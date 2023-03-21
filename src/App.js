@@ -31,7 +31,6 @@ function App() {
         </span></p>
       </div>
       <div className="container">
-        <h1>JazzDap App</h1>
         <div className="top">
           <input type="text" placeholder="Add Jazzdap" name="AddJazzDap" id="AddJazzDap" value={text} onChange={(e) => setText(e.target.value)} />
           <div className="add" onClick={isUpdating ?
@@ -56,7 +55,7 @@ function App() {
       <br />
 
       <div className="info">
-        <p><font face="Helvetica, sans-serif" color="#dce0cd"><b>A NEH-AHRC New Directions
+        <p><font face="Helvetica, sans-serif" color="ghostwhite"><b>A NEH-AHRC New Directions
           for Digital Scholarship in Cultural Institutions project</b></font></p>
         <p><span><font size="3" ><font color="#dce0cd">New
           Directions in Digital Jazz Studies uses state of the art music
@@ -83,7 +82,7 @@ function App() {
         <ul>
           <p>
             <span>
-              <font color="#dce0cd"><font size="3" >
+              <font color="ghostwhite"><font size="3" >
                 <strong>Investigators</strong>
               </font></font>
             </span>
@@ -111,14 +110,14 @@ function App() {
           <br />
           <hr />
           <br />
-          <p><span><font color="#dce0cd"><font size="3" ><strong>Partners</strong></font></font></span></p>
+          <p><span><font color="ghostwhite"><font size="3" ><strong>Partners</strong></font></font></span></p>
           <p><span><font size="3" ><font color="#dce0cd"><a className='externalLink' href="http://scottishjazzarchive.org/">Scottish
             Jazz Archive</a>, UK</font></font></span></p>
           <br />
           <hr />
           <br />
           <p>
-            <span><font color="#dce0cd"><font size="3" >
+            <span><font color="ghostwhite"><font size="3" >
               <b>Duration and Funding</b>
             </font></font></span>
           </p>
