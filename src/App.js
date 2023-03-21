@@ -27,7 +27,7 @@ function App() {
     <div className="App">
       <div className="header">
         <p><span>
-          <img src={logoJazzDap} className="imageHeader" name="Image1" align="bottom" width="192" height="107" border="0" />
+          <img src={logoJazzDap} className="imageHeader" alt='some value' name="Image1" align="bottom" width="192" height="107" border="0" />
         </span></p>
       </div>
       <div className="container">
@@ -134,17 +134,17 @@ function App() {
           <div className='footer'>
           <p><span>
             <font color="#72aee6">
-              <a className='externalLink' href="https://mirg.city.ac.uk/blog/wp-content/uploads/2021/11/logo.png" className="linkFooter">
+              <a className='externalLink' href="https://mirg.city.ac.uk/blog/wp-content/uploads/2021/11/logo.png" >
                 <font color="#000080"> </font>
-                <img src="https://mirg.city.ac.uk/blog/wp-content/uploads/2021/11/logo.png" className="imageFooter" name="Image2" align="bottom" width="280" height="71" border="1" />
+                <img src="https://mirg.city.ac.uk/blog/wp-content/uploads/2021/11/logo.png" className="imageFooter" alt='some value' name="Image2" align="bottom" width="280" height="71" border="1" />
               </a>
             </font>
 
             <a className='externalLink' href="https://mirg.city.ac.uk/blog/wp-content/uploads/2021/11/logo.png">
             </a>
-            <a className='externalLink' href="https://mirg.city.ac.uk/blog/wp-content/uploads/2021/11/logo-us-neh.png" className="linkFooter">
+            <a className='externalLink' href="https://mirg.city.ac.uk/blog/wp-content/uploads/2021/11/logo-us-neh.png" >
               <font color="#000080">
-                <img src="https://mirg.city.ac.uk/blog/wp-content/uploads/2021/11/logo-us-neh.png" className="imageFooter" name="Image3" align="bottom" width="280" height="67" border="1" />
+                <img src="https://mirg.city.ac.uk/blog/wp-content/uploads/2021/11/logo-us-neh.png" className="imageFooter" alt='some value' name="Image3" align="bottom" width="280" height="67" border="1" />
               </font>
             </a>
             <a className='externalLink' href="https://mirg.city.ac.uk/blog/wp-content/uploads/2021/11/logo-us-neh.png">
