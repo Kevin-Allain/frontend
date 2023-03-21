@@ -1,5 +1,6 @@
 .App {
   text-align: center;
+  background: #45465e;
 }
 
 .App-logo {
@@ -35,4 +36,102 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+.header{
+  background-color: ghostwhite;
+}
+
+.footer{
+  background-color: ghostwhite;
+  border: hidden;
+}
+
+.info{
+  text-align: center;
+}
+
+.imageHeader{
+  border-radius: 5px;
+  margin-block: 5px;
+  border:hidden;
+}
+
+.externalLink{
+  color:lightskyblue;
+}
+
+.linkFooter{
+  border-radius: 5px;
+  margin-block: 15px;
+}
+
+.imageFooter{
+  border-radius: 5px;
+  margin-block: 5px;
+  border:hidden;
+}
+
+.container{
+  max-width:600px;
+  margin:auto;
+  padding: 0 1rem;
+}
+
+h1 { 
+  margin-top: 1rem;
+  text-align: center;
+}
+
+.top{
+  margin-top: 1rem;
+  display: flex;
+  gap:1rem;
+  justify-content: center;
+}
+
+input{
+  border:none;
+  outline: none;
+  width: 400px;
+  padding: 0 0.5rem;
+  border-bottom: 1px solid #282c34;
+}
+
+.add{
+  border:none;
+  outline: none;
+  background-color: #282c34;
+  color: antiquewhite;
+  width: 100px;
+  padding: 0 0.5rem;
+  border-bottom: 1px solid #282c34;
+  cursor: pointer;
+}
+
+.container{
+  color:ghostwhite;
+}
+
+.jazzdap{
+  position: relative;
+  margin-top: 1rem;
+  background-color: black;
+  color: white;
+  border-radius: 5px;
+  border:solid;
+  border-width: thin;
+}
+
+.icons{
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  right: 20px;
+  display: flex;
+  gap:0.5rem;
+}
+.icon{
+  cursor: pointer;
+  font-size: 20px;
 }
