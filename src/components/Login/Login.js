@@ -9,7 +9,6 @@ export default function Login({setToken}) {
     const [username, setUserName] = useState();
     const [password, setPassword] = useState();
 
-
     const handleSubmit = async e => {
         e.preventDefault();
         const token = await loginUser({
@@ -17,8 +16,7 @@ export default function Login({setToken}) {
           password
         });
         setToken(token);
-      }
-    
+      }    
 
       return (
         <div className="login-wrapper">

@@ -51,6 +51,7 @@ const loginUser = (credentials) => {
     axios
         .post(`${baseUrl}/loginUser`, {credentials})
         .then( (data) => {
+            console.log("loginUser");
             console.log(data);
             data.json();
         })
