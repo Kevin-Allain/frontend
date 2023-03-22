@@ -1,7 +1,7 @@
 import axios from 'axios'
 
-// const baseUrl = "http://localhost:5000"
-const baseUrl = "https://fullstack-proto-jazzdap-backend.onrender.com"
+const baseUrl = "http://localhost:5000" // can be used for development
+// const baseUrl = "https://fullstack-proto-jazzdap-backend.onrender.com"
 
 const getAllJazzDap = (setJazzDap) => {
     axios
@@ -13,7 +13,6 @@ const getAllJazzDap = (setJazzDap) => {
         .catch(err => console.log(err))
 }
 
-
 const addJazzDap = (text,setText, setJazzDap) => {
     axios
         .post(`${baseUrl}/save`, {text})
@@ -24,7 +23,6 @@ const addJazzDap = (text,setText, setJazzDap) => {
         })
         .catch(err => console.log(err))
 }
-
 
 const updateJazzDap = (jazzDapId,text,setJazzDap, setText, setIsUpdating) => {
     axios
@@ -38,8 +36,6 @@ const updateJazzDap = (jazzDapId,text,setJazzDap, setText, setIsUpdating) => {
         .catch(err => console.log(err))
 }
 
-
-
 const deleteJazzDap = (jazzDapId, setJazzDap) => {
     axios
         .post(`${baseUrl}/delete`, {_id: jazzDapId})
@@ -50,4 +46,15 @@ const deleteJazzDap = (jazzDapId, setJazzDap) => {
         .catch(err => console.log(err))
 }
 
-export {getAllJazzDap, addJazzDap, updateJazzDap, deleteJazzDap}
+
+const loginUser = (credentials) => {
+    axios
+        .post(`${baseUrl}/loginUser`, {credentials})
+        .then( (data) => {
+            console.log(data);
+            data.json();
+        })
+        .catch(err => console.log(err))
+}
+
+export {getAllJazzDap, addJazzDap, updateJazzDap, deleteJazzDap, loginUser}

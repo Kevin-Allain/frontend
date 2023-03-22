@@ -1,6 +1,10 @@
 import { useState, useEffect } from 'react';
+import { BrowserRouter,  Routes,  Route } from 'react-router-dom';
 import './App.css';
 import JazzDap from './components/JazzDap';
+import Dashboard from './components/Dashboard/Dashboard';
+import Preferences from './components/Preferences/Preferences';
+import Login from './components/Login/Login';
 import { getAllJazzDap, addJazzDap, updateJazzDap, deleteJazzDap } from './utils/HandleApi';
 import logoJazzDap from './Logo1.jpg'
 
@@ -12,16 +16,18 @@ function App() {
   const [isUpdating, setIsUpdating] = useState(false);
   const [jazzDapId, setJazzDapId] = useState("");
 
-
-  useEffect(() => {
-    getAllJazzDap(setJazzDap)
-  }, [])
-
+  useEffect(() => { getAllJazzDap(setJazzDap) }, [])
   const updateMode = (_id, text) => {
     setIsUpdating(true);
     setText(text);
     setJazzDapId(_id);
   }
+
+  const [token, setToken] = useState();
+  if(!token) {
+    return <Login setToken={setToken} />
+  } 
+
 
   return (
     <div className="App">
@@ -30,6 +36,16 @@ function App() {
           <img src={logoJazzDap} className="imageHeader" alt='some value' name="Image1" align="bottom" width="192" height="107" border="0" />
         </span></p>
       </div>
+      
+      <div className='wrapper'>
+        <BrowserRouter>
+          <Routes>
+            <Route path="/dashboard" element={<Dashboard/>} />
+            <Route path="/preferences" element={<Preferences/>} />
+          </Routes>
+        </BrowserRouter>
+      </div>
+
       <div className="container">
         <div className="top">
           <input type="text" placeholder="Add Jazzdap" name="AddJazzDap" id="AddJazzDap" value={text} onChange={(e) => setText(e.target.value)} />
