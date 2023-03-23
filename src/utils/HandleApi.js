@@ -49,28 +49,27 @@ const deleteJazzDap = (jazzDapId, setJazzDap) => {
 
 // ---- axios attempt. not working as we expected. First let's try without axios
 // ---- TODO change to axios approach
-const loginUser = (credentials) => {
-    axios
-        .post(`${baseUrl}/loginUser`, {credentials})
-        .then( (data) => {
-            console.log("loginUser");
-            console.log(data);
-            data.json();
-        })
-        .catch(err => console.log(err))
-}
+// const loginUser = (setToken) => {
+//     axios
+//         .post(`${baseUrl}/loginUser`)
+//         .then( (data) => {
+//             console.log(`loginUser , data: ${data}`);
+//             setToken(data)
+//         })
+//         .catch(err => console.log(err))
+// }
 
-// async function loginUser(credentials) {
-//     console.log(`HandeAPI loginUSer`);
-//     return fetch( `${baseUrl}/loginUser` , {
-//       method: 'POST',
-//       headers: {
-//         'Content-Type': 'application/json'
-//       },
-//       body: JSON.stringify(credentials)
-//     })
-//       .then(data => data.json())
-//    }
+async function loginUser(credentials) {
+    console.log(`HandeAPI loginUSer`);
+    return fetch( `${baseUrl}/loginUser` , {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(credentials)
+    })
+      .then(data => data.json())
+   }
    
 
 
