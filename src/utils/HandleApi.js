@@ -60,7 +60,7 @@ const deleteJazzDap = (jazzDapId, setJazzDap) => {
 // }
 
 async function loginUser(credentials) {
-    console.log(`HandeAPI loginUSer`);
+    console.log(`HandeAPI loginUSer, credentials: ${ JSON.stringify(credentials)}`);
     return fetch( `${baseUrl}/loginUser` , {
       method: 'POST',
       headers: {

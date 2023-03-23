@@ -7,6 +7,9 @@ import Preferences from './components/Preferences/Preferences';
 import Login from './components/Login/Login';
 import { getAllJazzDap, addJazzDap, updateJazzDap, deleteJazzDap } from './utils/HandleApi';
 import logoJazzDap from './Logo1.jpg'
+import useToken from './components/App/useToken';
+
+
 
 
 function App() {
@@ -23,10 +26,9 @@ function App() {
     setJazzDapId(_id);
   }
 
-  const [token, setToken] = useState();
-  if(!token) {
-    return <Login setToken={setToken} />
-  } 
+  
+  const { token, setToken } = useToken();
+  if(!token) { return <Login setToken={setToken} /> } 
 
 
   return (
