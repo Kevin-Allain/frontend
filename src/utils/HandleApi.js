@@ -47,6 +47,8 @@ const deleteJazzDap = (jazzDapId, setJazzDap) => {
 }
 
 
+// ---- axios attempt. not working as we expected. First let's try without axios
+// ---- TODO change to axios approach
 const loginUser = (credentials) => {
     axios
         .post(`${baseUrl}/loginUser`, {credentials})
@@ -57,5 +59,19 @@ const loginUser = (credentials) => {
         })
         .catch(err => console.log(err))
 }
+
+// async function loginUser(credentials) {
+//     console.log(`HandeAPI loginUSer`);
+//     return fetch( `${baseUrl}/loginUser` , {
+//       method: 'POST',
+//       headers: {
+//         'Content-Type': 'application/json'
+//       },
+//       body: JSON.stringify(credentials)
+//     })
+//       .then(data => data.json())
+//    }
+   
+
 
 export {getAllJazzDap, addJazzDap, updateJazzDap, deleteJazzDap, loginUser}
