@@ -8,6 +8,7 @@ import Login from './components/Login/Login';
 import { getAllJazzDap, addJazzDap, updateJazzDap, deleteJazzDap } from './utils/HandleApi';
 import logoJazzDap from './Logo1.jpg'
 import useToken from './components/App/useToken';
+import Register from './components/Register/Register';
 
 
 
@@ -28,7 +29,8 @@ function App() {
 
   
   const { token, setToken } = useToken();
-  if(!token) { return <Login setToken={setToken} /> } 
+  var loginComponent = <></>
+  if(!token) { loginComponent = <Login setToken={setToken} /> } 
 
 
   return (
@@ -38,7 +40,10 @@ function App() {
           <img src={logoJazzDap} className="imageHeader" alt='some value' name="Image1" align="bottom" width="192" height="107" border="0" />
         </span></p>
       </div>
-      
+      <Register></Register>
+      <br/><hr/><br/>
+      {loginComponent}
+      <br/><hr/><br/>
       <div className='wrapper'>
         <BrowserRouter>
           <Routes>
