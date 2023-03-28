@@ -55,7 +55,8 @@ function App() {
 
       <div className="container">
         <div className="top">
-          <input type="text" placeholder="Add Jazzdap" name="AddJazzDap" id="AddJazzDap" value={text} onChange={(e) => setText(e.target.value)} />
+          <input type="text" placeholder="Add Jazzdap" name="AddJazzDap" id="AddJazzDap" 
+            value={text} onChange={(e) => setText(e.target.value)} />
           <div className="add" onClick={isUpdating ?
             () => updateJazzDap(jazzDapId, text, setJazzDap, setText, setIsUpdating) :
             () => addJazzDap(text, setText, setJazzDap)}>

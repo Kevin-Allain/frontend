@@ -14,6 +14,9 @@ const getAllJazzDap = (setJazzDap) => {
 }
 
 const addJazzDap = (text,setText, setJazzDap) => {
+
+    console.log(`addJazzDap: \n${baseUrl}/save`, {text})
+
     axios
         .post(`${baseUrl}/save`, {text})
         .then( (data) => {

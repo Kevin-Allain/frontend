@@ -1,10 +1,12 @@
 import { useRef, useState, useEffect } from "react";
 import { faCheck, faTimes, faInfoCircle } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-// TODO Seems like we will need to modify this to use the mongoose controller
 import axios from 'axios';
+// TODO Seems like we will need to modify this to use the mongoose controller
+// import axios from 'axios';
 const baseUrl = "http://localhost:5000" // can be used for development
 // const baseUrl = "https://fullstack-proto-jazzdap-backend.onrender.com"
+
 
 
 const USER_REGEX = /^[A-z][A-z0-9-_]{3,23}$/;
@@ -59,16 +61,25 @@ const Register = () => {
         }
         // if backend isn't set:
         // setSuccess(true);
-
+        
         try {
             console.log(`${baseUrl}/${REGISTER_URL}`);
-            const response = await axios.post(`${baseUrl}/${REGISTER_URL}`,
-                JSON.stringify({ user, pwd }),
-                {
-                    headers: { 'Content-Type': 'application/json' },
-                    withCredentials: true
-                }
-            );
+            console.log(JSON.stringify({ user, pwd }));
+            const response = await 
+                axios.post(`${baseUrl}/${REGISTER_URL}`,
+                    JSON.stringify({ user, pwd })
+                    ,
+                    {
+                        headers: { 'Content-Type': 'application/json' },
+                        // withCredentials: true// issue with cors with that
+                    }
+                )
+                .then( (d) => {
+                    console.log("d.data", JSON.stringify(d.data));
+                    console.log(`successfully registered. d: ${d}`);
+                })
+                .catch(err => console.log(`err: ${err}`))
+
             console.log(response?.data);
             console.log(response?.accessToken);
             console.log(JSON.stringify(response))
@@ -97,9 +108,7 @@ const Register = () => {
             {success ? (
                 <section>
                     <h1>Success!</h1>
-                    <p>
-                        <a href="#">Sign In</a>
-                    </p>
+                    <p> <a href="https://www.thesignmaker.co.nz/wp-content/uploads/2019/04/C16_Work-In-Progress.png">Sign In</a> </p>
                 </section>
             )
                 :
