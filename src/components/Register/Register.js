@@ -67,28 +67,28 @@ const Register = () => {
             console.log(JSON.stringify({ user, pwd }));
             const response = await 
                 axios.post(`${baseUrl}/${REGISTER_URL}`,
-                    JSON.stringify({ user, pwd })
-                    ,
+                    JSON.stringify({ user, pwd }),
                     {
-                        headers: { 'Content-Type': 'application/json' },
-                        // withCredentials: true// issue with cors with that
+                        headers: { 'Content-Type': 'application/json' } //, withCredentials: true// issue with cors with that
                     }
                 )
                 .then( (d) => {
                     console.log("d.data", JSON.stringify(d.data));
                     console.log(`successfully registered. d: ${d}`);
+                    setSuccess(true);
+                    //clear state and controlled inputs
+                    //need value attrib on inputs for this
+                    setUser('');
+                    setPwd('');
+                    setMatchPwd('');                
                 })
                 .catch(err => console.log(`err: ${err}`))
 
-            console.log(response?.data);
-            console.log(response?.accessToken);
-            console.log(JSON.stringify(response))
-            setSuccess(true);
-            //clear state and controlled inputs
-            //need value attrib on inputs for this
-            setUser('');
-            setPwd('');
-            setMatchPwd('');
+            console.log("response: ");
+            console.log(response?.data); // undefined
+            console.log(response?.accessToken); // undefined
+            console.log(JSON.stringify(response)) // undefined
+
         } catch (err) {
             if (!err?.response) {
                 setErrMsg('No Server Response');
