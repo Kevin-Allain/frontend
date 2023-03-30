@@ -1,5 +1,5 @@
 import { useRef, useState, useEffect } from "react";
-import { faCheck, faTimes, faInfoCircle } from "@fortawesome/free-solid-svg-icons"
+import { faCheck, faTimes, faInfoCircle, faTriangleExclamation } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import axios from 'axios';
 // TODO Seems like we will need to modify this to use the mongoose controller
@@ -21,6 +21,9 @@ const Register = () => {
     const [validName, setValidName] = useState(false);
     const [userFocus, setUserFocus] = useState(false);
 
+
+    const [userNameTaken, setUserNameTaken] = useState(false);
+
     const [pwd, setPwd] = useState('');
     const [validPwd, setValidPwd] = useState(false);
     const [pwdFocus, setPwdFocus] = useState(false);
@@ -37,6 +40,7 @@ const Register = () => {
     }, [])
 
     useEffect(() => {
+        setUserNameTaken(false);
         setValidName(USER_REGEX.test(user));
     }, [user])
 
@@ -52,6 +56,7 @@ const Register = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         e.preventDefault();
+
         // if button enabled with JS hack
         const v1 = USER_REGEX.test(user);
         const v2 = PWD_REGEX.test(pwd);
@@ -82,7 +87,14 @@ const Register = () => {
                     setPwd('');
                     setMatchPwd('');                
                 })
-                .catch(err => console.log(`err: ${err}`))
+                .catch(err =>{ 
+                    console.log(`catch err: ${err}`);
+                    console.log(err);
+                    setSuccess(false);
+                    if(err.response.data.message === "User already exists"){
+                        setUserNameTaken(true);
+                    }
+                })
 
             console.log("response: ");
             console.log(response?.data); // undefined
@@ -90,6 +102,8 @@ const Register = () => {
             console.log(JSON.stringify(response)) // undefined
 
         } catch (err) {
+            console.log("err: ", err);
+            // TODO code to show warning about username taken already
             if (!err?.response) {
                 setErrMsg('No Server Response');
             } else if (err.response?.status === 409) {
@@ -140,6 +154,9 @@ const Register = () => {
                                 4 to 24 characters.<br />
                                 Must begin with a letter.<br />
                                 Letters, numbers, underscores, hyphens allowed.
+                            </p>
+                            <p id="uiderror" className={user && userNameTaken ? "errorRegister" : "offscreen"}>
+                                <FontAwesomeIcon icon={faTriangleExclamation} /> User name already taken.
                             </p>
                             <label htmlFor="password">
                                 Password:
