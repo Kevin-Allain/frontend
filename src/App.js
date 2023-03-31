@@ -40,6 +40,7 @@ function App() {
           <img src={logoJazzDap} className="imageHeader" alt='some value' name="Image1" align="bottom" width="192" height="107" border="0" />
         </span></p>
       </div>
+      {/* TODO chage to usage of react context (look at Login) */}
       <div className={token ? "offscreen" : "auth"} >
         <Register></Register>
         <hr />
@@ -83,7 +84,7 @@ function App() {
       <div className="info">
         <p><font face="Helvetica, sans-serif" color="ghostwhite"><b>A NEH-AHRC New Directions
           for Digital Scholarship in Cultural Institutions project</b></font></p>
-        <p><span><font size="3" ><font color="#dce0cd">New
+        <div className='textInfo'><span><font size="3" ><font color="#dce0cd">New
           Directions in Digital Jazz Studies uses state of the art music
           information retrieval and artificial intelligence algorithms for the
           analysis of jazz recordings and linked data to enable novel
@@ -99,7 +100,7 @@ function App() {
           cultural institutions. We envision a disciplinary transformation
           through the discovery of new models for jazz historiography, and a
           broader, interdisciplinary transformation in methodology for digital
-          humanities</font></font></span></p>
+          humanities</font></font></span></div>
 
         <br />
         <hr />
@@ -113,32 +114,36 @@ function App() {
               </font></font>
             </span>
           </p>
-          <p><span><font size="3" ><font color="#dce0cd"><a className='externalLink' href="http://www.city.ac.uk/people/academics/tillman-weyde">Tillman
-            Weyde</a> (PI </font></font><font size="3" ><font color="#dce0cd">UK</font></font><font size="3" ><font color="#dce0cd">),
-              <a className='externalLink' href="http://www.city.ac.uk/">City University of London</a>, UK</font></font></span></p>
-          <p><span><font size="3" ><font color="#dce0cd"><a className='externalLink' href="https://music.illinois.edu/faculty/gabriel-solis">Gabriel
-            Solis</a> </font></font><font size="3" ><font color="#dce0cd">(PI
-              US)</font></font><font size="3" ><font color="#dce0cd">,
-                <a className='externalLink' href="http://illinois.edu/">University of Illinois Champaign
-                  Urbana</a>, USA</font></font></span></p>
-          <p><span><font size="3" ><font color="#dce0cd"><a className='externalLink' href="http://www.eecs.qmul.ac.uk/%7Esimond">Simon
-            Dixon</a>, <a className='externalLink' href="http://www.qmul.ac.uk/">Queen Mary University
-              of London</a>, UK</font></font></span></p>
-          <p><span><font size="3" ><font color="#dce0cd"><a className='externalLink' href="https://www.napier.ac.uk/people/haftor-medboe">Haftor
-            Medboe</a>, <a className='externalLink' href="https://www.napier.ac.uk/">Edinburgh Napier
-              University</a>, UK</font></font></span></p>
-          <p><span><font size="3" ><font color="#dce0cd"><a className='externalLink' href="https://www.bcu.ac.uk/research/our-people/a-e/pedro-cravinho">Pedro
-            Cravinho</a>, <a className='externalLink' href="https://www.bcu.ac.uk/">Birmingham City
-              University</a>, UK</font></font></span></p>
-          <p><span><font size="3" ><font color="#dce0cd"><a className='externalLink' href="https://www.libraries.rutgers.edu/directory/adriana-cuervo">Adriana
-            Cuervo</a>, <a className='externalLink' href="https://www.rutgers.edu/">Rutgers University</a>,
-            USA</font></font></span></p>
+          <div className='textInfo'>
+            <p><span><font size="3" ><font color="#dce0cd"><a className='externalLink' href="http://www.city.ac.uk/people/academics/tillman-weyde">Tillman
+              Weyde</a> (PI </font></font><font size="3" ><font color="#dce0cd">UK</font></font><font size="3" ><font color="#dce0cd">),
+                <a className='externalLink' href="http://www.city.ac.uk/">City University of London</a>, UK</font></font></span></p>
+            <p><span><font size="3" ><font color="#dce0cd"><a className='externalLink' href="https://music.illinois.edu/faculty/gabriel-solis">Gabriel
+              Solis</a> </font></font><font size="3" ><font color="#dce0cd">(PI
+                US)</font></font><font size="3" ><font color="#dce0cd">,
+                  <a className='externalLink' href="http://illinois.edu/">University of Illinois Champaign
+                    Urbana</a>, USA</font></font></span></p>
+            <p><span><font size="3" ><font color="#dce0cd"><a className='externalLink' href="http://www.eecs.qmul.ac.uk/%7Esimond">Simon
+              Dixon</a>, <a className='externalLink' href="http://www.qmul.ac.uk/">Queen Mary University
+                of London</a>, UK</font></font></span></p>
+            <p><span><font size="3" ><font color="#dce0cd"><a className='externalLink' href="https://www.napier.ac.uk/people/haftor-medboe">Haftor
+              Medboe</a>, <a className='externalLink' href="https://www.napier.ac.uk/">Edinburgh Napier
+                University</a>, UK</font></font></span></p>
+            <p><span><font size="3" ><font color="#dce0cd"><a className='externalLink' href="https://www.bcu.ac.uk/research/our-people/a-e/pedro-cravinho">Pedro
+              Cravinho</a>, <a className='externalLink' href="https://www.bcu.ac.uk/">Birmingham City
+                University</a>, UK</font></font></span></p>
+            <p><span><font size="3" ><font color="#dce0cd"><a className='externalLink' href="https://www.libraries.rutgers.edu/directory/adriana-cuervo">Adriana
+              Cuervo</a>, <a className='externalLink' href="https://www.rutgers.edu/">Rutgers University</a>,
+              USA</font></font></span></p>
+          </div>
           <br />
           <hr />
           <br />
           <p><span><font color="ghostwhite"><font size="3" ><strong>Partners</strong></font></font></span></p>
+          <div className='textInfo'>
           <p><span><font size="3" ><font color="#dce0cd"><a className='externalLink' href="http://scottishjazzarchive.org/">Scottish
             Jazz Archive</a>, UK</font></font></span></p>
+          </div>
           <br />
           <hr />
           <br />
@@ -147,14 +152,16 @@ function App() {
               <b>Duration and Funding</b>
             </font></font></span>
           </p>
+          <div className='textInfo'>
           <p><span><font size="3" ><font color="#dce0cd">The
             project is an ongoing collaboration between six different
             universities across four countries, which started in Feb 2021 and
             is funded until July 2024 by the NEH/AHRC New Directions for
-            Digital Scholarship in Cultural Institutions Call (see announcement
-            <a className='externalLink' href="https://webarchive.nationalarchives.gov.uk/ukgwa/20200619160542/https://ahrc.ukri.org/funding/apply-for-funding/current-opportunities/neh-ahrc-new-directions-for-digital-scholarship-in-cultural-institutions-call/">here</a>)
+            Digital Scholarship in Cultural Institutions Call (see announcement 
+             <a className='externalLink' href="https://webarchive.nationalarchives.gov.uk/ukgwa/20200619160542/https://ahrc.ukri.org/funding/apply-for-funding/current-opportunities/neh-ahrc-new-directions-for-digital-scholarship-in-cultural-institutions-call/">here</a>)
             via the support of the Arts and Humanities Research Council (UK)
             and the National Endowment for the Humanities (USA).</font></font></span></p>
+            </div>
           <br />
           <div className='footer'>
             <p><span>

@@ -85,6 +85,13 @@ h1 {
   color: ghostwhite;
 }
 
+.textInfo{
+  padding-left: 5%;
+  padding-right: 5%;
+  text-align: left;
+}
+
+
 .top{
   margin-top: 1rem;
   display: flex;
