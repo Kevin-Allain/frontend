@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { BrowserRouter,  Routes,  Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import './App.css';
 import JazzDap from './components/JazzDap';
 import Dashboard from './components/Dashboard/Dashboard';
@@ -30,10 +30,10 @@ function App() {
     setJazzDapId(_id);
   }
 
-  
+
   const { token, setToken } = useToken();
   var loginComponent = <></>
-  if(!token) { loginComponent = <Login setToken={setToken} /> } 
+  if (!token) { loginComponent = <Login setToken={setToken} /> }
 
 
   return (
@@ -43,24 +43,24 @@ function App() {
           <img src={logoJazzDap} className="imageHeader" alt='some value' name="Image1" align="bottom" width="192" height="107" border="0" />
         </span></p>
       </div>
-      <div className={contextAuth ? "offscreen" : "auth" } >
-      <Register></Register>
-      <hr/>
-      {loginComponent}
+      <div className={contextAuth ? "offscreen" : "auth"} >
+        <Register></Register>
+        <hr />
+        {loginComponent}
       </div>
-      <hr/>
+      <hr />
       <div className='wrapper'>
         <BrowserRouter>
           <Routes>
-            <Route path="/dashboard" element={<Dashboard/>} />
-            <Route path="/preferences" element={<Preferences/>} />
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/preferences" element={<Preferences />} />
           </Routes>
         </BrowserRouter>
       </div>
 
       <div className="container">
         <div className="top">
-          <input type="text" placeholder="Add Jazzdap" name="AddJazzDap" id="AddJazzDap" 
+          <input type="text" placeholder="Add Jazzdap" name="AddJazzDap" id="AddJazzDap"
             value={text} onChange={(e) => setText(e.target.value)} />
           <div className="add" onClick={isUpdating ?
             () => updateJazzDap(jazzDapId, text, setJazzDap, setText, setIsUpdating) :
@@ -160,24 +160,24 @@ function App() {
             and the National Endowment for the Humanities (USA).</font></font></span></p>
           <br />
           <div className='footer'>
-          <p><span>
-            <font color="#72aee6">
-              <a className='externalLink' href="https://mirg.city.ac.uk/blog/wp-content/uploads/2021/11/logo.png" >
-                <font color="#000080"> </font>
-                <img src="https://mirg.city.ac.uk/blog/wp-content/uploads/2021/11/logo.png" className="imageFooter" alt='some value' name="Image2" align="bottom" width="280" height="71" border="1" />
-              </a>
-            </font>
-
-            <a className='externalLink' href="https://mirg.city.ac.uk/blog/wp-content/uploads/2021/11/logo.png">
-            </a>
-            <a className='externalLink' href="https://mirg.city.ac.uk/blog/wp-content/uploads/2021/11/logo-us-neh.png" >
-              <font color="#000080">
-                <img src="https://mirg.city.ac.uk/blog/wp-content/uploads/2021/11/logo-us-neh.png" className="imageFooter" alt='some value' name="Image3" align="bottom" width="280" height="67" border="1" />
+            <p><span>
+              <font color="#72aee6">
+                <a className='externalLink' href="https://mirg.city.ac.uk/blog/wp-content/uploads/2021/11/logo.png" >
+                  <font color="#000080"> </font>
+                  <img src="https://mirg.city.ac.uk/blog/wp-content/uploads/2021/11/logo.png" className="imageFooter" alt='some value' name="Image2" align="bottom" width="280" height="71" border="1" />
+                </a>
               </font>
-            </a>
-            <a className='externalLink' href="https://mirg.city.ac.uk/blog/wp-content/uploads/2021/11/logo-us-neh.png">
-            </a></span>
-          </p>
+
+              <a className='externalLink' href="https://mirg.city.ac.uk/blog/wp-content/uploads/2021/11/logo.png">
+              </a>
+              <a className='externalLink' href="https://mirg.city.ac.uk/blog/wp-content/uploads/2021/11/logo-us-neh.png" >
+                <font color="#000080">
+                  <img src="https://mirg.city.ac.uk/blog/wp-content/uploads/2021/11/logo-us-neh.png" className="imageFooter" alt='some value' name="Image3" align="bottom" width="280" height="67" border="1" />
+                </font>
+              </a>
+              <a className='externalLink' href="https://mirg.city.ac.uk/blog/wp-content/uploads/2021/11/logo-us-neh.png">
+              </a></span>
+            </p>
           </div>
         </ul>
       </div>

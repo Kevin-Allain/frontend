@@ -7,12 +7,9 @@ import axios from 'axios';
 const baseUrl = "http://localhost:5000" // can be used for development
 // const baseUrl = "https://fullstack-proto-jazzdap-backend.onrender.com"
 
-
-
 const USER_REGEX = /^[A-z][A-z0-9-_]{3,23}$/;
 const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/;
 const REGISTER_URL = 'register';
-
 
 const Register = () => {
     const userRef = useRef();
@@ -20,7 +17,6 @@ const Register = () => {
     const [user, setUser] = useState('');
     const [validName, setValidName] = useState(false);
     const [userFocus, setUserFocus] = useState(false);
-
 
     const [userNameTaken, setUserNameTaken] = useState(false);
 
@@ -66,41 +62,39 @@ const Register = () => {
         }
         // if backend isn't set:
         // setSuccess(true);
-        
+
         try {
             console.log(`${baseUrl}/${REGISTER_URL}`);
             console.log(JSON.stringify({ user, pwd }));
-            const response = await 
+            const response = await
                 axios.post(`${baseUrl}/${REGISTER_URL}`,
                     JSON.stringify({ user, pwd }),
                     {
                         headers: { 'Content-Type': 'application/json' } //, withCredentials: true// issue with cors with that
                     }
                 )
-                .then( (d) => {
-                    console.log("d.data", JSON.stringify(d.data));
-                    console.log(`successfully registered. d: ${d}`);
-                    setSuccess(true);
-                    //clear state and controlled inputs
-                    //need value attrib on inputs for this
-                    setUser('');
-                    setPwd('');
-                    setMatchPwd('');                
-                })
-                .catch(err =>{ 
-                    console.log(`catch err: ${err}`);
-                    console.log(err);
-                    setSuccess(false);
-                    if(err.response.data.message === "User already exists"){
-                        setUserNameTaken(true);
-                    }
-                })
-
+                    .then((d) => {
+                        console.log("d.data", JSON.stringify(d.data));
+                        console.log(`successfully registered. d: ${d}`);
+                        setSuccess(true);
+                        //clear state and controlled inputs
+                        //need value attrib on inputs for this
+                        setUser('');
+                        setPwd('');
+                        setMatchPwd('');
+                    })
+                    .catch(err => {
+                        console.log(`catch err: ${err}`);
+                        console.log(err);
+                        setSuccess(false);
+                        if (err.response.data.message === "User already exists") {
+                            setUserNameTaken(true);
+                        }
+                    })
             console.log("response: ");
             console.log(response?.data); // undefined
             console.log(response?.accessToken); // undefined
             console.log(JSON.stringify(response)) // undefined
-
         } catch (err) {
             console.log("err: ", err);
             // TODO code to show warning about username taken already
@@ -113,8 +107,6 @@ const Register = () => {
             }
             errRef.current.focus();
         }
-
-
     }
 
     return (
