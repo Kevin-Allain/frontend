@@ -121,8 +121,8 @@ const Register = () => {
         <>
             {success ? (
                 <section>
-                    <h1>Success!</h1>
-                    <p> <a href="https://www.thesignmaker.co.nz/wp-content/uploads/2019/04/C16_Work-In-Progress.png">Sign In</a> </p>
+                    <h1>You've successfully created an account!</h1> <h2>You can now log in to use all our functionalities.</h2>
+                    {/* <p> <a href="https://www.thesignmaker.co.nz/wp-content/uploads/2019/04/C16_Work-In-Progress.png">Sign In</a> </p> */}
                 </section>
             )
                 :
@@ -202,14 +202,6 @@ const Register = () => {
                             </p>
                             <button disabled={!validName || !validPwd || !validMatch ? true : false}>Sign Up</button>
                         </form>
-                        {/* <p>
-                Already registered?<br />
-                <span className="line">
-                    We will add a link here
-                    <a href="#">Sign In</a>
-                </span>
-            </p> */}
-
                     </section >
                 )}
         </>

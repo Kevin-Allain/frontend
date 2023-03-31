@@ -20,6 +20,9 @@ function App() {
   const [isUpdating, setIsUpdating] = useState(false);
   const [jazzDapId, setJazzDapId] = useState("");
 
+
+  const [contextAuth, setContextAuth] = useState(false); // TODO change. Needs to be adapted per a reactContext
+
   useEffect(() => { getAllJazzDap(setJazzDap) }, [])
   const updateMode = (_id, text) => {
     setIsUpdating(true);
@@ -40,10 +43,12 @@ function App() {
           <img src={logoJazzDap} className="imageHeader" alt='some value' name="Image1" align="bottom" width="192" height="107" border="0" />
         </span></p>
       </div>
+      <div className={contextAuth ? "offscreen" : "auth" } >
       <Register></Register>
-      <br/><hr/><br/>
+      <hr/>
       {loginComponent}
-      <br/><hr/><br/>
+      </div>
+      <hr/>
       <div className='wrapper'>
         <BrowserRouter>
           <Routes>
