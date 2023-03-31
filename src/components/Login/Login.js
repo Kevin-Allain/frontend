@@ -1,17 +1,16 @@
 import { useRef, useState, useEffect, useContext } from 'react';
 import AuthContext from '../../context/AuthProvider';
 import PropTypes from 'prop-types'
-// import './Login.css';
 import axios from 'axios';
-import { loginUser } from '../../utils/HandleApi';
+// import './Login.css';
 
 const baseUrl = "http://localhost:5000" // can be used for development
 const REGISTER_URL = 'loginUser';
 
 
-
-
 export default function Login({ setToken }) {
+	const { setAuth } = useContext(AuthContext);
+
     const [username, setUserName] = useState();
     const [password, setPassword] = useState();
     const errRef = useRef();
@@ -26,16 +25,9 @@ export default function Login({ setToken }) {
 
     const handleSubmit = async e => {
         e.preventDefault();
-
-        console.log(`e.target[0]: ${e.target[0]}`);
-        console.log(`e.target[0].value: ${e.target[0].value}`);
-        console.log(`username: ${username}`)
-        console.log(`password: ${password}`)
-
-        // TODO change according to https://github.com/marvelken/login-and-registration/blob/master/src/Login.js
+        // console.log(`e.target[0]: ${e.target[0]}`); console.log(`e.target[0].value: ${e.target[0].value}`); console.log(`username: ${username}`); console.log(`password: ${password}`)
         try {
-            console.log(`${baseUrl}/${REGISTER_URL}`);
-            console.log(JSON.stringify({ username, password }));
+            // console.log(`${baseUrl}/${REGISTER_URL}`); console.log(JSON.stringify({ username, password }));
             const response = await
                 axios.post(`${baseUrl}/${REGISTER_URL}`,
                     JSON.stringify({ username, password }),
@@ -44,11 +36,8 @@ export default function Login({ setToken }) {
                     }
                 )
                     .then((d) => {
-                        console.log("d.data", JSON.stringify(d.data));
-                        console.log(`successfully logged in. d: ${d}`);
+                        console.log(`successfully logged in. d: `,JSON.stringify(d));
                         setSuccess(true);
-                        //clear state and controlled inputs
-                        //need value attrib on inputs for this
                         setUserName('');
                         setPassword('');
                     })
@@ -60,6 +49,9 @@ export default function Login({ setToken }) {
             console.log("response: ");
             console.log(response?.data); // undefined
             console.log(response?.accessToken); // undefined
+            const accessToken = response?.data?.accessToken;
+            const roles = response?.data?.roles;
+            setAuth({ username, password, roles, accessToken });
             console.log(JSON.stringify(response)) // undefined
         } catch (err) {
             console.log("err: ", err);

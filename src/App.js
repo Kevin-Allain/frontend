@@ -11,8 +11,6 @@ import useToken from './components/App/useToken';
 import Register from './components/Register/Register';
 
 
-
-
 function App() {
 
   const [jazzDap, setJazzDap] = useState([]);
@@ -21,7 +19,7 @@ function App() {
   const [jazzDapId, setJazzDapId] = useState("");
 
 
-  const [contextAuth, setContextAuth] = useState(false); // TODO change. Needs to be adapted per a reactContext
+  // const [contextAuth, setContextAuth] = useState(false); // TODO change. Needs to be adapted per a reactContext
 
   useEffect(() => { getAllJazzDap(setJazzDap) }, [])
   const updateMode = (_id, text) => {
@@ -29,7 +27,6 @@ function App() {
     setText(text);
     setJazzDapId(_id);
   }
-
 
   const { token, setToken } = useToken();
   var loginComponent = <></>
@@ -43,7 +40,7 @@ function App() {
           <img src={logoJazzDap} className="imageHeader" alt='some value' name="Image1" align="bottom" width="192" height="107" border="0" />
         </span></p>
       </div>
-      <div className={contextAuth ? "offscreen" : "auth"} >
+      <div className={token ? "offscreen" : "auth"} >
         <Register></Register>
         <hr />
         {loginComponent}
