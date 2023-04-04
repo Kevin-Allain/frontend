@@ -9,6 +9,7 @@ const baseUrl = "http://localhost:5000" // can be used for development
 
 const USER_REGEX = /^[A-z][A-z0-9-_]{3,23}$/;
 const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/;
+const EMAIL_REGEX = /^[a-zA-Z0-9-!#$%&'*+-/=?^_`{|}~]+(?:\.[a-zA-Z0-9]+)*@[a-zA-Z0-9]+(?:\.[a-zA-Z0-9]+)*$/; // good enough for now
 const REGISTER_URL = 'register';
 
 const Register = () => {
@@ -28,6 +29,12 @@ const Register = () => {
     const [validMatch, setValidMatch] = useState(false);
     const [matchFocus, setMatchFocus] = useState(false);
 
+    const [email, setEmail] = useState('');
+    const [validEmail, setValidEmail] = useState(false);
+    const [emailFocus, setEmailFocus] = useState(false);
+
+    const [emailTaken, setEmailTaken] = useState(false);
+
     const [errMsg, setErrMsg] = useState('');
     const [success, setSuccess] = useState(false);
 
@@ -39,6 +46,10 @@ const Register = () => {
         setUserNameTaken(false);
         setValidName(USER_REGEX.test(user));
     }, [user])
+
+    useEffect(() => {
+        setValidEmail(EMAIL_REGEX.test(email));
+    }, [email])
 
     useEffect(() => {
         setValidPwd(PWD_REGEX.test(pwd));
@@ -56,19 +67,18 @@ const Register = () => {
         // if button enabled with JS hack
         const v1 = USER_REGEX.test(user);
         const v2 = PWD_REGEX.test(pwd);
-        if (!v1 || !v2) {
+        const v3 = EMAIL_REGEX.test(email);
+        if (!v1 || !v2 || !v3) {
             setErrMsg("Invalid Entry");
             return;
         }
-        // if backend isn't set:
-        // setSuccess(true);
 
         try {
             console.log(`${baseUrl}/${REGISTER_URL}`);
-            console.log(JSON.stringify({ user, pwd }));
+            console.log(JSON.stringify({ user, pwd, email }));
             const response = await
                 axios.post(`${baseUrl}/${REGISTER_URL}`,
-                    JSON.stringify({ user, pwd }),
+                    JSON.stringify({ user, pwd, email }),
                     {
                         headers: { 'Content-Type': 'application/json' } //, withCredentials: true// issue with cors with that
                     }
@@ -80,6 +90,7 @@ const Register = () => {
                         //clear state and controlled inputs
                         //need value attrib on inputs for this
                         setUser('');
+                        setEmail('');
                         setPwd('');
                         setMatchPwd('');
                     })
@@ -89,6 +100,9 @@ const Register = () => {
                         setSuccess(false);
                         if (err.response.data.message === "User already exists") {
                             setUserNameTaken(true);
+                        }
+                        if (err.response.data.message === "Email already used"){
+                            setEmailTaken(true);
                         }
                     })
             console.log("response: ");
@@ -150,6 +164,32 @@ const Register = () => {
                             <p id="uiderror" className={user && userNameTaken ? "errorRegister" : "offscreen"}>
                                 <FontAwesomeIcon icon={faTriangleExclamation} /> User name already taken.
                             </p>
+
+                            <label htmlFor="email">
+                                Email:
+                                <FontAwesomeIcon icon={faCheck} className={validEmail ? "valid" : "hide"} />
+                                <FontAwesomeIcon icon={faTimes} className={validEmail || !email ? "hide" : "invalid"} />
+                            </label>
+                            <input
+                                type="text"
+                                id="email"
+                                onChange={(e) => setEmail(e.target.value)}
+                                value={email}
+                                autoComplete="off"
+                                required
+                                aria-invalid={validEmail ? "false" : "true"}
+                                aria-describedby="uidnote"
+                                onFocus={() => setEmailFocus(true)}
+                                onBlur={() => setEmailFocus(false)}
+                            />
+                            <p id="uidnote" className={emailFocus && email && !validEmail ? "instructions" : "offscreen"}>
+                                <FontAwesomeIcon icon={faInfoCircle} />
+                                Make sure you give a valid email.
+                            </p>
+                            <p id="uiderror" className={email && emailTaken ? "errorRegister" : "offscreen"}>
+                                <FontAwesomeIcon icon={faTriangleExclamation} /> Email already used.
+                            </p>
+
                             <label htmlFor="password">
                                 Password:
                                 <FontAwesomeIcon icon={faCheck} className={validPwd ? "valid" : "hide"} />

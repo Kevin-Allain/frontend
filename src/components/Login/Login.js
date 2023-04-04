@@ -3,8 +3,10 @@ import AuthContext from '../../context/AuthProvider';
 import PropTypes from 'prop-types'
 import axios from 'axios';
 // import './Login.css';
+// import axios from '../../api/axios'
 
 const baseUrl = "http://localhost:5000" // can be used for development
+// const baseUrl = axios.baseUrl;
 const REGISTER_URL = 'loginUser';
 
 
@@ -46,13 +48,13 @@ export default function Login({ setToken }) {
                         console.log(err);
                         setSuccess(false);
                     })
-            console.log("response: ");
-            console.log(response?.data); // undefined
-            console.log(response?.accessToken); // undefined
+            console.log("response?.data: ",response?.data); // undefined
+            console.log("response?.accessToken: ",response?.accessToken); // undefined
+            console.log("response?.data?.roles: ",response?.data?.roles); // undefined
             const accessToken = response?.data?.accessToken;
             const roles = response?.data?.roles;
             setAuth({ username, password, roles, accessToken });
-            console.log(JSON.stringify(response)) // undefined
+            console.log('response: ',JSON.stringify(response)) // undefined
         } catch (err) {
             console.log("err: ", err);
             // TODO code to show warning about username taken already
