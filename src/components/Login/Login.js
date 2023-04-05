@@ -24,12 +24,9 @@ export default function Login({ setToken }) {
         setErrMsg('');
     }, [username, password])
 
-
     const handleSubmit = async e => {
         e.preventDefault();
-        // console.log(`e.target[0]: ${e.target[0]}`); console.log(`e.target[0].value: ${e.target[0].value}`); console.log(`username: ${username}`); console.log(`password: ${password}`)
         try {
-            // console.log(`${baseUrl}/${REGISTER_URL}`); console.log(JSON.stringify({ username, password }));
             const response = await
                 axios.post(`${baseUrl}/${REGISTER_URL}`,
                     JSON.stringify({ username, password }),
@@ -42,19 +39,22 @@ export default function Login({ setToken }) {
                         setSuccess(true);
                         setUserName('');
                         setPassword('');
+                        const roles = [];
+                        const accessToken = d.data.accessToken;
+                        setAuth({ username, password, roles, accessToken });
+
+                        const token = localStorage.getItem('token');
+                        console.log(`token in then login handleSubmit: ${token}`)
+                        axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+                        
+
                     })
                     .catch(err => {
                         console.log(`catch err: ${err}`);
-                        console.log(err);
                         setSuccess(false);
                     })
-            console.log("response?.data: ",response?.data); // undefined
-            console.log("response?.accessToken: ",response?.accessToken); // undefined
-            console.log("response?.data?.roles: ",response?.data?.roles); // undefined
-            const accessToken = response?.data?.accessToken;
-            const roles = response?.data?.roles;
-            setAuth({ username, password, roles, accessToken });
-            console.log('response: ',JSON.stringify(response)) // undefined
+            // console.log("response?.data: ",response?.data); // undefined // const accessToken = response?.data?.accessToken; const roles = response?.data?.roles;
+
         } catch (err) {
             console.log("err: ", err);
             // TODO code to show warning about username taken already

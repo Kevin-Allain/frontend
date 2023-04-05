@@ -15,7 +15,7 @@ const getAllJazzDap = (setJazzDap) => {
 
 const addJazzDap = (text,setText, setJazzDap) => {
 
-    console.log(`addJazzDap: \n${baseUrl}/save`, {text})
+    console.log(`HandeAPI addJazzDap: \n${baseUrl}/save`, {text})
 
     axios
         .post(`${baseUrl}/save`, {text})
@@ -50,33 +50,22 @@ const deleteJazzDap = (jazzDapId, setJazzDap) => {
 }
 
 
-// ---- axios attempt. not working as we expected. First let's try without axios
-// ---- TODO change to axios approach
-// const loginUser = (setToken) => {
-//     axios
-//         .post(`${baseUrl}/loginUser`)
-//         .then( (data) => {
-//             console.log(`loginUser , data: ${data}`);
-//             setToken(data)
-//         })
-//         .catch(err => console.log(err))
-// }
-
-async function loginUser(credentials) {
-    console.log(`HandeAPI loginUSer, credentials: ${ JSON.stringify(credentials)}`);
-    return fetch( `${baseUrl}/loginUser` , {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(credentials)
-    })
-      .then(data => data.json())
-   }
+// ---- Not called here
+// async function loginUser(credentials) {
+//     console.log(`HandeAPI loginUSer, credentials: ${ JSON.stringify(credentials)}`);
+//     return fetch( `${baseUrl}/loginUser` , {
+//       method: 'POST',
+//       headers: {
+//         'Content-Type': 'application/json'
+//       },
+//       body: JSON.stringify(credentials)
+//     })
+//       .then(data => data.json())
+//    }
    
 
 
 
 
-
-export {getAllJazzDap, addJazzDap, updateJazzDap, deleteJazzDap, loginUser}
+export {getAllJazzDap, addJazzDap, updateJazzDap, deleteJazzDap }
+    // loginUser}
