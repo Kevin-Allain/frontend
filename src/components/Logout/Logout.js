@@ -80,7 +80,7 @@ export default function Logout() {
 
     return (
         <div className="logout-wrapper">
-            Hello { auth ? auth.username : ''}. <br/>
+            Hello { localStorage.username ? localStorage.username : ''}. <br/>
             <button onClick={handleSubmit} >
             Logout
             </button>

@@ -49,6 +49,7 @@ export default function Login({ setToken }) {
                         // setAuth({ username, password, roles, accessToken });
 
                         localStorage.setItem('token',accessToken);
+                        localStorage.setItem('username',username);
                         setAuth({ username, roles, accessToken });
 
                         console.log(`token in then login handleSubmit: ${accessToken}`)

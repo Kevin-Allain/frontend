@@ -13,12 +13,12 @@ const getAllJazzDap = (setJazzDap) => {
         .catch(err => console.log(err))
 }
 
-const addJazzDap = (text,setText, setJazzDap) => {
+const addJazzDap = (text,setText, setJazzDap, user=null) => {
 
     console.log(`HandeAPI addJazzDap: \n${baseUrl}/save`, {text})
 
     axios
-        .post(`${baseUrl}/save`, {text})
+        .post(`${baseUrl}/save`, {text,user})
         .then( (data) => {
             console.log(data);
             setText("");

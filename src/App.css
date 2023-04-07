@@ -219,3 +219,10 @@ button {
 .auth div {
   width: 50%
 }
+
+.logout-wrapper{
+flex-direction: column;
+color: ghostwhite;
+text-align: right;
+padding-right: 3%;
+}

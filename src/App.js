@@ -53,7 +53,6 @@ function App() {
             <div className={ ( auth!==null || localStorage.token ) ? "logout" : "offscreen" }>
               <Logout></Logout>
             </div>
-            <hr/>
 
             <Routes>
               <Route path="/dashboard" element={<Dashboard />} />
@@ -62,14 +61,16 @@ function App() {
           </BrowserRouter>
         </div>
 
-
+        <hr/>
         <div className="container">
           <div className="top">
+            
             <input type="text" placeholder="Add Jazzdap" name="AddJazzDap" id="AddJazzDap"
               value={text} onChange={(e) => setText(e.target.value)} />
+            
             <div className="add" onClick={isUpdating ?
               () => updateJazzDap(jazzDapId, text, setJazzDap, setText, setIsUpdating) :
-              () => addJazzDap(text, setText, setJazzDap)}>
+              () => addJazzDap(text, setText, setJazzDap, (localStorage.username)?localStorage.username:null )}>
               {isUpdating ? "Update" : "Add"}
             </div>
           </div>
