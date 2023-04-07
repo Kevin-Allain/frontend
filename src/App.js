@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import './App.css';
 import JazzDap from './components/JazzDap';
@@ -7,9 +7,10 @@ import Preferences from './components/Preferences/Preferences';
 import Login from './components/Login/Login';
 import { getAllJazzDap, addJazzDap, updateJazzDap, deleteJazzDap } from './utils/HandleApi';
 import logoJazzDap from './Logo1.jpg'
-import useToken from './components/App/useToken';
 import Register from './components/Register/Register';
 
+import AuthContext from './context/AuthProvider';
+import { UserContext } from './context/UserContext';
 
 function App() {
 
@@ -19,7 +20,8 @@ function App() {
   const [jazzDapId, setJazzDapId] = useState("");
 
 
-  // const [contextAuth, setContextAuth] = useState(false); // TODO change. Needs to be adapted per a reactContext
+  const { auth, setAuth } = useContext(AuthContext);
+
 
   useEffect(() => { getAllJazzDap(setJazzDap) }, [])
   const updateMode = (_id, text) => {
@@ -28,11 +30,6 @@ function App() {
     setJazzDapId(_id);
   }
 
-  const { token, setToken } = useToken();
-  var loginComponent = <></>
-  if (!token) { loginComponent = <Login setToken={setToken} /> }
-
-
   return (
     <div className="App">
       <div className="header">
@@ -40,42 +37,48 @@ function App() {
           <img src={logoJazzDap} className="imageHeader" alt='some value' name="Image1" align="bottom" width="192" height="107" border="0" />
         </span></p>
       </div>
-      {/* TODO chage to usage of react context (look at Login) */}
-      <div className={token ? "offscreen" : "auth"} >
-        <Register></Register>
-        <hr />
-        {loginComponent}
-      </div>
-      <hr />
-      <div className='wrapper'>
-        <BrowserRouter>
-          <Routes>
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/preferences" element={<Preferences />} />
-          </Routes>
-        </BrowserRouter>
-      </div>
+      <UserContext.Provider value="hello from context">
 
-      <div className="container">
-        <div className="top">
-          <input type="text" placeholder="Add Jazzdap" name="AddJazzDap" id="AddJazzDap"
-            value={text} onChange={(e) => setText(e.target.value)} />
-          <div className="add" onClick={isUpdating ?
-            () => updateJazzDap(jazzDapId, text, setJazzDap, setText, setIsUpdating) :
-            () => addJazzDap(text, setText, setJazzDap)}>
-            {isUpdating ? "Update" : "Add"}
+        <div className='wrapper'>
+          <BrowserRouter>
+
+            <div className={auth ? "offscreen" : "auth"} >
+              <Register></Register>
+              <hr />
+              <Login></Login>
+            </div>
+            <hr />
+
+            <Routes>
+              <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/preferences" element={<Preferences />} />
+            </Routes>
+          </BrowserRouter>
+        </div>
+
+
+        <div className="container">
+          <div className="top">
+            <input type="text" placeholder="Add Jazzdap" name="AddJazzDap" id="AddJazzDap"
+              value={text} onChange={(e) => setText(e.target.value)} />
+            <div className="add" onClick={isUpdating ?
+              () => updateJazzDap(jazzDapId, text, setJazzDap, setText, setIsUpdating) :
+              () => addJazzDap(text, setText, setJazzDap)}>
+              {isUpdating ? "Update" : "Add"}
+            </div>
           </div>
-        </div>
-        <div className="list">
-          {jazzDap.map((item) =>
-            <JazzDap key={item._id}
-              text={item.text}
-              updateMode={() => updateMode(item._id, item.text)}
-              deleteJazzDap={() => deleteJazzDap(item._id, setJazzDap)}
-            />)}
+          <div className="list">
+            {jazzDap.map((item) =>
+              <JazzDap key={item._id}
+                text={item.text}
+                updateMode={() => updateMode(item._id, item.text)}
+                deleteJazzDap={() => deleteJazzDap(item._id, setJazzDap)}
+              />)}
+          </div>
+
         </div>
 
-      </div>
+      </UserContext.Provider>
 
       <br />
       <hr />
@@ -141,8 +144,8 @@ function App() {
           <br />
           <p><span><font color="ghostwhite"><font size="3" ><strong>Partners</strong></font></font></span></p>
           <div className='textInfo'>
-          <p><span><font size="3" ><font color="#dce0cd"><a className='externalLink' href="http://scottishjazzarchive.org/">Scottish
-            Jazz Archive</a>, UK</font></font></span></p>
+            <p><span><font size="3" ><font color="#dce0cd"><a className='externalLink' href="http://scottishjazzarchive.org/">Scottish
+              Jazz Archive</a>, UK</font></font></span></p>
           </div>
           <br />
           <hr />
@@ -153,15 +156,15 @@ function App() {
             </font></font></span>
           </p>
           <div className='textInfo'>
-          <p><span><font size="3" ><font color="#dce0cd">The
-            project is an ongoing collaboration between six different
-            universities across four countries, which started in Feb 2021 and
-            is funded until July 2024 by the NEH/AHRC New Directions for
-            Digital Scholarship in Cultural Institutions Call (see announcement 
-             <a className='externalLink' href="https://webarchive.nationalarchives.gov.uk/ukgwa/20200619160542/https://ahrc.ukri.org/funding/apply-for-funding/current-opportunities/neh-ahrc-new-directions-for-digital-scholarship-in-cultural-institutions-call/">here</a>)
-            via the support of the Arts and Humanities Research Council (UK)
-            and the National Endowment for the Humanities (USA).</font></font></span></p>
-            </div>
+            <p><span><font size="3" ><font color="#dce0cd">The
+              project is an ongoing collaboration between six different
+              universities across four countries, which started in Feb 2021 and
+              is funded until July 2024 by the NEH/AHRC New Directions for
+              Digital Scholarship in Cultural Institutions Call (see announcement
+              <a className='externalLink' href="https://webarchive.nationalarchives.gov.uk/ukgwa/20200619160542/https://ahrc.ukri.org/funding/apply-for-funding/current-opportunities/neh-ahrc-new-directions-for-digital-scholarship-in-cultural-institutions-call/">here</a>)
+              via the support of the Arts and Humanities Research Council (UK)
+              and the National Endowment for the Humanities (USA).</font></font></span></p>
+          </div>
           <br />
           <div className='footer'>
             <p><span>

@@ -2,6 +2,7 @@ import { useRef, useState, useEffect, useContext } from 'react';
 import AuthContext from '../../context/AuthProvider';
 import PropTypes from 'prop-types'
 import axios from 'axios';
+import { UserContext } from '../../context/UserContext';
 // import './Login.css';
 // import axios from '../../api/axios'
 
@@ -11,7 +12,7 @@ const REGISTER_URL = 'loginUser';
 
 
 export default function Login({ setToken }) {
-	const { setAuth } = useContext(AuthContext);
+	const { auth, setAuth } = useContext(AuthContext);
 
     const [username, setUserName] = useState();
     const [password, setPassword] = useState();
@@ -19,6 +20,9 @@ export default function Login({ setToken }) {
 
     const [success, setSuccess] = useState(false);
     const [errMsg, setErrMsg] = useState('');
+
+
+    const msgContext = useContext(UserContext);
 
     useEffect(() => {
         setErrMsg('');
@@ -39,13 +43,16 @@ export default function Login({ setToken }) {
                         setSuccess(true);
                         setUserName('');
                         setPassword('');
-                        const roles = [];
-                        const accessToken = d.data.accessToken;
-                        setAuth({ username, password, roles, accessToken });
 
-                        const token = localStorage.getItem('token');
-                        console.log(`token in then login handleSubmit: ${token}`)
-                        axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+                        const accessToken = d.data.accessToken;
+                        const roles = d.data.roles;
+                        // setAuth({ username, password, roles, accessToken });
+
+                        localStorage.setItem('token',accessToken);
+                        setAuth({ username, roles, accessToken });
+
+                        console.log(`token in then login handleSubmit: ${accessToken}`)
+                        axios.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`;
                         
 
                     })
@@ -71,6 +78,8 @@ export default function Login({ setToken }) {
 
     return (
         <div className="login-wrapper">
+            {msgContext}<hr/>
+            {JSON.stringify(auth)}<hr/>
             {success ? (
                 <h1>You are logged in!</h1>
             ) : (
@@ -96,6 +105,6 @@ export default function Login({ setToken }) {
     )
 }
 
-Login.propTypes = {
-    setToken: PropTypes.func.isRequired
-}
+// Login.propTypes = {
+//     setToken: PropTypes.func.isRequired
+// }
