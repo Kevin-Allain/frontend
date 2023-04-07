@@ -5,6 +5,8 @@ import JazzDap from './components/JazzDap';
 import Dashboard from './components/Dashboard/Dashboard';
 import Preferences from './components/Preferences/Preferences';
 import Login from './components/Login/Login';
+import Logout from './components/Logout/Logout';
+
 import { getAllJazzDap, addJazzDap, updateJazzDap, deleteJazzDap } from './utils/HandleApi';
 import logoJazzDap from './Logo1.jpg'
 import Register from './components/Register/Register';
@@ -42,12 +44,16 @@ function App() {
         <div className='wrapper'>
           <BrowserRouter>
 
-            <div className={auth ? "offscreen" : "auth"} >
+            <div className={( auth!==null || localStorage.token ) ? "offscreen" : "auth"} >
               <Register></Register>
               <hr />
               <Login></Login>
             </div>
-            <hr />
+
+            <div className={ ( auth!==null || localStorage.token ) ? "logout" : "offscreen" }>
+              <Logout></Logout>
+            </div>
+            <hr/>
 
             <Routes>
               <Route path="/dashboard" element={<Dashboard />} />

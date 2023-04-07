@@ -78,14 +78,13 @@ export default function Login({ setToken }) {
 
     return (
         <div className="login-wrapper">
-            {msgContext}<hr/>
-            {JSON.stringify(auth)}<hr/>
-            {success ? (
+            {/* {msgContext}<hr/>
+            {JSON.stringify(auth)}<hr/> */}
+            {auth ? (
                 <h1>You are logged in!</h1>
             ) : (
                 <>
-                    <p ref={errRef} className={errMsg ? 'errmsg' : 'offscreen'} aria-live='assertive'> {errMsg} </p>
-                    <h1>Log In</h1>
+                    <p ref={errRef} className={errMsg ? 'errmsg' : 'offscreen'} aria-live='assertive'> {errMsg} </p>                    <h1>Log In</h1>
                     <form onSubmit={handleSubmit}>
                         <label>
                             <p>Username</p>
