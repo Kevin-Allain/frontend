@@ -69,7 +69,7 @@ function App() {
               value={text} onChange={(e) => setText(e.target.value)} />
             
             <div className="add" onClick={isUpdating ?
-              () => updateJazzDap(jazzDapId, text, setJazzDap, setText, setIsUpdating) :
+              () => updateJazzDap(jazzDapId, text, setJazzDap, setText, setIsUpdating, localStorage?.username) :
               () => addJazzDap(text, setText, setJazzDap, (localStorage.username)?localStorage.username:null )}>
               {isUpdating ? "Update" : "Add"}
             </div>
@@ -78,7 +78,7 @@ function App() {
             {jazzDap.map((item) =>
               <JazzDap key={item._id}
                 text={item.text}
-                updateMode={() => updateMode(item._id, item.text)}
+                updateMode={() => updateMode(item._id, item.text, localStorage?.username)}
                 deleteJazzDap={() => deleteJazzDap(item._id, setJazzDap)}
               />)}
           </div>

@@ -27,9 +27,9 @@ const addJazzDap = (text,setText, setJazzDap, user=null) => {
         .catch(err => console.log(err))
 }
 
-const updateJazzDap = (jazzDapId,text,setJazzDap, setText, setIsUpdating) => {
+const updateJazzDap = (jazzDapId,text,setJazzDap, setText, setIsUpdating, userId=null) => {
     axios
-        .post(`${baseUrl}/update`, {_id: jazzDapId, text})
+        .post(`${baseUrl}/update`, {_id: jazzDapId, text, userId})
         .then( (data) => {
             console.log(data);
             setText("");
