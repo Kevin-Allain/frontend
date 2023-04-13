@@ -79,8 +79,6 @@ export default function Login({ setToken }) {
 
     return (
         <div className="login-wrapper">
-            {/* {msgContext}<hr/>
-            {JSON.stringify(auth)}<hr/> */}
             {auth ? (
                 <h1>You are logged in!</h1>
             ) : (
@@ -104,7 +102,3 @@ export default function Login({ setToken }) {
         </div>
     )
 }
-
-// Login.propTypes = {
-//     setToken: PropTypes.func.isRequired
-// }

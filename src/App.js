@@ -18,6 +18,7 @@ import Register from "./components/Register/Register";
 
 import AuthContext from "./context/AuthProvider";
 import { UserContext } from "./context/UserContext";
+import MusicInterface from "./components/MusicInterface/MusicInterface";
 
 
 function App() {
@@ -84,6 +85,9 @@ function App() {
         </div>
 
         <hr />
+        <MusicInterface />
+        <hr />
+
         <div className="container">
           <div className="top">
             <input
@@ -94,7 +98,6 @@ function App() {
               value={text}
               onChange={(e) => setText(e.target.value)}
             />
-
             <div
               className="add"
               onClick={
