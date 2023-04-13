@@ -11,7 +11,7 @@ const [ contextMusic, setContextMusic ] = useState();
 const [ test, setTest ] = useState(0);
 const [oscillator, setOscilator] = useState();
 
-const synth = new Tone.MembraneSynth().toDestination();
+const synth2 = new Tone.MembraneSynth().toDestination();
 // create two monophonic synths
 const synthA = new Tone.FMSynth().toDestination();
 const synthB = new Tone.AMSynth().toDestination();
@@ -29,12 +29,13 @@ const sampler = new Tone.Sampler({
 }).toDestination();
 
 
-async function playSinth() {
+
+function playSinth() {
   const now = Tone.now();
-  synth.triggerAttackRelease("C4", "8n", now+0.25);
-  synth.triggerAttackRelease("E4", "8n", now + 0.5);
-  synth.triggerAttackRelease("G4", "8n", now + 1);
-  synth.triggerAttackRelease(440, "800n", now + 1.5);
+  synth2.triggerAttackRelease("C4", "8n", now+0.25);
+  synth2.triggerAttackRelease("E4", "8n", now + 0.5);
+  synth2.triggerAttackRelease("G4", "8n", now + 1);
+  synth2.triggerAttackRelease(440, "800n", now + 1.5);
 
   synthPoly.triggerAttack("D4", now);
   // synthPoly.triggerAttack("F4", now + 0.5);
@@ -80,9 +81,10 @@ function getOrCreateContext() {
 // 	await Tone.start()
 // 	console.log('audio is ready')
 // })
-document.querySelector('.playMusic')?.addEventListener('click', async () => {
+document.querySelector('.MusicInterface-wrapper')?.addEventListener('click', async () => {
   	await Tone.start()
   	console.log('audio is ready')
+    player.start(1);
   })
 
 
@@ -113,10 +115,41 @@ function playMusic(contextMusic,oscillator,music = tetris, lengthNote=2, eps=0.0
 // osc.connect(ac.destination);
 // const tetris = [ [76, 4], [71, 8], [72, 8], [74, 4], [72, 8], [71, 8], [69, 4], [69, 8], [72, 8], [76, 4], [74, 8], [72, 8], [71, 4], [71, 8], [72, 8], [74, 4], [76, 4], [72, 4], [69, 4], [69, 4], [0,  4], [74, 3], [77, 8],[81, 4], [79, 8], [77, 8], [76, 3], [72, 8], [76, 4], [74, 8], [72, 8], [71, 4], [71, 8], [72, 8], [74, 4], [76, 4], [72, 4], [69, 4], [69, 4], [0, 4],]
 
+const player = new Tone.Player({
+  url: "https://tonejs.github.io/audio/loop/FWDL.mp3",
+  loop: true,
+  loopStart: 0.5,
+  loopEnd: 0.7,
+}).toDestination();
+
+
+
+// ui({
+//   tone: player,
+//   parent: document.querySelector("#content")
+// });
+
+// bind the interface
+// document.querySelector("tone-play-toggle")?.addEventListener("start", () => player.start());
+// document.querySelector("tone-play-toggle")?.addEventListener("stop", () => player.stop());
+
+
+
 
   return (
     <div className="MusicInterface-wrapper">
       <h1>Music Interface</h1>
+
+      {/* <div id="content">
+	  		<tone-play-toggle>Van Halen</tone-play-toggle>
+  		</div> */}
+
+      <div className='stopMusic' 
+      onClick={ (c) => { player.stop(); } } >
+        Stop auto music
+      </div>
+
+
       <div
         className="playMusic"
         onClick={(c) => {
@@ -134,6 +167,35 @@ function playMusic(contextMusic,oscillator,music = tetris, lengthNote=2, eps=0.0
       >
         Play Test Music
       </div>
+      <br/>
+      <div
+        className="stopMusic"
+        onClick={(c) => {
+          console.log("trying to stop music")
+          console.log( Tone );
+          // console.log( synth );
+          // synthPoly.stop();
+          // sampler.stop();
+
+          // synth = synth || new Tone.Synth().toMaster();
+          // synth.triggerAttackRelease();
+          // synthPoly.triggerAttackRelease();
+          // sampler.triggerAttackRelease();
+
+
+
+          Tone.Transport.stop();
+          Tone.Transport.cancel();
+          // Tone.Transport.off();
+          Tone.Transport.dispose();
+
+          const osc = new Tone.Oscillator().toDestination();
+          osc.start().stop();
+
+        }}
+      >
+        Stop Music
+      </div>      
     </div>
   );
 }
