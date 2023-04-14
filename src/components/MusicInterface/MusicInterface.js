@@ -1,5 +1,9 @@
 import { useRef, useState, useEffect, useContext } from 'react';
 import * as Tone from "tone"
+import {
+  getMusicMIDI
+} from "../../utils/HandleApi";
+
 
 // Note: To shift by an octave you just have to add 12.
 // Apparenlty supposed to use that: Math.pow(2, (m-69)/12)*440, with m being the pitch
@@ -20,27 +24,7 @@ const sampler = new Tone.Sampler({
 	baseUrl: "https://tonejs.github.io/audio/salamander/",
 }).toDestination();
 
-// useEffect(() => {
-//   // getOrCreateContext()
-//   console.log("useEffect for contextMusic: ",contextMusic)
-//   // setContextMusic(new AudioContext());
-//   if (!contextMusic){setContextMusic(new AudioContext())}
-// });
-
-// function getOrCreateContext() {
-//   console.log("getOrCreateContext. test: ",test)
-//   if (!contextMusic) {
-//     console.log("!contextMusic")
-//     setContextMusic(new AudioContext());
-//     setTest(1);
-//     console.log("contextMusic: ", contextMusic,", test: ",test)
-//     setOscilator(contextMusic.createOscillator());
-//     oscillator.connect(contextMusic.destination);
-//   }
-//   return contextMusic;
-// }
-
-
+/* // Previously set Tone.start by a click
 document
   .querySelector(".musicInterface")
   ?.addEventListener("click", () => {
@@ -49,6 +33,7 @@ document
     //   console.log("audio is ready");
     // }
   });
+  */
 
 function playSinth() {
   const now = Tone.now();
@@ -57,7 +42,6 @@ function playSinth() {
   synthPoly.triggerAttack("D4", now + 3); synthPoly.triggerAttack("F4", now + 0.5 + 3); // synthPoly.triggerAttack("A4", now + 1); // synthPoly.triggerAttack("C5", now + 1.5); // synthPoly.triggerAttack("E5", now + 2); // synthPoly.triggerAttack("G6", now + 3); // synthPoly.triggerAttack("D3", now + 4); 
   synthPoly.triggerRelease(["D4", "F4", "A4", "C5", "E5"], now + 1 + 3);
   // Tone.loaded().then(() => { sampler.triggerAttackRelease(["Eb4", "G4", "Bb4"], "16n", now+5);  })
-
 }
 
 // This is a tetris theme transposed from https://musescore.com/user/16693/scores/38133
@@ -107,15 +91,12 @@ const kicks = [
   { time: '0:0' }, { time: '0:3:2' }, { time: '1:1' }, { time: '2:0' }, { time: '2:1:2' }, { time: '2:3:2' }, { time: '3:0:2' }, { time: '3:1:' }, { time: '4:0' }, { time: '4:3:2' }, { time: '5:1' }, { time: '6:0' }, { time: '6:1:2' }, { time: '6:3:2' }, { time: '7:0:2' }, { time: '7:1:' },
 ];
 
-
 // function playMusic(contextMusic,oscillator,music = tetris, lengthNote=2, eps=0.01) {
 //   // getOrCreateContext();
-//   console.log("playMusic. contextMusic:",contextMusic," ,oscillator: ",oscillator)
 //   if (oscillator.context.state!=="running") {oscillator.start(0);}
 //   var time = contextMusic.currentTime + eps;
 //   music.forEach((note) => {
 //     const freq = Math.pow(2, (note[0] - 69) / 12) * 440;
-//     console.log(time);
 //     oscillator.frequency.setTargetAtTime(0, time - eps, 0.001);
 //     oscillator.frequency.setTargetAtTime(freq, time, 0.001);
 //     time += lengthNote / note[1];
@@ -127,7 +108,6 @@ const kicks = [
 
 function playTestMidi(){
     Tone.Transport.stop();
-
     if (Tone.context.state !== "running") {
       Tone.start();
       console.log("audio is ready");
@@ -155,8 +135,10 @@ function playTestMidi(){
 
 }
 
-function playMidi(){
+function playMidiDatabase(){
   // TODO
+  getMusicMIDI( "BGR0082-T1");
+
 }
 
 
@@ -165,6 +147,17 @@ function playMidi(){
       <h1>Music Interface</h1>
       <br />
       <div className="buttonsMusicInterface">
+      <div
+          className="playMusic"
+          onClick={(c) => {
+            console.log("about to play music from database");
+            playMidiDatabase();
+            console.log("done with music from database");
+          }}
+        >
+          Play Test Database Music
+        </div>
+
         <div
           className="playMusic"
           onClick={(c) => {

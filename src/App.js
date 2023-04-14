@@ -41,20 +41,7 @@ function App() {
   return (
     <div className="App">
       <div className="header">
-        <p>
-          <span>
-            <img
-              src={logoJazzDap}
-              className="imageHeader"
-              alt="some value"
-              name="Image1"
-              align="bottom"
-              width="192"
-              height="107"
-              border="0"
-            />
-          </span>
-        </p>
+        <p> <span> <img src={logoJazzDap} className="imageHeader" alt="some value" name="Image1" align="bottom" width="192" height="107" border="0" /> </span> </p>
       </div>
       <UserContext.Provider value="hello from context">
         <div className="wrapper">
@@ -98,26 +85,12 @@ function App() {
               value={text}
               onChange={(e) => setText(e.target.value)}
             />
-            <div
-              className="add"
-              onClick={
+            <div className="add" onClick={
                 isUpdating
                   ? () =>
-                      updateJazzDap(
-                        jazzDapId,
-                        text,
-                        setJazzDap,
-                        setText,
-                        setIsUpdating,
-                        localStorage?.username
-                      )
+                      updateJazzDap( jazzDapId, text, setJazzDap, setText, setIsUpdating, localStorage?.username )
                   : () =>
-                      addJazzDap(
-                        text,
-                        setText,
-                        setJazzDap,
-                        localStorage.username ? localStorage.username : null
-                      )
+                      addJazzDap( text, setText, setJazzDap, localStorage.username ? localStorage.username : null )
               }
             >
               {isUpdating ? "Update" : "Add"}
@@ -125,12 +98,7 @@ function App() {
           </div>
           <div className="list">
             {jazzDap.map((item) => (
-              <JazzDap
-                key={item._id}
-                text={item.text}
-                updateMode={() =>
-                  updateMode(item._id, item.text, localStorage?.username)
-                }
+              <JazzDap key={item._id} text={item.text} updateMode={() => updateMode(item._id, item.text, localStorage?.username) }
                 deleteJazzDap={() => deleteJazzDap(item._id, setJazzDap)}
               />
             ))}

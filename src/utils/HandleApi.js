@@ -50,22 +50,26 @@ const deleteJazzDap = (jazzDapId, setJazzDap) => {
 }
 
 
-// ---- Not called here
-// async function loginUser(credentials) {
-//     console.log(`HandeAPI loginUSer, credentials: ${ JSON.stringify(credentials)}`);
-//     return fetch( `${baseUrl}/loginUser` , {
-//       method: 'POST',
-//       headers: {
-//         'Content-Type': 'application/json'
-//       },
-//       body: JSON.stringify(credentials)
-//     })
-//       .then(data => data.json())
-//    }
-   
+const getMusicMIDI = ( recording="BGR0082-T1", user=null) => {
+    console.log("-- handleAPI. getMusicMIDI. recording: ",recording,", user: ",user);
+    
+    axios
+        .get(`${baseUrl}/getMusicMIDI`, {
+            params: {
+              recording: "BGR0082-T1"
+            }
+        })
+        .then( (d) => {
+            console.log("#### Then of getMusicMIDI ####");
+            console.log(d);
+            console.log(d.data)
+        })
+        .catch(err => console.log(err))
+
+}
 
 
-
-
-export {getAllJazzDap, addJazzDap, updateJazzDap, deleteJazzDap }
-    // loginUser}
+export {
+    getAllJazzDap, addJazzDap, updateJazzDap, deleteJazzDap, 
+    getMusicMIDI 
+}
