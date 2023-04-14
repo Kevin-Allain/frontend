@@ -40,6 +40,8 @@ export default function Logout() {
             setAuth(null);
             axios.defaults.headers.common['Authorization'] = null;                        
 
+            window.location.reload();
+
             // TODO consider if we want to keep track, on the database, of numbers of active users, and who they are (in which case, we need to modify code for login as well, and set a table for active users)
             /*
             const response = await

@@ -15,7 +15,7 @@ const synth2 = new Tone.MembraneSynth().toDestination();
 // create two monophonic synths
 const synthA = new Tone.FMSynth().toDestination();
 const synthB = new Tone.AMSynth().toDestination();
-const synthPoly = new Tone.PolySynth(Tone.Synth).toDestination();
+let synthPoly = new Tone.PolySynth(Tone.Synth).toDestination();
 
 const sampler = new Tone.Sampler({
 	urls: {
@@ -32,21 +32,24 @@ const sampler = new Tone.Sampler({
 
 function playSinth() {
   const now = Tone.now();
-  synth2.triggerAttackRelease("C4", "8n", now+0.25);
-  synth2.triggerAttackRelease("E4", "8n", now + 0.5);
-  synth2.triggerAttackRelease("G4", "8n", now + 1);
-  synth2.triggerAttackRelease(440, "800n", now + 1.5);
+  // synth2.triggerAttackRelease("C4", "8n", now+0.25);
+  // synth2.triggerAttackRelease("E4", "8n", now + 0.5);
+  // synth2.triggerAttackRelease("G4", "8n", now + 1);
+  // synth2.triggerAttackRelease(440, "800n", now + 1.5);
 
   synthPoly.triggerAttack("D4", now);
   // synthPoly.triggerAttack("F4", now + 0.5);
   // synthPoly.triggerAttack("A4", now + 1);
   // synthPoly.triggerAttack("C5", now + 1.5);
   synthPoly.triggerAttack("E5", now + 2);
+  synthPoly.triggerAttack("G6", now + 3);
+  synthPoly.triggerAttack("D3", now + 4);
+
   synthPoly.triggerRelease(["D4", "F4", "A4", "C5", "E5"], now + 4);
 
-  Tone.loaded().then(() => {
-    sampler.triggerAttackRelease(["Eb4", "G4", "Bb4"], "16n", now+5);
-  })
+  // Tone.loaded().then(() => {
+  //   sampler.triggerAttackRelease(["Eb4", "G4", "Bb4"], "16n", now+5);
+  // })
 
 }
 
@@ -81,11 +84,15 @@ function getOrCreateContext() {
 // 	await Tone.start()
 // 	console.log('audio is ready')
 // })
-document.querySelector('.MusicInterface-wrapper')?.addEventListener('click', async () => {
-  	await Tone.start()
-  	console.log('audio is ready')
-    player.start(1);
-  })
+document
+  .querySelector(".MusicInterface-wrapper")
+  ?.addEventListener("click", async () => {
+    if (Tone.context.state !== "running") {
+      await Tone.start();
+      console.log("audio is ready");
+    }
+    // player.start(1);
+  });
 
 
 
@@ -115,12 +122,12 @@ function playMusic(contextMusic,oscillator,music = tetris, lengthNote=2, eps=0.0
 // osc.connect(ac.destination);
 // const tetris = [ [76, 4], [71, 8], [72, 8], [74, 4], [72, 8], [71, 8], [69, 4], [69, 8], [72, 8], [76, 4], [74, 8], [72, 8], [71, 4], [71, 8], [72, 8], [74, 4], [76, 4], [72, 4], [69, 4], [69, 4], [0,  4], [74, 3], [77, 8],[81, 4], [79, 8], [77, 8], [76, 3], [72, 8], [76, 4], [74, 8], [72, 8], [71, 4], [71, 8], [72, 8], [74, 4], [76, 4], [72, 4], [69, 4], [69, 4], [0, 4],]
 
-const player = new Tone.Player({
-  url: "https://tonejs.github.io/audio/loop/FWDL.mp3",
-  loop: true,
-  loopStart: 0.5,
-  loopEnd: 0.7,
-}).toDestination();
+// const player = new Tone.Player({
+//   url: "https://tonejs.github.io/audio/loop/FWDL.mp3",
+//   loop: true,
+//   loopStart: 0.5,
+//   loopEnd: 0.7,
+// }).toDestination();
 
 
 
@@ -137,18 +144,18 @@ const player = new Tone.Player({
 
 
   return (
-    <div className="MusicInterface-wrapper">
+    <div className="musicInterface">
       <h1>Music Interface</h1>
-
       {/* <div id="content">
 	  		<tone-play-toggle>Van Halen</tone-play-toggle>
   		</div> */}
-
-      <div className='stopMusic' 
+      {/* <div className='stopMusic' 
       onClick={ (c) => { player.stop(); } } >
         Stop auto music
-      </div>
+      </div> */}
+      <br/>
 
+      <div className='buttonsMusicInterface'>
 
       <div
         className="playMusic"
@@ -165,9 +172,9 @@ const player = new Tone.Player({
           console.log("done with music")
         }}
       >
-        Play Test Music
+        Play Test MIDI Music
       </div>
-      <br/>
+
       <div
         className="stopMusic"
         onClick={(c) => {
@@ -182,8 +189,13 @@ const player = new Tone.Player({
           // synthPoly.triggerAttackRelease();
           // sampler.triggerAttackRelease();
 
-
-
+          const now = Tone.now();
+          // synthPoly.triggerRelease(["D4", "F4", "A4", "C5", "E5"], now); // This will only release triggers, not really stop sound...
+          // synthPoly = new Tone.PolySynth(Tone.Synth).toDestination();
+          // synthPoly.triggerAttackRelease();
+          synthPoly.triggerRelease(["D4", "F4", "A4", "C5", "E5", "G6", "D3"], now); // This will only release triggers, not really stop sound...
+          console.log("synthPoly: ",synthPoly)
+          
           Tone.Transport.stop();
           Tone.Transport.cancel();
           // Tone.Transport.off();
@@ -196,6 +208,19 @@ const player = new Tone.Player({
       >
         Stop Music
       </div>      
+
+      <div
+        className="reloadPage"
+        onClick={(c) => {
+          console.log("reload the page")
+          window.location.reload();
+        }}
+      >
+        Reload Page
+      </div>      
+
+    </div>
+        <br/>
     </div>
   );
 }
