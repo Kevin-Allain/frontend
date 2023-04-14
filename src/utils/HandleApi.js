@@ -50,23 +50,44 @@ const deleteJazzDap = (jazzDapId, setJazzDap) => {
 }
 
 
-const getMusicMIDI = ( recording="BGR0082-T1", user=null) => {
-    console.log("-- handleAPI. getMusicMIDI. recording: ",recording,", user: ",user);
-    
-    axios
-        .get(`${baseUrl}/getMusicMIDI`, {
-            params: {
-              recording: "BGR0082-T1"
-            }
-        })
-        .then( (d) => {
-            console.log("#### Then of getMusicMIDI ####");
-            console.log(d);
-            console.log(d.data)
-        })
-        .catch(err => console.log(err))
+const getMusicMIDI = ( recording = "BGR0082-T1", user = null, transformFunc = null, playMusicFunc = null ) => {
+  console.log( "-- handleAPI. getMusicMIDI. recording: ", recording, ", user: ", user, ", transformFunc: ",transformFunc,", playMusicFunc: ",playMusicFunc );
 
-}
+  axios
+    .get(`${baseUrl}/getMusicMIDI`, {
+      params: {
+        recording: recording,
+        user: user,
+      },
+    })
+    .then((d) => {
+      console.log("#### Then of getMusicMIDI ####");
+      console.log(d);
+      console.log(d.data);
+
+      if (transformFunc !== null) {
+        const dTransformed = transformFunc(d.data);
+        console.log("dTransformed: ", dTransformed);
+        // play transformed song
+        if (playMusicFunc === null) {
+          console.log("problem, playMusicFunc is null");
+        } else {
+          playMusicFunc(dTransformed);
+        }
+      } else {
+        // play song without transformation
+        console.log("missing transformation function");
+        if (playMusicFunc === null) {
+          console.log("also, playMusicFunc is null");
+        } else {
+          playMusicFunc(d.data); // MIGHT BE BUGGY
+        }
+      }
+
+      return d;
+    })
+    .catch((err) => console.log(err));
+};
 
 
 export {

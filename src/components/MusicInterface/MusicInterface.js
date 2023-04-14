@@ -84,12 +84,16 @@ const mainMelody = [
   {'time': '6:3:2', 'note': 'A4', 'duration': 2},
 ];
 
+
+const beginningRecord =  [
+  {"time":4.017052154,"note":69,"duration":4.82975056},{"time":7.140136054,"note":77,"duration":1.114557824},{"time":8.997732426,"note":85,"duration":0.185759632},{"time":9.102222222,"note":80,"duration":0.37151928},{"time":10.73922902,"note":72,"duration":5.20126984},{"time":10.73922902,"note":72,"duration":5.20126984},{"time":15.29034014,"note":69,"duration":4.272471648},{"time":16.8460771,"note":67,"duration":13.374693872},{"time":17.8677551,"note":67,"duration":0.185759632},{"time":19.73696145,"note":67,"duration":13.746213152}
+]
+
+
 const kickDrum = new Tone.MembraneSynth({
   volume: 6
 }).toDestination();
-const kicks = [
-  { time: '0:0' }, { time: '0:3:2' }, { time: '1:1' }, { time: '2:0' }, { time: '2:1:2' }, { time: '2:3:2' }, { time: '3:0:2' }, { time: '3:1:' }, { time: '4:0' }, { time: '4:3:2' }, { time: '5:1' }, { time: '6:0' }, { time: '6:1:2' }, { time: '6:3:2' }, { time: '7:0:2' }, { time: '7:1:' },
-];
+const kicks = [ { time: '0:0' }, { time: '0:3:2' }, { time: '1:1' }, { time: '2:0' }, { time: '2:1:2' }, { time: '2:3:2' }, { time: '3:0:2' }, { time: '3:1:' }, { time: '4:0' }, { time: '4:3:2' }, { time: '5:1' }, { time: '6:0' }, { time: '6:1:2' }, { time: '6:3:2' }, { time: '7:0:2' }, { time: '7:1:' }, ];
 
 // function playMusic(contextMusic,oscillator,music = tetris, lengthNote=2, eps=0.01) {
 //   // getOrCreateContext();
@@ -104,6 +108,45 @@ const kicks = [
 //   // line added ourselves, unsure if it makes perfect sense
 //   oscillator.stop(tetris.length / lengthNote);
 // }
+
+
+// We keep the consideration that it makes sense to do: Math.pow(2, (76 - 69) / 12) * 440
+// We set time to the value of the onset property of the input item, note to the value of the pitch property, and duration to the value of the duration property multiplied by 16 to convert from seconds to sixteenth notes (you can adjust this factor as needed depending on your use case).
+// TODO Considering the music doesn't start at time 0, it might make sense to later do some modifications where everything is offset
+function transformToPlayfulFormat(d){
+  const outputArray = d.map(item => ({
+    time: item.onset,
+    note: Math.pow(2, (item.pitch - 69) / 12) * 440 ,
+    duration: item.duration * 16 // Assuming duration is in seconds and you want it in sixteenth notes
+  }));
+  return outputArray;    
+}
+
+
+function playFormattedMusic(music){
+  const synth3 = new Tone.MembraneSynth().toDestination();
+  Tone.Transport.stop();
+  if (Tone.context.state !== "running") {
+    Tone.start();
+    console.log("audio is ready");
+  }
+
+  if (Tone.Transport.state !== "started") {
+    Tone.Transport.start();
+    console.log("Tone.Transport.start");
+  } else {
+    Tone.Transport.stop();
+    console.log("Tone.Transport.stop");
+  }
+
+  const now = Tone.now();
+  Tone.Transport.bpm.value = 180; // Not necessary, but good to have... // normal bpm is slower
+
+  const musicPart = new Tone.Part(function (time, note) {
+    synth3.triggerAttackRelease(note.note, note.duration, time);
+  }, music).start(now); // used to start at 0 but would bug
+
+}
 
 
 function playTestMidi(){
@@ -128,6 +171,10 @@ function playTestMidi(){
       synth2.triggerAttackRelease(note.note, note.duration, time);
     }, mainMelody).start(now); // used to start at 0 but would bug
 
+    // const testRecDB = new Tone.Part(function (time,note){
+    //   synth2.triggerAttackRelease(note.note,note.duration,time);
+    // },beginningRecord).start(now);
+
     const kickPart = new Tone.Part(function (time) {
       kickDrum.triggerAttackRelease("C1", "8n", time);
     }, kicks).start(now);
@@ -136,9 +183,8 @@ function playTestMidi(){
 }
 
 function playMidiDatabase(){
-  // TODO
-  getMusicMIDI( "BGR0082-T1");
-
+  var d = getMusicMIDI("BGR0082-T1", localStorage?.username,transformToPlayfulFormat,playFormattedMusic);
+  console.log("---- playMidiDatabase. d: ",d);
 }
 
 
@@ -178,27 +224,6 @@ function playMidiDatabase(){
         >
           Play Test Synthetizers
         </div>
-        {/* <div
-          className="stopMusic"
-          onClick={(c) => {
-            console.log("trying to stop music");
-            console.log(Tone);
-            // synthPoly.stop(); // sampler.stop(); // synth = synth || new Tone.Synth().toMaster();
-            // synth.triggerAttackRelease(); // synthPoly.triggerAttackRelease(); // sampler.triggerAttackRelease();
-            const now = Tone.now();
-            // synthPoly.triggerRelease(["D4", "F4", "A4", "C5", "E5"], now); // This will only release triggers, not really stop sound...
-            // synthPoly = new Tone.PolySynth(Tone.Synth).toDestination();
-            // synthPoly.triggerAttackRelease();
-            synthPoly.triggerRelease(
-              ["D4", "F4", "A4", "C5", "E5", "G6", "D3"],
-              now
-            ); // This will only release triggers, not really stop sound...
-            // Tone.Transport.stop(); // Tone.Transport.cancel(); // Tone.Transport.off(); // Tone.Transport.dispose();
-            // const osc = new Tone.Oscillator().toDestination(); // osc.start().stop();
-          }}
-        >
-          Stop Music
-        </div> */}
         <div
           className="reloadPage"
           onClick={(c) => {
