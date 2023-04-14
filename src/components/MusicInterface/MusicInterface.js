@@ -44,10 +44,10 @@ const sampler = new Tone.Sampler({
 document
   .querySelector(".musicInterface")
   ?.addEventListener("click", () => {
-    if (Tone.context.state !== "running") {
-      Tone.start();
-      console.log("audio is ready");
-    }
+    // if (Tone.context.state !== "running") {
+    //   Tone.start();
+    //   console.log("audio is ready");
+    // }
   });
 
 function playSinth() {
@@ -55,7 +55,7 @@ function playSinth() {
   synth2.triggerAttackRelease("C4", "8n", now+0.25); // synth2.triggerAttackRelease("E4", "8n", now + 0.5); // synth2.triggerAttackRelease("G4", "8n", now + 1); // synth2.triggerAttackRelease(440, "800n", now + 1.5);
   synth2.triggerAttackRelease(360, 1, now + 1); synth2.triggerAttackRelease(360, 1, now + 2); synth2.triggerAttackRelease(360, 5, now + 3);
   synthPoly.triggerAttack("D4", now + 3); synthPoly.triggerAttack("F4", now + 0.5 + 3); // synthPoly.triggerAttack("A4", now + 1); // synthPoly.triggerAttack("C5", now + 1.5); // synthPoly.triggerAttack("E5", now + 2); // synthPoly.triggerAttack("G6", now + 3); // synthPoly.triggerAttack("D3", now + 4); 
-  synthPoly.triggerRelease(["D4", "F4", "A4", "C5", "E5"], now + 4 + 3);
+  synthPoly.triggerRelease(["D4", "F4", "A4", "C5", "E5"], now + 1 + 3);
   // Tone.loaded().then(() => { sampler.triggerAttackRelease(["Eb4", "G4", "Bb4"], "16n", now+5);  })
 
 }
@@ -67,7 +67,7 @@ const tetris = [
 
 const mainMelody = [
   {'time': 0, 'note': Math.pow(2, (76 - 69) / 12) * 440, 'duration': 5},
-  {'time': '0:0:2', 'note': Math.pow(2, (71 - 69) / 12) * 440, 'duration': '8n'},
+  // {'time': 6, 'note': Math.pow(2, (100 - 69) / 12) * 440, 'duration': 10},
   {'time': '0:1', 'note': Math.pow(2, (72 - 69) / 12) * 440, 'duration': '8n.'},
   {'time': '0:2', 'note': Math.pow(2, (74 - 69) / 12) * 440, 'duration': '8n'},
   {'time': '0:2:2', 'note': Math.pow(2, (72 - 69) / 12) * 440, 'duration': '8n.'},
@@ -97,7 +97,7 @@ const mainMelody = [
   {'time': '6:2', 'note': 'B4', 'duration': '8n'},
   {'time': '6:2:2', 'note': 'A4', 'duration': '8n'},
   {'time': '6:3', 'note': 'G4', 'duration': '8n'},
-  {'time': '6:3:2', 'note': 'A4', 'duration': 5},
+  {'time': '6:3:2', 'note': 'A4', 'duration': 2},
 ];
 
 const kickDrum = new Tone.MembraneSynth({
@@ -126,22 +126,31 @@ const kicks = [
 
 
 function playTestMidi(){
-  if (Tone.Transport.state !== 'started') {
-    Tone.Transport.start();
-  } else {
     Tone.Transport.stop();
-  }
 
-  const now = Tone.now();
-  Tone.Transport.bpm.value = 150 // Not necessary, but good to have... // normal bpm is slower
+    if (Tone.context.state !== "running") {
+      Tone.start();
+      console.log("audio is ready");
+    }
 
-  const musicPart = new Tone.Part(function(time, note){
-    synth2.triggerAttackRelease(note.note, note.duration, time);
-  }, mainMelody).start(0);
-  
-  const kickPart = new Tone.Part(function(time) {
-    kickDrum.triggerAttackRelease('C1', '8n', time)
-  }, kicks).start(0);
+    if (Tone.Transport.state !== "started") {
+      Tone.Transport.start();
+      console.log("Tone.Transport.start");
+    } else {
+      Tone.Transport.stop();
+      console.log("Tone.Transport.stop");
+    }
+
+    const now = Tone.now();
+    Tone.Transport.bpm.value = 180; // Not necessary, but good to have... // normal bpm is slower
+
+    const musicPart = new Tone.Part(function (time, note) {
+      synth2.triggerAttackRelease(note.note, note.duration, time);
+    }, mainMelody).start(now); // used to start at 0 but would bug
+
+    const kickPart = new Tone.Part(function (time) {
+      kickDrum.triggerAttackRelease("C1", "8n", time);
+    }, kicks).start(now);
   
 
 }
@@ -176,7 +185,7 @@ function playMidi(){
         >
           Play Test Synthetizers
         </div>
-        <div
+        {/* <div
           className="stopMusic"
           onClick={(c) => {
             console.log("trying to stop music");
@@ -196,7 +205,7 @@ function playMidi(){
           }}
         >
           Stop Music
-        </div>
+        </div> */}
         <div
           className="reloadPage"
           onClick={(c) => {
