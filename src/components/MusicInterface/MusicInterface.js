@@ -3,6 +3,8 @@ import * as Tone from "tone"
 import {
   getMusicMIDI
 } from "../../utils/HandleApi";
+import {AiFillPlayCircle, AiFillPauseCircle} from 'react-icons/ai'
+import {ImLoop2} from 'react-icons/im'
 
 
 // Note: To shift by an octave you just have to add 12.
@@ -17,6 +19,11 @@ const synth2 = new Tone.MembraneSynth().toDestination();
 const synthA = new Tone.FMSynth().toDestination();
 const synthB = new Tone.AMSynth().toDestination();
 let synthPoly = new Tone.PolySynth(Tone.Synth).toDestination();
+
+const [playingMp3, setPlayingMp3] = useState(false);
+const [iconPlayMp3, setIconPlayMp3] = useState(<AiFillPlayCircle className='icon'></AiFillPlayCircle>)
+const [audioMp3,setAudioMp3] = useState( new Audio("https://www.learningcontainer.com/wp-content/uploads/2020/02/Kalimba.mp3") )
+
 
 const sampler = new Tone.Sampler({
 	urls: { "C4": "C4.mp3", "D#4": "Ds4.mp3", "F#4": "Fs4.mp3", "A4": "A4.mp3", },
@@ -45,9 +52,7 @@ function playSinth() {
 }
 
 // This is a tetris theme transposed from https://musescore.com/user/16693/scores/38133
-const tetris = [
-  [76, 4], [71, 8], [72, 8], [74, 4], [72, 8], [71, 8], [69, 4], [69, 8], [72, 8], [76, 4], [74, 8], [72, 8], [71, 4], [71, 8], [72, 8], [74, 4], [76, 4], [72, 4], [69, 4], [69, 4], [0,  4], [74, 3], [77, 8],[81, 4], [79, 8], [77, 8], [76, 3], [72, 8], [76, 4], [74, 8], [72, 8], [71, 4], [71, 8], [72, 8], [74, 4], [76, 4], [72, 4], [69, 4], [69, 4], [0, 4],
-]
+const tetris = [ [76, 4], [71, 8], [72, 8], [74, 4], [72, 8], [71, 8], [69, 4], [69, 8], [72, 8], [76, 4], [74, 8], [72, 8], [71, 4], [71, 8], [72, 8], [74, 4], [76, 4], [72, 4], [69, 4], [69, 4], [0,  4], [74, 3], [77, 8],[81, 4], [79, 8], [77, 8], [76, 3], [72, 8], [76, 4], [74, 8], [72, 8], [71, 4], [71, 8], [72, 8], [74, 4], [76, 4], [72, 4], [69, 4], [69, 4], [0, 4], ]
 
 const mainMelody = [
   {'time': 0, 'note': Math.pow(2, (76 - 69) / 12) * 440, 'duration': 5},
@@ -187,13 +192,56 @@ function playMidiDatabase(){
   console.log("---- playMidiDatabase. d: ",d);
 }
 
+function playMp3(){
+  console.log("---- playMp3. playing: ",playingMp3)
+  if (playingMp3){
+    audioMp3.pause();
+    setIconPlayMp3(<AiFillPlayCircle></AiFillPlayCircle>)
+  } else {
+    audioMp3.play();
+    setIconPlayMp3(<AiFillPauseCircle></AiFillPauseCircle>)
+  }
+  setPlayingMp3(!playingMp3);
+}
+
+function resetMp3(){
+  if (playingMp3){
+    audioMp3.pause();
+    setIconPlayMp3(<AiFillPlayCircle></AiFillPlayCircle>)
+    setPlayingMp3(!playingMp3);
+  }
+  setAudioMp3(new Audio("https://www.learningcontainer.com/wp-content/uploads/2020/02/Kalimba.mp3"));
+}
 
   return (
     <div className="musicInterface">
       <h1>Music Interface</h1>
       <br />
       <div className="buttonsMusicInterface">
-      <div
+        <div className='playMusic'
+        >
+          Play Test Link Mp3
+          <div className='iconPlayPause'
+            onClick={(c) => {
+              console.log("about to play mp3");
+              playMp3();
+              console.log("done with mp3");
+            }}
+          >
+            {iconPlayMp3}
+          </div>
+          <div className='iconResetSong'
+            onClick={(c) => {
+              console.log("resetMp3");
+              resetMp3();
+              console.log("done with resetMp3");
+            }}
+            >
+              <ImLoop2></ImLoop2>
+          </div>
+        </div>
+
+        <div
           className="playMusic"
           onClick={(c) => {
             console.log("about to play music from database");
