@@ -90,7 +90,49 @@ const getMusicMIDI = ( recording = "BGR0082-T1", user = null, transformFunc = nu
 };
 
 
+const getSampleMIDI = ( recording = "BGR0082-T1", firstNoteIndex=0, lastNodeIndex= null, user = null, transformFunc = null, playMusicFunc = null ) => {
+  console.log( "-- handleAPI. getMusicMIDI. recording: ", recording, ", user: ", user, ", transformFunc: ",transformFunc,", playMusicFunc: ",playMusicFunc );
+
+  axios
+    .get(`${baseUrl}/getSampleMIDI`, {
+      params: {
+        recording: recording,
+        firstNoteIndex:firstNoteIndex,
+        lastNodeIndex: lastNodeIndex,
+        user: user,
+      },
+    })
+    .then((d) => {
+      console.log("#### Then of getSampleMIDI ####");
+      console.log(d);
+      console.log(d.data);
+
+      if (transformFunc !== null) {
+        const dTransformed = transformFunc(d.data);
+        console.log("dTransformed: ", dTransformed);
+        // play transformed song
+        if (playMusicFunc === null) {
+          console.log("problem, playMusicFunc is null");
+        } else {
+          playMusicFunc(dTransformed);
+        }
+      } else {
+        // play song without transformation
+        console.log("missing transformation function");
+        if (playMusicFunc === null) {
+          console.log("also, playMusicFunc is null");
+        } else {
+          playMusicFunc(d.data); // MIGHT BE BUGGY
+        }
+      }
+
+      return d;
+    })
+    .catch((err) => console.log(err));
+};
+
+
 export {
     getAllJazzDap, addJazzDap, updateJazzDap, deleteJazzDap, 
-    getMusicMIDI 
+    getMusicMIDI, getSampleMIDI 
 }

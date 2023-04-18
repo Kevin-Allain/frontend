@@ -1,7 +1,8 @@
 import { useRef, useState, useEffect, useContext } from 'react';
 import * as Tone from "tone"
 import {
-  getMusicMIDI
+  getMusicMIDI,
+  getSampleMIDI
 } from "../../utils/HandleApi";
 import {AiFillPlayCircle, AiFillPauseCircle} from 'react-icons/ai'
 import {ImLoop2} from 'react-icons/im'
@@ -192,6 +193,12 @@ function playMidiDatabase(){
   console.log("---- playMidiDatabase. d: ",d);
 }
 
+function playSampleMidiDatabase(){
+  var d = getSampleMIDI("BGR0082-T1", 0, 10,localStorage?.username, transformToPlayfulFormat,playFormattedMusic);
+  console.log("---- playSampleMidiDatabase. d: ",d);
+}
+
+
 function playMp3(){
   console.log("---- playMp3. playing: ",playingMp3)
   if (playingMp3){
@@ -221,6 +228,7 @@ function resetMp3(){
         <div className='playMusic'
         >
           Play Test Link Mp3
+          <hr/>
           <div className='iconPlayPause'
             onClick={(c) => {
               console.log("about to play mp3");
@@ -231,14 +239,20 @@ function resetMp3(){
             {iconPlayMp3}
           </div>
           <div className='iconResetSong'
-            onClick={(c) => {
-              console.log("resetMp3");
-              resetMp3();
-              console.log("done with resetMp3");
-            }}
-            >
-              <ImLoop2></ImLoop2>
+            onClick={(c) => { console.log("resetMp3"); resetMp3(); console.log("done with resetMp3"); }} >
+              <ImLoop2/>
           </div>
+        </div>
+
+        <div
+          className="playMusic"
+          onClick={(c) => {
+            console.log("about to play sample from database");
+            playSampleMidiDatabase();
+            console.log("done with sample from database");
+          }}
+        >
+          Play Test Sample Database Music
         </div>
 
         <div
@@ -251,6 +265,7 @@ function resetMp3(){
         >
           Play Test Database Music
         </div>
+
 
         <div
           className="playMusic"
