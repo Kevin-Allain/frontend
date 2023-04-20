@@ -2,10 +2,12 @@ import { useRef, useState, useEffect, useContext } from 'react';
 import * as Tone from "tone"
 import {
   getMusicMIDI,
-  getSampleMIDI
+  getSampleMIDI,
+  getMatchLevenshteinDistance
 } from "../../utils/HandleApi";
 import {AiFillPlayCircle, AiFillPauseCircle} from 'react-icons/ai'
 import {ImLoop2} from 'react-icons/im'
+import {BiDotsHorizontalRounded} from 'react-icons/bi'
 
 
 // Note: To shift by an octave you just have to add 12.
@@ -24,6 +26,9 @@ let synthPoly = new Tone.PolySynth(Tone.Synth).toDestination();
 const [playingMp3, setPlayingMp3] = useState(false);
 const [iconPlayMp3, setIconPlayMp3] = useState(<AiFillPlayCircle className='icon'></AiFillPlayCircle>)
 const [audioMp3,setAudioMp3] = useState( new Audio("https://www.learningcontainer.com/wp-content/uploads/2020/02/Kalimba.mp3") )
+
+const [playingMIDI, setPlayingMIDI] = useState(false);
+const [ iconPlayMIDI , setIconPlayMIDI] = useState(<AiFillPlayCircle className='icon'></AiFillPlayCircle>)
 
 
 const sampler = new Tone.Sampler({
@@ -199,6 +204,19 @@ function playSampleMidiDatabase(){
 }
 
 
+function playMatchLevenshteinDistance(){
+  console.log("---- playMatchLevenshteinDistance. playingMIDI: ",playingMIDI)
+  // TODO adapt here... most likely we won't be able to pause once MIDI starts being played, so we might want not to do these changes anyway... to consider.
+  if(playingMIDI){
+    setIconPlayMIDI(<BiDotsHorizontalRounded/>)
+  } else {
+    setIconPlayMIDI(<BiDotsHorizontalRounded/>)
+  }
+  setPlayingMIDI(!playingMIDI);
+
+  getMatchLevenshteinDistance("BGR0082-T1", 0, 10,localStorage?.username, transformToPlayfulFormat,playFormattedMusic);
+}
+
 function playMp3(){
   console.log("---- playMp3. playing: ",playingMp3)
   if (playingMp3){
@@ -225,8 +243,27 @@ function resetMp3(){
       <h1>Music Interface</h1>
       <br />
       <div className="buttonsMusicInterface">
-        <div className='playMusic'
-        >
+
+      <div className='playMusic' >
+          Play Test Search
+          <hr/>
+          <div className='iconPlayPause'
+            onClick={(c) => {
+              console.log("about to play search");
+              playMatchLevenshteinDistance();
+              console.log("done with play search");
+            }}
+          >
+            {iconPlayMIDI}
+          </div>
+          {/* <div className='iconResetSong'
+            onClick={(c) => { console.log("resetMp3"); resetMp3(); console.log("done with resetMp3"); }} >
+              <ImLoop2/>
+          </div> */}
+        </div>
+
+
+        <div className='playMusic' >
           Play Test Link Mp3
           <hr/>
           <div className='iconPlayPause'
