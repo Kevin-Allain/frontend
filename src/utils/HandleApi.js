@@ -187,7 +187,6 @@ const getMatchLevenshteinDistance = (
           dataSplitByRecording[allRecording[i]].data = filteredByRecording;
         }
 
-        // TODO fix
         for (let i in dataSplitByRecording) {
           // sort notes
           dataSplitByRecording[i].data = dataSplitByRecording[i].data.sort((a, b) => a.recording - b.recording || a.m_id - b.m_id);
@@ -202,6 +201,8 @@ const getMatchLevenshteinDistance = (
         }
 
 
+        // ugly... but we messed up structure here...
+        let resArray = []
 
         for ( let i in dataSplitByRecording){
           dataSplitByRecording[i].distances = []
@@ -212,9 +213,15 @@ const getMatchLevenshteinDistance = (
             let distCalc = levenshteinDistanceFunc(arrayNotesInput, curArrNotes);
             dataSplitByRecording[i].distances.push(distCalc);
           } 
+          resArray.push({"recording":i})
+          resArray[resArray.length-1].data = dataSplitByRecording[i].data;
+          resArray[resArray.length-1].distances = dataSplitByRecording[i].distances;
+          resArray[resArray.length-1].sequences = dataSplitByRecording[i].sequences;
         }
 
         console.log("dataSplitByRecording: ", dataSplitByRecording);
+        // Will be better to later allow filter
+        console.log("resArray: ",resArray)
 
         return d;
       }
