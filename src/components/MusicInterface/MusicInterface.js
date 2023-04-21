@@ -28,7 +28,7 @@ const [iconPlayMp3, setIconPlayMp3] = useState(<AiFillPlayCircle className='icon
 const [audioMp3,setAudioMp3] = useState( new Audio("https://www.learningcontainer.com/wp-content/uploads/2020/02/Kalimba.mp3") )
 
 const [playingMIDI, setPlayingMIDI] = useState(false);
-const [ iconPlayMIDI , setIconPlayMIDI] = useState(<AiFillPlayCircle className='icon'></AiFillPlayCircle>)
+const [ iconPlayMIDI , setIconPlayMIDI] = useState(<AiOutlineArrowRight className='icon'></AiOutlineArrowRight>)
 
 
 const sampler = new Tone.Sampler({
@@ -107,8 +107,8 @@ const kickDrum = new Tone.MembraneSynth({
 const kicks = [ { time: '0:0' }, { time: '0:3:2' }, { time: '1:1' }, { time: '2:0' }, { time: '2:1:2' }, { time: '2:3:2' }, { time: '3:0:2' }, { time: '3:1:' }, { time: '4:0' }, { time: '4:3:2' }, { time: '5:1' }, { time: '6:0' }, { time: '6:1:2' }, { time: '6:3:2' }, { time: '7:0:2' }, { time: '7:1:' }, ];
 
 
-// Function for distance
-function calculateLevenshteinDistance(s1, s2) {
+// Function for distance : strings
+function calcLevenshteinDistance_str(s1, s2) {
   // Create two-dimensional array of distances
   const distances = [];
   for (let i = 0; i <= s1.length; i++) {
@@ -132,6 +132,29 @@ function calculateLevenshteinDistance(s1, s2) {
     }
   }
   return distances[s1.length][s2.length];
+}
+
+// Function for distance: arrays of int
+function calcLevenshteinDistance_int(arr1, arr2) {
+  const m = arr1.length;
+  const n = arr2.length;
+  const dp = Array.from({ length: m + 1 }, () => Array.from({ length: n + 1 }, () => 0));
+
+  for (let i = 0; i <= m; i++) {
+    for (let j = 0; j <= n; j++) {
+      if (i === 0) {
+        dp[i][j] = j;
+      } else if (j === 0) {
+        dp[i][j] = i;
+      } else if (arr1[i - 1] === arr2[j - 1]) {
+        dp[i][j] = dp[i - 1][j - 1];
+      } else {
+        dp[i][j] = 1 + Math.min(dp[i][j - 1], dp[i - 1][j], dp[i - 1][j - 1]);
+      }
+    }
+  }
+
+  return dp[m][n];
 }
 
 
@@ -250,7 +273,7 @@ function playMatchLevenshteinDistance(){
     localStorage?.username, 
     transformToPlayfulFormat,
     playFormattedMusic, 
-    calculateLevenshteinDistance
+    calcLevenshteinDistance_int
   );
 }
 
@@ -291,7 +314,7 @@ function resetMp3(){
               console.log("done with play search");
             }}
           >
-            <AiOutlineArrowRight/>
+            {iconPlayMIDI}
           </div>
           {/* <div className='iconResetSong'
             onClick={(c) => { console.log("resetMp3"); resetMp3(); console.log("done with resetMp3"); }} >

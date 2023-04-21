@@ -165,9 +165,9 @@ const getMatchLevenshteinDistance = (
       } else {
         // structure data
         const arrayStrNotes = stringNotes.split('-')
-        const arrayNotes = arrayStrNotes.map( a => parseInt(a))
-        const numNotes = arrayNotes.length;
-        console.log("numNotes: ",numNotes);
+        const arrayNotesInput = arrayStrNotes.map( a => parseInt(a))
+        const numNotesInput = arrayNotesInput.length;
+        console.log("numNotesInput: ",numNotesInput);
         const allRecording = [...new Set(d.data.map( a => a.recording ) ) ]
         console.log("allRecording: ",allRecording);
 
@@ -195,30 +195,28 @@ const getMatchLevenshteinDistance = (
           // let startSeQuences = dataSplitByRecording[i].data.filter(a => a.startSequence);
           for (let ds in dataSplitByRecording[i].data) {
             if (dataSplitByRecording[i].data[ds].startSequence) {
-              console.log("ds: ",ds,", (parseInt(ds) + parseInt(numNotes) + 1: ): ",(parseInt(ds) + parseInt(numNotes) + 1))
-              let slice = dataSplitByRecording[i].data.slice(parseInt(ds), (parseInt(ds) + parseInt(numNotes) + 1) );
-              dataSplitByRecording[i].sequences.push(
-                slice
-              )
+              let slice = dataSplitByRecording[i].data.slice(parseInt(ds), (parseInt(ds) + parseInt(numNotesInput) ) );
+              dataSplitByRecording[i].sequences.push( slice );
             }
           }
         }
 
-        console.log("dataSplitByRecording: ", dataSplitByRecording);
 
 
         for ( let i in dataSplitByRecording){
           dataSplitByRecording[i].distances = []
           for (let j in dataSplitByRecording[i].sequences){
-            let arrNotes = dataSplitByRecording[i].sequences[j].map(a => a.pitch)
+            let curArrNotes = dataSplitByRecording[i].sequences[j].map(a => a.pitch)
             // console.log("arrNotes: ", arrNotes);
-            let strArrNotes=arrNotes.toString().replaceAll(',','-');
-            let distCalc = levenshteinDistanceFunc(stringNotes, strArrNotes);
+            // let strArrNotes=arrNotes.toString().replaceAll(',','-');
+            let distCalc = levenshteinDistanceFunc(arrayNotesInput, curArrNotes);
             dataSplitByRecording[i].distances.push(distCalc);
           } 
         }
 
-        return dataSplitByRecording;
+        console.log("dataSplitByRecording: ", dataSplitByRecording);
+
+        return d;
       }
 
 
