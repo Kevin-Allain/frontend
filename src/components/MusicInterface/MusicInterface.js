@@ -5,7 +5,7 @@ import {
   getSampleMIDI,
   getMatchLevenshteinDistance
 } from "../../utils/HandleApi";
-import {AiFillPlayCircle, AiFillPauseCircle} from 'react-icons/ai'
+import {AiFillPlayCircle, AiFillPauseCircle, AiOutlineArrowRight} from 'react-icons/ai'
 import {ImLoop2} from 'react-icons/im'
 import {BiDotsHorizontalRounded} from 'react-icons/bi'
 
@@ -291,7 +291,7 @@ function resetMp3(){
               console.log("done with play search");
             }}
           >
-            {iconPlayMIDI}
+            <AiOutlineArrowRight/>
           </div>
           {/* <div className='iconResetSong'
             onClick={(c) => { console.log("resetMp3"); resetMp3(); console.log("done with resetMp3"); }} >

@@ -156,8 +156,8 @@ const getMatchLevenshteinDistance = (
     })
     .then((d) => {
       console.log("#### Then of getMatchLevenshteinDistance ####");
-      console.log(d);
-      console.log(d.data);
+      console.log("d",d);
+      console.log("d.data: ",d.data);
 
       // In retrospect, we probably don't want to play songs directly... we want to list the matching bits.
       if (levenshteinDistanceFunc == null){
@@ -166,40 +166,61 @@ const getMatchLevenshteinDistance = (
         // structure data
         const arrayStrNotes = stringNotes.split('-')
         const arrayNotes = arrayStrNotes.map( a => parseInt(a))
-
-        const allRecording = [... new Set(d.data.map( a => a.recording ) ) ]
+        const numNotes = arrayNotes.length;
+        console.log("numNotes: ",numNotes);
+        const allRecording = [...new Set(d.data.map( a => a.recording ) ) ]
         console.log("allRecording: ",allRecording);
 
         let notesPerRecording = {};
         for (let i in allRecording){
-          notesPerRecording[allRecording[i]] = d.data.filter(a => a.recording === allRecording[i])
+          notesPerRecording[allRecording[i]] = 
+            d.data.filter(a => a.recording === allRecording[i])
         }
         console.log("notesPerRecording :",notesPerRecording);
         // Tricky to split the data into sections... might have to do it from previous step actually!
-        
+
+        // split according to recording
+        let dataSplitByRecording = {};
+        for (let i in allRecording) {
+          let filteredByRecording = d.data.filter(a => a.recording === allRecording[i])
+          dataSplitByRecording[allRecording[i]] = {}
+          dataSplitByRecording[allRecording[i]].data = filteredByRecording;
+        }
+
+        // TODO fix
+        for (let i in dataSplitByRecording) {
+          // sort notes
+          dataSplitByRecording[i].data = dataSplitByRecording[i].data.sort((a, b) => a.recording - b.recording || a.m_id - b.m_id);
+          dataSplitByRecording[i].sequences = [];
+          // let startSeQuences = dataSplitByRecording[i].data.filter(a => a.startSequence);
+          for (let ds in dataSplitByRecording[i].data) {
+            if (dataSplitByRecording[i].data[ds].startSequence) {
+              console.log("ds: ",ds,", (parseInt(ds) + parseInt(numNotes) + 1: ): ",(parseInt(ds) + parseInt(numNotes) + 1))
+              let slice = dataSplitByRecording[i].data.slice(parseInt(ds), (parseInt(ds) + parseInt(numNotes) + 1) );
+              dataSplitByRecording[i].sequences.push(
+                slice
+              )
+            }
+          }
+        }
+
+        console.log("dataSplitByRecording: ", dataSplitByRecording);
+
+
+        for ( let i in dataSplitByRecording){
+          dataSplitByRecording[i].distances = []
+          for (let j in dataSplitByRecording[i].sequences){
+            let arrNotes = dataSplitByRecording[i].sequences[j].map(a => a.pitch)
+            // console.log("arrNotes: ", arrNotes);
+            let strArrNotes=arrNotes.toString().replaceAll(',','-');
+            let distCalc = levenshteinDistanceFunc(stringNotes, strArrNotes);
+            dataSplitByRecording[i].distances.push(distCalc);
+          } 
+        }
+
+        return dataSplitByRecording;
       }
 
-      // TODO
-      /*
-      if (transformFunc !== null) {
-        const dTransformed = transformFunc(d.data);
-        console.log("dTransformed: ", dTransformed);
-        // play transformed song
-        if (playMusicFunc === null) {
-          console.log("problem, playMusicFunc is null");
-        } else {
-          playMusicFunc(dTransformed);
-        }
-      } else {
-        // play song without transformation
-        console.log("missing transformation function");
-        if (playMusicFunc === null) {
-          console.log("also, playMusicFunc is null");
-        } else {
-          playMusicFunc(d.data); // MIGHT BE BUGGY
-        }
-      }
-      */
 
       return d;
     })
