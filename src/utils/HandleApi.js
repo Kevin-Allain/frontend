@@ -131,21 +131,31 @@ const getSampleMIDI = ( recording = "BGR0082-T1", firstNoteIndex=0, lastNodeInde
     .catch((err) => console.log(err));
 };
 
-
-const getMatchLevenshteinDistance = ( recording = "BGR0082-T1", firstNoteIndex=0, lastNodeIndex= null, user = null, transformFunc = null, playMusicFunc = null ) => {
-  console.log( "-- handleAPI. getMatchLevenshteinDistance. recording: ", recording, ", user: ", user, ", transformFunc: ",transformFunc,", playMusicFunc: ",playMusicFunc );
+const getMatchLevenshteinDistance = (
+  stringNotes = "",
+  percMatch = 1,
+  user = null,
+  transformFunc = null,
+  playMusicFunc = null,
+  levenshteinDistanceFunc = null
+) => {
+  console.log("-- handleAPI. getMatchLevenshteinDistance. stringNotes: ", stringNotes,
+    ", percMatch: ", percMatch,
+    " user: ", user,
+    ", transformFunc: ", transformFunc,
+    ", playMusicFunc: ", playMusicFunc,
+    ", levenshteinDistanceFunc: ", levenshteinDistanceFunc);
 
   axios
     .get(`${baseUrl}/getMatchLevenshteinDistance`, {
       params: {
-        recording: recording,
-        firstNoteIndex:firstNoteIndex,
-        lastNodeIndex: lastNodeIndex,
+        stringNotes:stringNotes,
+        percMatch: percMatch,
         user: user,
       },
     })
     .then((d) => {
-      console.log("#### Then of getSampleMIDI ####");
+      console.log("#### Then of getMatchLevenshteinDistance ####");
       console.log(d);
       console.log(d.data);
 

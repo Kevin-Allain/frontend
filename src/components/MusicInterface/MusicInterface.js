@@ -106,6 +106,36 @@ const kickDrum = new Tone.MembraneSynth({
 }).toDestination();
 const kicks = [ { time: '0:0' }, { time: '0:3:2' }, { time: '1:1' }, { time: '2:0' }, { time: '2:1:2' }, { time: '2:3:2' }, { time: '3:0:2' }, { time: '3:1:' }, { time: '4:0' }, { time: '4:3:2' }, { time: '5:1' }, { time: '6:0' }, { time: '6:1:2' }, { time: '6:3:2' }, { time: '7:0:2' }, { time: '7:1:' }, ];
 
+
+// Function for distance
+function calculateLevenshteinDistance(s1, s2) {
+  // Create two-dimensional array of distances
+  const distances = [];
+  for (let i = 0; i <= s1.length; i++) {
+    distances[i] = [i];
+  }
+  for (let j = 0; j <= s2.length; j++) {
+    distances[0][j] = j;
+  }
+
+  // Calculate Levenshtein distance
+  for (let j = 1; j <= s2.length; j++) {
+    for (let i = 1; i <= s1.length; i++) {
+      if (s1.charAt(i - 1) === s2.charAt(j - 1)) {
+        distances[i][j] = distances[i - 1][j - 1];
+      } else {
+        const deletion = distances[i - 1][j] + 1;
+        const insertion = distances[i][j - 1] + 1;
+        const substitution = distances[i - 1][j - 1] + 1;
+        distances[i][j] = Math.min(deletion, insertion, substitution);
+      }
+    }
+  }
+  return distances[s1.length][s2.length];
+}
+
+
+
 // function playMusic(contextMusic,oscillator,music = tetris, lengthNote=2, eps=0.01) {
 //   // getOrCreateContext();
 //   if (oscillator.context.state!=="running") {oscillator.start(0);}
@@ -214,7 +244,14 @@ function playMatchLevenshteinDistance(){
   }
   setPlayingMIDI(!playingMIDI);
 
-  getMatchLevenshteinDistance("BGR0082-T1", 0, 10,localStorage?.username, transformToPlayfulFormat,playFormattedMusic);
+  getMatchLevenshteinDistance(
+    "69-76-76-74-76",
+    1, 
+    localStorage?.username, 
+    transformToPlayfulFormat,
+    playFormattedMusic, 
+    calculateLevenshteinDistance
+  );
 }
 
 function playMp3(){
