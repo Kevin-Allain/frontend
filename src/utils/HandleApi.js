@@ -159,6 +159,26 @@ const getMatchLevenshteinDistance = (
       console.log(d);
       console.log(d.data);
 
+      // In retrospect, we probably don't want to play songs directly... we want to list the matching bits.
+      if (levenshteinDistanceFunc == null){
+        console.log("We are missing a function to calculate distance!");
+      } else {
+        // structure data
+        const arrayStrNotes = stringNotes.split('-')
+        const arrayNotes = arrayStrNotes.map( a => parseInt(a))
+
+        const allRecording = [... new Set(d.data.map( a => a.recording ) ) ]
+        console.log("allRecording: ",allRecording);
+
+        let notesPerRecording = {};
+        for (let i in allRecording){
+          notesPerRecording[allRecording[i]] = d.data.filter(a => a.recording === allRecording[i])
+        }
+        console.log("notesPerRecording :",notesPerRecording);
+        // Tricky to split the data into sections... might have to do it from previous step actually!
+        
+      }
+
       // TODO
       /*
       if (transformFunc !== null) {
