@@ -249,7 +249,9 @@ const getMatchLevenshteinDistance = (
         // console.log("divRes: ", divRes)
 
 
-        setListSearchRes( JSON.stringify(resAggreg) );
+        // setListSearchRes( JSON.stringify(resAggreg) );
+        
+        setListSearchRes( resAggreg );
 
         return d;
       }

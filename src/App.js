@@ -100,7 +100,10 @@ function App() {
           </div>
           <div className="list">
             {jazzDap.map((item) => (
-              <JazzDap key={item._id} text={item.text} updateMode={() => updateMode(item._id, item.text, localStorage?.username) }
+              <JazzDap
+                key={item._id}
+                text={item.text}
+                updateMode={() => updateMode(item._id, item.text, localStorage?.username)}
                 deleteJazzDap={() => deleteJazzDap(item._id, setJazzDap)}
               />
             ))}

@@ -404,7 +404,12 @@ function resetMp3(){
       </div>
       <br />
       <div className='outputMusicSearch'>
-          {listSearchRes}
+        {listSearchRes.map((item) => {
+          return (
+            <div className='resMusicSearch' > Recording: {item.recording}. Notes: {item.arrNotes}. Distance match: {item.distCalc}  </div>
+          )
+        })
+        }
       </div>
     </div>
   );
