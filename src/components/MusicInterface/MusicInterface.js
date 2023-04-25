@@ -31,6 +31,8 @@ const [playingMIDI, setPlayingMIDI] = useState(false);
 const [ iconPlayMIDI , setIconPlayMIDI] = useState(<AiOutlineArrowRight className='icon'></AiOutlineArrowRight>)
 
 
+const [listSearchRes, setListSearchRes] = useState([]);
+
 const sampler = new Tone.Sampler({
 	urls: { "C4": "C4.mp3", "D#4": "Ds4.mp3", "F#4": "Fs4.mp3", "A4": "A4.mp3", },
 	release: 1,
@@ -267,13 +269,17 @@ function playMatchLevenshteinDistance(){
   }
   setPlayingMIDI(!playingMIDI);
 
+
+  console.log("(typeof setListSearchRes: ", typeof setListSearchRes)
+
   getMatchLevenshteinDistance(
     "69-76-76-74-76",
     1, 
     localStorage?.username, 
     transformToPlayfulFormat,
     playFormattedMusic, 
-    calcLevenshteinDistance_int
+    calcLevenshteinDistance_int,
+    setListSearchRes
   );
 }
 
@@ -306,6 +312,8 @@ function resetMp3(){
 
       <div className='playMusic' >
           Play Test Search
+          <hr/>
+          69-76-76-74-76
           <hr/>
           <div className='iconPlayPause'
             onClick={(c) => {
@@ -395,6 +403,9 @@ function resetMp3(){
         </div>
       </div>
       <br />
+      <div className='outputMusicSearch'>
+          {listSearchRes}
+      </div>
     </div>
   );
 }

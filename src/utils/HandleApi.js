@@ -137,7 +137,8 @@ const getMatchLevenshteinDistance = (
   user = null,
   transformFunc = null,
   playMusicFunc = null,
-  levenshteinDistanceFunc = null
+  levenshteinDistanceFunc = null,
+  setListSearchRes = null
 ) => {
   console.log("-- handleAPI. getMatchLevenshteinDistance. stringNotes: ", stringNotes,
     ", percMatch: ", percMatch,
@@ -201,27 +202,54 @@ const getMatchLevenshteinDistance = (
         }
 
 
+
         // ugly... but we messed up structure here...
         let resArray = []
+        let resAggreg = [];
 
-        for ( let i in dataSplitByRecording){
+        for (let i in dataSplitByRecording) {
           dataSplitByRecording[i].distances = []
-          for (let j in dataSplitByRecording[i].sequences){
+          dataSplitByRecording[i].slicesDist = [];
+          for (let j in dataSplitByRecording[i].sequences) {
             let curArrNotes = dataSplitByRecording[i].sequences[j].map(a => a.pitch)
             // console.log("arrNotes: ", arrNotes);
             // let strArrNotes=arrNotes.toString().replaceAll(',','-');
             let distCalc = levenshteinDistanceFunc(arrayNotesInput, curArrNotes);
             dataSplitByRecording[i].distances.push(distCalc);
-          } 
-          resArray.push({"recording":i})
-          resArray[resArray.length-1].data = dataSplitByRecording[i].data;
-          resArray[resArray.length-1].distances = dataSplitByRecording[i].distances;
-          resArray[resArray.length-1].sequences = dataSplitByRecording[i].sequences;
+            dataSplitByRecording[i].slicesDist.push({
+              arrNotes: curArrNotes,
+              distCalc: distCalc,
+              recording: i
+            });
+          }
+          resArray.push({ "recording": i })
+          resArray[resArray.length - 1].data = dataSplitByRecording[i].data;
+          resArray[resArray.length - 1].distances = dataSplitByRecording[i].distances;
+          resArray[resArray.length - 1].sequences = dataSplitByRecording[i].sequences;
+          resArray[resArray.length - 1].slicesDist = dataSplitByRecording[i].slicesDist;
+          resAggreg = resAggreg.concat( dataSplitByRecording[i].slicesDist ) ;
         }
 
+        resAggreg.sort( (a,b) => a.distCalc - b.distCalc);
         console.log("dataSplitByRecording: ", dataSplitByRecording);
         // Will be better to later allow filter
-        console.log("resArray: ",resArray)
+        console.log("resArray: ",resArray);
+        console.log("resAggreg: ",resAggreg);
+        console.log("typeof resAggreg: ",typeof resAggreg);
+
+        // TODO return div
+        // const divRes = ({resAggreg}) =>{
+        //   const resComponent = resAggreg.map((res , i) => {
+        //       return(
+        //           <div>
+        //             {res}
+        //           </div>
+        //             )
+        //   })      
+        // console.log("divRes: ", divRes)
+
+
+        setListSearchRes( JSON.stringify(resAggreg) );
 
         return d;
       }

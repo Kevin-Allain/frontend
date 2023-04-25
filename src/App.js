@@ -29,6 +29,8 @@ function App() {
 
   const { auth, setAuth } = useContext(AuthContext);
 
+  
+
   useEffect(() => {
     getAllJazzDap(setJazzDap);
   }, []);
