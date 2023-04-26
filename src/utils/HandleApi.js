@@ -236,20 +236,6 @@ const getMatchLevenshteinDistance = (
         console.log("resArray: ",resArray);
         console.log("resAggreg: ",resAggreg);
         console.log("typeof resAggreg: ",typeof resAggreg);
-
-        // TODO return div
-        // const divRes = ({resAggreg}) =>{
-        //   const resComponent = resAggreg.map((res , i) => {
-        //       return(
-        //           <div>
-        //             {res}
-        //           </div>
-        //             )
-        //   })      
-        // console.log("divRes: ", divRes)
-
-
-        // setListSearchRes( JSON.stringify(resAggreg) );
         
         setListSearchRes( resAggreg );
 

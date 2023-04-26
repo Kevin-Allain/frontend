@@ -272,3 +272,43 @@ color: ghostwhite;
 text-align: right;
 padding-right: 3%;
 }
+
+.wrapperMusicSearch{
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+
+.outputMusicSearch{
+  height: 500px;
+  overflow-y: scroll;
+  width: 70%;
+  border: solid;
+  border-color: ghostwhite;
+  text-align: center;
+  position: relative;
+  left: 15%;
+  border-radius: 10px;
+  background: ghostwhite;
+}
+
+
+::-webkit-scrollbar {
+  width: 10px;
+  z-index: 2;
+}
+/* Track */
+::-webkit-scrollbar-track {
+  background: #343650;
+}
+
+/* Handle */
+/* Change of color from designers... we want something visible over pretty */
+::-webkit-scrollbar-thumb {
+  /* background: #4c4f6a; */
+  background: #acadbd;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #1e202f;
+}

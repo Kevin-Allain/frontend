@@ -83,7 +83,8 @@ export default function Login({ setToken }) {
                 <h1>You are logged in!</h1>
             ) : (
                 <>
-                    <p ref={errRef} className={errMsg ? 'errmsg' : 'offscreen'} aria-live='assertive'> {errMsg} </p>                    <h1>Log In</h1>
+                    <p ref={errRef} className={errMsg ? 'errmsg' : 'offscreen'} aria-live='assertive'> {errMsg} </p>
+                    <h1>Log In</h1>
                     <form onSubmit={handleSubmit}>
                         <label>
                             <p>Username</p>

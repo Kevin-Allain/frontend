@@ -402,13 +402,19 @@ function resetMp3(){
           Reload Page
         </div>
       </div>
-      <br />
-      <div className='outputMusicSearch'>
-        {listSearchRes.map((item) => {
-          return (
-            <div className='resMusicSearch' > Recording: {item.recording}. Notes: {item.arrNotes}. Distance match: {item.distCalc}  </div>
-          )
-        })
+      <div className='wrapperMusicSearch'>
+        {(listSearchRes.length <= 0) ? (<></>) :
+          <div className='outputMusicSearch'> 
+          <h2>List of results for your search</h2>
+            {(listSearchRes.map((item, i) => {
+              return (
+                <div className='resMusicSearch' key={i+'' + item.recording + '_' + item.arrNotes.toString().replaceAll(',', '-')} >
+                  Recording: {item.recording}. Notes: {item.arrNotes.toString().replaceAll(',', '-')}. Distance match: {item.distCalc}
+                </div>
+              )
+            })
+            )}
+          </div>
         }
       </div>
     </div>
