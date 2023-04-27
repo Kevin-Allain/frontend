@@ -1,5 +1,8 @@
 import { useState, useEffect, useContext } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+// versions issue with mui/base/ModalUnstyled
+// import ModalUnstyled from "@mui/base/ModalUnstyled";
+// import { ModalUnstyled } from '@mui/base';
 import "./App.css";
 import JazzDap from "./components/JazzDap";
 import Dashboard from "./components/Dashboard/Dashboard";
@@ -29,7 +32,14 @@ function App() {
 
   const { auth, setAuth } = useContext(AuthContext);
 
-  
+  //  ---- Login buttons variables
+  // const {showOptionsLog, setShowOptionsLog} = useContext(false);
+  const [open, setOpen] = useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+
+  const [showDiv, setShowDiv] = useState(false);
+
 
   useEffect(() => {
     getAllJazzDap(setJazzDap);
@@ -44,9 +54,45 @@ function App() {
     <div className="App">
       <div className="header">
         <p> <span> <img src={logoJazzDap} className="imageHeader" alt="some value" name="Image1" align="bottom" width="192" height="107" border="0" /> </span> </p>
+        {/* <ModalUnstyled open={open} onClose={handleClose}>
+          <Login onClose={handleClose}></Login>
+        </ModalUnstyled> */}
+        {/* <div className="buttonShowOptionsLog">
+          <form onSubmit={setShowOptionsLog(!showOptionsLog)}>
+            <button type="submit">Show options to log.</button>
+          </form>
+        </div> */}
+        <button className='buttonShowDiv' onClick={() => setShowDiv(!showDiv)}>
+          {showDiv ? 'Hide Login / Register' : 'Login / Register'}
+        </button>
+        {showDiv &&
+          <div className="wrapper">
+            <BrowserRouter>
+              <div
+                className={
+                  auth !== null || localStorage.token ? "offscreen" : "auth"
+                }
+              >
+                <Register></Register>
+                <hr />
+                <Login></Login>
+              </div>
+
+              <div
+                className={
+                  auth !== null || localStorage.token ? "logout" : "offscreen"
+                }
+              >
+                <Logout></Logout>
+              </div>
+              {/* <Routes> <Route path="/dashboard" element={<Dashboard />} /> <Route path="/preferences" element={<Preferences />} /> </Routes> */}
+            </BrowserRouter>
+          </div>
+        }
+
       </div>
       <UserContext.Provider value="hello from context">
-        <div className="wrapper">
+        {/* <div className="wrapper">
           <BrowserRouter>
             <div
               className={
@@ -57,7 +103,6 @@ function App() {
               <hr />
               <Login></Login>
             </div>
-
             <div
               className={
                 auth !== null || localStorage.token ? "logout" : "offscreen"
@@ -65,17 +110,10 @@ function App() {
             >
               <Logout></Logout>
             </div>
-
-            <Routes>
-              <Route path="/dashboard" element={<Dashboard />} />
-              <Route path="/preferences" element={<Preferences />} />
-            </Routes>
           </BrowserRouter>
-        </div>
+        </div> */}
 
-        <hr />
         <MusicInterface />
-        <hr />
 
         <div className="container">
           <div className="top">
@@ -110,10 +148,6 @@ function App() {
           </div>
         </div>
       </UserContext.Provider>
-
-      <br />
-      <hr />
-      <br />
 
       <div className="info">
         <p>

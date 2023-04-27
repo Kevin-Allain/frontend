@@ -40,6 +40,7 @@
 
 .header{
   background-color: ghostwhite;
+  padding: 0.25rem;
 }
 
 .footer{
@@ -73,9 +74,9 @@
 }
 
 .container{
-  max-width:600px;
   margin:auto;
-  padding: 0 1rem;
+  padding: 0.5rem;
+  background-color: #1e202f;
 }
 
 h1 { 
@@ -93,7 +94,6 @@ h1 {
 
 
 .top{
-  margin-top: 1rem;
   display: flex;
   gap:1rem;
   justify-content: center;
@@ -163,18 +163,16 @@ input{
 }
 
 
-.container{
-  color:ghostwhite;
-}
-
 .jazzdap{
   position: relative;
   margin-top: 1rem;
   background-color: black;
   color: white;
   border-radius: 5px;
-  border:solid;
+  border: solid;
+  width: 70%;
   border-width: thin;
+  left: 15%;
 }
 
 .icons{
@@ -269,8 +267,10 @@ button {
 .logout-wrapper{
 flex-direction: column;
 color: ghostwhite;
+background-color: #1e202f;
 text-align: right;
 padding-right: 3%;
+padding-bottom: 0.25rem;
 }
 
 .wrapperMusicSearch{
@@ -291,6 +291,9 @@ padding-right: 3%;
   background: ghostwhite;
 }
 
+.buttonShowDiv{
+  padding-bottom: 0.5rem;
+}
 
 ::-webkit-scrollbar {
   width: 10px;

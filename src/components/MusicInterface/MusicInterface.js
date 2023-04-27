@@ -28,7 +28,7 @@ const [iconPlayMp3, setIconPlayMp3] = useState(<AiFillPlayCircle className='icon
 const [audioMp3,setAudioMp3] = useState( new Audio("https://www.learningcontainer.com/wp-content/uploads/2020/02/Kalimba.mp3") )
 
 const [playingMIDI, setPlayingMIDI] = useState(false);
-const [ iconPlayMIDI , setIconPlayMIDI] = useState(<AiOutlineArrowRight className='icon'></AiOutlineArrowRight>)
+const [ iconSearchTest , setIconSearchTest] = useState(<AiOutlineArrowRight className='icon'></AiOutlineArrowRight>)
 
 
 const [listSearchRes, setListSearchRes] = useState([]);
@@ -263,9 +263,9 @@ function playMatchLevenshteinDistance(){
   console.log("---- playMatchLevenshteinDistance. playingMIDI: ",playingMIDI)
   // TODO adapt here... most likely we won't be able to pause once MIDI starts being played, so we might want not to do these changes anyway... to consider.
   if(playingMIDI){
-    setIconPlayMIDI(<BiDotsHorizontalRounded/>)
+    setIconSearchTest(<BiDotsHorizontalRounded/>)
   } else {
-    setIconPlayMIDI(<BiDotsHorizontalRounded/>)
+    setIconSearchTest(<BiDotsHorizontalRounded/>)
   }
   setPlayingMIDI(!playingMIDI);
 
@@ -322,7 +322,7 @@ function resetMp3(){
               console.log("done with play search");
             }}
           >
-            {iconPlayMIDI}
+            {iconSearchTest}
           </div>
           {/* <div className='iconResetSong'
             onClick={(c) => { console.log("resetMp3"); resetMp3(); console.log("done with resetMp3"); }} >
