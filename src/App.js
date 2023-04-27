@@ -52,19 +52,11 @@ function App() {
 
   return (
     <div className="App">
+      <button className='buttonShowDiv' onClick={() => setShowDiv(!showDiv)}>
+        {showDiv ? 'Hide Login / Register' : 'Login / Register'}
+      </button>
       <div className="header">
         <p> <span> <img src={logoJazzDap} className="imageHeader" alt="some value" name="Image1" align="bottom" width="192" height="107" border="0" /> </span> </p>
-        {/* <ModalUnstyled open={open} onClose={handleClose}>
-          <Login onClose={handleClose}></Login>
-        </ModalUnstyled> */}
-        {/* <div className="buttonShowOptionsLog">
-          <form onSubmit={setShowOptionsLog(!showOptionsLog)}>
-            <button type="submit">Show options to log.</button>
-          </form>
-        </div> */}
-        <button className='buttonShowDiv' onClick={() => setShowDiv(!showDiv)}>
-          {showDiv ? 'Hide Login / Register' : 'Login / Register'}
-        </button>
         {showDiv &&
           <div className="wrapper">
             <BrowserRouter>

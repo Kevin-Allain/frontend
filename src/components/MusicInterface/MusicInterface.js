@@ -30,6 +30,22 @@ const [audioMp3,setAudioMp3] = useState( new Audio("https://www.learningcontaine
 const [playingMIDI, setPlayingMIDI] = useState(false);
 const [ iconSearchTest , setIconSearchTest] = useState(<AiOutlineArrowRight className='icon'></AiOutlineArrowRight>)
 
+const [textSearch, setTextSearch] = useState('');
+
+const handleClickTextSearch = () => {
+  console.log("",textSearch,", (typeof textSearch): ",(typeof textSearch));
+  // make a call to the database, then set string back to ''
+
+};
+
+  const handleChangeTextSearch = (event) => {
+    let val = (/^[0-9,]*$/.test(event.target.value)) ? event.target.value : '';
+    console.log("val: ", val)
+    if (val !== '') {
+      setTextSearch(val);
+    }
+  };
+
 
 const [listSearchRes, setListSearchRes] = useState([]);
 
@@ -48,7 +64,7 @@ document
     //   console.log("audio is ready");
     // }
   });
-  */
+*/
 
 function playSinth() {
   const now = Tone.now();
@@ -69,32 +85,7 @@ const mainMelody = [
   {'time': '0:2', 'note': Math.pow(2, (74 - 69) / 12) * 440, 'duration': '8n'},
   {'time': '0:2:2', 'note': Math.pow(2, (72 - 69) / 12) * 440, 'duration': '8n.'},
   {'time': '0:2:4', 'note': Math.pow(2, (71 - 69) / 12) * 440, 'duration': '8n.'},
-  {'time': '0:3', 'note': 440, 'duration': '8n'},
-  {'time': '0:3:2', 'note': 'A4', 'duration': '2n'},
-  {'time': '2:0', 'note': 'A4', 'duration': '8n'},
-  {'time': '2:0:2', 'note': 'G4', 'duration': '8n'},
-  {'time': '2:1', 'note': 'F4', 'duration': '8n'},
-  {'time': '2:2', 'note': 'A4', 'duration': '8n'},
-  {'time': '2:2:2', 'note': 'G4', 'duration': '8n'},
-  {'time': '2:3', 'note': 'E4', 'duration': '8n'},
-  {'time': '2:3:2', 'note': 'F4', 'duration': '2n'},
-  {'time': '4:0', 'note': 'G4', 'duration': '8n'},
-  {'time': '4:0:2', 'note': 'F4', 'duration': '8n'},
-  {'time': '4:1', 'note': 'D4', 'duration': '8n'},
-  {'time': '4:2', 'note': 'F4', 'duration': '8n'},
-  {'time': '4:2:2', 'note': 'A4', 'duration': '8n'},
-  {'time': '4:3', 'note': 'G4', 'duration': '8n'},
-  {'time': '4:3:2', 'note': 'A4', 'duration': '2n'},
-  {'time': '5:2:2', 'note': 'G4', 'duration': '8n'},
-  {'time': '5:3', 'note': 'A4', 'duration': '8n'},
-  {'time': '5:3:2', 'note': 'B4', 'duration': '8n'},
-  {'time': '6:0', 'note': 'C5', 'duration': '8n'},
-  {'time': '6:1', 'note': 'B4', 'duration': '8n'},
-  {'time': '6:1:2', 'note': 'A4', 'duration': '8n'},
-  {'time': '6:2', 'note': 'B4', 'duration': '8n'},
-  {'time': '6:2:2', 'note': 'A4', 'duration': '8n'},
-  {'time': '6:3', 'note': 'G4', 'duration': '8n'},
-  {'time': '6:3:2', 'note': 'A4', 'duration': 2},
+  {'time': '0:3', 'note': 440, 'duration': '8n'}, {'time': '0:3:2', 'note': 'A4', 'duration': '2n'}, {'time': '2:0', 'note': 'A4', 'duration': '8n'}, {'time': '2:0:2', 'note': 'G4', 'duration': '8n'}, {'time': '2:1', 'note': 'F4', 'duration': '8n'}, {'time': '2:2', 'note': 'A4', 'duration': '8n'}, {'time': '2:2:2', 'note': 'G4', 'duration': '8n'}, {'time': '2:3', 'note': 'E4', 'duration': '8n'}, {'time': '2:3:2', 'note': 'F4', 'duration': '2n'}, {'time': '4:0', 'note': 'G4', 'duration': '8n'}, {'time': '4:0:2', 'note': 'F4', 'duration': '8n'}, {'time': '4:1', 'note': 'D4', 'duration': '8n'}, {'time': '4:2', 'note': 'F4', 'duration': '8n'}, {'time': '4:2:2', 'note': 'A4', 'duration': '8n'}, {'time': '4:3', 'note': 'G4', 'duration': '8n'}, {'time': '4:3:2', 'note': 'A4', 'duration': '2n'}, {'time': '5:2:2', 'note': 'G4', 'duration': '8n'}, {'time': '5:3', 'note': 'A4', 'duration': '8n'}, {'time': '5:3:2', 'note': 'B4', 'duration': '8n'}, {'time': '6:0', 'note': 'C5', 'duration': '8n'}, {'time': '6:1', 'note': 'B4', 'duration': '8n'}, {'time': '6:1:2', 'note': 'A4', 'duration': '8n'}, {'time': '6:2', 'note': 'B4', 'duration': '8n'}, {'time': '6:2:2', 'note': 'A4', 'duration': '8n'}, {'time': '6:3', 'note': 'G4', 'duration': '8n'}, {'time': '6:3:2', 'note': 'A4', 'duration': 2},
 ];
 
 
@@ -159,8 +150,6 @@ function calcLevenshteinDistance_int(arr1, arr2) {
   return dp[m][n];
 }
 
-
-
 // function playMusic(contextMusic,oscillator,music = tetris, lengthNote=2, eps=0.01) {
 //   // getOrCreateContext();
 //   if (oscillator.context.state!=="running") {oscillator.start(0);}
@@ -188,7 +177,6 @@ function transformToPlayfulFormat(d){
   return outputArray;    
 }
 
-
 function playFormattedMusic(music){
   const synth3 = new Tone.MembraneSynth().toDestination();
   Tone.Transport.stop();
@@ -213,7 +201,6 @@ function playFormattedMusic(music){
   }, music).start(now); // used to start at 0 but would bug
 
 }
-
 
 function playTestMidi(){
     Tone.Transport.stop();
@@ -309,6 +296,12 @@ function resetMp3(){
       <h1>Music Interface</h1>
       <br />
       <div className="buttonsMusicInterface">
+
+        <div className="topTextSearch">
+          <input type="text"  value={textSearch} onChange={handleChangeTextSearch} />
+          <button onClick={handleClickTextSearch}>Submit</button>
+        </div>
+
 
       <div className='playMusic' >
           Play Test Search

@@ -40,7 +40,7 @@
 
 .header{
   background-color: ghostwhite;
-  padding: 0.25rem;
+  /* padding: 0.25rem; */
 }
 
 .footer{
@@ -292,7 +292,8 @@ padding-bottom: 0.25rem;
 }
 
 .buttonShowDiv{
-  padding-bottom: 0.5rem;
+  position: absolute;
+  left: 85%;
 }
 
 ::-webkit-scrollbar {
