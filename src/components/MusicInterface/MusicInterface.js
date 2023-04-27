@@ -35,12 +35,15 @@ const [textSearch, setTextSearch] = useState('');
 const handleClickTextSearch = () => {
   console.log("",textSearch,", (typeof textSearch): ",(typeof textSearch));
   // make a call to the database, then set string back to ''
-
+  playMatchLevenshteinDistance(textSearch);
 };
 
+// Only accept input for this variable if it is a number or a -
+// TODO current issue to fix: if only one character left, suppression not working...
   const handleChangeTextSearch = (event) => {
-    let val = (/^[0-9,]*$/.test(event.target.value)) ? event.target.value : '';
-    console.log("val: ", val)
+    console.log("event.target.value: ",event.target.value)
+    console.log("event: ",event)
+    let val = (/^[0-9-]*$/.test(event.target.value)) ? event.target.value : '';
     if (val !== '') {
       setTextSearch(val);
     }
@@ -246,7 +249,7 @@ function playSampleMidiDatabase(){
 }
 
 
-function playMatchLevenshteinDistance(){
+function playMatchLevenshteinDistance(strNotes="69-76-76-74-76"){
   console.log("---- playMatchLevenshteinDistance. playingMIDI: ",playingMIDI)
   // TODO adapt here... most likely we won't be able to pause once MIDI starts being played, so we might want not to do these changes anyway... to consider.
   if(playingMIDI){
@@ -260,7 +263,7 @@ function playMatchLevenshteinDistance(){
   console.log("(typeof setListSearchRes: ", typeof setListSearchRes)
 
   getMatchLevenshteinDistance(
-    "69-76-76-74-76",
+    strNotes,
     1, 
     localStorage?.username, 
     transformToPlayfulFormat,
