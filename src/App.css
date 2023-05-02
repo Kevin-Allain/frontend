@@ -175,6 +175,18 @@ input{
   left: 15%;
 }
 
+.musicres{
+  position: relative;
+  margin-top: 1rem;
+  background-color: black;
+  color: white;
+  border-radius: 5px;
+  border: solid;
+  width: 70%;
+  border-width: thin;
+  left: 15%;
+}
+
 .icons{
   position: absolute;
   top: 50%;

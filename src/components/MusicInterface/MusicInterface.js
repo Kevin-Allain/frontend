@@ -5,6 +5,7 @@ import {
   getSampleMIDI,
   getMatchLevenshteinDistance
 } from "../../utils/HandleApi";
+import MusicRes from "./MusicRes"
 import {AiFillPlayCircle, AiFillPauseCircle, AiOutlineArrowRight} from 'react-icons/ai'
 import {ImLoop2} from 'react-icons/im'
 import {BiDotsHorizontalRounded} from 'react-icons/bi'
@@ -12,51 +13,62 @@ import {BiDotsHorizontalRounded} from 'react-icons/bi'
 
 // Note: To shift by an octave you just have to add 12.
 // Apparenlty supposed to use that: Math.pow(2, (m-69)/12)*440, with m being the pitch
-export default function MusicInterface() {
+const MusicInterface = () => {
 
-// const [ contextMusic, setContextMusic ] = useState(); // const [ test, setTest ] = useState(0); // const [oscillator, setOscilator] = useState();
+  // const synth = new Tone.Synth().toDestination()
+  const [synth2, setSynth2] =  useState(new Tone.MembraneSynth().toDestination());
+  // create two monophonic synths
+  // const synthA = new Tone.FMSynth().toDestination();
+  // const synthB = new Tone.AMSynth().toDestination();
+  const [synthPoly, setSynthPoly] = useState(new Tone.PolySynth(Tone.Synth).toDestination());
 
-const synth = new Tone.Synth().toDestination()
-const synth2 = new Tone.MembraneSynth().toDestination();
-// create two monophonic synths
-const synthA = new Tone.FMSynth().toDestination();
-const synthB = new Tone.AMSynth().toDestination();
-let synthPoly = new Tone.PolySynth(Tone.Synth).toDestination();
+  const [playingMp3, setPlayingMp3] = useState(false);
+  const [iconPlayMp3, setIconPlayMp3] = useState(<AiFillPlayCircle className='icon'></AiFillPlayCircle>)
+  const [audioMp3, setAudioMp3] = useState(new Audio("https://www.learningcontainer.com/wp-content/uploads/2020/02/Kalimba.mp3"))
 
-const [playingMp3, setPlayingMp3] = useState(false);
-const [iconPlayMp3, setIconPlayMp3] = useState(<AiFillPlayCircle className='icon'></AiFillPlayCircle>)
-const [audioMp3,setAudioMp3] = useState( new Audio("https://www.learningcontainer.com/wp-content/uploads/2020/02/Kalimba.mp3") )
+  const [playingMIDI, setPlayingMIDI] = useState(false);
+  const [iconSearchTest, setIconSearchTest] = useState(<AiOutlineArrowRight className='icon'></AiOutlineArrowRight>)
 
-const [playingMIDI, setPlayingMIDI] = useState(false);
-const [ iconSearchTest , setIconSearchTest] = useState(<AiOutlineArrowRight className='icon'></AiOutlineArrowRight>)
 
-const [textSearch, setTextSearch] = useState('');
+  const [textSearch, setTextSearch] = useState('');
+  const textSearchRef = useRef();
+ 
 
-const handleClickTextSearch = () => {
-  console.log("",textSearch,", (typeof textSearch): ",(typeof textSearch));
-  // make a call to the database, then set string back to ''
-  playMatchLevenshteinDistance(textSearch);
-};
-
-// Only accept input for this variable if it is a number or a -
-// TODO current issue to fix: if only one character left, suppression not working...
-  const handleChangeTextSearch = (event) => {
-    console.log("event.target.value: ",event.target.value)
-    console.log("event: ",event)
-    let val = (/^[0-9-]*$/.test(event.target.value)) ? event.target.value : '';
-    if (val !== '') {
-      setTextSearch(val);
-    }
+  const handleClickTextSearch = async (e) => {
+    e.preventDefault();
+    console.log("", textSearch, ", (typeof textSearch): ", (typeof textSearch));
+    
+    // make a call to the database, then set string back to ''
+    playMatchLevenshteinDistance(textSearch);
   };
+
+  // // TODO change to a useRef instead?!
+  // // Only accept input for this variable if it is a number or a -
+  // const handleChangeTextSearch = async (event) => {
+  //   event.preventDefault();
+  //   // console.log("event.target.value: ",event.target.value)
+  //   // console.log("event: ",event)
+  //   let val = (/^[0-9-]*$/.test(event.target.value)) ? event.target.value : '';
+  //   if (val !== '') {
+  //     setTextSearch(val);
+  //   }
+  // };
+
+  useEffect(() => {
+    // setValidEmail(EMAIL_REGEX.test(email));
+    console.log("useEffect textSearch")
+  }, [textSearch])
+
+
 
 
 const [listSearchRes, setListSearchRes] = useState([]);
 
-const sampler = new Tone.Sampler({
-	urls: { "C4": "C4.mp3", "D#4": "Ds4.mp3", "F#4": "Fs4.mp3", "A4": "A4.mp3", },
-	release: 1,
-	baseUrl: "https://tonejs.github.io/audio/salamander/",
-}).toDestination();
+// const sampler = new Tone.Sampler({
+// 	urls: { "C4": "C4.mp3", "D#4": "Ds4.mp3", "F#4": "Fs4.mp3", "A4": "A4.mp3", },
+// 	release: 1,
+// 	baseUrl: "https://tonejs.github.io/audio/salamander/",
+// }).toDestination();
 
 /* // Previously set Tone.start by a click
 document
@@ -78,8 +90,8 @@ function playSinth() {
   // Tone.loaded().then(() => { sampler.triggerAttackRelease(["Eb4", "G4", "Bb4"], "16n", now+5);  })
 }
 
-// This is a tetris theme transposed from https://musescore.com/user/16693/scores/38133
-const tetris = [ [76, 4], [71, 8], [72, 8], [74, 4], [72, 8], [71, 8], [69, 4], [69, 8], [72, 8], [76, 4], [74, 8], [72, 8], [71, 4], [71, 8], [72, 8], [74, 4], [76, 4], [72, 4], [69, 4], [69, 4], [0,  4], [74, 3], [77, 8],[81, 4], [79, 8], [77, 8], [76, 3], [72, 8], [76, 4], [74, 8], [72, 8], [71, 4], [71, 8], [72, 8], [74, 4], [76, 4], [72, 4], [69, 4], [69, 4], [0, 4], ]
+// // This is a tetris theme transposed from https://musescore.com/user/16693/scores/38133
+// const tetris = [ [76, 4], [71, 8], [72, 8], [74, 4], [72, 8], [71, 8], [69, 4], [69, 8], [72, 8], [76, 4], [74, 8], [72, 8], [71, 4], [71, 8], [72, 8], [74, 4], [76, 4], [72, 4], [69, 4], [69, 4], [0,  4], [74, 3], [77, 8],[81, 4], [79, 8], [77, 8], [76, 3], [72, 8], [76, 4], [74, 8], [72, 8], [71, 4], [71, 8], [72, 8], [74, 4], [76, 4], [72, 4], [69, 4], [69, 4], [0, 4], ]
 
 const mainMelody = [
   {'time': 0, 'note': Math.pow(2, (76 - 69) / 12) * 440, 'duration': 5},
@@ -92,9 +104,9 @@ const mainMelody = [
 ];
 
 
-const beginningRecord =  [
-  {"time":4.017052154,"note":69,"duration":4.82975056},{"time":7.140136054,"note":77,"duration":1.114557824},{"time":8.997732426,"note":85,"duration":0.185759632},{"time":9.102222222,"note":80,"duration":0.37151928},{"time":10.73922902,"note":72,"duration":5.20126984},{"time":10.73922902,"note":72,"duration":5.20126984},{"time":15.29034014,"note":69,"duration":4.272471648},{"time":16.8460771,"note":67,"duration":13.374693872},{"time":17.8677551,"note":67,"duration":0.185759632},{"time":19.73696145,"note":67,"duration":13.746213152}
-]
+// const beginningRecord =  [
+//   {"time":4.017052154,"note":69,"duration":4.82975056},{"time":7.140136054,"note":77,"duration":1.114557824},{"time":8.997732426,"note":85,"duration":0.185759632},{"time":9.102222222,"note":80,"duration":0.37151928},{"time":10.73922902,"note":72,"duration":5.20126984},{"time":10.73922902,"note":72,"duration":5.20126984},{"time":15.29034014,"note":69,"duration":4.272471648},{"time":16.8460771,"note":67,"duration":13.374693872},{"time":17.8677551,"note":67,"duration":0.185759632},{"time":19.73696145,"note":67,"duration":13.746213152}
+// ]
 
 
 const kickDrum = new Tone.MembraneSynth({
@@ -298,19 +310,28 @@ function resetMp3(){
     <div className="musicInterface">
       <h1>Music Interface</h1>
       <br />
-      <div className="buttonsMusicInterface">
 
-        <div className="topTextSearch">
-          <input type="text"  value={textSearch} onChange={handleChangeTextSearch} />
-          <button onClick={handleClickTextSearch}>Submit</button>
+      {/* ==== SEARCH INPUT ==== */}
+      <div className="topTextSearch">
+          <input 
+            type="text"  
+            ref={textSearchRef}
+            autoComplete="off"
+            required
+            value={textSearch} 
+            onChange={ (e) => setTextSearch(e.target.value) } 
+          />
+          <button onClick={handleClickTextSearch}>Submit search</button>
         </div>
 
 
-      <div className='playMusic' >
+      {/* ==== BUTTONS ====  */}
+      <div className="buttonsMusicInterface">
+        <div className='playMusic' >
           Play Test Search
-          <hr/>
+          <hr />
           69-76-76-74-76
-          <hr/>
+          <hr />
           <div className='iconPlayPause'
             onClick={(c) => {
               console.log("about to play search");
@@ -320,16 +341,10 @@ function resetMp3(){
           >
             {iconSearchTest}
           </div>
-          {/* <div className='iconResetSong'
-            onClick={(c) => { console.log("resetMp3"); resetMp3(); console.log("done with resetMp3"); }} >
-              <ImLoop2/>
-          </div> */}
         </div>
-
-
         <div className='playMusic' >
           Play Test Link Mp3
-          <hr/>
+          <hr />
           <div className='iconPlayPause'
             onClick={(c) => {
               console.log("about to play mp3");
@@ -341,10 +356,9 @@ function resetMp3(){
           </div>
           <div className='iconResetSong'
             onClick={(c) => { console.log("resetMp3"); resetMp3(); console.log("done with resetMp3"); }} >
-              <ImLoop2/>
+            <ImLoop2 />
           </div>
         </div>
-
         <div
           className="playMusic"
           onClick={(c) => {
@@ -355,7 +369,6 @@ function resetMp3(){
         >
           Play Test Sample Database Music
         </div>
-
         <div
           className="playMusic"
           onClick={(c) => {
@@ -366,8 +379,6 @@ function resetMp3(){
         >
           Play Test Database Music
         </div>
-
-
         <div
           className="playMusic"
           onClick={(c) => {
@@ -398,21 +409,36 @@ function resetMp3(){
           Reload Page
         </div>
       </div>
+
+      {/* ==== OUTPUT SEARCH ==== */}
       <div className='wrapperMusicSearch'>
         {(listSearchRes.length <= 0) ? (<></>) :
-          <div className='outputMusicSearch'> 
-          <h2>List of results for your search</h2>
-            {(listSearchRes.map((item, i) => {
+          <div className='outputMusicSearch'>
+            <h2>List of results for your search</h2>
+            {listSearchRes.map((item, i ) => (
+              <MusicRes
+                key={item._id}
+                text={i + '_' + item.recording + '_' + item.arrNotes.toString().replaceAll(',', '-') +"_"+ item.distCalc}
+                // updateMode={() => updateMode(item._id, item.text, localStorage?.username)}
+                // deleteJazzDap={() => deleteJazzDap(item._id, setJazzDap)}
+              />
+            ))}
+            
+             {(listSearchRes.map((item, i) => {
               return (
-                <div className='resMusicSearch' key={i+'' + item.recording + '_' + item.arrNotes.toString().replaceAll(',', '-')} >
+                <div className='resMusicSearch'
+                  key={i + '' + item.recording + '_' + item.arrNotes.toString().replaceAll(',', '-')} >
                   Recording: {item.recording}. Notes: {item.arrNotes.toString().replaceAll(',', '-')}. Distance match: {item.distCalc}
-                </div>
-              )
+                </div>)
             })
-            )}
+            )} 
           </div>
         }
       </div>
+
     </div>
   );
 }
+
+
+export default MusicInterface;

@@ -84,26 +84,6 @@ function App() {
 
       </div>
       <UserContext.Provider value="hello from context">
-        {/* <div className="wrapper">
-          <BrowserRouter>
-            <div
-              className={
-                auth !== null || localStorage.token ? "offscreen" : "auth"
-              }
-            >
-              <Register></Register>
-              <hr />
-              <Login></Login>
-            </div>
-            <div
-              className={
-                auth !== null || localStorage.token ? "logout" : "offscreen"
-              }
-            >
-              <Logout></Logout>
-            </div>
-          </BrowserRouter>
-        </div> */}
 
         <MusicInterface />
 

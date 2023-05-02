@@ -11,8 +11,7 @@ const JazzDap = ({text,updateMode,deleteJazzDap}) => {
                 <AiFillDelete className='icon' onClick={deleteJazzDap} />
             </div>
         </div>
-
-    )
+    );
 }
 
 export default JazzDap

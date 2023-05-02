@@ -62,7 +62,7 @@ const Register = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        e.preventDefault();
+        // e.preventDefault();
 
         // if button enabled with JS hack
         const v1 = USER_REGEX.test(user);
@@ -105,10 +105,10 @@ const Register = () => {
                             setEmailTaken(true);
                         }
                     })
-            console.log("response: ");
-            console.log(response?.data); // undefined
-            console.log(response?.accessToken); // undefined
-            console.log(JSON.stringify(response)) // undefined
+            // console.log("response: ");
+            // console.log(response?.data); // undefined
+            // console.log(response?.accessToken); // undefined
+            // console.log(JSON.stringify(response)) // undefined
         } catch (err) {
             console.log("err: ", err);
             // TODO code to show warning about username taken already

@@ -13,9 +13,8 @@ const getAllJazzDap = (setJazzDap) => {
         .catch(err => console.log(err))
 }
 
-const addJazzDap = (text,setText, setJazzDap, user=null) => {
-
-    console.log(`HandeAPI addJazzDap: \n${baseUrl}/save`, {text})
+const addJazzDap = (text,setText,setJazzDap,user=null) => {
+    console.log(`HandeAPI addJazzDap: \n${baseUrl}/save`, {text});
 
     axios
         .post(`${baseUrl}/save`, {text,user})
@@ -160,6 +159,10 @@ const getMatchLevenshteinDistance = (
       console.log("d",d);
       console.log("d.data: ",d.data);
 
+      /** TODO
+       * This is a lot of code and most likely should be passed as a function
+       */
+
       // In retrospect, we probably don't want to play songs directly... we want to list the matching bits.
       if (levenshteinDistanceFunc == null){
         console.log("We are missing a function to calculate distance!");
@@ -200,8 +203,6 @@ const getMatchLevenshteinDistance = (
             }
           }
         }
-
-
 
         // ugly... but we messed up structure here...
         let resArray = []
