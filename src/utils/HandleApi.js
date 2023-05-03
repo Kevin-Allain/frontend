@@ -207,7 +207,6 @@ const getMatchLevenshteinDistance = (
         // ugly... but we messed up structure here...
         let resArray = []
         let resAggreg = [];
-
         for (let i in dataSplitByRecording) {
           dataSplitByRecording[i].distances = []
           dataSplitByRecording[i].slicesDist = [];

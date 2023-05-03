@@ -178,6 +178,9 @@ input{
 .disclaimerSearchPitch{
   color:ghostwhite;
 }
+.topTextSearch{
+  margin-bottom: 0.25rem;
+}
 
 .musicres{
   position: relative;

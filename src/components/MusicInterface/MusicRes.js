@@ -6,10 +6,10 @@ const MusicRes = ({text,updateMode,deleteJazzDap}) => {
     return (
         <div className="musicres">
             <div className="text">{text}</div>
-            <div className="icons">
+            {/* <div className="icons">
                 <BiEdit className='icon' onClick={console.log("MusicRes biedit")} />
                 <AiFillDelete className='icon' onClick={console.log("MusicRes aifilldelete")} />
-            </div>
+            </div> */}
         </div>
     );
 }

@@ -434,21 +434,21 @@ function resetMp3(){
             <h2>List of results for your search</h2>
             {listSearchRes.map((item, i ) => (
               <MusicRes
-                key={item._id}
+                key={i + '' + item.recording + '_' + item.arrNotes.toString().replaceAll(',', '-')}
                 text={i + '_' + item.recording + '_' + item.arrNotes.toString().replaceAll(',', '-') +"_"+ item.distCalc}
                 // updateMode={() => updateMode(item._id, item.text, localStorage?.username)}
                 // deleteJazzDap={() => deleteJazzDap(item._id, setJazzDap)}
               />
             ))}
             
-             {(listSearchRes.map((item, i) => {
+             {/* {(listSearchRes.map((item, i) => {
               return (
                 <div className='resMusicSearch'
                   key={i + '' + item.recording + '_' + item.arrNotes.toString().replaceAll(',', '-')} >
                   Recording: {item.recording}. Notes: {item.arrNotes.toString().replaceAll(',', '-')}. Distance match: {item.distCalc}
                 </div>)
             })
-            )} 
+            )}  */}
           </div>
         }
       </div>
