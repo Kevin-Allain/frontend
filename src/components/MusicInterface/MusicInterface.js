@@ -11,6 +11,13 @@ import {ImLoop2} from 'react-icons/im'
 import {BiDotsHorizontalRounded} from 'react-icons/bi'
 
 
+// const PITCH_QUERY_REGEX = /^[0-9-]*$/;
+// const PITCH_QUERY_REGEX = /^(?!.*--)(?!-)[0-9]{0,3}(-[0-9]{1,3})*$/
+const PITCH_QUERY_REGEX = /^$|(^(?!.*--)(?!-)([0-9]{1,2}|1[01][0-9]|12[0-7])(-([0-9]{1,2}|1[01][0-9]|12[0-7]))*(-?)$)/;
+
+
+
+
 // Note: To shift by an octave you just have to add 12.
 // Apparenlty supposed to use that: Math.pow(2, (m-69)/12)*440, with m being the pitch
 const MusicInterface = () => {
@@ -32,7 +39,8 @@ const MusicInterface = () => {
 
   const [textSearch, setTextSearch] = useState('');
   const textSearchRef = useRef();
- 
+  const [validPitchQuery, setValidPitchQuery] = useState(false);
+
 
   const handleClickTextSearch = async (e) => {
     e.preventDefault();
@@ -55,11 +63,17 @@ const MusicInterface = () => {
   // };
 
   useEffect(() => {
-    // setValidEmail(EMAIL_REGEX.test(email));
-    console.log("useEffect textSearch")
-  }, [textSearch])
+    setValidPitchQuery(PITCH_QUERY_REGEX.test(textSearch))
+    console.log("useEffect textSearch, validPitchQuery: ",validPitchQuery)
+  }, [textSearch, validPitchQuery])
 
+  const handleChangeQueryPitch = (event) => {
+    const value = event.target.value;
 
+    if (PITCH_QUERY_REGEX.test(value) || value[value.length-1]==='-' ) {
+      setTextSearch(value)
+    }
+  }
 
 
 const [listSearchRes, setListSearchRes] = useState([]);
@@ -313,13 +327,16 @@ function resetMp3(){
 
       {/* ==== SEARCH INPUT ==== */}
       <div className="topTextSearch">
+        <div className='disclaimerSearchPitch'>Enter a query based on pitch notes (from 0 to 127) separated with - characters.</div>
           <input 
             type="text"  
             ref={textSearchRef}
             autoComplete="off"
             required
             value={textSearch} 
-            onChange={ (e) => setTextSearch(e.target.value) } 
+            // onChange={ (e) => PITCH_QUERY_REGEX.test(e.target.value)? setTextSearch(e.target.value) : '' } 
+            // onChange={ (e) => setTextSearch(e.target.value) } 
+            onChange={handleChangeQueryPitch}
           />
           <button onClick={handleClickTextSearch}>Submit search</button>
         </div>

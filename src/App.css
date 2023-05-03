@@ -175,6 +175,10 @@ input{
   left: 15%;
 }
 
+.disclaimerSearchPitch{
+  color:ghostwhite;
+}
+
 .musicres{
   position: relative;
   margin-top: 1rem;
