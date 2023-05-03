@@ -4,6 +4,8 @@ const baseUrl = "http://localhost:5000" // can be used for development
 // const baseUrl = "https://fullstack-proto-jazzdap-backend.onrender.com"
 
 const getAllJazzDap = (setJazzDap) => {
+  console.log("getAllJazzDap", new Date());
+  
     axios
         .get(baseUrl)
         .then(({ data }) => {
@@ -163,6 +165,10 @@ const getMatchLevenshteinDistance = (
        * This is a lot of code and most likely should be passed as a function
        */
 
+      /**
+       * TODO 2: what to do when the data returned is the result from a query without matches?
+       */
+
       // In retrospect, we probably don't want to play songs directly... we want to list the matching bits.
       if (levenshteinDistanceFunc == null){
         console.log("We are missing a function to calculate distance!");
@@ -212,12 +218,16 @@ const getMatchLevenshteinDistance = (
           dataSplitByRecording[i].slicesDist = [];
           for (let j in dataSplitByRecording[i].sequences) {
             let curArrNotes = dataSplitByRecording[i].sequences[j].map(a => a.pitch)
+            let curArrTime = dataSplitByRecording[i].sequences[j].map(a => a.onset)
+            let curArrDurations = dataSplitByRecording[i].sequences[j].map(a => a.duration)
             // console.log("arrNotes: ", arrNotes);
             // let strArrNotes=arrNotes.toString().replaceAll(',','-');
             let distCalc = levenshteinDistanceFunc(arrayNotesInput, curArrNotes);
             dataSplitByRecording[i].distances.push(distCalc);
             dataSplitByRecording[i].slicesDist.push({
               arrNotes: curArrNotes,
+              arrTime: curArrTime,
+              arrDurations: curArrDurations,
               distCalc: distCalc,
               recording: i
             });
