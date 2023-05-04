@@ -247,6 +247,11 @@ button {
   max-width: max-content;
 }
 
+button:hover{
+  color: orange;
+  cursor: pointer;  
+}
+
 .offscreen {
   position: absolute;
   left: -9999px;
