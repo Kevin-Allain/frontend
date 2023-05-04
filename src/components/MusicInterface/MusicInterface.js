@@ -10,12 +10,7 @@ import {AiFillPlayCircle, AiFillPauseCircle, AiOutlineArrowRight} from 'react-ic
 import {ImLoop2} from 'react-icons/im'
 import {BiDotsHorizontalRounded} from 'react-icons/bi'
 
-
-// const PITCH_QUERY_REGEX = /^[0-9-]*$/;
-// const PITCH_QUERY_REGEX = /^(?!.*--)(?!-)[0-9]{0,3}(-[0-9]{1,3})*$/
 const PITCH_QUERY_REGEX = /^$|(^(?!.*--)(?!-)([0-9]{1,2}|1[01][0-9]|12[0-7])(-([0-9]{1,2}|1[01][0-9]|12[0-7]))*(-?)$)/;
-
-
 
 
 // Note: To shift by an octave you just have to add 12.
@@ -47,7 +42,7 @@ const MusicInterface = () => {
     console.log("", textSearch, ", (typeof textSearch): ", (typeof textSearch));
     
     // make a call to the database, then set string back to ''
-    playMatchLevenshteinDistance(textSearch);
+    findMatchLevenshteinDistance(textSearch);
   };
 
   // // TODO change to a useRef instead?!
@@ -138,8 +133,8 @@ const mainMelody = [
 const kickDrum = new Tone.MembraneSynth({
   volume: 6
 }).toDestination();
-const kicks = [ { time: '0:0' }, { time: '0:3:2' }, 
-// { time: '1:1' }, { time: '2:0' }, { time: '2:1:2' }, { time: '2:3:2' }, 
+const kicks = [ { time: 0 }, { time: 0.32 }, 
+{ time: 0.51 }, { time: 0.52 }, { time: 1.1 }, { time: 1.2 }, 
 // { time: '3:0:2' }, { time: '3:1:' }, { time: '4:0' }, { time: '4:3:2' }, { time: '5:1' }, { time: '6:0' }, { time: '6:1:2' }, { time: '6:3:2' }, { time: '7:0:2' }, { time: '7:1:' }, 
 ];
 
@@ -228,7 +223,6 @@ function playFormattedMusic(music){
     Tone.start();
     console.log("audio is ready");
   }
-
   if (Tone.Transport.state !== "started") {
     Tone.Transport.start();
     console.log("Tone.Transport.start");
@@ -240,16 +234,16 @@ function playFormattedMusic(music){
   const now = Tone.now();
   Tone.Transport.bpm.value = 180; // Not necessary, but good to have... // normal bpm is slower
 
-  const musicPart = new Tone.Part(function (time, note) {
-    synth3.triggerAttackRelease(note.note, note.duration, time);
-  }, music).start(now); // used to start at 0 but would bug
+  music.forEach(tune => {
+    const now = Tone.now()
+    // synth3.triggerAttackRelease(tune.note, tune.duration, now + tune.time)
+    synthPoly.triggerAttackRelease(tune.note, tune.duration, now + tune.time)
+  })
 
 }
 
-
-
 /**
- * Seems like this is the right approach to play any types of notes.
+ * Seems like this is the right approach to play any types of notes. (unnecessary)
  */
 function playTestMidi(){
     console.log("---- playTestMidi")
@@ -285,10 +279,15 @@ function playTestMidi(){
     // },beginningRecord).start(now);
 
     // const kickPart = new Tone.Part(function (time) {
+    //   const now = Tone.now()
     //   kickDrum.triggerAttackRelease("C1", "8n", now + time);
     // }, kicks).start(now);
-
     
+    kicks.forEach(tune => {
+      const now = Tone.now()
+      kickDrum.triggerAttackRelease("C1", "8n", now + tune.time)
+    })
+
     // *** Trying to stop the transport after playing
     // console.log("mainMelody[mainMelody.length-1].time: ",mainMelody[mainMelody.length-1].time)
     // console.log("now: ",now);
@@ -319,30 +318,29 @@ function playSampleMidiDatabase(){
     console.log("audio is ready");
   }
 
-
   var d = getSampleMIDI("BGR0082-T1", 0, 10,localStorage?.username, transformToPlayfulFormat,playFormattedMusic);
   console.log("---- playSampleMidiDatabase. d: ",d);
 }
 
-
-function playMatchLevenshteinDistance(strNotes="69-76-76-74-76"){
-  console.log("---- playMatchLevenshteinDistance. playingMIDI: ",playingMIDI)
-  Tone.Transport.stop();
-  if (Tone.context.state !== "running") {
-    Tone.start();
-    console.log("audio is ready");
-  }
+function formatAndPlay(item){
+  // Reformat
+  const arrNotes = item.arrNotes;
+  const arrTime = item.arrTime;
+  const arrDurations = item.arrDurations
   
-  // TODO adapt here... most likely we won't be able to pause once MIDI starts being played, so we might want not to do these changes anyway... to consider.
-  if(playingMIDI){
-    setIconSearchTest(<BiDotsHorizontalRounded/>)
-  } else {
-    setIconSearchTest(<BiDotsHorizontalRounded/>)
-  }
-  setPlayingMIDI(!playingMIDI);
+  const firstTime = arrTime[0];
+  
+  const combinedArray = arrNotes.map((note, index) => ({
+    note,
+    time: arrTime[index] - firstTime,
+    duration: arrDurations[index]
+  }));
+  // Play formatted music
+  playFormattedMusic(combinedArray);
+}
 
-
-  console.log("(typeof setListSearchRes: ", typeof setListSearchRes)
+function findMatchLevenshteinDistance(strNotes="69-76-76-74-76"){
+  console.log("---- findMatchLevenshteinDistance.")
 
   getMatchLevenshteinDistance(
     strNotes,
@@ -353,16 +351,18 @@ function playMatchLevenshteinDistance(strNotes="69-76-76-74-76"){
     calcLevenshteinDistance_int,
     setListSearchRes
   );
+
+  setTextSearch('');
 }
 
 function playMp3(){
   console.log("---- playMp3. playing: ",playingMp3)
   if (playingMp3){
     audioMp3.pause();
-    setIconPlayMp3(<AiFillPlayCircle></AiFillPlayCircle>)
+    setIconPlayMp3(<AiFillPlayCircle className='icon'></AiFillPlayCircle>)
   } else {
     audioMp3.play();
-    setIconPlayMp3(<AiFillPauseCircle></AiFillPauseCircle>)
+    setIconPlayMp3(<AiFillPauseCircle className='icon'></AiFillPauseCircle>)
   }
   setPlayingMp3(!playingMp3);
 }
@@ -408,7 +408,7 @@ function resetMp3(){
           <div className='iconPlayPause'
             onClick={(c) => {
               console.log("about to play search");
-              playMatchLevenshteinDistance();
+              findMatchLevenshteinDistance();
               console.log("done with play search");
             }}
           >
@@ -429,7 +429,7 @@ function resetMp3(){
           </div>
           <div className='iconResetSong'
             onClick={(c) => { console.log("resetMp3"); resetMp3(); console.log("done with resetMp3"); }} >
-            <ImLoop2 />
+            <ImLoop2 className='icon' />
           </div>
         </div>
         <div
@@ -492,6 +492,10 @@ function resetMp3(){
               <MusicRes
                 key={i + '' + item.recording + '_' + item.arrNotes.toString().replaceAll(',', '-')}
                 text={i + '_' + item.recording + '_' + item.arrNotes.toString().replaceAll(',', '-') +"_"+ item.distCalc}
+                /** Need to format the structure */
+                // funcPlayMIDI= {() => playFormattedMusic(item.arrNotes) }
+                funcPlayMIDI = { () => formatAndPlay(item) }
+
                 // updateMode={() => updateMode(item._id, item.text, localStorage?.username)}
                 // deleteJazzDap={() => deleteJazzDap(item._id, setJazzDap)}
               />

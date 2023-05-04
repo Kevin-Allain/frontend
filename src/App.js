@@ -25,7 +25,7 @@ import MusicInterface from "./components/MusicInterface/MusicInterface";
 
 
 function App() {
-  const [jazzDap, setJazzDap] = useState([]);
+  const [listJazzDap, setListJazzDap] = useState([]);
   const [text, setText] = useState("");
   const [isUpdating, setIsUpdating] = useState(false);
   const [jazzDapId, setJazzDapId] = useState("");
@@ -33,7 +33,6 @@ function App() {
   const { auth, setAuth } = useContext(AuthContext);
 
   //  ---- Login buttons variables
-  // const {showOptionsLog, setShowOptionsLog} = useContext(false);
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -42,7 +41,7 @@ function App() {
 
 
   useEffect(() => {
-    getAllJazzDap(setJazzDap);
+    getAllJazzDap(setListJazzDap);
   }, []);
   const updateMode = (_id, text) => {
     setIsUpdating(true);
@@ -98,23 +97,23 @@ function App() {
               onChange={(e) => setText(e.target.value)}
             />
             <div className="add" onClick={
-                isUpdating
-                  ? () =>
-                      updateJazzDap( jazzDapId, text, setJazzDap, setText, setIsUpdating, localStorage?.username )
-                  : () =>
-                      addJazzDap( text, setText, setJazzDap, localStorage.username ? localStorage.username : null )
-              }
+              isUpdating
+                ? () =>
+                  updateJazzDap(jazzDapId, text, setListJazzDap, setText, setIsUpdating, localStorage?.username)
+                : () =>
+                  addJazzDap(text, setText, setListJazzDap, localStorage.username ? localStorage.username : null)
+            }
             >
               {isUpdating ? "Update" : "Add"}
             </div>
           </div>
           <div className="list">
-            {jazzDap.map((item) => (
+            {listJazzDap.map((item) => (
               <JazzDap
                 key={item._id}
                 text={item.text}
                 updateMode={() => updateMode(item._id, item.text, localStorage?.username)}
-                deleteJazzDap={() => deleteJazzDap(item._id, setJazzDap)}
+                deleteJazzDap={() => deleteJazzDap(item._id, setListJazzDap)}
               />
             ))}
           </div>
