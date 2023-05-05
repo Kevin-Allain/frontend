@@ -189,9 +189,10 @@ input{
   color: white;
   border-radius: 5px;
   border: solid;
-  width: 70%;
+  width: 90%;
   border-width: thin;
-  left: 15%;
+  left: 5%;
+  text-align: left;
 }
 
 .icons{
@@ -210,6 +211,10 @@ input{
 
 .icon:hover{
   color:orange;
+}
+
+.iconsMusicRes{
+  text-align: center;
 }
 
 form {
@@ -310,12 +315,12 @@ padding-bottom: 0.25rem;
 .outputMusicSearch{
   height: 500px;
   overflow-y: scroll;
-  width: 70%;
+  width: 80%;
   border: solid;
   border-color: ghostwhite;
   text-align: center;
   position: relative;
-  left: 15%;
+  left: 10%;
   border-radius: 10px;
   background: ghostwhite;
 }

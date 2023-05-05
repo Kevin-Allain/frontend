@@ -6,10 +6,15 @@ import {FiPlayCircle} from 'react-icons/fi'
  * @param {*} param0 
  * @returns 
  */
-const MusicRes = ({text, funcPlayMIDI, updateMode=null}) => {
+const MusicRes = ({text, length, notes, durations, times, distance, funcPlayMIDI, updateMode=null}) => {
     return (
         <div className="musicres">
-            <div className="text">{text}</div>
+            <div className="text">Song:<br/>{text}</div>
+            <div className="length">Length:<br/>{length}</div>
+            <div className="notes">Notes:<br/>{notes}</div>
+            <div className="times">Times:<br/>{times}</div>
+            <div className="distance">Distance:<br/>{distance}</div>
+            <div className="durations">Durations:<br/>{durations}</div>
             <div className="iconsMusicRes">
                 <FiPlayCircle className='icon' onClick={ funcPlayMIDI } />
             </div>

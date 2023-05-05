@@ -28,9 +28,9 @@ const MusicInterface = () => {
   const [iconPlayMp3, setIconPlayMp3] = useState(<AiFillPlayCircle className='icon'></AiFillPlayCircle>)
   const [audioMp3, setAudioMp3] = useState(new Audio("https://www.learningcontainer.com/wp-content/uploads/2020/02/Kalimba.mp3"))
 
+
   const [playingMIDI, setPlayingMIDI] = useState(false);
   const [iconSearchTest, setIconSearchTest] = useState(<AiOutlineArrowRight className='icon'></AiOutlineArrowRight>)
-
 
   const [textSearch, setTextSearch] = useState('');
   const textSearchRef = useRef();
@@ -216,30 +216,47 @@ function transformToPlayfulFormat(d){
   return outputArray;    
 }
 
-function playFormattedMusic(music){
-  const synth3 = new Tone.MembraneSynth().toDestination();
+function playFormattedMusic(music){  
+  console.log("-1- Tone.Transport.state ", Tone.Transport.state);
+  // const now = Tone.now();
+  // const synth3 = new Tone.MembraneSynth().toDestination();
   Tone.Transport.stop();
-  if (Tone.context.state !== "running") {
-    Tone.start();
-    console.log("audio is ready");
-  }
+
   if (Tone.Transport.state !== "started") {
-    Tone.Transport.start();
+    // Tone.Transport.start();
+    Tone.Transport.start("+0.1")
     console.log("Tone.Transport.start");
-  } else {
-    Tone.Transport.stop();
-    console.log("Tone.Transport.stop");
-  }
+  } 
+  // else {
+  //   Tone.Transport.stop();
+  //   console.log("Tone.Transport.stop");
+  // }
+
+  // if (Tone.context.state !== "running") {
+    // Tone.start();
+    // console.log("audio is ready");
+  // }
+  console.log("-2- Tone.Transport.state ", Tone.Transport.state);
+
+  // Tone.Transport.bpm.value = 180; // Not necessary, but good to have... // normal bpm is slower
+
+  console.log("music: ",music);
 
   const now = Tone.now();
-  Tone.Transport.bpm.value = 180; // Not necessary, but good to have... // normal bpm is slower
-
   music.forEach(tune => {
-    const now = Tone.now()
+    console.log("now: ", now, ", tune.time: ", tune.time, ", sum: ", (now + tune.time));
     // synth3.triggerAttackRelease(tune.note, tune.duration, now + tune.time)
     synthPoly.triggerAttackRelease(tune.note, tune.duration, now + tune.time)
   })
 
+  // Tone.Transport.dispose();
+  // Tone.Transport.cancel();
+  // Tone.Transport.clear();
+
+
+  // console.log("Asking to stop after time: ", (music[music.length-1].duration + music[music.length-1].time))
+  // Tone.Transport.stop(music[music.length-1].duration + music[music.length-1].time);
+  console.log("-3- Tone.Transport.state ", Tone.Transport.state);
 }
 
 /**
@@ -491,7 +508,12 @@ function resetMp3(){
             {listSearchRes.map((item, i ) => (
               <MusicRes
                 key={i + '' + item.recording + '_' + item.arrNotes.toString().replaceAll(',', '-')}
-                text={i + '_' + item.recording + '_' + item.arrNotes.toString().replaceAll(',', '-') +"_"+ item.distCalc}
+                text={i + '_' + item.recording }
+                length = {  item.arrTime[item.arrTime.length-1] + item.arrDurations[item.arrDurations.length-1] -  item.arrTime[0] }
+                notes={ item.arrNotes.toString().replaceAll(',', '-') }
+                durations={ item.arrDurations.toString().replaceAll(',', '-') }
+                times={ item.arrTime.toString().replaceAll(',', '-') }
+                distance = { item.distCalc }
                 /** Need to format the structure */
                 // funcPlayMIDI= {() => playFormattedMusic(item.arrNotes) }
                 funcPlayMIDI = { () => formatAndPlay(item) }
