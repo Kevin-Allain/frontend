@@ -132,7 +132,8 @@ const getSampleMIDI = ( recording = "BGR0082-T1", firstNoteIndex=0, lastNodeInde
     .catch((err) => console.log(err));
 };
 
-const getTrackMetadata = (lognumber) => {
+
+const getTrackMetadata = (lognumber, infoMusicList, setInfoMusicList) => {
   axios
     .get(`${baseUrl}/getTrackMetadata`, {
       params: {
@@ -141,10 +142,15 @@ const getTrackMetadata = (lognumber) => {
     })
     .then((d) => {
       console.log("#### Then of getTrackMetadata ####");
-      console.log("d: ",d);
-      // Probably something like this
-      // setListSearchRes( resAggreg );
-
+      console.log("d: ",d, ", d.data[0].lognumber: ", d.data[0].lognumber);
+      // Need to change to push into the array... if that's not something already queried for...? 
+      // It might be arguable that one metadata search is enough
+      setInfoMusicList([... infoMusicList, 
+        {
+          lognumber: d.data[0].lognumber,
+          contents: d.data[0].Contents,
+        }
+      ])
     })
 }
 

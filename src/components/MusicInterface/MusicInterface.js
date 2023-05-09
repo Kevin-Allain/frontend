@@ -38,6 +38,10 @@ const MusicInterface = () => {
   const [validPitchQuery, setValidPitchQuery] = useState(false);
 
 
+  // TODO probably change approach
+  const [infoMusicList, setInfoMusicList] = useState([]);
+
+
   const handleClickTextSearch = async (e) => {
     e.preventDefault();
     console.log("", textSearch, ", (typeof textSearch): ", (typeof textSearch));
@@ -360,10 +364,10 @@ function formatAndPlay(item){
 }
 
 
-function getMusicInfo( track ){
+function getMusicInfo( track, infoMusicList, setInfoMusicList = null ){
   const lognumber = track.split("-")[0];  
-  console.log("getMusicInfo, track: ", track,", lognumber: ", lognumber);
-  getTrackMetadata(lognumber);
+  console.log("getMusicInfo, track: ", track,", lognumber: ", lognumber,", setInfoMusicList: ",setInfoMusicList);
+  getTrackMetadata(lognumber, infoMusicList, setInfoMusicList);
 }
 
 function findMatchLevenshteinDistance(strNotes="69-76-76-74-76"){
@@ -519,6 +523,7 @@ function resetMp3(){
               <MusicRes
                 key={i + '' + item.recording + '_' + item.arrNotes.toString().replaceAll(',', '-')}
                 text={i + '_' + item.recording }
+                lognumber = {item.recording.split('-')[0]}
                 length = {  item.arrTime[item.arrTime.length-1] + item.arrDurations[item.arrDurations.length-1] -  item.arrTime[0] }
                 notes={ item.arrNotes.toString().replaceAll(',', '-') }
                 durations={ item.arrDurations.toString().replaceAll(',', '-') }
@@ -527,7 +532,8 @@ function resetMp3(){
                 /** Need to format the structure */
                 // funcPlayMIDI= {() => playFormattedMusic(item.arrNotes) }
                 funcPlayMIDI = { () => formatAndPlay(item) }
-                getMusicInfo = { () => getMusicInfo(item.recording) }
+                getMusicInfo = { () => getMusicInfo(item.recording, infoMusicList, setInfoMusicList) }
+                infoMusicList={ infoMusicList }
                 // updateMode={() => updateMode(item._id, item.text, localStorage?.username)}
                 // deleteJazzDap={() => deleteJazzDap(item._id, setJazzDap)}
               />

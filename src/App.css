@@ -217,6 +217,10 @@ input{
   text-align: center;
 }
 
+.musicinfo{
+  background-color: gray;
+}
+
 form {
   display: flex;
   flex-direction: column;

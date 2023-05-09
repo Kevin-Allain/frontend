@@ -4,10 +4,7 @@ import {BsInfoCircleFill} from 'react-icons/bs'
 import MusicInfo from "./MusicInfo"
 
 
-const MusicRes = ({text, length, notes, durations, times, distance, funcPlayMIDI, getMusicInfo }) => {
-
-
-    const [infoMusicList, setInfoMusicList] = useState([]);
+const MusicRes = ({text, lognumber, length, notes, durations, times, distance, funcPlayMIDI, getMusicInfo, infoMusicList }) => {
 
     return (
         <div className="musicres">
@@ -15,14 +12,17 @@ const MusicRes = ({text, length, notes, durations, times, distance, funcPlayMIDI
                 <div className="infoMusic"> <BsInfoCircleFill className='icon' onClick={getMusicInfo} /> </div>
                 {(infoMusicList.length <= 0) ? (<></>) :
                     infoMusicList.map((item, i) => (
-                        <MusicInfo
+                        lognumber !== item.lognumber? (<></>) : 
+                        <MusicInfo className='musicinfo'
                             key={i + '' + item.text}
-                            text={i + '_' + item.text}
+                            lognumber={item.lognumber}
+                            contents={item.contents}
                         />
                     )
                     )
                 }
             </div>
+            <div className='lognumber'>lognumber: {lognumber}</div>
             <div className="length">Length:<br />{length}</div>
             <div className="notes">Notes:<br />{notes}</div>
             <div className="times">Times:<br />{times}</div>
