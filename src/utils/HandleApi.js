@@ -132,6 +132,22 @@ const getSampleMIDI = ( recording = "BGR0082-T1", firstNoteIndex=0, lastNodeInde
     .catch((err) => console.log(err));
 };
 
+const getTrackMetadata = (lognumber) => {
+  axios
+    .get(`${baseUrl}/getTrackMetadata`, {
+      params: {
+        lognumber: lognumber,
+      }
+    })
+    .then((d) => {
+      console.log("#### Then of getTrackMetadata ####");
+      console.log("d: ",d);
+      // Probably something like this
+      // setListSearchRes( resAggreg );
+
+    })
+}
+
 const getMatchLevenshteinDistance = (
   stringNotes = "",
   percMatch = 1,
@@ -262,5 +278,6 @@ const getMatchLevenshteinDistance = (
 
 export {
     getAllJazzDap, addJazzDap, updateJazzDap, deleteJazzDap, 
-    getMusicMIDI, getSampleMIDI, getMatchLevenshteinDistance
+    getMusicMIDI, getSampleMIDI, getMatchLevenshteinDistance,
+    getTrackMetadata
 }

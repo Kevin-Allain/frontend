@@ -3,7 +3,8 @@ import * as Tone from "tone"
 import {
   getMusicMIDI,
   getSampleMIDI,
-  getMatchLevenshteinDistance
+  getMatchLevenshteinDistance,
+  getTrackMetadata
 } from "../../utils/HandleApi";
 import MusicRes from "./MusicRes"
 import {AiFillPlayCircle, AiFillPauseCircle, AiOutlineArrowRight} from 'react-icons/ai'
@@ -224,7 +225,7 @@ function playFormattedMusic(music){
 
   if (Tone.Transport.state !== "started") {
     // Tone.Transport.start();
-    Tone.Transport.start("+0.1")
+    Tone.Transport.start("+0.1") // We try to see if the odd bug goes away by setting up the transfer with an offset.
     console.log("Tone.Transport.start");
   } 
   // else {
@@ -242,7 +243,9 @@ function playFormattedMusic(music){
 
   console.log("music: ",music);
 
-  const now = Tone.now();
+  const offsetTest = 0.1;
+
+  const now = Tone.now() + offsetTest;
   music.forEach(tune => {
     console.log("now: ", now, ", tune.time: ", tune.time, ", sum: ", (now + tune.time));
     // synth3.triggerAttackRelease(tune.note, tune.duration, now + tune.time)
@@ -354,6 +357,13 @@ function formatAndPlay(item){
   }));
   // Play formatted music
   playFormattedMusic(combinedArray);
+}
+
+
+function getMusicInfo( track ){
+  const lognumber = track.split("-")[0];  
+  console.log("getMusicInfo, track: ", track,", lognumber: ", lognumber);
+  getTrackMetadata(lognumber);
 }
 
 function findMatchLevenshteinDistance(strNotes="69-76-76-74-76"){
@@ -517,7 +527,7 @@ function resetMp3(){
                 /** Need to format the structure */
                 // funcPlayMIDI= {() => playFormattedMusic(item.arrNotes) }
                 funcPlayMIDI = { () => formatAndPlay(item) }
-
+                getMusicInfo = { () => getMusicInfo(item.recording) }
                 // updateMode={() => updateMode(item._id, item.text, localStorage?.username)}
                 // deleteJazzDap={() => deleteJazzDap(item._id, setJazzDap)}
               />

@@ -1,22 +1,35 @@
-import React from 'react'
+import {useState} from 'react'
 import {FiPlayCircle} from 'react-icons/fi'
+import {BsInfoCircleFill} from 'react-icons/bs'
+import MusicInfo from "./MusicInfo"
 
-/**
- * We intend to make a component that can list results of licks queries, play it in Mp3 and MIDI, and display information about the song it comes from
- * @param {*} param0 
- * @returns 
- */
-const MusicRes = ({text, length, notes, durations, times, distance, funcPlayMIDI, updateMode=null}) => {
+
+const MusicRes = ({text, length, notes, durations, times, distance, funcPlayMIDI, getMusicInfo }) => {
+
+
+    const [infoMusicList, setInfoMusicList] = useState([]);
+
     return (
         <div className="musicres">
-            <div className="text">Song:<br/>{text}</div>
-            <div className="length">Length:<br/>{length}</div>
-            <div className="notes">Notes:<br/>{notes}</div>
-            <div className="times">Times:<br/>{times}</div>
-            <div className="distance">Distance:<br/>{distance}</div>
-            <div className="durations">Durations:<br/>{durations}</div>
+            <div className="text">Song:<br />{text}
+                <div className="infoMusic"> <BsInfoCircleFill className='icon' onClick={getMusicInfo} /> </div>
+                {(infoMusicList.length <= 0) ? (<></>) :
+                    infoMusicList.map((item, i) => (
+                        <MusicInfo
+                            key={i + '' + item.text}
+                            text={i + '_' + item.text}
+                        />
+                    )
+                    )
+                }
+            </div>
+            <div className="length">Length:<br />{length}</div>
+            <div className="notes">Notes:<br />{notes}</div>
+            <div className="times">Times:<br />{times}</div>
+            <div className="distance">Distance:<br />{distance}</div>
+            <div className="durations">Durations:<br />{durations}</div>
             <div className="iconsMusicRes">
-                <FiPlayCircle className='icon' onClick={ funcPlayMIDI } />
+                <FiPlayCircle className='icon' onClick={funcPlayMIDI} />
             </div>
         </div>
     );
