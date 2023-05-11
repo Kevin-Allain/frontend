@@ -126,7 +126,13 @@ input{
   width: 100px;
   padding: 0 0.5rem;
   border-bottom: 1px solid #282c34;
-  cursor: pointer;
+  cursor: default;
+}
+
+.alpha_warning{
+  padding-bottom: 0.2rem;
+  font: message-box;
+  font-size: larger;
 }
 
 .musicInterface{
@@ -148,7 +154,7 @@ input{
   width: 100px;
   padding: 0 0.5rem;
   border-bottom: 1px solid #282c34;
-  cursor: pointer;
+  cursor: default;
 }
 
 .stopMusic{
@@ -193,6 +199,18 @@ input{
   border-width: thin;
   left: 5%;
   text-align: left;
+}
+
+.infoLogNumber{
+  margin-top: 1rem;
+  background-color: rgb(51, 51, 59);
+  color: white;
+  max-height: 200px;
+  overflow-y: scroll;
+  overflow-x: scroll;
+  width: 90%;
+  left: 5%;
+  position: relative;
 }
 
 .icons{

@@ -4,12 +4,15 @@ import {
   getMusicMIDI,
   getSampleMIDI,
   getMatchLevenshteinDistance,
-  getTrackMetadata
+  getTrackMetadata,
+  getTracksMetadata
 } from "../../utils/HandleApi";
 import MusicRes from "./MusicRes"
 import {AiFillPlayCircle, AiFillPauseCircle, AiOutlineArrowRight} from 'react-icons/ai'
 import {ImLoop2} from 'react-icons/im'
 import {BiDotsHorizontalRounded} from 'react-icons/bi'
+import {BsInfoCircleFill} from 'react-icons/bs'
+
 
 const PITCH_QUERY_REGEX = /^$|(^(?!.*--)(?!-)([0-9]{1,2}|1[01][0-9]|12[0-7])(-([0-9]{1,2}|1[01][0-9]|12[0-7]))*(-?)$)/;
 
@@ -77,6 +80,7 @@ const MusicInterface = () => {
 
 
 const [listSearchRes, setListSearchRes] = useState([]);
+const [listLogNumbers, setListLogNumbers] = useState([]);
 
 // const sampler = new Tone.Sampler({
 // 	urls: { "C4": "C4.mp3", "D#4": "Ds4.mp3", "F#4": "Fs4.mp3", "A4": "A4.mp3", },
@@ -370,6 +374,12 @@ function getMusicInfo( track, infoMusicList, setInfoMusicList = null ){
   getTrackMetadata(lognumber, infoMusicList, setInfoMusicList);
 }
 
+function getResultsInfo( lognumbers, infoMusicList, setInfoMusicList = null ){
+  console.log("getResultsInfo, lognumbers: ", lognumbers,", infoMusicList: ",infoMusicList,", setInfoMusicList: ",setInfoMusicList);
+  getTracksMetadata(lognumbers, infoMusicList, setInfoMusicList);
+}
+
+
 function findMatchLevenshteinDistance(strNotes="69-76-76-74-76"){
   console.log("---- findMatchLevenshteinDistance.")
 
@@ -380,11 +390,15 @@ function findMatchLevenshteinDistance(strNotes="69-76-76-74-76"){
     transformToPlayfulFormat,
     playFormattedMusic, 
     calcLevenshteinDistance_int,
-    setListSearchRes
+    setListSearchRes, 
+    setListLogNumbers
   );
 
   setTextSearch('');
 }
+
+
+
 
 function playMp3(){
   console.log("---- playMp3. playing: ",playingMp3)
@@ -519,7 +533,10 @@ function resetMp3(){
         {(listSearchRes.length <= 0) ? (<></>) :
           <div className='outputMusicSearch'>
             <h2>List of results for your search</h2>
-            {listSearchRes.map((item, i ) => (
+            <div className='infoLogNumber'>Information about the recordings:   <br/>
+              <BsInfoCircleFill className='icon' onClick={getMusicInfo} /> 
+            </div>
+            {listSearchRes.map((item, i) => (
               <MusicRes
                 key={i + '' + item.recording + '_' + item.arrNotes.toString().replaceAll(',', '-')}
                 text={i + '_' + item.recording }
@@ -537,7 +554,8 @@ function resetMp3(){
                 // updateMode={() => updateMode(item._id, item.text, localStorage?.username)}
                 // deleteJazzDap={() => deleteJazzDap(item._id, setJazzDap)}
               />
-            ))}
+            ))
+            }
             
              {/* {(listSearchRes.map((item, i) => {
               return (
