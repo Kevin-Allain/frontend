@@ -191,6 +191,100 @@ const Piano = () => {
             <li data-note="B4" className={`key note white ${activeWhiteNote === "A4" ? "active" : ""}`} >
                 B4
             </li>
+            <li data-note="C5"
+                className={`key note white ${activeWhiteNote === "C5" ? "active" : ""}`} >
+                <div data-note="C#5s"
+                    className={`black-key note white ${activeBlackNote === "C#5s" ? "active" : ""}`} >
+                    C#5
+                </div>
+                C5
+            </li>
+            <li data-note="D5"
+                className={`key note white ${activeWhiteNote === "D5" ? "active" : ""}`} >
+                <div data-note="D#5s"
+                    className={`black-key note white ${activeBlackNote === "D#5s" ? "active" : "" }`} >
+                    D#5
+                </div>
+                D5
+            </li>
+            <li data-note="E5"
+                className={`key note white ${activeWhiteNote === "E5" ? "active" : ""}`} >
+                E5
+            </li>
+            <li data-note="F5"
+                className={`key note white ${activeWhiteNote === "F5" ? "active" : ""}`} >
+                <div data-note="F#5s"
+                    className={`black-key note white ${activeBlackNote === "F#5s" ? "active" : "" }`} >
+                    F#5
+                </div>
+                F5
+            </li>
+            <li data-note="G5"
+                className={`key note white ${activeWhiteNote === "G5" ? "active" : ""}`} >
+                <div data-note="G#5s"
+                    className={`black-key note white ${activeBlackNote === "G#5s" ? "active" : "" }`} >
+                    G#5
+                </div>
+                G5
+            </li>
+            <li data-note="A5"
+                className={`key note white ${activeWhiteNote === "A5" ? "active" : ""}`} >
+                <div data-note="A#5s"
+                    className={`black-key note white ${activeBlackNote === "A#5s" ? "active" : "" }`} >
+                    A#5
+                </div>
+                A5
+            </li>
+            <li data-note="B5" className={`key note white ${activeWhiteNote === "A5" ? "active" : ""}`} >
+                B5
+            </li>
+            <li data-note="C6"
+                className={`key note white ${activeWhiteNote === "C6" ? "active" : ""}`} >
+                <div data-note="C#6s"
+                    className={`black-key note white ${activeBlackNote === "C#6s" ? "active" : ""}`} >
+                    C#6
+                </div>
+                C6
+            </li>
+            <li data-note="D6"
+                className={`key note white ${activeWhiteNote === "D6" ? "active" : ""}`} >
+                <div data-note="D#6s"
+                    className={`black-key note white ${activeBlackNote === "D#6s" ? "active" : "" }`} >
+                    D#6
+                </div>
+                D6
+            </li>
+            <li data-note="E6"
+                className={`key note white ${activeWhiteNote === "E6" ? "active" : ""}`} >
+                E6
+            </li>
+            <li data-note="F6"
+                className={`key note white ${activeWhiteNote === "F6" ? "active" : ""}`} >
+                <div data-note="F#6s"
+                    className={`black-key note white ${activeBlackNote === "F#6s" ? "active" : "" }`} >
+                    F#6
+                </div>
+                F6
+            </li>
+            <li data-note="G6"
+                className={`key note white ${activeWhiteNote === "G6" ? "active" : ""}`} >
+                <div data-note="G#6s"
+                    className={`black-key note white ${activeBlackNote === "G#6s" ? "active" : "" }`} >
+                    G#6
+                </div>
+                G6
+            </li>
+            <li data-note="A6"
+                className={`key note white ${activeWhiteNote === "A6" ? "active" : ""}`} >
+                <div data-note="A#6s"
+                    className={`black-key note white ${activeBlackNote === "A#6s" ? "active" : "" }`} >
+                    A#6
+                </div>
+                A6
+            </li>
+            <li data-note="B6" className={`key note white ${activeWhiteNote === "A6" ? "active" : ""}`} >
+                B6
+            </li>
         </ul>
     );
 }
