@@ -56,7 +56,7 @@ function App() {
       </button>
       <div className="header">
         <p> <span> <img src={logoJazzDap} className="imageHeader" alt="some value" name="Image1" align="bottom" width="192" height="107" border="0" /> </span>
-          <div className="alpha_warning">ALPHA</div>
+          <span className="alpha_warning">ALPHA</span>
         </p>
         {showDiv &&
           <div className="wrapper">

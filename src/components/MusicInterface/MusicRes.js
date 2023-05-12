@@ -29,7 +29,7 @@ const MusicRes = ({text, lognumber, length, notes, durations, times, distance, f
             <div className="length">Length:<br />{length}</div>
             <div className="notes">Notes:<br />{notes}</div>
             <div className="times">Times:<br />{times}</div>
-            <div className="distance">Distance:<br />{distance}</div>
+            <div className="distance">Distance (difference to query):<br />{distance}</div>
             <div className="durations">Durations:<br />{durations}</div>
             <div className="iconsMusicRes">
                 <FiPlayCircle className='icon' onClick={funcPlayMIDI} />

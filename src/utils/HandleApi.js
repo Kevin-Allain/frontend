@@ -132,7 +132,6 @@ const getSampleMIDI = (recording = "BGR0082-T1", firstNoteIndex = 0, lastNodeInd
     .catch((err) => console.log(err));
 };
 
-/** TODO would make more sense if we loaded all the albums already returned. */
 const getTracksMetadata = (lognumbers, infoMusicList, setInfoMusicList) => {
   axios
     .get(`${baseUrl}/getTracksMetadata`, {
@@ -142,10 +141,22 @@ const getTracksMetadata = (lognumbers, infoMusicList, setInfoMusicList) => {
     })
     .then((d) => {
       console.log("#### Then of getTracksMetadata ####");
-      console.log("d: ", d, ", d.data[0].lognumber: ", d.data[0].lognumber);
-
+      console.log("d: ", d);
+      
+      // TODO low-priority change names of columns in the files, then updated in databased (automate with Python)
+      let transf_info_metadata = [];
+      for ( let i in d.data){
+        transf_info_metadata.push({
+          lognumber: d.data[i].lognumber,
+          contents: d.data[i].Contents,
+          configuration: d.data[i].Configuration,
+          tape_stock: d.data[i]["Tape stock"],
+          recording_location: d.data[i]["Recording location"],
+        })
+      }
+      console.log("transf_info_metadata: ",transf_info_metadata);
+      setInfoMusicList(transf_info_metadata);
     })
-
 }
 
 /** TODO would make more sense if we loaded all the albums already returned. */

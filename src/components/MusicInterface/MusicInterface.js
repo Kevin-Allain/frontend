@@ -8,6 +8,7 @@ import {
   getTracksMetadata
 } from "../../utils/HandleApi";
 import MusicRes from "./MusicRes"
+import MusicInfo from "./MusicInfo"
 import {AiFillPlayCircle, AiFillPauseCircle, AiOutlineArrowRight} from 'react-icons/ai'
 import {ImLoop2} from 'react-icons/im'
 import {BiDotsHorizontalRounded} from 'react-icons/bi'
@@ -40,30 +41,18 @@ const MusicInterface = () => {
   const textSearchRef = useRef();
   const [validPitchQuery, setValidPitchQuery] = useState(false);
 
-
   // TODO probably change approach
   const [infoMusicList, setInfoMusicList] = useState([]);
+  const [listSearchRes, setListSearchRes] = useState([]);
+  const [listLogNumbers, setListLogNumbers] = useState([]);
 
 
   const handleClickTextSearch = async (e) => {
     e.preventDefault();
     console.log("", textSearch, ", (typeof textSearch): ", (typeof textSearch));
-    
     // make a call to the database, then set string back to ''
     findMatchLevenshteinDistance(textSearch);
   };
-
-  // // TODO change to a useRef instead?!
-  // // Only accept input for this variable if it is a number or a -
-  // const handleChangeTextSearch = async (event) => {
-  //   event.preventDefault();
-  //   // console.log("event.target.value: ",event.target.value)
-  //   // console.log("event: ",event)
-  //   let val = (/^[0-9-]*$/.test(event.target.value)) ? event.target.value : '';
-  //   if (val !== '') {
-  //     setTextSearch(val);
-  //   }
-  // };
 
   useEffect(() => {
     setValidPitchQuery(PITCH_QUERY_REGEX.test(textSearch))
@@ -78,9 +67,6 @@ const MusicInterface = () => {
     }
   }
 
-
-const [listSearchRes, setListSearchRes] = useState([]);
-const [listLogNumbers, setListLogNumbers] = useState([]);
 
 // const sampler = new Tone.Sampler({
 // 	urls: { "C4": "C4.mp3", "D#4": "Ds4.mp3", "F#4": "Fs4.mp3", "A4": "A4.mp3", },
@@ -374,8 +360,8 @@ function getMusicInfo( track, infoMusicList, setInfoMusicList = null ){
   getTrackMetadata(lognumber, infoMusicList, setInfoMusicList);
 }
 
-function getResultsInfo( lognumbers, infoMusicList, setInfoMusicList = null ){
-  console.log("getResultsInfo, lognumbers: ", lognumbers,", infoMusicList: ",infoMusicList,", setInfoMusicList: ",setInfoMusicList);
+function getResultsInfo( lognumbers, infoMusicList, setInfoMusicList ){
+  console.log("getResultsInfo, lognumbers: ", lognumbers, {infoMusicList, setInfoMusicList});
   getTracksMetadata(lognumbers, infoMusicList, setInfoMusicList);
 }
 
@@ -424,8 +410,6 @@ function resetMp3(){
   return (
     <div className="musicInterface">
       <h1>Music Interface</h1>
-      <br />
-
       {/* ==== SEARCH INPUT ==== */}
       <div className="topTextSearch">
         <div className='disclaimerSearchPitch'>Enter a query based on pitch notes (from 0 to 127) separated with - characters.</div>
@@ -533,8 +517,21 @@ function resetMp3(){
         {(listSearchRes.length <= 0) ? (<></>) :
           <div className='outputMusicSearch'>
             <h2>List of results for your search</h2>
-            <div className='infoLogNumber'>Information about the recordings:   <br/>
-              <BsInfoCircleFill className='icon' onClick={getMusicInfo} /> 
+            <div className='infoLogNumber'>Information about the recordings<br/>
+              <BsInfoCircleFill className='icon' 
+                onClick={ () => getResultsInfo(listLogNumbers, infoMusicList, setInfoMusicList) }
+              /> 
+              {(infoMusicList.length <= 0) ? (<></>) :
+                    infoMusicList.map((item, i) => (
+                        <MusicInfo className='musicinfo'
+                            key={`${i}-${item.lognumber}`} // for some reason warning about keys?!
+                            lognumber={  item.lognumber}
+                            contents={ item.contents}
+                            recording_location= { item.recording_location}
+                        />
+                    )
+                    )
+                }              
             </div>
             {listSearchRes.map((item, i) => (
               <MusicRes
