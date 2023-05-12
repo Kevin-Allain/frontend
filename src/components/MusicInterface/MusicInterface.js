@@ -9,6 +9,7 @@ import {
 } from "../../utils/HandleApi";
 import MusicRes from "./MusicRes"
 import MusicInfo from "./MusicInfo"
+import Piano from "./Piano"
 import {AiFillPlayCircle, AiFillPauseCircle, AiOutlineArrowRight} from 'react-icons/ai'
 import {ImLoop2} from 'react-icons/im'
 import {BiDotsHorizontalRounded} from 'react-icons/bi'
@@ -412,6 +413,8 @@ function resetMp3(){
   return (
     <div className="musicInterface">
       <h1>Music Interface</h1>
+      {/* ==== PIANO INPUT ==== */}
+      <Piano/>
       {/* ==== SEARCH INPUT ==== */}
       <div className="topTextSearch">
         <div className='disclaimerSearchPitch'>Enter a query based on pitch notes (from 0 to 127) separated with - characters.</div>
