@@ -369,6 +369,8 @@ function getResultsInfo( lognumbers, infoMusicList, setInfoMusicList ){
 function findMatchLevenshteinDistance(strNotes="69-76-76-74-76"){
   console.log("---- findMatchLevenshteinDistance.")
 
+  setInfoMusicList([]);
+
   getMatchLevenshteinDistance(
     strNotes,
     1, 
