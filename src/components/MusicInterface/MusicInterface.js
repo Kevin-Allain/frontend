@@ -414,7 +414,7 @@ function resetMp3(){
     <div className="musicInterface">
       <h1>Music Interface</h1>
       {/* ==== PIANO INPUT ==== */}
-      <Piano/>
+      <Piano textSearch={textSearch} setTextSearch={setTextSearch} />
       {/* ==== SEARCH INPUT ==== */}
       <div className="topTextSearch">
         <div className='disclaimerSearchPitch'>Enter a query based on pitch notes (from 0 to 127) separated with - characters.</div>

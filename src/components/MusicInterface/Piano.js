@@ -4,7 +4,10 @@ import "./MusicInterface.css"
 import NotetoMIDI from "./NotetoMIDI.json"
 import MIDItoNote from "./MIDItoNote.json"
 
-const Piano = () => {
+const Piano = ( props) => {
+
+    let { textSearch, setTextSearch } = props;
+    
 
     const [synth, setSynth] = useState(new Tone.Synth());
     // Set the tone to sine
@@ -107,8 +110,10 @@ const Piano = () => {
             setActiveWhiteNote(note);
         }
         console.log(`Note ${note} down. activeBlackNote: ${activeBlackNote}. activeWhiteNote: ${activeWhiteNote}`);
-        console.log(NotetoMIDI);
-        console.log(MIDItoNote);
+        console.log("NotetoMIDI[note]: ",NotetoMIDI[note]); // This is correct. We thus need for the piano to somehow call the function that fills in the search
+        
+        console.log("textSearch: ",textSearch ,", typeof textSearch: ",(typeof textSearch)  ,", setTextSearch: ",setTextSearch)
+        setTextSearch(textSearch+= (textSearch.length===0)? NotetoMIDI[note] :  "-"+NotetoMIDI[note])
     };
 
     const handleNoteUp = (note) => {
