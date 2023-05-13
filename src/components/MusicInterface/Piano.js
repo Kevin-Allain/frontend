@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import * as Tone from "tone"
 import "./MusicInterface.css"
+import NotetoMIDI from "./NotetoMIDI.json"
+import MIDItoNote from "./MIDItoNote.json"
 
 const Piano = () => {
 
@@ -105,6 +107,8 @@ const Piano = () => {
             setActiveWhiteNote(note);
         }
         console.log(`Note ${note} down. activeBlackNote: ${activeBlackNote}. activeWhiteNote: ${activeWhiteNote}`);
+        console.log(NotetoMIDI);
+        console.log(MIDItoNote);
     };
 
     const handleNoteUp = (note) => {
