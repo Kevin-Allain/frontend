@@ -10,6 +10,8 @@ import {
 import MusicRes from "./MusicRes"
 import MusicInfo from "./MusicInfo"
 import Piano from "./Piano"
+import NotetoMIDI from "./NotetoMIDI.json"
+import MIDItoNote from "./MIDItoNote.json"
 import {AiFillPlayCircle, AiFillPauseCircle, AiOutlineArrowRight} from 'react-icons/ai'
 import {ImLoop2} from 'react-icons/im'
 import {BiDotsHorizontalRounded} from 'react-icons/bi'
@@ -24,7 +26,10 @@ const PITCH_QUERY_REGEX = /^$|(^(?!.*--)(?!-)([0-9]{1,2}|1[01][0-9]|12[0-7])(-([
 const MusicInterface = () => {
 
   // const synth = new Tone.Synth().toDestination()
-  const [synth2, setSynth2] =  useState(new Tone.MembraneSynth().toDestination());
+  const [synth2, setSynth2] =  useState(new Tone.Synth());
+  synth2.oscillator.type = "sine";  
+  synth2.toDestination();
+
   // create two monophonic synths
   // const synthA = new Tone.FMSynth().toDestination();
   // const synthB = new Tone.AMSynth().toDestination();
@@ -88,7 +93,8 @@ document
 
 function playSinth() {
   const now = Tone.now();
-  synth2.triggerAttackRelease("C4", "8n", now+0.25); // synth2.triggerAttackRelease("E4", "8n", now + 0.5); // synth2.triggerAttackRelease("G4", "8n", now + 1); // synth2.triggerAttackRelease(440, "800n", now + 1.5);
+  synth2.triggerAttackRelease("C#4", "8n", now+0.25); // synth2.triggerAttackRelease("E4", "8n", now + 0.5); // synth2.triggerAttackRelease("G4", "8n", now + 1); // synth2.triggerAttackRelease(440, "800n", now + 1.5);
+  synth2.triggerAttackRelease("C#4s", "8n", now+0.5);
   synth2.triggerAttackRelease(360, 1, now + 1); synth2.triggerAttackRelease(360, 1, now + 2); synth2.triggerAttackRelease(360, 5, now + 3);
   synthPoly.triggerAttack("D4", now + 3); synthPoly.triggerAttack("F4", now + 0.5 + 3); // synthPoly.triggerAttack("A4", now + 1); // synthPoly.triggerAttack("C5", now + 1.5); // synthPoly.triggerAttack("E5", now + 2); // synthPoly.triggerAttack("G6", now + 3); // synthPoly.triggerAttack("D3", now + 4); 
   synthPoly.triggerRelease(["D4", "F4", "A4", "C5", "E5"], now + 1 + 3);
@@ -214,26 +220,16 @@ function transformToPlayfulFormat(d){
 
 function playFormattedMusic(music){  
   console.log("-1- Tone.Transport.state ", Tone.Transport.state);
-  // const now = Tone.now();
-  // const synth3 = new Tone.MembraneSynth().toDestination();
+  // const now = Tone.now(); // const synth3 = new Tone.MembraneSynth().toDestination();
   Tone.Transport.stop();
-
   if (Tone.Transport.state !== "started") {
     // Tone.Transport.start();
     Tone.Transport.start("+0.1") // We try to see if the odd bug goes away by setting up the transfer with an offset.
     console.log("Tone.Transport.start");
   } 
-  // else {
-  //   Tone.Transport.stop();
-  //   console.log("Tone.Transport.stop");
-  // }
-
-  // if (Tone.context.state !== "running") {
-    // Tone.start();
-    // console.log("audio is ready");
-  // }
+  // else { Tone.Transport.stop(); console.log("Tone.Transport.stop");  }
+  // if (Tone.context.state !== "running") {  Tone.start();  console.log("audio is ready");  }
   console.log("-2- Tone.Transport.state ", Tone.Transport.state);
-
   // Tone.Transport.bpm.value = 180; // Not necessary, but good to have... // normal bpm is slower
 
   console.log("music: ",music);
@@ -242,9 +238,11 @@ function playFormattedMusic(music){
 
   const now = Tone.now() + offsetTest;
   music.forEach(tune => {
-    console.log("now: ", now, ", tune.time: ", tune.time, ", sum: ", (now + tune.time));
+    console.log("now: ", now, ", tune.time: ", tune.time, ", sum: ", (now + tune.time),", tune.note: ", tune.note,", MIDItoNote[tune.note]: ",MIDItoNote[tune.note]);
     // synth3.triggerAttackRelease(tune.note, tune.duration, now + tune.time)
-    synthPoly.triggerAttackRelease(tune.note, tune.duration, now + tune.time)
+    // synthPoly.triggerAttackRelease(tune.note, tune.duration, now + tune.time)
+    // synth2.triggerAttackRelease(tune.note, tune.duration, now + tune.time)
+    synth2.triggerAttackRelease( MIDItoNote[tune.note], tune.duration, now + tune.time)
   })
 
   // Tone.Transport.dispose();
@@ -344,7 +342,8 @@ function formatAndPlay(item){
   const arrDurations = item.arrDurations
   
   const firstTime = arrTime[0];
-  
+  console.log("formatAndPlay. arrNotes: ",arrNotes);
+
   const combinedArray = arrNotes.map((note, index) => ({
     note,
     time: arrTime[index] - firstTime,

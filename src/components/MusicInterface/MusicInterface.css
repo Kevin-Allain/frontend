@@ -11,8 +11,11 @@ body {
 .keys {
     list-style: none;
     display: flex;
-    left: 5%;
-    position: relative;    
+    left: 1%;
+    position: relative;
+    /* overflow-x: scroll; */
+    padding-bottom: 1rem;
+    width:95%;
 }
 
 /* TODO change code with JavaScript to mute white keys reacting to hover when hovering black keys */
