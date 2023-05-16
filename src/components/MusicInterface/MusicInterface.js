@@ -44,7 +44,7 @@ const MusicInterface = () => {
   const [iconSearchTest, setIconSearchTest] = useState(<AiOutlineArrowRight className='icon'></AiOutlineArrowRight>)
 
   const [textSearch, setTextSearch] = useState('');
-  const textSearchRef = useRef();
+  const textSearchRef = useRef('');
   const [validPitchQuery, setValidPitchQuery] = useState(false);
 
   // TODO probably change approach
@@ -409,11 +409,17 @@ function resetMp3(){
   setAudioMp3(new Audio("https://www.learningcontainer.com/wp-content/uploads/2020/02/Kalimba.mp3"));
 }
 
+function handleKeyPress(keyName) {
+  setTextSearch((prevText) => (prevText==='')? NotetoMIDI[keyName] : prevText + '-' + NotetoMIDI[keyName]);
+  textSearchRef.current.value += NotetoMIDI[keyName];
+}
+
+
   return (
     <div className="musicInterface">
       <h1>Music Interface</h1>
       {/* ==== PIANO INPUT ==== */}
-      <Piano textSearch={textSearch} setTextSearch={setTextSearch} />
+      <Piano onKeyPress={handleKeyPress} />
       {/* ==== SEARCH INPUT ==== */}
       <div className="topTextSearch">
         <div className='disclaimerSearchPitch'>Enter a query based on pitch notes (from 0 to 127) separated with - characters.</div>
