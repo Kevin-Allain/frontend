@@ -26,7 +26,7 @@ import MusicInterface from "./components/MusicInterface/MusicInterface";
 
 function App() {
   const [listJazzDap, setListJazzDap] = useState([]);
-  const [text, setText] = useState("");
+  const [textInputJazzDAP, setTextInputJazzDAP] = useState("");
   const [isUpdating, setIsUpdating] = useState(false);
   const [jazzDapId, setJazzDapId] = useState("");
 
@@ -45,7 +45,7 @@ function App() {
   }, []);
   const updateMode = (_id, text) => {
     setIsUpdating(true);
-    setText(text);
+    setTextInputJazzDAP(text);
     setJazzDapId(_id);
   };
 
@@ -89,21 +89,21 @@ function App() {
         <MusicInterface />
 
         <div className="container">
-          <div className="top">
+          <div className="jazzdapInput">
             <input
               type="text"
               placeholder="Add Jazzdap"
               name="AddJazzDap"
               id="AddJazzDap"
-              value={text}
-              onChange={(e) => setText(e.target.value)}
+              value={textInputJazzDAP}
+              onChange={(e) => setTextInputJazzDAP(e.target.value)}
             />
             <div className="add" onClick={
               isUpdating
                 ? () =>
-                  updateJazzDap(jazzDapId, text, setListJazzDap, setText, setIsUpdating, localStorage?.username)
+                  updateJazzDap(jazzDapId, textInputJazzDAP, setListJazzDap, setTextInputJazzDAP, setIsUpdating, localStorage.username ? localStorage.username : null)
                 : () =>
-                  addJazzDap(text, setText, setListJazzDap, localStorage.username ? localStorage.username : null)
+                  addJazzDap(textInputJazzDAP, setTextInputJazzDAP, setListJazzDap, localStorage.username ? localStorage.username : null)
             }
             >
               {isUpdating ? "Update" : "Add"}

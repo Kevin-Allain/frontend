@@ -1,104 +1,19 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import * as Tone from "tone"
 import "./MusicInterface.css"
 import NotetoMIDI from "./NotetoMIDI.json"
 import MIDItoNote from "./MIDItoNote.json"
 
-const Piano = ( props) => {
+const Piano = (props) => {
 
     // let { textSearch, setTextSearch } = props;
     const { onKeyPress } = props;
 
-    const [synth, setSynth] = useState(new Tone.Synth());
+    const synth = useRef(new Tone.Synth());
     // Set the tone to sine
-    synth.oscillator.type = "sine";
+    synth.current.oscillator.type = "sine";
     // connect it to the master output (your speakers)
-    synth.toDestination();
-    const piano = document.getElementById("piano");
-    // piano.addEventListener("mousedown", e => {
-    //     // fires off a note continously until trigger is released
-    //     synth.triggerAttack(e.target.dataset.note);
-    // });
-    // piano.addEventListener("mouseup", e => {
-    //     // stops the trigger
-    //     synth.triggerRelease();
-    // });
-
-    // // handles keyboard events
-    // document.addEventListener("keydown", e => {
-    //     // e object has the key property to tell which key was pressed
-    //     switch (e.key) {
-    //         case "d":
-    //             return synth.triggerAttack("C4");
-    //         case "r":
-    //             return synth.triggerAttack("C#4");
-    //         case "f":
-    //             return synth.triggerAttack("D4");
-    //         case "t":
-    //             return synth.triggerAttack("D#4");
-    //         case "g":
-    //             return synth.triggerAttack("E4");
-    //         case "h":
-    //             return synth.triggerAttack("F4");
-    //         case "u":
-    //             return synth.triggerAttack("F#4");
-    //         case "j":
-    //             return synth.triggerAttack("G4");
-    //         case "i":
-    //             return synth.triggerAttack("G#4");
-    //         case "k":
-    //             return synth.triggerAttack("A4");
-    //         case "o":
-    //             return synth.triggerAttack("A#4");
-    //         case "l":
-    //             return synth.triggerAttack("B4");
-    //         default:
-    //             return;
-    //     }
-    // });
-    // // when the key is released, audio is released as well
-    // document.addEventListener("keyup", e => {
-    //     switch (e.key) {
-    //         case "d":
-    //             synth.triggerRelease();
-    //             return;
-    //         case "r":
-    //             synth.triggerRelease();
-    //             return;
-    //         case "f":
-    //             synth.triggerRelease();
-    //             return;
-    //         case "t":
-    //             synth.triggerRelease();
-    //             return;
-    //         case "g":
-    //             synth.triggerRelease();
-    //             return;
-    //         case "h":
-    //             synth.triggerRelease();
-    //             return;
-    //         case "u":
-    //             synth.triggerRelease();
-    //             return;
-    //         case "j":
-    //             synth.triggerRelease();
-    //             return;
-    //         case "i":
-    //             synth.triggerRelease();
-    //             return;
-    //         case "k":
-    //             synth.triggerRelease();
-    //             return;
-    //         case "o":
-    //             synth.triggerRelease();
-    //             return;
-    //         case "l":
-    //             synth.triggerRelease();
-    //             return;
-    //         default:
-    //             return;
-    //     }
-    // });
+    synth.current.toDestination();
 
     const [activeWhiteNote, setActiveWhiteNote] = useState(null);
     const [activeBlackNote, setActiveBlackNote] = useState(null);
@@ -110,8 +25,8 @@ const Piano = ( props) => {
             setActiveWhiteNote(note);
         }
         console.log(`Note ${note} down. activeBlackNote: ${activeBlackNote}. activeWhiteNote: ${activeWhiteNote}`);
-        console.log("NotetoMIDI[note]: ",NotetoMIDI[note]); // This is correct. We thus need for the piano to somehow call the function that fills in the search
-        
+        console.log("NotetoMIDI[note]: ", NotetoMIDI[note]); // This is correct. We thus need for the piano to somehow call the function that fills in the search
+
         // console.log("textSearch: ",textSearch ,", typeof textSearch: ",(typeof textSearch)  ,", setTextSearch: ",setTextSearch)
         // setTextSearch(textSearch+= (textSearch.length===0)? NotetoMIDI[note] :  "-"+NotetoMIDI[note])
         onKeyPress(note);
@@ -134,10 +49,10 @@ const Piano = ( props) => {
 
         const handleKeyDown = (event) => {
             const note = event.target.dataset.note;
-            console.log("note: ",note);
+            console.log("note: ", note);
             const now = Tone.now();
-            synth.triggerAttackRelease(note, "8n", now+0.25);
-            // synth.triggerAttackRelease(NotetoMIDI[note], "8n", now+1);
+            synth.current.triggerAttackRelease(note, "8n", now + 0.25);
+            Tone.Transport.stop();
             handleNoteDown(note);
         };
 
@@ -308,7 +223,7 @@ const Piano = ( props) => {
             <li data-note="D3"
                 className={`key note white ${activeWhiteNote === "D3" ? "active" : ""}`} >
                 <div data-note="D#3s"
-                    className={`black-key note white ${activeBlackNote === "D#3s" ? "active" : "" }`} >
+                    className={`black-key note white ${activeBlackNote === "D#3s" ? "active" : ""}`} >
                     D#3
                 </div>
                 D3
@@ -320,7 +235,7 @@ const Piano = ( props) => {
             <li data-note="F3"
                 className={`key note white ${activeWhiteNote === "F3" ? "active" : ""}`} >
                 <div data-note="F#3s"
-                    className={`black-key note white ${activeBlackNote === "F#3s" ? "active" : "" }`} >
+                    className={`black-key note white ${activeBlackNote === "F#3s" ? "active" : ""}`} >
                     F#3
                 </div>
                 F3
@@ -328,7 +243,7 @@ const Piano = ( props) => {
             <li data-note="G3"
                 className={`key note white ${activeWhiteNote === "G3" ? "active" : ""}`} >
                 <div data-note="G#3s"
-                    className={`black-key note white ${activeBlackNote === "G#3s" ? "active" : "" }`} >
+                    className={`black-key note white ${activeBlackNote === "G#3s" ? "active" : ""}`} >
                     G#3
                 </div>
                 G3
@@ -336,7 +251,7 @@ const Piano = ( props) => {
             <li data-note="A3"
                 className={`key note white ${activeWhiteNote === "A3" ? "active" : ""}`} >
                 <div data-note="A#3s"
-                    className={`black-key note white ${activeBlackNote === "A#3s" ? "active" : "" }`} >
+                    className={`black-key note white ${activeBlackNote === "A#3s" ? "active" : ""}`} >
                     A#3
                 </div>
                 A3
@@ -355,7 +270,7 @@ const Piano = ( props) => {
             <li data-note="D4"
                 className={`key note white ${activeWhiteNote === "D4" ? "active" : ""}`} >
                 <div data-note="D#4s"
-                    className={`black-key note white ${activeBlackNote === "D#4s" ? "active" : "" }`} >
+                    className={`black-key note white ${activeBlackNote === "D#4s" ? "active" : ""}`} >
                     D#4
                 </div>
                 D4
@@ -367,7 +282,7 @@ const Piano = ( props) => {
             <li data-note="F4"
                 className={`key note white ${activeWhiteNote === "F4" ? "active" : ""}`} >
                 <div data-note="F#4s"
-                    className={`black-key note white ${activeBlackNote === "F#4s" ? "active" : "" }`} >
+                    className={`black-key note white ${activeBlackNote === "F#4s" ? "active" : ""}`} >
                     F#4
                 </div>
                 F4
@@ -375,7 +290,7 @@ const Piano = ( props) => {
             <li data-note="G4"
                 className={`key note white ${activeWhiteNote === "G4" ? "active" : ""}`} >
                 <div data-note="G#4s"
-                    className={`black-key note white ${activeBlackNote === "G#4s" ? "active" : "" }`} >
+                    className={`black-key note white ${activeBlackNote === "G#4s" ? "active" : ""}`} >
                     G#4
                 </div>
                 G4
@@ -383,7 +298,7 @@ const Piano = ( props) => {
             <li data-note="A4"
                 className={`key note white ${activeWhiteNote === "A4" ? "active" : ""}`} >
                 <div data-note="A#4s"
-                    className={`black-key note white ${activeBlackNote === "A#4s" ? "active" : "" }`} >
+                    className={`black-key note white ${activeBlackNote === "A#4s" ? "active" : ""}`} >
                     A#4
                 </div>
                 A4
@@ -402,7 +317,7 @@ const Piano = ( props) => {
             <li data-note="D5"
                 className={`key note white ${activeWhiteNote === "D5" ? "active" : ""}`} >
                 <div data-note="D#5s"
-                    className={`black-key note white ${activeBlackNote === "D#5s" ? "active" : "" }`} >
+                    className={`black-key note white ${activeBlackNote === "D#5s" ? "active" : ""}`} >
                     D#5
                 </div>
                 D5
@@ -414,7 +329,7 @@ const Piano = ( props) => {
             <li data-note="F5"
                 className={`key note white ${activeWhiteNote === "F5" ? "active" : ""}`} >
                 <div data-note="F#5s"
-                    className={`black-key note white ${activeBlackNote === "F#5s" ? "active" : "" }`} >
+                    className={`black-key note white ${activeBlackNote === "F#5s" ? "active" : ""}`} >
                     F#5
                 </div>
                 F5
@@ -422,7 +337,7 @@ const Piano = ( props) => {
             <li data-note="G5"
                 className={`key note white ${activeWhiteNote === "G5" ? "active" : ""}`} >
                 <div data-note="G#5s"
-                    className={`black-key note white ${activeBlackNote === "G#5s" ? "active" : "" }`} >
+                    className={`black-key note white ${activeBlackNote === "G#5s" ? "active" : ""}`} >
                     G#5
                 </div>
                 G5
@@ -430,7 +345,7 @@ const Piano = ( props) => {
             <li data-note="A5"
                 className={`key note white ${activeWhiteNote === "A5" ? "active" : ""}`} >
                 <div data-note="A#5s"
-                    className={`black-key note white ${activeBlackNote === "A#5s" ? "active" : "" }`} >
+                    className={`black-key note white ${activeBlackNote === "A#5s" ? "active" : ""}`} >
                     A#5
                 </div>
                 A5
@@ -449,7 +364,7 @@ const Piano = ( props) => {
             <li data-note="D6"
                 className={`key note white ${activeWhiteNote === "D6" ? "active" : ""}`} >
                 <div data-note="D#6s"
-                    className={`black-key note white ${activeBlackNote === "D#6s" ? "active" : "" }`} >
+                    className={`black-key note white ${activeBlackNote === "D#6s" ? "active" : ""}`} >
                     D#6
                 </div>
                 D6
@@ -461,7 +376,7 @@ const Piano = ( props) => {
             <li data-note="F6"
                 className={`key note white ${activeWhiteNote === "F6" ? "active" : ""}`} >
                 <div data-note="F#6s"
-                    className={`black-key note white ${activeBlackNote === "F#6s" ? "active" : "" }`} >
+                    className={`black-key note white ${activeBlackNote === "F#6s" ? "active" : ""}`} >
                     F#6
                 </div>
                 F6
@@ -469,7 +384,7 @@ const Piano = ( props) => {
             <li data-note="G6"
                 className={`key note white ${activeWhiteNote === "G6" ? "active" : ""}`} >
                 <div data-note="G#6s"
-                    className={`black-key note white ${activeBlackNote === "G#6s" ? "active" : "" }`} >
+                    className={`black-key note white ${activeBlackNote === "G#6s" ? "active" : ""}`} >
                     G#6
                 </div>
                 G6
@@ -477,7 +392,7 @@ const Piano = ( props) => {
             <li data-note="A6"
                 className={`key note white ${activeWhiteNote === "A6" ? "active" : ""}`} >
                 <div data-note="A#6s"
-                    className={`black-key note white ${activeBlackNote === "A#6s" ? "active" : "" }`} >
+                    className={`black-key note white ${activeBlackNote === "A#6s" ? "active" : ""}`} >
                     A#6
                 </div>
                 A6

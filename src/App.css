@@ -37,6 +37,9 @@
     transform: rotate(360deg);
   }
 }
+.annotation{
+  background-color: #f6f6b3;
+}
 
 .header{
   background-color: ghostwhite;
@@ -93,7 +96,7 @@ h1 {
 }
 
 
-.top{
+.jazzdapInput{
   display: flex;
   gap:1rem;
   justify-content: center;
@@ -138,6 +141,12 @@ input{
 .musicInterface{
   justify-content: space-around;
 
+}
+
+.areaAnnotation { 
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
 }
 
 .buttonsMusicInterface{
