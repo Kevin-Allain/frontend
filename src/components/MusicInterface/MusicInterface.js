@@ -70,13 +70,6 @@ const MusicInterface = () => {
     }
   }
 
-  // Function to save annotation for a specific MusicRes
-  const handleSaveAnnotation = (musicResId, annotation) => {
-    // Save the annotation for the specified MusicRes
-    // ...
-
-    console.log(`Saved annotation "${annotation}" for MusicRes ${musicResId}`);
-  };
 
   // TODO use for note playing!!! https://tonejs.github.io/
   // const sampler = new Tone.Sampler({
@@ -342,9 +335,13 @@ const MusicInterface = () => {
       <div className='wrapperMusicSearch'>
         {(listSearchRes.length <= 0) ? (<></>) :
           <div className='outputMusicSearch'>
-            {/* TODO imperfect, makes sense for oldSearch to be updated with handleAPi output. */}
+            {/* TODO fix imperfect implementation, makes more sense for oldSearch to be updated with handleAPi output. */}
             <h2>List of results for your search: {oldSearch}</h2>
-            <AnnotationSystem type={"search"} data={oldSearch} addAnnotation={addAnnotation} />
+            <AnnotationSystem
+              type={"search"}
+              info={oldSearch}
+              addAnnotation={addAnnotation}
+            />
             <div className='infoLogNumber'>Load information about the recordings<br />
               <BsInfoCircleFill className='icon'
                 onClick={() => getResultsInfo(listLogNumbers, infoMusicList, setInfoMusicList)}
@@ -377,9 +374,10 @@ const MusicInterface = () => {
                 infoMusicList={infoMusicList}
               // updateMode={() => updateMode(item._id, item.text, localStorage?.username)}
               // deleteJazzDap={() => deleteJazzDap(item._id, setJazzDap)}
-              annotations = {listAnnotMusRes.map((item, j) => (
-                  <Annotation musicRes={item.recording} onSave={()=> {console.log("onSave")}}  />))
-                }
+              // TODO annotation for each musicres
+              // annotations = {listAnnotMusRes.map((item, j) => (
+              //     <Annotation musicRes={item.recording} onSave={()=> {console.log("onSave")}}  />))
+              //   }
               />
             ))
             }

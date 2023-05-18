@@ -51,14 +51,17 @@ function App() {
 
   return (
     <div className="App">
-      <button className='buttonShowDiv' onClick={() => setShowDiv(!showDiv)}>
+      <button
+        className='buttonShowDiv'
+        onClick={() => setShowDiv(!showDiv)}
+      >
         {showDiv ? 'Hide Login / Register' : 'Login / Register'}
       </button>
       <div className="header">
         <p> <span> <img src={logoJazzDap} className="imageHeader" alt="some value" name="Image1" align="bottom" width="192" height="107" border="0" /> </span>
           <span className="alpha_warning">ALPHA</span>
         </p>
-        {showDiv &&
+        {(showDiv || localStorage?.username !== undefined) &&
           <div className="wrapper">
             <BrowserRouter>
               <div
@@ -70,7 +73,6 @@ function App() {
                 <hr />
                 <Login></Login>
               </div>
-
               <div
                 className={
                   auth !== null || localStorage.token ? "logout" : "offscreen"
@@ -103,7 +105,12 @@ function App() {
                 ? () =>
                   updateJazzDap(jazzDapId, textInputJazzDAP, setListJazzDap, setTextInputJazzDAP, setIsUpdating, localStorage.username ? localStorage.username : null)
                 : () =>
-                  addJazzDap(textInputJazzDAP, setTextInputJazzDAP, setListJazzDap, localStorage.username ? localStorage.username : null)
+                  addJazzDap(
+                    textInputJazzDAP, 
+                    setTextInputJazzDAP, 
+                    setListJazzDap, 
+                    localStorage.username ? localStorage.username : null
+                  )
             }
             >
               {isUpdating ? "Update" : "Add"}

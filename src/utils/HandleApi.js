@@ -318,26 +318,41 @@ const getMatchLevenshteinDistance = (
 };
 
 
+/** Annotations */
+
 // This is really just a v1
-const addAnnotation = (type, annotation, setAnnotation, setJazzDap, user = null) => {
-  console.log(`HandeAPI addJazzDap: \n${baseUrl}/saveAnnotation`, { annotation });
+const addAnnotation = (type, info, annotationInput, setAnnotationInput, setAnnotations, user = null) => {
+  console.log(`HandeAPI addAnnotation: \n${baseUrl}/saveAnnotation`, { type, info, annotationInput });
 
   axios
-    .post(`${baseUrl}/saveannotation`, { annotation, type, user })
+    .post(`${baseUrl}/addAnnotation`, { type, info, annotationInput, user })
     .then((data) => {
       console.log(data);
-      setAnnotation("");
+      setAnnotationInput("");
       // getAllAnnotation(setAnnotations); // TODO
+    })
+    .catch(err => console.log(err))
+}
+
+// TODO
+const getAnnotations = (type, info, setAnnotations, user=null) => {
+  console.log("HandeAPI getAnnotations", new Date());
+
+  axios
+    .get( `${baseUrl}/getannotations`,  {type, info, user} )
+    .then(({ data }) => {
+      console.log('data: ', data);
+      setAnnotations(data);
     })
     .catch(err => console.log(err))
 }
 
 
 
+
 export {
   getAllJazzDap, addJazzDap, updateJazzDap, deleteJazzDap,
   getMusicMIDI, getSampleMIDI, getMatchLevenshteinDistance,
-  getTrackMetadata, // will probably remove this one? 
-  getTracksMetadata,
-  addAnnotation
+  getTrackMetadata, /* will probably remove this one? */ getTracksMetadata,
+  addAnnotation, getAnnotations
 }

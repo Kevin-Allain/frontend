@@ -3,7 +3,7 @@ import { HiOutlineAnnotation } from 'react-icons/hi'
 
 // TODO assess how we want to convey information about the object that uses the annotation system. 
 // We need to standardize (maybe use a different structure?)
-const AnnotationSystem = ( {type, data, addAnnotation} ) => {
+const AnnotationSystem = ({ type, info, addAnnotation }) => {
 
   const [textInputAnnotation, setTextInputAnnotation] = useState("");
   const [isUpdating, setIsUpdating] = useState(false);
@@ -13,33 +13,40 @@ const AnnotationSystem = ( {type, data, addAnnotation} ) => {
 
   // localStorage.username ? localStorage.username : null
 
-    return (
-        <div className="annotationInput">
+  return (
+    <div className="annotationInput">
 
-        {/* button to show or hide */}
-        <button className='buttonShowAnnotation' onClick={() => setShowInputAnnotation(!showInputAnnotation)}>
-          <HiOutlineAnnotation className='icon' />
-        </button>
-        {showInputAnnotation && 
-          <div className='areaAnnotation'>
-            <input
-              type="text"
-              placeholder={"Add annotation about "+type}
-              name="AddAnnotation"
-              id="AddAnnotation"
-              className='annotation'
-              value={textInputAnnotation}
-              onChange={(e) => setTextInputAnnotation(e.target.value)} />
-              <div className="add annotation" onClick={isUpdating
-                ? () => console.log("will try to update")
-                : () => console.log("wil try to add. data: ",data,", type: ",type," textInputAnnotation: ",textInputAnnotation)}
-              >
-                {isUpdating ? "Update" : "Add"}
-              </div>
-            </div>
-        }
-      </div>
-    )
+      {/* button to show or hide */}
+      <button className='buttonShowAnnotation' onClick={() => setShowInputAnnotation(!showInputAnnotation)}>
+        <HiOutlineAnnotation className='icon' />
+      </button>
+      {showInputAnnotation &&
+        <div className='areaAnnotation'>
+          <input
+            type="text"
+            placeholder={"Add annotation about " + type}
+            name="AddAnnotation"
+            id="AddAnnotation"
+            className='annotation'
+            value={textInputAnnotation}
+            onChange={(e) => setTextInputAnnotation(e.target.value)} />
+          <div className="add annotation" onClick={isUpdating
+            ? () => console.log("will try to update")
+            : () => addAnnotation(
+              type,
+              info,
+              textInputAnnotation,
+              setTextInputAnnotation,
+              null, // TODO fix
+              localStorage?.username)
+          }
+          >
+            {isUpdating ? "Update" : "Add"}
+          </div>
+        </div>
+      }
+    </div>
+  )
 }
 
 
