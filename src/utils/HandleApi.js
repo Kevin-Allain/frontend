@@ -5,7 +5,6 @@ const baseUrl = "http://localhost:5000" // can be used for development
 
 const getAllJazzDap = (setJazzDap) => {
   console.log("getAllJazzDap", new Date());
-
   axios
     .get(baseUrl)
     .then(({ data }) => {
