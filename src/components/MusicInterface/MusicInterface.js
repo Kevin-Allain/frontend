@@ -5,7 +5,8 @@ import {
   getSampleMIDI,
   getMatchLevenshteinDistance,
   getTrackMetadata,
-  getTracksMetadata
+  getTracksMetadata,
+  addAnnotation
 } from "../../utils/HandleApi";
 import MusicRes from "./MusicRes"
 import MusicInfo from "./MusicInfo"
@@ -343,7 +344,7 @@ const MusicInterface = () => {
           <div className='outputMusicSearch'>
             {/* TODO imperfect, makes sense for oldSearch to be updated with handleAPi output. */}
             <h2>List of results for your search: {oldSearch}</h2>
-            <AnnotationSystem type={"search"} />
+            <AnnotationSystem type={"search"} data={oldSearch} addAnnotation={addAnnotation} />
             <div className='infoLogNumber'>Load information about the recordings<br />
               <BsInfoCircleFill className='icon'
                 onClick={() => getResultsInfo(listLogNumbers, infoMusicList, setInfoMusicList)}

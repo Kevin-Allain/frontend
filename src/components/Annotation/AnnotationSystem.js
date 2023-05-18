@@ -1,13 +1,17 @@
 import React, { useState } from 'react';
 import { HiOutlineAnnotation } from 'react-icons/hi'
 
-const AnnotationSystem = ( {type} ) => {
+// TODO assess how we want to convey information about the object that uses the annotation system. 
+// We need to standardize (maybe use a different structure?)
+const AnnotationSystem = ( {type, data, addAnnotation} ) => {
 
   const [textInputAnnotation, setTextInputAnnotation] = useState("");
   const [isUpdating, setIsUpdating] = useState(false);
   const [annotationId, setAnnotatoinId] = useState("");
 
   const [showInputAnnotation, setShowInputAnnotation] = useState(false);
+
+  // localStorage.username ? localStorage.username : null
 
     return (
         <div className="annotationInput">
@@ -28,7 +32,7 @@ const AnnotationSystem = ( {type} ) => {
               onChange={(e) => setTextInputAnnotation(e.target.value)} />
               <div className="add annotation" onClick={isUpdating
                 ? () => console.log("will try to update")
-                : () => console.log("wil try to add")}
+                : () => console.log("wil try to add. data: ",data,", type: ",type," textInputAnnotation: ",textInputAnnotation)}
               >
                 {isUpdating ? "Update" : "Add"}
               </div>

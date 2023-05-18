@@ -318,10 +318,26 @@ const getMatchLevenshteinDistance = (
 };
 
 
+// This is really just a v1
+const addAnnotation = (type, annotation, setAnnotation, setJazzDap, user = null) => {
+  console.log(`HandeAPI addJazzDap: \n${baseUrl}/saveAnnotation`, { annotation });
+
+  axios
+    .post(`${baseUrl}/saveannotation`, { annotation, type, user })
+    .then((data) => {
+      console.log(data);
+      setAnnotation("");
+      // getAllAnnotation(setAnnotations); // TODO
+    })
+    .catch(err => console.log(err))
+}
+
+
 
 export {
   getAllJazzDap, addJazzDap, updateJazzDap, deleteJazzDap,
   getMusicMIDI, getSampleMIDI, getMatchLevenshteinDistance,
   getTrackMetadata, // will probably remove this one? 
-  getTracksMetadata
+  getTracksMetadata,
+  addAnnotation
 }
