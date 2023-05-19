@@ -7,7 +7,8 @@ import {
   getTrackMetadata,
   getTracksMetadata,
   addAnnotation,
-  getAnnotations
+  getAnnotations,
+  deleteAnnotation
 } from "../../utils/HandleApi";
 import MusicRes from "./MusicRes"
 import MusicInfo from "./MusicInfo"
@@ -343,6 +344,7 @@ const MusicInterface = () => {
               info={oldSearch}
               addAnnotation={addAnnotation}
               getAnnotations = {getAnnotations}
+              deleteAnnotation={deleteAnnotation}
             />
             <div className='infoLogNumber'>Load information about the recordings<br />
               <BsInfoCircleFill className='icon'
@@ -375,7 +377,6 @@ const MusicInterface = () => {
                 getMusicInfo={() => getMusicInfo(item.recording, infoMusicList, setInfoMusicList)}
                 infoMusicList={infoMusicList}
               // updateMode={() => updateMode(item._id, item.text, localStorage?.username)}
-              // deleteJazzDap={() => deleteJazzDap(item._id, setJazzDap)}
               // TODO annotation for each musicres
               // annotations = {listAnnotMusRes.map((item, j) => (
               //     <Annotation musicRes={item.recording} onSave={()=> {console.log("onSave")}}  />))

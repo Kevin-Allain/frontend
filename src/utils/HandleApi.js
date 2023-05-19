@@ -18,7 +18,7 @@ const addJazzDap = (text, setText, setJazzDap, user = null) => {
   console.log(`HandeAPI addJazzDap: \n${baseUrl}/save`, { text });
 
   axios
-    .post(`${baseUrl}/save`, { text, user })
+    .post(`${baseUrl}/saveJazzDap`, { text, user })
     .then((data) => {
       console.log(data);
       setText("");
@@ -27,9 +27,9 @@ const addJazzDap = (text, setText, setJazzDap, user = null) => {
     .catch(err => console.log(err))
 }
 
-const updateJazzDap = (jazzDapId, text, setJazzDap, setText, setIsUpdating, userId = null) => {
+const updateJazzDap = (jazzDapId, text, setJazzDap, setText, setIsUpdating, userId = null) => {  
   axios
-    .post(`${baseUrl}/update`, { _id: jazzDapId, text, userId })
+    .post(`${baseUrl}/updateJazzDap`, { _id: jazzDapId, text, userId })
     .then((data) => {
       console.log(data);
       setText("");
@@ -40,8 +40,10 @@ const updateJazzDap = (jazzDapId, text, setJazzDap, setText, setIsUpdating, user
 }
 
 const deleteJazzDap = (jazzDapId, setJazzDap) => {
+  console.log("HandeAPI deleteJazzDap. annotationId: ", jazzDapId, ", setJazzDap: ", setJazzDap)
+
   axios
-    .post(`${baseUrl}/delete`, { _id: jazzDapId })
+    .post(`${baseUrl}/deleteJazzDap`, { _id: jazzDapId })
     .then((data) => {
       console.log(data);
       getAllJazzDap(setJazzDap);
@@ -334,9 +336,9 @@ const addAnnotation = (type, info, annotationInput, setAnnotationInput, setListA
     .catch(err => console.log(err))
 }
 
-// TODO
+
 const getAnnotations = (type, info, setListAnnotations, user = null) => {
-  console.log("HandeAPI getAnnotations at ", new Date(), ", type: ", type, ", info: ", info);
+  console.log("HandeAPI getAnnotations type: ", type, ", info: ", info);
 
   axios
     .get(`${baseUrl}/getAnnotations`, {
@@ -350,6 +352,17 @@ const getAnnotations = (type, info, setListAnnotations, user = null) => {
     .catch(err => console.log(err))
 }
 
+const deleteAnnotation = (annotationId, type, info, setListAnnotations) => {
+  console.log("HandeAPI deleteAnnotation. annotationId: ", annotationId, ", setListAnnotations: ", setListAnnotations)
+
+  axios
+    .post(`${baseUrl}/deleteAnnotation`, { _id: annotationId })
+    .then((data) => {
+      console.log(data);
+      getAnnotations(type, info, setListAnnotations);
+    })
+    .catch(err => console.log(err))
+}
 
 
 
@@ -357,5 +370,5 @@ export {
   getAllJazzDap, addJazzDap, updateJazzDap, deleteJazzDap,
   getMusicMIDI, getSampleMIDI, getMatchLevenshteinDistance,
   getTrackMetadata, getTracksMetadata,
-  addAnnotation, getAnnotations
+  addAnnotation, getAnnotations, deleteAnnotation, 
 }

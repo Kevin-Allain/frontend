@@ -2,13 +2,17 @@
     display: flex;
     gap: 1rem;
     justify-content: center;
+    padding-bottom: 0.2rem;
+    padding-top: 0.2rem;
   }
 
 .annotation{
-  background-color: #f6f6b3;
-}
-  
+  background-color: #f9f9c9;
+  border: solid;
+  border-width: thin;
+} 
   
 .areaDisplayAnnotation{
-
+  max-height: 350px;
+  overflow-y: scroll;
 }

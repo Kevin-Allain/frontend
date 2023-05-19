@@ -5,7 +5,7 @@ import "./AnnotationSystem.css"
 
 // TODO assess how we want to convey information about the object that uses the annotation system. 
 // We need to standardize (maybe use a different structure?)
-const AnnotationSystem = ({ type, info, addAnnotation, getAnnotations }) => {
+const AnnotationSystem = ({ type, info, addAnnotation, getAnnotations, deleteAnnotation }) => {
 
   const [textInputAnnotation, setTextInputAnnotation] = useState("");
   const [isUpdating, setIsUpdating] = useState(false);
@@ -72,7 +72,7 @@ const AnnotationSystem = ({ type, info, addAnnotation, getAnnotations }) => {
                   privacy={item.privacy}
                   // TODO (and think about more)
                   // updateMode={() => updateMode(item._id, item.text, localStorage?.username)}
-                  // deleteJazzDap={() => deleteJazzDap(item._id, setListJazzDap)}
+                  deleteAnnotation={() => deleteAnnotation(item._id, item.type, item.info, setListAnnotations)}
                 />
               ))}
           </div>
