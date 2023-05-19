@@ -1,0 +1,14 @@
+.areaInputAnnotation { 
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+  }
+
+.annotation{
+  background-color: #f6f6b3;
+}
+  
+  
+.areaDisplayAnnotation{
+
+}

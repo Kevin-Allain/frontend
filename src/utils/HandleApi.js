@@ -4,7 +4,7 @@ const baseUrl = "http://localhost:5000" // can be used for development
 // const baseUrl = "https://fullstack-proto-jazzdap-backend.onrender.com"
 
 const getAllJazzDap = (setJazzDap) => {
-  console.log("getAllJazzDap", new Date());
+  console.log("---- HandleApi / getAllJazzDap", new Date());
   axios
     .get(baseUrl)
     .then(({ data }) => {
@@ -132,6 +132,7 @@ const getSampleMIDI = (recording = "BGR0082-T1", firstNoteIndex = 0, lastNodeInd
 };
 
 const getTracksMetadata = (lognumbers, infoMusicList, setInfoMusicList) => {
+  console.log("---- HandleApi / getTracksMetadata. lognumbers: ", lognumbers,", infoMusicList: ",infoMusicList,", setInfoMusicList: ",setInfoMusicList);
   axios
     .get(`${baseUrl}/getTracksMetadata`, {
       params: {
@@ -196,7 +197,7 @@ const getMatchLevenshteinDistance = (
   setListSearchRes = null,
   setListLogNumbers = null
 ) => {
-  console.log("-- handleAPI. getMatchLevenshteinDistance. stringNotes: ", stringNotes,
+  console.log("-- handleAPI / getMatchLevenshteinDistance. stringNotes: ", stringNotes,
     ", percMatch: ", percMatch,
     " user: ", user,
     ", transformFunc: ", transformFunc,
@@ -320,7 +321,7 @@ const getMatchLevenshteinDistance = (
 /** Annotations */
 
 // This is really just a v1
-const addAnnotation = (type, info, annotationInput, setAnnotationInput, setAnnotations, user = null) => {
+const addAnnotation = (type, info, annotationInput, setAnnotationInput, setListAnnotations, user = null) => {
   console.log(`HandeAPI addAnnotation: \n${baseUrl}/saveAnnotation`, { type, info, annotationInput });
 
   axios
@@ -328,20 +329,23 @@ const addAnnotation = (type, info, annotationInput, setAnnotationInput, setAnnot
     .then((data) => {
       console.log(data);
       setAnnotationInput("");
-      // getAllAnnotation(setAnnotations); // TODO
+      getAnnotations(type, info,setListAnnotations)
     })
     .catch(err => console.log(err))
 }
 
 // TODO
-const getAnnotations = (type, info, setAnnotations, user=null) => {
-  console.log("HandeAPI getAnnotations", new Date());
+const getAnnotations = (type, info, setListAnnotations, user = null) => {
+  console.log("HandeAPI getAnnotations at ", new Date(), ", type: ", type, ", info: ", info);
 
   axios
-    .get( `${baseUrl}/getannotations`,  {type, info, user} )
+    .get(`${baseUrl}/getAnnotations`, {
+      params:
+        { type: type, info: info }
+    })
     .then(({ data }) => {
       console.log('data: ', data);
-      setAnnotations(data);
+      setListAnnotations(data);
     })
     .catch(err => console.log(err))
 }
@@ -352,6 +356,6 @@ const getAnnotations = (type, info, setAnnotations, user=null) => {
 export {
   getAllJazzDap, addJazzDap, updateJazzDap, deleteJazzDap,
   getMusicMIDI, getSampleMIDI, getMatchLevenshteinDistance,
-  getTrackMetadata, /* will probably remove this one? */ getTracksMetadata,
+  getTrackMetadata, getTracksMetadata,
   addAnnotation, getAnnotations
 }

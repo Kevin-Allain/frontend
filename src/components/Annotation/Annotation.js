@@ -4,7 +4,7 @@ import { AiOutlineStar } from 'react-icons/ai' // doubt about inclusion of star 
 const Annotation = ({
   type,
   info = '',
-  text,
+  annotationInput,
   user,
   privacy = 'private',
   starred_by = []
@@ -14,7 +14,7 @@ const Annotation = ({
     <div className='annotation'>
       <h4>Annotation for {type}</h4>
       {(info === '') ? <></> : <><p>About info: {info}</p></>}
-      <div className='annotationText'>{text}</div>
+      <div className='annotationText'>{annotationInput}</div>
       {/* <AiOutlineStar className='icon' onClick={ () => console.log("star pressed") } /> */}
     </div>
   );

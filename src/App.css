@@ -37,9 +37,6 @@
     transform: rotate(360deg);
   }
 }
-.annotation{
-  background-color: #f6f6b3;
-}
 
 .header{
   background-color: ghostwhite;
@@ -120,6 +117,9 @@ input{
   border-bottom: 1px solid #282c34;
   cursor: pointer;
 }
+.add:hover{
+  color:orange;
+}
 
 .reloadPage{
   border:none;
@@ -141,12 +141,6 @@ input{
 .musicInterface{
   justify-content: space-around;
 
-}
-
-.areaAnnotation { 
-  display: flex;
-  gap: 1rem;
-  justify-content: center;
 }
 
 .buttonsMusicInterface{

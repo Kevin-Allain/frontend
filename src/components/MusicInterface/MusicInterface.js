@@ -6,7 +6,8 @@ import {
   getMatchLevenshteinDistance,
   getTrackMetadata,
   getTracksMetadata,
-  addAnnotation
+  addAnnotation,
+  getAnnotations
 } from "../../utils/HandleApi";
 import MusicRes from "./MusicRes"
 import MusicInfo from "./MusicInfo"
@@ -341,6 +342,7 @@ const MusicInterface = () => {
               type={"search"}
               info={oldSearch}
               addAnnotation={addAnnotation}
+              getAnnotations = {getAnnotations}
             />
             <div className='infoLogNumber'>Load information about the recordings<br />
               <BsInfoCircleFill className='icon'
