@@ -50,7 +50,7 @@ const MusicRes = ({
             <AnnotationSystem 
                     type={"sample"}
                     info={text+"_"+notes}
-                    addAnnotation={addAnnotation}
+                    addAnnotation= {addAnnotation}
                     getAnnotations = {getAnnotations}
                     deleteAnnotation={deleteAnnotation}                
                 />            

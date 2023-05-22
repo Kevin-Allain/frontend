@@ -58,7 +58,8 @@ function App() {
         {showDiv ? 'Hide Login / Register' : 'Login / Register'}
       </button>
       <div className="header">
-        <p> <span> <img src={logoJazzDap} className="imageHeader" alt="some value" name="Image1" align="bottom" width="192" height="107" border="0" /> </span>
+        <p> <span> 
+          <img src={logoJazzDap} className="imageHeader" alt="some value" name="Image1" align="bottom" width="125.6" height="70" border="0" /> </span>
           <span className="alpha_warning">ALPHA</span>
         </p>
         {(showDiv || localStorage?.username !== undefined) &&
@@ -103,7 +104,13 @@ function App() {
             <div className="add" onClick={
               isUpdating
                 ? () =>
-                  updateJazzDap(jazzDapId, textInputJazzDAP, setListJazzDap, setTextInputJazzDAP, setIsUpdating, localStorage.username ? localStorage.username : null)
+                  updateJazzDap(
+                    jazzDapId, 
+                    textInputJazzDAP, 
+                    setListJazzDap, 
+                    setTextInputJazzDAP, 
+                    setIsUpdating, 
+                    localStorage.username ? localStorage.username : null)
                 : () =>
                   addJazzDap(
                     textInputJazzDAP, 

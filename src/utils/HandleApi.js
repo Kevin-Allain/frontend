@@ -28,6 +28,7 @@ const addJazzDap = (text, setText, setJazzDap, user = null) => {
 }
 
 const updateJazzDap = (jazzDapId, text, setJazzDap, setText, setIsUpdating, userId = null) => {  
+  console.log("HandleApi updateJazzDap: ", jazzDapId, text);
   axios
     .post(`${baseUrl}/updateJazzDap`, { _id: jazzDapId, text, userId })
     .then((data) => {
@@ -337,6 +338,28 @@ const addAnnotation = (type, info, annotationInput, setAnnotationInput, setListA
 }
 
 
+const updateAnnotation = (
+  annotationId,
+  annotationInput,
+  type,
+  info,
+  setListAnnotations,
+  setIsUpdating,
+  userId = null) => {
+  console.log("HandleApi updateAnnotation: ", annotationId, annotationInput);
+  axios
+    .post(`${baseUrl}/updateAnnotation`, { _id: annotationId, annotationInput, userId })
+    .then((data) => {
+      console.log(data);
+      // setText("");
+      setIsUpdating(false);
+      // getAllJazzDap(setJazzDap);
+      getAnnotations(type, info, setListAnnotations);
+    })
+    .catch(err => console.log(err))
+}
+
+
 const getAnnotations = (type, info, setListAnnotations, user = null) => {
   console.log("HandeAPI getAnnotations type: ", type, ", info: ", info);
 
@@ -370,5 +393,5 @@ export {
   getAllJazzDap, addJazzDap, updateJazzDap, deleteJazzDap,
   getMusicMIDI, getSampleMIDI, getMatchLevenshteinDistance,
   getTrackMetadata, getTracksMetadata,
-  addAnnotation, getAnnotations, deleteAnnotation, 
+  addAnnotation, getAnnotations, deleteAnnotation, updateAnnotation
 }

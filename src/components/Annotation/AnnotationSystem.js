@@ -5,18 +5,22 @@ import "./AnnotationSystem.css"
 
 // TODO assess how we want to convey information about the object that uses the annotation system. 
 // We need to standardize (maybe use a different structure?)
-const AnnotationSystem = ({ type, info, addAnnotation, getAnnotations, deleteAnnotation }) => {
+const AnnotationSystem = ({ type, info, addAnnotation, updateAnnotation , getAnnotations, deleteAnnotation }) => {
 
   const [textInputAnnotation, setTextInputAnnotation] = useState("");
   const [isUpdating, setIsUpdating] = useState(false);
-  const [annotationId, setAnnotatoinId] = useState(""); // do we care about this...?
+  const [annotationId, setAnnotationId] = useState("");
 
   const [showInputAnnotation, setShowInputAnnotation] = useState(false);
 
   const [listAnnotations, setListAnnotations] = useState([]);
 
-
-  // localStorage.username ? localStorage.username : null
+  const updateMode = (_id, text) => {
+    console.log("updateMode AnnotationSystem. text: ",text);
+    setIsUpdating(true);
+    setTextInputAnnotation(text);
+    setAnnotationId(_id);
+  };
 
   const handleShowAndLoad = (type, info, getAnnotations) => {
     setShowInputAnnotation(!showInputAnnotation)
@@ -48,11 +52,10 @@ const AnnotationSystem = ({ type, info, addAnnotation, getAnnotations, deleteAnn
             value={textInputAnnotation}
             onChange={(e) => setTextInputAnnotation(e.target.value)} />
           <div className="add" onClick={isUpdating
-            ? () => console.log("will try to update")
-            : () => addAnnotation(
-              type,
-              info,
-              textInputAnnotation,
+            ? () => updateAnnotation( annotationId, textInputAnnotation, type, info,
+              setListAnnotations, setIsUpdating,
+              localStorage?.username)
+            : () => addAnnotation( type, info, textInputAnnotation, 
               setTextInputAnnotation,
               setListAnnotations,
               localStorage?.username)
@@ -71,7 +74,8 @@ const AnnotationSystem = ({ type, info, addAnnotation, getAnnotations, deleteAnn
                   user={item.user}
                   privacy={item.privacy}
                   // TODO (and think about more)
-                  // updateMode={() => updateMode(item._id, item.text, localStorage?.username)}
+                  updateMode={
+                    () => updateMode(item._id, item.annotationInput, localStorage?.username)}
                   deleteAnnotation={() => deleteAnnotation(item._id, item.type, item.info, setListAnnotations)}
                 />
               ))}

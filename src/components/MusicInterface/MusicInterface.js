@@ -8,7 +8,8 @@ import {
   getTracksMetadata,
   addAnnotation,
   getAnnotations,
-  deleteAnnotation
+  deleteAnnotation,
+  updateAnnotation
 } from "../../utils/HandleApi";
 import MusicRes from "./MusicRes"
 import MusicInfo from "./MusicInfo"
@@ -143,7 +144,6 @@ const MusicInterface = () => {
   }
 
   function playFormattedMusic(music) {
-
     // TODO fix the issue with sound getting a lot of distortion and then stopping!
     // synth2.current.dispose(); // this may be something good, but really unsure!
     // synth2.current = new Tone.Synth();
@@ -344,6 +344,7 @@ const MusicInterface = () => {
               type={"search"}
               info={oldSearch}
               addAnnotation={addAnnotation}
+              updateAnnotation={updateAnnotation}
               getAnnotations = {getAnnotations}
               deleteAnnotation={deleteAnnotation}
             />
@@ -360,6 +361,7 @@ const MusicInterface = () => {
                       contents={item.contents}
                       recording_location={item.recording_location}
                       addAnnotation={addAnnotation}
+                      updateAnnotation={updateAnnotation}
                       getAnnotations={getAnnotations}
                       deleteAnnotation={deleteAnnotation}
                     />
@@ -383,6 +385,7 @@ const MusicInterface = () => {
                 getMusicInfo={() => getMusicInfo(item.recording, infoMusicList, setInfoMusicList)}
                 infoMusicList={infoMusicList}
                 addAnnotation={addAnnotation}
+                updateAnnotation={updateAnnotation}
                 getAnnotations={getAnnotations}
                 deleteAnnotation={deleteAnnotation}
 

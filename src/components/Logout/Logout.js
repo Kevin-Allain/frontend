@@ -82,7 +82,7 @@ export default function Logout() {
 
     return (
         <div className="logout-wrapper">
-            Hello { localStorage.username ? localStorage.username : ''}. <br/>
+            Hello { localStorage.username ? localStorage.username : ''}. 
             <button onClick={handleSubmit} >
             Logout
             </button>
