@@ -16,9 +16,9 @@ const Annotation = ({
 
   return (
     <div className='annotation'>
-      <h4>Annotation for {type}</h4>
+      Annotation for {type}
       {/* {(info === '') ? <></> : <><p>About info: {info}</p></>} */}
-      <div className='annotationText'>{annotationInput}</div>
+      <h4><div className='annotationText'>{annotationInput}</div></h4>
       {/* <AiOutlineStar className='icon' onClick={ () => console.log("star pressed") } /> */}
       <AiFillDelete className='icon' onClick={deleteAnnotation} />
     </div>

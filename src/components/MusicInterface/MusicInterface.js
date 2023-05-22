@@ -338,7 +338,8 @@ const MusicInterface = () => {
         {(listSearchRes.length <= 0) ? (<></>) :
           <div className='outputMusicSearch'>
             {/* TODO fix imperfect implementation, makes more sense for oldSearch to be updated with handleAPi output. */}
-            <h2>List of results for your search: {oldSearch}</h2>
+            <>
+            List of results for your search: {oldSearch} 
             <AnnotationSystem
               type={"search"}
               info={oldSearch}
@@ -346,21 +347,26 @@ const MusicInterface = () => {
               getAnnotations = {getAnnotations}
               deleteAnnotation={deleteAnnotation}
             />
+            </>
             <div className='infoLogNumber'>Load information about the recordings<br />
               <BsInfoCircleFill className='icon'
                 onClick={() => getResultsInfo(listLogNumbers, infoMusicList, setInfoMusicList)}
               />
               {(infoMusicList.length <= 0) ? (<></>) :
                 infoMusicList.map((item, i) => (
-                  <MusicInfo className='musicinfo'
-                    key={`${i}-${item.lognumber}`} // for some reason warning about keys?!
-                    lognumber={item.lognumber}
-                    contents={item.contents}
-                    recording_location={item.recording_location}
-                  />
+                    <MusicInfo className='musicinfo'
+                      key={`${i}-${item.lognumber}`} // for some reason warning about keys?!
+                      lognumber={item.lognumber}
+                      contents={item.contents}
+                      recording_location={item.recording_location}
+                      addAnnotation={addAnnotation}
+                      getAnnotations={getAnnotations}
+                      deleteAnnotation={deleteAnnotation}
+                    />
                 )
                 )
               }
+              
             </div>
             {listSearchRes.map((item, i) => (
               <MusicRes
@@ -376,6 +382,10 @@ const MusicInterface = () => {
                 funcPlayMIDI={() => formatAndPlay(item)}
                 getMusicInfo={() => getMusicInfo(item.recording, infoMusicList, setInfoMusicList)}
                 infoMusicList={infoMusicList}
+                addAnnotation={addAnnotation}
+                getAnnotations={getAnnotations}
+                deleteAnnotation={deleteAnnotation}
+
               // updateMode={() => updateMode(item._id, item.text, localStorage?.username)}
               // TODO annotation for each musicres
               // annotations = {listAnnotMusRes.map((item, j) => (
