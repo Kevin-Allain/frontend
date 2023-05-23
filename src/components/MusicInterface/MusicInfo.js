@@ -8,7 +8,8 @@ const MusicInfo = ({
     tape_stock, 
     recording_location, 
     addAnnotation, 
-    getAnnotations, 
+    getAnnotations,
+    updateAnnotation, 
     deleteAnnotation}) => {
     return (
         <div className="musicinfo">
@@ -24,6 +25,7 @@ const MusicInfo = ({
                 addAnnotation={addAnnotation}
                 getAnnotations={getAnnotations}
                 deleteAnnotation={deleteAnnotation}
+                updateAnnotation={updateAnnotation}
             />
         </div>
     );

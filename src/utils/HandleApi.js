@@ -323,12 +323,19 @@ const getMatchLevenshteinDistance = (
 
 /** Annotations */
 
-// This is really just a v1
-const addAnnotation = (type, info, annotationInput, setAnnotationInput, setListAnnotations, user = null) => {
-  console.log(`HandeAPI addAnnotation: \n${baseUrl}/saveAnnotation`, { type, info, annotationInput });
+// index added because we can have one sequence occur several times in a track
+const addAnnotation = (
+  type, 
+  info, 
+  index,
+  annotationInput, 
+  setAnnotationInput, 
+  setListAnnotations, 
+  author = null) => {
+  console.log(`HandeAPI addAnnotation: \n${baseUrl}/saveAnnotation`, { type, info, annotationInput, author });
 
   axios
-    .post(`${baseUrl}/addAnnotation`, { type, info, annotationInput, user })
+    .post(`${baseUrl}/addAnnotation`, { type, info, index, annotationInput, author })
     .then((data) => {
       console.log(data);
       setAnnotationInput("");
@@ -341,6 +348,7 @@ const addAnnotation = (type, info, annotationInput, setAnnotationInput, setListA
 const updateAnnotation = (
   annotationId,
   annotationInput,
+  setAnnotationInput,
   type,
   info,
   setListAnnotations,
@@ -351,7 +359,7 @@ const updateAnnotation = (
     .post(`${baseUrl}/updateAnnotation`, { _id: annotationId, annotationInput, userId })
     .then((data) => {
       console.log(data);
-      // setText("");
+      setAnnotationInput("");
       setIsUpdating(false);
       // getAllJazzDap(setJazzDap);
       getAnnotations(type, info, setListAnnotations);
@@ -360,13 +368,13 @@ const updateAnnotation = (
 }
 
 
-const getAnnotations = (type, info, setListAnnotations, user = null) => {
-  console.log("HandeAPI getAnnotations type: ", type, ", info: ", info);
+const getAnnotations = (type, info, setListAnnotations, index=0, user = null) => {
+  console.log("HandeAPI getAnnotations type: ", type, ", info: ", info, ", index: ",index);
 
   axios
     .get(`${baseUrl}/getAnnotations`, {
       params:
-        { type: type, info: info }
+        { type: type, info: info, index:index }
     })
     .then(({ data }) => {
       console.log('data: ', data);

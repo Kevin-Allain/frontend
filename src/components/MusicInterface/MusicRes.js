@@ -17,18 +17,21 @@ const MusicRes = ({
     infoMusicList, 
     addAnnotation,
     getAnnotations,
+    updateAnnotation,
     deleteAnnotation
  }) => {
 
     return (
         <div className="musicres" key={text}>
             <div className="text">
-                Song:<br />{text} </div>
+                Song:<br />{text.substr(text.indexOf("-")+1)} </div>
                 <AnnotationSystem 
                     type={"track"}
-                    info={text}
+                    info={text.substr(text.indexOf("-")+1)}
+                    // index = {Number(text.split('-')[0])}
                     addAnnotation={addAnnotation}
                     getAnnotations = {getAnnotations}
+                    updateAnnotation={updateAnnotation}
                     deleteAnnotation={deleteAnnotation}                
                 />
             <div className='lognumber'>
@@ -49,9 +52,11 @@ const MusicRes = ({
             </div>
             <AnnotationSystem 
                     type={"sample"}
-                    info={text+"_"+notes}
+                    info={text.substr(text.indexOf("-")+1)+"_"+notes}
+                    index={Number(text.split('-')[0])}
                     addAnnotation= {addAnnotation}
                     getAnnotations = {getAnnotations}
+                    updateAnnotation={updateAnnotation}
                     deleteAnnotation={deleteAnnotation}                
                 />            
         </div>

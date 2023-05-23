@@ -51,14 +51,17 @@ function App() {
 
   return (
     <div className="App">
-      <button
-        className='buttonShowDiv'
-        onClick={() => setShowDiv(!showDiv)}
-      >
-        {showDiv ? 'Hide Login / Register' : 'Login / Register'}
-      </button>
+      {(localStorage?.username === undefined) ?
+        <button
+          className='buttonShowDiv'
+          onClick={() => setShowDiv(!showDiv)}
+        >
+          {showDiv ? 'Hide Login / Register' : 'Login / Register'}
+        </button>
+        : <></>
+      }
       <div className="header">
-        <p> <span> 
+        <p> <span>
           <img src={logoJazzDap} className="imageHeader" alt="some value" name="Image1" align="bottom" width="125.6" height="70" border="0" /> </span>
           <span className="alpha_warning">ALPHA</span>
         </p>

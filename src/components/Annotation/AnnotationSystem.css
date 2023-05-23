@@ -7,10 +7,11 @@
   }
 
 .annotation{
-  color:black;
+  color: black;
   background-color: #f9f9c9;
   border: solid;
   border-width: thin;
+  text-align: left;
 } 
   
 .areaDisplayAnnotation{

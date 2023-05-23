@@ -5,7 +5,7 @@ import "./AnnotationSystem.css"
 
 // TODO assess how we want to convey information about the object that uses the annotation system. 
 // We need to standardize (maybe use a different structure?)
-const AnnotationSystem = ({ type, info, addAnnotation, updateAnnotation , getAnnotations, deleteAnnotation }) => {
+const AnnotationSystem = ({ type, info, index=0, addAnnotation, updateAnnotation , getAnnotations, deleteAnnotation }) => {
 
   const [textInputAnnotation, setTextInputAnnotation] = useState("");
   const [isUpdating, setIsUpdating] = useState(false);
@@ -24,9 +24,9 @@ const AnnotationSystem = ({ type, info, addAnnotation, updateAnnotation , getAnn
 
   const handleShowAndLoad = (type, info, getAnnotations) => {
     setShowInputAnnotation(!showInputAnnotation)
-    console.log("type: ",type,", info: ",info,", getAnnotations: ", getAnnotations,", showInputAnnotation: ",showInputAnnotation)
+    console.log("type: ",type,", info: ",info,", index: ",index ,", getAnnotations: ", getAnnotations,", showInputAnnotation: ",showInputAnnotation)
     if (!showInputAnnotation){
-      getAnnotations(type, info, setListAnnotations, localStorage.username ? localStorage.username : null);
+      getAnnotations(type, info, setListAnnotations, index, localStorage.username ? localStorage.username : null);
     }
   }
 
@@ -52,10 +52,10 @@ const AnnotationSystem = ({ type, info, addAnnotation, updateAnnotation , getAnn
             value={textInputAnnotation}
             onChange={(e) => setTextInputAnnotation(e.target.value)} />
           <div className="add" onClick={isUpdating
-            ? () => updateAnnotation( annotationId, textInputAnnotation, type, info,
+            ? () => updateAnnotation( annotationId, textInputAnnotation , setTextInputAnnotation, type, info,
               setListAnnotations, setIsUpdating,
               localStorage?.username)
-            : () => addAnnotation( type, info, textInputAnnotation, 
+            : () => addAnnotation( type, info, index, textInputAnnotation, 
               setTextInputAnnotation,
               setListAnnotations,
               localStorage?.username)
@@ -71,9 +71,9 @@ const AnnotationSystem = ({ type, info, addAnnotation, updateAnnotation , getAnn
                   annotationInput={item.annotationInput}
                   info={item.info}
                   type={item.type}
-                  user={item.user}
+                  author={item.author}
                   privacy={item.privacy}
-                  // TODO (and think about more)
+                  // TODO (and think about more) e.g. star
                   updateMode={
                     () => updateMode(item._id, item.annotationInput, localStorage?.username)}
                   deleteAnnotation={() => deleteAnnotation(item._id, item.type, item.info, setListAnnotations)}

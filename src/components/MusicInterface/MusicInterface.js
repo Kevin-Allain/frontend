@@ -373,7 +373,7 @@ const MusicInterface = () => {
             {listSearchRes.map((item, i) => (
               <MusicRes
                 key={i + '' + item.recording + '_' + item.arrNotes.toString().replaceAll(',', '-')}
-                text={ item.recording}
+                text={ i + '-' + item.recording}
                 lognumber={item.recording.split('-')[0]}
                 length={item.arrTime[item.arrTime.length - 1] + item.arrDurations[item.arrDurations.length - 1] - item.arrTime[0]}
                 notes={item.arrNotes.toString().replaceAll(',', '-')}
