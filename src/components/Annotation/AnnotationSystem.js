@@ -52,7 +52,7 @@ const AnnotationSystem = ({ type, info, index=0, addAnnotation, updateAnnotation
             value={textInputAnnotation}
             onChange={(e) => setTextInputAnnotation(e.target.value)} />
           <div className="add" onClick={isUpdating
-            ? () => updateAnnotation( annotationId, textInputAnnotation , setTextInputAnnotation, type, info,
+            ? () => updateAnnotation( annotationId, textInputAnnotation , setTextInputAnnotation, index, type, info,
               setListAnnotations, setIsUpdating,
               localStorage?.username)
             : () => addAnnotation( type, info, index, textInputAnnotation, 

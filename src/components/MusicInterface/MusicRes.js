@@ -57,8 +57,8 @@ const MusicRes = ({
                     addAnnotation= {addAnnotation}
                     getAnnotations = {getAnnotations}
                     updateAnnotation={updateAnnotation}
-                    deleteAnnotation={deleteAnnotation}                
-                />            
+                    deleteAnnotation={deleteAnnotation}
+                />
         </div>
     );
 }

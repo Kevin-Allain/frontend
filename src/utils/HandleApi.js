@@ -327,19 +327,20 @@ const getMatchLevenshteinDistance = (
 const addAnnotation = (
   type, 
   info, 
-  index,
+  index = 0,
   annotationInput, 
   setAnnotationInput, 
   setListAnnotations, 
-  author = null) => {
-  console.log(`HandeAPI addAnnotation: \n${baseUrl}/saveAnnotation`, { type, info, annotationInput, author });
+  author = null,
+  ) => {
+  console.log(`HandeAPI addAnnotation: \n${baseUrl}/saveAnnotation`, { type, info, annotationInput, author, index });
 
   axios
     .post(`${baseUrl}/addAnnotation`, { type, info, index, annotationInput, author })
     .then((data) => {
       console.log(data);
       setAnnotationInput("");
-      getAnnotations(type, info,setListAnnotations)
+      getAnnotations(type, info,setListAnnotations, index)
     })
     .catch(err => console.log(err))
 }
@@ -349,20 +350,22 @@ const updateAnnotation = (
   annotationId,
   annotationInput,
   setAnnotationInput,
+  index=0,
   type,
   info,
   setListAnnotations,
   setIsUpdating,
   userId = null) => {
-  console.log("HandleApi updateAnnotation: ", annotationId, annotationInput);
+  console.log("HandleApi updateAnnotation: ", annotationId, annotationInput, index);
   axios
     .post(`${baseUrl}/updateAnnotation`, { _id: annotationId, annotationInput, userId })
     .then((data) => {
-      console.log(data);
+      console.log("data: ", data);
+      console.log("data[0]: ", data[0]);
       setAnnotationInput("");
       setIsUpdating(false);
       // getAllJazzDap(setJazzDap);
-      getAnnotations(type, info, setListAnnotations);
+      getAnnotations(type, info, setListAnnotations, index);
     })
     .catch(err => console.log(err))
 }
