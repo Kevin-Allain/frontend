@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { AiOutlineStar } from 'react-icons/ai' // doubt about inclusion of star button for annotation...
+import { AiOutlineComment, AiOutlineStar } from 'react-icons/ai' // doubt about inclusion of star button for annotation...
 import {BiEdit} from 'react-icons/bi'
 import {AiFillDelete} from 'react-icons/ai'
+
 
 const Annotation = ({
   type,
@@ -26,6 +27,8 @@ const Annotation = ({
       {/* <AiOutlineStar className='icon' onClick={ () => console.log("star pressed") } /> */}
       <BiEdit className='icon' onClick={updateMode} />
       <AiFillDelete className='icon' onClick={deleteAnnotation} />
+      <div class="line"></div>
+      <AiOutlineComment className='icon' onClick={ () => console.log("should set comments")} />
     </div>
   );
 };

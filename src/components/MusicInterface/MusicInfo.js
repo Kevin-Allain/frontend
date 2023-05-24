@@ -13,11 +13,22 @@ const MusicInfo = ({
     deleteAnnotation}) => {
     return (
         <div className="musicinfo">
-            <div className='lognumber'>Log number: {lognumber}</div>
-            <div className="contents">Contents: {contents}</div>
-            <div className="configuration">Configuration: {configuration}</div>
-            <div className='tape_stock'>Tape stock: {tape_stock}</div>
-            <div className='recording_location'>Recording location: {recording_location}</div>
+        <table>
+            <tr>
+                <th>Log Number</th>
+                <th>Contents</th>
+                <th>Configuration</th>
+                <th>Tape stock</th>
+                <th>Recording location</th>
+            </tr>
+            <tr>
+                <th>{lognumber}</th>
+                <th>{contents}</th>
+                <th>{configuration}</th>
+                <th>{tape_stock}</th>
+                <th>{recording_location}</th>
+            </tr>
+        </table> 
             <AnnotationSystem
                 key={"recording-"+lognumber}
                 type={"recording"}

@@ -288,6 +288,79 @@ const MusicInterface = () => {
       </div>
 
 
+
+      {/* ==== OUTPUT SEARCH ==== */}
+      <div className='wrapperMusicSearch'>
+        {(listSearchRes.length <= 0) ? (<></>) :
+          <div className='outputMusicSearch'>
+            {/* TODO fix imperfect implementation, makes more sense for oldSearch to be updated with handleAPi output. */}
+
+            List of results for your search: {oldSearch} 
+            <AnnotationSystem
+              type={"search"}
+              info={oldSearch}
+              addAnnotation={addAnnotation}
+              updateAnnotation={updateAnnotation}
+              getAnnotations = {getAnnotations}
+              deleteAnnotation={deleteAnnotation}
+            />
+
+          <div className='musicInterfaceContent'>
+
+              <div className='infoLogNumber'>Load information about the recordings<br />
+                <BsInfoCircleFill className='icon'
+                  onClick={() => getResultsInfo(listLogNumbers, infoMusicList, setInfoMusicList)}
+                />
+                {(infoMusicList.length <= 0) ? (<></>) :
+                  infoMusicList.map((item, i) => (
+                      <MusicInfo className='musicinfo'
+                        key={`${i}-${item.lognumber}`} // for some reason warning about keys?!
+                        lognumber={item.lognumber}
+                        contents={item.contents}
+                        recording_location={item.recording_location}
+                        addAnnotation={addAnnotation}
+                        updateAnnotation={updateAnnotation}
+                        getAnnotations={getAnnotations}
+                        deleteAnnotation={deleteAnnotation}
+                      />
+                  )
+                  )
+                }
+                
+              </div>
+              {listSearchRes.map((item, i) => (
+                <MusicRes
+                  key={i + '' + item.recording + '_' + item.arrNotes.toString().replaceAll(',', '-')}
+                  text={ i + '-' + item.recording}
+                  lognumber={item.recording.split('-')[0]}
+                  length={item.arrTime[item.arrTime.length - 1] + item.arrDurations[item.arrDurations.length - 1] - item.arrTime[0]}
+                  notes={item.arrNotes.toString().replaceAll(',', '-')}
+                  durations={item.arrDurations.toString().replaceAll(',', '-')}
+                  times={item.arrTime.toString().replaceAll(',', '-')}
+                  distance={item.distCalc}
+                  // Need to format the structure 
+                  funcPlayMIDI={() => formatAndPlay(item)}
+                  getMusicInfo={() => getMusicInfo(item.recording, infoMusicList, setInfoMusicList)}
+                  infoMusicList={infoMusicList}
+                  addAnnotation={addAnnotation}
+                  updateAnnotation={updateAnnotation}
+                  getAnnotations={getAnnotations}
+                  deleteAnnotation={deleteAnnotation}
+
+                // updateMode={() => updateMode(item._id, item.text, localStorage?.username)}
+                // TODO annotation for each musicres
+                // annotations = {listAnnotMusRes.map((item, j) => (
+                //     <Annotation musicRes={item.recording} onSave={()=> {console.log("onSave")}}  />))
+                //   }
+                />
+              ))
+              }
+
+            </div>
+          </div>
+        }
+      </div>
+
       {/* ==== BUTTONS ====  */}
       <div className="buttonsMusicInterface">
         <div className='playMusic' >
@@ -332,75 +405,6 @@ const MusicInterface = () => {
           Reload Page
         </div>
       </div>
-
-      {/* ==== OUTPUT SEARCH ==== */}
-      <div className='wrapperMusicSearch'>
-        {(listSearchRes.length <= 0) ? (<></>) :
-          <div className='outputMusicSearch'>
-            {/* TODO fix imperfect implementation, makes more sense for oldSearch to be updated with handleAPi output. */}
-            <>
-            List of results for your search: {oldSearch} 
-            <AnnotationSystem
-              type={"search"}
-              info={oldSearch}
-              addAnnotation={addAnnotation}
-              updateAnnotation={updateAnnotation}
-              getAnnotations = {getAnnotations}
-              deleteAnnotation={deleteAnnotation}
-            />
-            </>
-            <div className='infoLogNumber'>Load information about the recordings<br />
-              <BsInfoCircleFill className='icon'
-                onClick={() => getResultsInfo(listLogNumbers, infoMusicList, setInfoMusicList)}
-              />
-              {(infoMusicList.length <= 0) ? (<></>) :
-                infoMusicList.map((item, i) => (
-                    <MusicInfo className='musicinfo'
-                      key={`${i}-${item.lognumber}`} // for some reason warning about keys?!
-                      lognumber={item.lognumber}
-                      contents={item.contents}
-                      recording_location={item.recording_location}
-                      addAnnotation={addAnnotation}
-                      updateAnnotation={updateAnnotation}
-                      getAnnotations={getAnnotations}
-                      deleteAnnotation={deleteAnnotation}
-                    />
-                )
-                )
-              }
-              
-            </div>
-            {listSearchRes.map((item, i) => (
-              <MusicRes
-                key={i + '' + item.recording + '_' + item.arrNotes.toString().replaceAll(',', '-')}
-                text={ i + '-' + item.recording}
-                lognumber={item.recording.split('-')[0]}
-                length={item.arrTime[item.arrTime.length - 1] + item.arrDurations[item.arrDurations.length - 1] - item.arrTime[0]}
-                notes={item.arrNotes.toString().replaceAll(',', '-')}
-                durations={item.arrDurations.toString().replaceAll(',', '-')}
-                times={item.arrTime.toString().replaceAll(',', '-')}
-                distance={item.distCalc}
-                // Need to format the structure 
-                funcPlayMIDI={() => formatAndPlay(item)}
-                getMusicInfo={() => getMusicInfo(item.recording, infoMusicList, setInfoMusicList)}
-                infoMusicList={infoMusicList}
-                addAnnotation={addAnnotation}
-                updateAnnotation={updateAnnotation}
-                getAnnotations={getAnnotations}
-                deleteAnnotation={deleteAnnotation}
-
-              // updateMode={() => updateMode(item._id, item.text, localStorage?.username)}
-              // TODO annotation for each musicres
-              // annotations = {listAnnotMusRes.map((item, j) => (
-              //     <Annotation musicRes={item.recording} onSave={()=> {console.log("onSave")}}  />))
-              //   }
-              />
-            ))
-            }
-          </div>
-        }
-      </div>
-
     </div>
   );
 }

@@ -191,30 +191,6 @@ input{
   margin-bottom: 0.25rem;
 }
 
-.musicres{
-  position: relative;
-  margin-top: 1rem;
-  background-color: black;
-  color: white;
-  border-radius: 5px;
-  border: solid;
-  width: 90%;
-  border-width: thin;
-  left: 5%;
-  text-align: left;
-}
-
-.infoLogNumber{
-  margin-top: 1rem;
-  background-color: #1e202f;
-  color: white;
-  max-height: 200px;
-  overflow-y: scroll;
-  overflow-x: scroll;
-  width: 90%;
-  left: 5%;
-  position: relative;
-}
 
 .icons{
   position: absolute;
@@ -234,19 +210,6 @@ input{
   color:orange;
 }
 
-.iconsMusicRes{
-  text-align: center;
-}
-
-.musicinfo{
-  background-color: gray;
-  border: solid;
-  border-width: thin;
-  text-align: left;
-  width: 90%;
-  left: 5%;
-  position: relative;
-}
 
 form {
   display: flex;
@@ -344,18 +307,6 @@ padding-bottom: 0.25rem;
   padding-bottom: 5px;
 }
 
-.outputMusicSearch{
-  height: 500px;
-  overflow-y: scroll;
-  width: 80%;
-  border: solid;
-  border-color: ghostwhite;
-  text-align: center;
-  position: relative;
-  left: 10%;
-  border-radius: 10px;
-  background: ghostwhite;
-}
 
 .buttonShowDiv{
   position: absolute;

@@ -15,7 +15,7 @@ body {
     position: relative;
     /* overflow-x: scroll; */
     padding-bottom: 1rem;
-    width:95%;
+    width: 95%;
 }
 
 /* TODO change code with JavaScript to mute white keys reacting to hover when hovering black keys */
@@ -27,10 +27,24 @@ body {
 .black-key:hover {
     color: orange;
 } */
-.activeWhiteNote:hover{
+
+.outputMusicSearch {
+    height: 500px;
+    overflow-y: scroll;
+    width: 98%;
+    border: solid;
+    border-color: #dfdfdf;
+    text-align: center;
+    position: relative;
+    border-radius: 0 10px 10px 0;
+    background: #dfdfdf;
+}
+
+.activeWhiteNote:hover {
     color: orange;
 }
-.activeBlackNote:hover{
+
+.activeBlackNote:hover {
     color: orange;
 }
 
@@ -70,4 +84,76 @@ ul .black-key {
     align-items: flex-end;
     padding-bottom: 10px;
     color: white;
+}
+
+td,
+th {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 0.15rem;
+    font-size: 12px;
+}
+
+
+.musicInterfaceContent {
+    overflow: hidden;
+    /* Clear floats */
+}
+
+.musicres {
+    position: relative;
+    margin-top: 0.1rem;
+    margin-right: 0.25rem;
+    background-color: #1e202f;
+    color: white;
+    border-radius: 0 5px 5px 0;
+    border: solid;
+    /* width: 90%; */
+    border-width: thin;
+    margin-left: 30%;
+    text-align: left;
+}
+
+.infoLogNumber {
+    margin-top: 0.1rem;
+    background-color: #1e202f;
+    color: white;
+    border: solid;
+    width: 30%;
+    float: left;
+    /* max-height: 200px;
+    overflow-y: scroll;
+    overflow-x: scroll; */
+}
+
+.iconsMusicRes {
+    text-align: center;
+}
+
+.musicinfo {
+    background-color: gray;
+    border: solid;
+    border-width: thin;
+    text-align: left;
+    /* width: 90%;
+    left: 5%;
+    position: relative; */
+}
+
+::-webkit-scrollbar {
+    width: 10px;
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgb(150, 150, 150);
+    border-bottom-left-radius: 7.5px;
+    border-top-left-radius: 7.5px;
+    border-bottom-right-radius: 7.5px;
+    border-top-right-radius: 7.5px;
+}
+
+.outputMusicSearch ::-webkit-scrollbar-track {
+    background: #343650;
+    border-radius: 5px;
 }

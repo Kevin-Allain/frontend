@@ -24,7 +24,7 @@ const MusicRes = ({
     return (
         <div className="musicres" key={text}>
             <div className="text">
-                Song:<br />{text.substr(text.indexOf("-")+1)} </div>
+                Song: {text.substr(text.indexOf("-")+1)} </div>
                 <AnnotationSystem 
                     type={"track"}
                     info={text.substr(text.indexOf("-")+1)}
@@ -34,18 +34,25 @@ const MusicRes = ({
                     updateAnnotation={updateAnnotation}
                     deleteAnnotation={deleteAnnotation}                
                 />
-            <div className='lognumber'>
-                Recording: {lognumber}</div>
-            <div className="length">
-                Length:<br />{length}</div>
-            <div className="notes">
-                Notes:<br />{notes}</div>
-            <div className="times">
-                Times:<br />{times}</div>
-            <div className="distance">
-                Distance (difference to query):<br />{distance}</div>
-            <div className="durations">
-                Durations:<br />{durations}</div>
+            <table>
+                <tr>
+                    <th>Recording</th>
+                    <th>Duration</th>
+                    <th>Notes</th>
+                    <th>Times</th>
+                    <th>Distance (difference to query)</th>
+                    <th>Durations</th>
+                </tr>
+                <tr>
+                    <th>{lognumber}</th>
+                    <th>{length}</th>
+                    <th>{notes}</th>
+                    <th>{times}</th>
+                    <th>{distance}</th>
+                    <th>{durations}</th>
+                </tr>
+            </table> 
+
             <div className="iconsMusicRes">
                 <FiPlayCircle className='icon'
                     onClick={funcPlayMIDI} />
