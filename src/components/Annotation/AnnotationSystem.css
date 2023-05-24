@@ -1,9 +1,9 @@
 .areaInputAnnotation { 
     display: flex;
-    gap: 1rem;
+    /* gap: 1rem; */
     justify-content: center;
-    padding-bottom: 0.2rem;
-    padding-top: 0.2rem;
+    /* padding-bottom: 0.2rem; */
+    /* padding-top: 0.2rem; */
   }
 
 .annotation{
@@ -19,10 +19,13 @@
   overflow-y: scroll;
 }
 
+.annotationText{
+  margin-left: 0.5rem;
+}
+
 .buttonShowAnnotation{
   border-width: thin;
-  position:relative;
-  
+  /* position:relative;   */
 }
 
 .line {
