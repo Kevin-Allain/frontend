@@ -23,21 +23,21 @@ body {
 .key:hover {
     color: orange;
 }
-
 .black-key:hover {
     color: orange;
 } */
 
 .outputMusicSearch {
-    height: 500px;
+    height: 700px;
     overflow-y: scroll;
     width: 98%;
-    border: solid;
-    border-color: #dfdfdf;
+    /* border: solid;
+    border-color: #dfdfdf; */
     text-align: center;
     position: relative;
     border-radius: 0 10px 10px 0;
     background: #dfdfdf;
+    opacity: 0.9;
 }
 
 .activeWhiteNote:hover {
@@ -110,15 +110,16 @@ th {
     border: solid;
     /* width: 90%; */
     border-width: thin;
-    margin-left: 30%;
+    margin-left: 31%;
     text-align: left;
+    
 }
 
 .infoLogNumber {
     margin-top: 0.1rem;
     background-color: #1e202f;
     color: white;
-    border: solid;
+    /* border: solid; */
     width: 30%;
     float: left;
     /* max-height: 200px;

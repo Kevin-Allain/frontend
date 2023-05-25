@@ -3,9 +3,13 @@ import { HiOutlineAnnotation } from 'react-icons/hi'
 import Annotation from "./Annotation.js"
 import "./AnnotationSystem.css"
 
+
 // TODO assess how we want to convey information about the object that uses the annotation system. 
 // We need to standardize (maybe use a different structure?)
-const AnnotationSystem = ({ type, info, index=0, addAnnotation, updateAnnotation , getAnnotations, deleteAnnotation }) => {
+const AnnotationSystem = ({ 
+  type, info, index=0, addAnnotation, updateAnnotation , getAnnotations, deleteAnnotation,
+  getComments = ()=>{console.log('will get comments')}
+ }) => {
 
   const [textInputAnnotation, setTextInputAnnotation] = useState("");
   const [isUpdating, setIsUpdating] = useState(false);
@@ -22,26 +26,39 @@ const AnnotationSystem = ({ type, info, index=0, addAnnotation, updateAnnotation
     setAnnotationId(_id);
   };
 
-  const handleShowAndLoad = (type, info, getAnnotations) => {
+  const handleShowAndLoadAnnotations = (type, info, getAnnotations) => {
     setShowInputAnnotation(!showInputAnnotation)
     console.log("type: ",type,", info: ",info,", index: ",index ,", getAnnotations: ", getAnnotations,", showInputAnnotation: ",showInputAnnotation)
     if (!showInputAnnotation){
-      getAnnotations(type, info, setListAnnotations, index, localStorage.username ? localStorage.username : null);
+      getAnnotations(
+        type, 
+        info, 
+        setListAnnotations, 
+        index, 
+        localStorage.username ? localStorage.username : null);
     }
   }
 
+  const handleShowAndLoadCommentsSystem = (annotationId, getComments) => {
+    console.log("handleShowAndLoadCommentsSystem. annotationId: ", annotationId);
+    // setShowInputAnnotation(!showInputAnnotation)
+    console.log("type: ",type,", info: ",info,", index: ",index ,", getAnnotations: ", getAnnotations,", showInputAnnotation: ",showInputAnnotation)
+    getComments();
+  }
+
+
   return (
     <div className="annotationInput">
-
       {/* button to show or hide... could be a good place to make the query about the annotations... */}
       <button className='buttonShowAnnotation' onClick={
-        () => handleShowAndLoad(type, info, getAnnotations)
+        () => handleShowAndLoadAnnotations(type, info, getAnnotations)
       }>
         <HiOutlineAnnotation className='icon' />
       </button>
       {/* TODO think about whether the addition of annotations should be open without making an account... probably not? */}
       {showInputAnnotation &&
         <div className='areaAnnotation'>
+          
           <div className='areaInputAnnotation'>
           <input
             type="text"
@@ -74,12 +91,17 @@ const AnnotationSystem = ({ type, info, index=0, addAnnotation, updateAnnotation
                   author={item.author}
                   privacy={item.privacy}
                   // TODO (and think about more) e.g. star
+                  handleShowAndLoadCommentsSystem={ 
+                    () => handleShowAndLoadCommentsSystem(item._id, getComments) 
+                  }
                   updateMode={
                     () => updateMode(item._id, item.annotationInput, localStorage?.username)}
                   deleteAnnotation={() => deleteAnnotation(item._id, item.type, item.info, setListAnnotations)}
                 />
               ))}
           </div>
+          
+           
         </div>
       }
     </div>

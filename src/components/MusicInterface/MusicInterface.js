@@ -294,7 +294,6 @@ const MusicInterface = () => {
         {(listSearchRes.length <= 0) ? (<></>) :
           <div className='outputMusicSearch'>
             {/* TODO fix imperfect implementation, makes more sense for oldSearch to be updated with handleAPi output. */}
-
             List of results for your search: {oldSearch} 
             <AnnotationSystem
               type={"search"}
