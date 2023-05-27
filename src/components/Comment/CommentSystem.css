@@ -1,0 +1,33 @@
+.areaInputComment { 
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    padding-bottom: 0.1rem;
+    width: 90%;
+    left: 10%;
+  }
+
+.comment{
+  color: black;
+  background-color: white;
+  border: solid;
+  border-width: thin;
+  text-align: left;
+}
+  
+.areaDisplayComment{
+  max-height: 350px;
+  overflow-y: scroll;
+}
+
+.commentText{
+  margin-left: 0.5rem;
+}
+
+.areaComment {
+    background-color: white;
+    position: relative;
+    padding:0.1rem;
+    /* left:10%; */
+    /* width: 90%; */
+}

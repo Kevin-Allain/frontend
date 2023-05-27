@@ -46,7 +46,6 @@ const AnnotationSystem = ({
     getComments();
   }
 
-
   return (
     <div className="annotationInput">
       {/* button to show or hide... could be a good place to make the query about the annotations... */}

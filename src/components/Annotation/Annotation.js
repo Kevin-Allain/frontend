@@ -44,7 +44,7 @@ const Annotation = ({
       <AiOutlineComment className='icon'   onClick={ handleToggleCommentSystem }
       />
       {isCommentSystemVisible && (
-        <CommentSystem/>
+        <CommentSystem type={type} info={info} index={index} />
       )}
 
     </div>
