@@ -399,10 +399,89 @@ const deleteAnnotation = (annotationId, type, info, setListAnnotations) => {
 }
 
 
+/** Comments */
+
+// index added because we can have one sequence occur several times in a track
+const addComment = (
+  type, 
+  info, 
+  index = 0,
+  commentInput, 
+  setCommentInput, 
+  setListComments, 
+  author = null,
+  ) => {
+  console.log(`HandeAPI addComment: \n${baseUrl}/saveComment`, { type, info, commentInput, author, index });
+
+  axios
+    .post(`${baseUrl}/addComment`, { type, info, index, commentInput, author })
+    .then((data) => {
+      console.log(data);
+      setCommentInput("");
+      getComments(type, info,setListComments, index)
+    })
+    .catch(err => console.log(err))
+}
+
+
+const updateComment = (
+  commentId,
+  commentInput,
+  setCommentInput,
+  index=0,
+  type,
+  info,
+  setListComments,
+  setIsUpdating,
+  userId = null) => {
+  console.log("HandleApi updateComment: ", commentId, commentInput, index);
+  axios
+    .post(`${baseUrl}/updateComment`, { _id: commentId, commentInput, userId })
+    .then((data) => {
+      console.log("data: ", data);
+      console.log("data[0]: ", data[0]);
+      setCommentInput("");
+      setIsUpdating(false);
+      // getAllJazzDap(setJazzDap);
+      getComments(type, info, setListComments, index);
+    })
+    .catch(err => console.log(err))
+}
+
+
+const getComments = (type, info, setListComments, index=0, user = null) => {
+  console.log("HandeAPI getComments type: ", type, ", info: ", info, ", index: ",index);
+
+  axios
+    .get(`${baseUrl}/getComments`, {
+      params:
+        { type: type, info: info, index:index }
+    })
+    .then(({ data }) => {
+      console.log('data: ', data);
+      setListComments(data);
+    })
+    .catch(err => console.log(err))
+}
+
+const deleteComment = (commentId, type, info, setListComments) => {
+  console.log("HandeAPI deleteComment. commentId: ", commentId, ", setListComments: ", setListComments)
+
+  axios
+    .post(`${baseUrl}/deleteComment`, { _id: commentId })
+    .then((data) => {
+      console.log(data);
+      getComments(type, info, setListComments);
+    })
+    .catch(err => console.log(err))
+}
+
+
 
 export {
   getAllJazzDap, addJazzDap, updateJazzDap, deleteJazzDap,
   getMusicMIDI, getSampleMIDI, getMatchLevenshteinDistance,
   getTrackMetadata, getTracksMetadata,
-  addAnnotation, getAnnotations, deleteAnnotation, updateAnnotation
+  addAnnotation, getAnnotations, deleteAnnotation, updateAnnotation,
+  addComment, getComments, deleteComment, updateComment
 }

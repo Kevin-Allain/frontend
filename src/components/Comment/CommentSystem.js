@@ -2,15 +2,18 @@ import React, { useState } from 'react';
 import { HiOutlineComment } from 'react-icons/hi'
 import Comment from './Comment'
 import "./CommentSystem.css"
+import {
+    addComment,
+    updateComment,
+    getComments,
+    deleteComment
+} from "../../utils/HandleApi";
+
 
 const CommentSystem = ({
     type,
     info,
     index = 0,
-    addComment,
-    updateComment,
-    getComments,
-    deleteComment
 }) => {
 
     const [textInputComment, setTextInputComment] = useState("");
