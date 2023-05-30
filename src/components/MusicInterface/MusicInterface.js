@@ -287,8 +287,6 @@ const MusicInterface = () => {
         <button onClick={handleClickTextSearch}>Submit search</button>
       </div>
 
-
-
       {/* ==== OUTPUT SEARCH ==== */}
       <div className='wrapperMusicSearch'>
         {(listSearchRes.length <= 0) ? (<></>) :
@@ -360,7 +358,7 @@ const MusicInterface = () => {
         }
       </div>
 
-      {/* ==== BUTTONS ====  */}
+      {/* ==== BUTTONS FOR TESTS ====  */}
       <div className="buttonsMusicInterface">
         <div className='playMusic' >
           Test Search

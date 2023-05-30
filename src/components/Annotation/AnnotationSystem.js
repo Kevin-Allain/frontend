@@ -7,9 +7,8 @@ import "./AnnotationSystem.css"
 // TODO assess how we want to convey information about the object that uses the annotation system. 
 // We need to standardize (maybe use a different structure?)
 const AnnotationSystem = ({ 
-  type, info, index=0, addAnnotation, updateAnnotation , getAnnotations, deleteAnnotation,
-  getComments = ()=>{console.log('will get comments')}
- }) => {
+  type, info, index=0, addAnnotation, updateAnnotation , getAnnotations, deleteAnnotation 
+}) => {
 
   const [textInputAnnotation, setTextInputAnnotation] = useState("");
   const [isUpdating, setIsUpdating] = useState(false);
@@ -39,11 +38,10 @@ const AnnotationSystem = ({
     }
   }
 
-  const handleShowAndLoadCommentsSystem = (annotationId, getComments) => {
+  const handleShowAndLoadCommentsSystem = (annotationId) => {
     console.log("handleShowAndLoadCommentsSystem. annotationId: ", annotationId);
     // setShowInputAnnotation(!showInputAnnotation)
     console.log("type: ",type,", info: ",info,", index: ",index ,", getAnnotations: ", getAnnotations,", showInputAnnotation: ",showInputAnnotation)
-    getComments();
   }
 
   return (
@@ -81,7 +79,7 @@ const AnnotationSystem = ({
           </div>
           </div>
           <div className='areaDisplayAnnotation'>
-            {listAnnotations.map((item) => (
+            {listAnnotations.map((item, i) => (
                 <Annotation
                   key={item._id}
                   annotationInput={item.annotationInput}
@@ -89,9 +87,10 @@ const AnnotationSystem = ({
                   type={item.type}
                   author={item.author}
                   privacy={item.privacy}
+                  indexAnnotation = {i}
                   // TODO (and think about more) e.g. star
                   handleShowAndLoadCommentsSystem={ 
-                    () => handleShowAndLoadCommentsSystem(item._id, getComments) 
+                    () => handleShowAndLoadCommentsSystem(item._id, ) 
                   }
                   updateMode={
                     () => updateMode(item._id, item.annotationInput, localStorage?.username)}

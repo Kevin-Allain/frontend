@@ -320,27 +320,26 @@ const getMatchLevenshteinDistance = (
     .catch((err) => console.log(err));
 };
 
-
 /** Annotations */
 
-// index added because we can have one sequence occur several times in a track
+// indexAnnotation added because we can have one sequence occur several times in a track
 const addAnnotation = (
   type, 
   info, 
-  index = 0,
+  indexAnnotation = 0,
   annotationInput, 
   setAnnotationInput, 
   setListAnnotations, 
   author = null,
   ) => {
-  console.log(`HandeAPI addAnnotation: \n${baseUrl}/saveAnnotation`, { type, info, annotationInput, author, index });
+  console.log(`HandeAPI addAnnotation: \n${baseUrl}/saveAnnotation`, { type, info, annotationInput, author, indexAnnotation });
 
   axios
-    .post(`${baseUrl}/addAnnotation`, { type, info, index, annotationInput, author })
+    .post(`${baseUrl}/addAnnotation`, { type, info, indexAnnotation, annotationInput, author })
     .then((data) => {
       console.log(data);
       setAnnotationInput("");
-      getAnnotations(type, info,setListAnnotations, index)
+      getAnnotations(type, info,setListAnnotations, indexAnnotation)
     })
     .catch(err => console.log(err))
 }
@@ -350,13 +349,13 @@ const updateAnnotation = (
   annotationId,
   annotationInput,
   setAnnotationInput,
-  index=0,
+  indexAnnotation=0,
   type,
   info,
   setListAnnotations,
   setIsUpdating,
   userId = null) => {
-  console.log("HandleApi updateAnnotation: ", annotationId, annotationInput, index);
+  console.log("HandleApi updateAnnotation: ", annotationId, annotationInput, indexAnnotation);
   axios
     .post(`${baseUrl}/updateAnnotation`, { _id: annotationId, annotationInput, userId })
     .then((data) => {
@@ -365,19 +364,19 @@ const updateAnnotation = (
       setAnnotationInput("");
       setIsUpdating(false);
       // getAllJazzDap(setJazzDap);
-      getAnnotations(type, info, setListAnnotations, index);
+      getAnnotations(type, info, setListAnnotations, indexAnnotation);
     })
     .catch(err => console.log(err))
 }
 
 
-const getAnnotations = (type, info, setListAnnotations, index=0, user = null) => {
-  console.log("HandeAPI getAnnotations type: ", type, ", info: ", info, ", index: ",index);
+const getAnnotations = (type, info, setListAnnotations, indexAnnotation=0, user = null) => {
+  console.log("HandeAPI getAnnotations type: ", type, ", info: ", info, ", indexAnnotation: ",indexAnnotation);
 
   axios
     .get(`${baseUrl}/getAnnotations`, {
       params:
-        { type: type, info: info, index:index }
+        { type: type, info: info, indexAnnotation:indexAnnotation }
     })
     .then(({ data }) => {
       console.log('data: ', data);
@@ -401,24 +400,24 @@ const deleteAnnotation = (annotationId, type, info, setListAnnotations) => {
 
 /** Comments */
 
-// index added because we can have one sequence occur several times in a track
+// indexAnnotation added because we can have one sequence occur several times in a track
 const addComment = (
   type, 
   info, 
-  index = 0,
+  indexAnnotation = 0,
   commentInput, 
   setCommentInput, 
   setListComments, 
   author = null,
   ) => {
-  console.log(`HandeAPI addComment: \n${baseUrl}/saveComment`, { type, info, commentInput, author, index });
+  console.log(`HandeAPI addComment: \n${baseUrl}/saveComment`, { type, info, commentInput, author, indexAnnotation });
 
   axios
-    .post(`${baseUrl}/addComment`, { type, info, index, commentInput, author })
+    .post(`${baseUrl}/addComment`, { type, info, indexAnnotation, commentInput, author })
     .then((data) => {
       console.log(data);
       setCommentInput("");
-      getComments(type, info,setListComments, index)
+      getComments(type, info,setListComments, indexAnnotation)
     })
     .catch(err => console.log(err))
 }
@@ -428,13 +427,13 @@ const updateComment = (
   commentId,
   commentInput,
   setCommentInput,
-  index=0,
+  indexAnnotation=0,
   type,
   info,
   setListComments,
   setIsUpdating,
   userId = null) => {
-  console.log("HandleApi updateComment: ", commentId, commentInput, index);
+  console.log("HandleApi updateComment: ", commentId, commentInput, indexAnnotation);
   axios
     .post(`${baseUrl}/updateComment`, { _id: commentId, commentInput, userId })
     .then((data) => {
@@ -443,19 +442,19 @@ const updateComment = (
       setCommentInput("");
       setIsUpdating(false);
       // getAllJazzDap(setJazzDap);
-      getComments(type, info, setListComments, index);
+      getComments(type, info, setListComments, indexAnnotation);
     })
     .catch(err => console.log(err))
 }
 
 
-const getComments = (type, info, setListComments, index=0, user = null) => {
-  console.log("HandeAPI getComments type: ", type, ", info: ", info, ", index: ",index);
+const getComments = (type, info, setListComments, indexAnnotation=0, user = null) => {
+  console.log("HandeAPI getComments type: ", type, ", info: ", info, ", indexAnnotation: ",indexAnnotation);
 
   axios
     .get(`${baseUrl}/getComments`, {
       params:
-        { type: type, info: info, index:index }
+        { type: type, info: info, indexAnnotation:indexAnnotation }
     })
     .then(({ data }) => {
       console.log('data: ', data);
@@ -475,6 +474,7 @@ const deleteComment = (commentId, type, info, setListComments) => {
     })
     .catch(err => console.log(err))
 }
+
 
 
 
