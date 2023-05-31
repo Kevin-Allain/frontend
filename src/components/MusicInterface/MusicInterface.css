@@ -100,9 +100,10 @@ th {
     /* Clear floats */
 }
 
-.musicres {
+.sampleres {
     position: relative;
     margin-top: 0.1rem;
+    margin-bottom: 0.5rem;
     margin-right: 0.25rem;
     background-color: #1e202f;
     color: white;
@@ -127,7 +128,7 @@ th {
     overflow-x: scroll; */
 }
 
-.iconsMusicRes {
+.iconsSampleRes {
     text-align: center;
 }
 

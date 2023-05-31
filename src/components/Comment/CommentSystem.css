@@ -13,11 +13,16 @@
   border: solid;
   border-width: thin;
   text-align: left;
+  z-index: 1;
+  position: relative;
 }
   
 .areaDisplayComment{
   max-height: 350px;
   overflow-y: scroll;
+  left: 5%;
+  position: relative;
+  width: 95%;
 }
 
 .commentText{
@@ -30,4 +35,24 @@
     padding:0.1rem;
     /* left:10%; */
     /* width: 90%; */
+}
+
+.comments-container {
+  position: relative;
+  padding-left: 20px; /* Adjust as needed */
+}
+
+.comment-wrapper {
+  margin-bottom: 10px; /* Adjust as needed */
+}
+
+.vertical-line {
+  position: absolute;
+  left: 2%;
+  top: 0;
+  width: 5px;
+  height: 100%;
+  background-color: #000; /* Adjust line color as needed */
+  margin-right: 10px; /* Adjust as needed */
+  z-index: 0;
 }

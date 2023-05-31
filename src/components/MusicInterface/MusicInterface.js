@@ -11,7 +11,7 @@ import {
   deleteAnnotation,
   updateAnnotation
 } from "../../utils/HandleApi";
-import MusicRes from "./MusicRes"
+import SampleRes from "./SampleRes"
 import MusicInfo from "./MusicInfo"
 import Piano from "./Piano"
 import NotetoMIDI from "./NotetoMIDI.json"
@@ -273,7 +273,7 @@ const MusicInterface = () => {
       <Piano onKeyPress={handleKeyPress} />
       {/* ==== SEARCH INPUT ==== */}
       <div className="topTextSearch">
-        <div className='disclaimerSearchPitch'>Enter a query based on pitch notes (from 0 to 127) separated with - characters.</div>
+        <div className='disclaimerSearchPitch'>Play the piano keys or enter a query based on pitch notes (from 0 to 127) separated with - characters.</div>
         <input
           type="text"
           ref={textSearchRef}
@@ -326,7 +326,7 @@ const MusicInterface = () => {
                 
               </div>
               {listSearchRes.map((item, i) => (
-                <MusicRes
+                <SampleRes
                   key={i + '' + item.recording + '_' + item.arrNotes.toString().replaceAll(',', '-')}
                   text={ i + '-' + item.recording}
                   lognumber={item.recording.split('-')[0]}
@@ -343,12 +343,6 @@ const MusicInterface = () => {
                   updateAnnotation={updateAnnotation}
                   getAnnotations={getAnnotations}
                   deleteAnnotation={deleteAnnotation}
-
-                // updateMode={() => updateMode(item._id, item.text, localStorage?.username)}
-                // TODO annotation for each musicres
-                // annotations = {listAnnotMusRes.map((item, j) => (
-                //     <Annotation musicRes={item.recording} onSave={()=> {console.log("onSave")}}  />))
-                //   }
                 />
               ))
               }

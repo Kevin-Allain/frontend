@@ -13,10 +13,15 @@
   border-width: thin;
   text-align: left;
 } 
-  
+
+.outerAreaDisplayAnnotation{
+  max-height: 350px;
+  overflow-y: hidden;
+}
+
 .areaDisplayAnnotation{
   max-height: 350px;
-  overflow-y: scroll;
+  overflow-y: auto;
 }
 
 .annotationText{

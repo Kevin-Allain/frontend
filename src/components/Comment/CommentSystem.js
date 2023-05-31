@@ -69,19 +69,20 @@ const CommentSystem = ({
                     </div>
                 </div>
                 <div className='areaDisplayComment'>
-                    {listComments.map((item) => (
-                        <Comment
-                            key={item._id}
-                            commentInput={item.commentInput}
-                            info={item.info}
-                            type={item.type}
-                            author={item.author}
-                            privacy={item.privacy}
-                            // TODO (and think about more) e.g. star
-                            updateMode={
-                                () => updateMode(item._id, item.commentInput, localStorage?.username)}
-                            deleteComment={() => deleteComment(item._id, item.type, item.info, setListComments)}
-                        />
+                    {listComments.map((item, i) => (
+                        <div key={i} className='comment-wrapper'>
+                            <div className="vertical-line" />
+                            <Comment
+                                key={item._id}
+                                commentInput={item.commentInput}
+                                info={item.info}
+                                type={item.type}
+                                author={item.author}
+                                privacy={item.privacy}
+                                // TODO (and think about more) e.g. star, +1, -1 from people
+                                updateMode={() => updateMode(item._id, item.commentInput, localStorage?.username)}
+                                deleteComment={() => deleteComment(item._id, item.type, item.info, setListComments)} />
+                        </div>
                     ))}
                 </div>
             </div>

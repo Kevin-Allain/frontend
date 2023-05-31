@@ -78,27 +78,28 @@ const AnnotationSystem = ({
             {isUpdating ? "Update" : "Add"}
           </div>
           </div>
-          <div className='areaDisplayAnnotation'>
-            {listAnnotations.map((item, i) => (
-                <Annotation
-                  key={item._id}
-                  annotationInput={item.annotationInput}
-                  info={item.info}
-                  type={item.type}
-                  author={item.author}
-                  privacy={item.privacy}
-                  indexAnnotation = {i}
-                  // TODO (and think about more) e.g. star
-                  handleShowAndLoadCommentsSystem={ 
-                    () => handleShowAndLoadCommentsSystem(item._id, ) 
-                  }
-                  updateMode={
-                    () => updateMode(item._id, item.annotationInput, localStorage?.username)}
-                  deleteAnnotation={() => deleteAnnotation(item._id, item.type, item.info, setListAnnotations)}
-                />
-              ))}
+          <div className='outerAreaDisplayAnnotation'>
+            <div className='areaDisplayAnnotation'>
+              {listAnnotations.map((item, i) => (
+                  <Annotation
+                    key={item._id}
+                    annotationInput={item.annotationInput}
+                    info={item.info}
+                    type={item.type}
+                    author={item.author}
+                    privacy={item.privacy}
+                    indexAnnotation = {i}
+                    // TODO (and think about more) e.g. star
+                    handleShowAndLoadCommentsSystem={ 
+                      () => handleShowAndLoadCommentsSystem(item._id, ) 
+                    }
+                    updateMode={
+                      () => updateMode(item._id, item.annotationInput, localStorage?.username)}
+                    deleteAnnotation={() => deleteAnnotation(item._id, item.type, item.info, setListAnnotations)}
+                  />
+                ))}
+            </div>
           </div>
-          
            
         </div>
       }
