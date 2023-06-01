@@ -49,15 +49,17 @@ const SampleRes = ({
                 </tbody>
             </table> 
 
-            <div className="iconsSampleRes">
-                <FiPlayCircle className='icon'
-                    onClick={funcPlayMIDI} />
+            <div className='buttonSampleRes'>
+                <div className="iconsSampleRes">
+                    <FiPlayCircle className='icon'
+                        onClick={funcPlayMIDI} />
+                </div>
+                <AnnotationSystem 
+                        type={"sample"}
+                        info={text.substr(text.indexOf("-")+1)+"_"+notes+'_'+Number(text.split('-')[0])}
+                        index={Number(text.split('-')[0])}
+                    />
             </div>
-            <AnnotationSystem 
-                    type={"sample"}
-                    info={text.substr(text.indexOf("-")+1)+"_"+notes+'_'+Number(text.split('-')[0])}
-                    index={Number(text.split('-')[0])}
-                />
         </div>
     );
 }

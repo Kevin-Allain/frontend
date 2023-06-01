@@ -100,6 +100,12 @@ th {
     /* Clear floats */
 }
 
+.buttonSampleRes{
+    display:flex;
+    gap: 2rem;
+    justify-content: left;
+}
+
 .sampleres {
     position: relative;
     margin-top: 0.1rem;
@@ -111,9 +117,16 @@ th {
     border: solid;
     /* width: 90%; */
     border-width: thin;
-    margin-left: 31%;
+    /* margin-left: 31%; */
     text-align: left;
-    
+
+}
+
+.trackres {
+    border: solid;
+    margin-left: 31%;
+    position: relative;
+    width: 67%;
 }
 
 .infoLogNumber {
