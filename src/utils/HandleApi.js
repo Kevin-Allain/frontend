@@ -198,7 +198,8 @@ const getMatchLevenshteinDistance = (
   playMusicFunc = null,
   levenshteinDistanceFunc = null,
   setListSearchRes = null,
-  setListLogNumbers = null
+  setListLogNumbers = null, 
+  setListTracks=null
 ) => {
   console.log("-- handleAPI / getMatchLevenshteinDistance. stringNotes: ", stringNotes,
     ", percMatch: ", percMatch,
@@ -310,6 +311,9 @@ const getMatchLevenshteinDistance = (
         // console.log("allLogNumber: ", allLogNumber);
         setListLogNumbers(allLogNumber);
         setListSearchRes(resAggreg);
+        // TODO
+        console.log("**** About to setListTracks: ", ([...new Set(resAggreg.map(obj => obj.recording))]) )
+        setListTracks(  [...new Set(resAggreg.map(obj => obj.recording))].sort() )
 
         return d;
       }

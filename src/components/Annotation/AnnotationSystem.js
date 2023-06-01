@@ -1,14 +1,19 @@
 import React, { useState } from 'react';
 import { HiOutlineAnnotation } from 'react-icons/hi'
+import {
+  addAnnotation,
+  getAnnotations,
+  deleteAnnotation,
+  updateAnnotation
+} from "../../utils/HandleApi";
+
 import Annotation from "./Annotation.js"
 import "./AnnotationSystem.css"
 
 
 // TODO assess how we want to convey information about the object that uses the annotation system. 
 // We need to standardize (maybe use a different structure?)
-const AnnotationSystem = ({ 
-  type, info, index=0, addAnnotation, updateAnnotation , getAnnotations, deleteAnnotation 
-}) => {
+const AnnotationSystem = ({ type, info, index=0 }) => {
 
   const [textInputAnnotation, setTextInputAnnotation] = useState("");
   const [isUpdating, setIsUpdating] = useState(false);

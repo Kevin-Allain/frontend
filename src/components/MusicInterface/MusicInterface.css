@@ -118,14 +118,12 @@ th {
 
 .infoLogNumber {
     margin-top: 0.1rem;
-    background-color: #1e202f;
+    background-color: #dfdfdf;
     color: white;
     /* border: solid; */
     width: 30%;
+    color: black;
     float: left;
-    /* max-height: 200px;
-    overflow-y: scroll;
-    overflow-x: scroll; */
 }
 
 .iconsSampleRes {
@@ -137,9 +135,7 @@ th {
     border: solid;
     border-width: thin;
     text-align: left;
-    /* width: 90%;
-    left: 5%;
-    position: relative; */
+    margin-bottom: 1rem;
 }
 
 ::-webkit-scrollbar {

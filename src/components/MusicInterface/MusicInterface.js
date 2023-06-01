@@ -22,6 +22,7 @@ import { AiFillPlayCircle, AiFillPauseCircle, AiOutlineArrowRight } from 'react-
 import { ImLoop2 } from 'react-icons/im'
 import { BiDotsHorizontalRounded } from 'react-icons/bi'
 import { BsInfoCircleFill } from 'react-icons/bs'
+import TrackRes from './TrackRes';
 
 const PITCH_QUERY_REGEX = /^$|(^(?!.*--)(?!-)([0-9]{1,2}|1[01][0-9]|12[0-7])(-([0-9]{1,2}|1[01][0-9]|12[0-7]))*(-?)$)/;
 
@@ -45,6 +46,7 @@ const MusicInterface = () => {
   const [oldSearch, setOldSearch] = useState('');
 
   const [infoMusicList, setInfoMusicList] = useState([]);
+  const [listTracks, setListTracks] = useState([]);
   const [listSearchRes, setListSearchRes] = useState([]);
   const [listLogNumbers, setListLogNumbers] = useState([]);
 
@@ -233,7 +235,8 @@ const MusicInterface = () => {
       playFormattedMusic,
       calcLevenshteinDistance_int,
       setListSearchRes,
-      setListLogNumbers
+      setListLogNumbers,
+      setListTracks
     );
     setTextSearch('');
   }
@@ -266,6 +269,7 @@ const MusicInterface = () => {
   }
 
 
+
   return (
     <div className="musicInterface">
       <h1>Music Interface</h1>
@@ -292,14 +296,14 @@ const MusicInterface = () => {
         {(listSearchRes.length <= 0) ? (<></>) :
           <div className='outputMusicSearch'>
             {/* TODO fix imperfect implementation, makes more sense for oldSearch to be updated with handleAPi output. */}
-            List of results for your search: {oldSearch} 
+            List of results for your search: <h4>{oldSearch}</h4>
             <AnnotationSystem
               type={"search"}
               info={oldSearch}
-              addAnnotation={addAnnotation}
-              updateAnnotation={updateAnnotation}
-              getAnnotations = {getAnnotations}
-              deleteAnnotation={deleteAnnotation}
+              // addAnnotation={addAnnotation}
+              // updateAnnotation={updateAnnotation}
+              // getAnnotations = {getAnnotations}
+              // deleteAnnotation={deleteAnnotation}
             />
 
           <div className='musicInterfaceContent'>
@@ -325,26 +329,37 @@ const MusicInterface = () => {
                 }
                 
               </div>
-              {listSearchRes.map((item, i) => (
-                <SampleRes
-                  key={i + '' + item.recording + '_' + item.arrNotes.toString().replaceAll(',', '-')}
-                  text={ i + '-' + item.recording}
-                  lognumber={item.recording.split('-')[0]}
-                  length={item.arrTime[item.arrTime.length - 1] + item.arrDurations[item.arrDurations.length - 1] - item.arrTime[0]}
-                  notes={item.arrNotes.toString().replaceAll(',', '-')}
-                  durations={item.arrDurations.toString().replaceAll(',', '-')}
-                  times={item.arrTime.toString().replaceAll(',', '-')}
-                  distance={item.distCalc}
-                  // Need to format the structure 
-                  funcPlayMIDI={() => formatAndPlay(item)}
-                  getMusicInfo={() => getMusicInfo(item.recording, infoMusicList, setInfoMusicList)}
-                  infoMusicList={infoMusicList}
-                  addAnnotation={addAnnotation}
-                  updateAnnotation={updateAnnotation}
-                  getAnnotations={getAnnotations}
-                  deleteAnnotation={deleteAnnotation}
-                />
-              ))
+              {(listSearchRes.length <= 0) ? (<></>) :
+                listTracks.map((item, i) => (
+                  <>
+                    <TrackRes
+                      key={"Track"+i + '' + item}
+                      text={item}
+                      listSearchRes={listSearchRes.filter(a => a.recording===item)}
+                      formatAndPlay={formatAndPlay}
+                      getMusicInfo={getMusicInfo}
+                      infoMusicList={infoMusicList}
+                      setInfoMusicList={setInfoMusicList}
+                    />
+                    {/* <SampleRes
+                      key={i + '' + item.recording + '_' + item.arrNotes.toString().replaceAll(',', '-')}
+                      text={i + '-' + item.recording}
+                      lognumber={item.recording.split('-')[0]}
+                      length={item.arrTime[item.arrTime.length - 1] + item.arrDurations[item.arrDurations.length - 1] - item.arrTime[0]}
+                      notes={item.arrNotes.toString().replaceAll(',', '-')}
+                      durations={item.arrDurations.toString().replaceAll(',', '-')}
+                      times={item.arrTime.toString().replaceAll(',', '-')}
+                      distance={item.distCalc}
+                      // Need to format the structure 
+                      funcPlayMIDI={() => formatAndPlay(item)}
+                      getMusicInfo={() => getMusicInfo(item.recording, infoMusicList, setInfoMusicList)}
+                      infoMusicList={infoMusicList}
+                      addAnnotation={addAnnotation}
+                      updateAnnotation={updateAnnotation}
+                      getAnnotations={getAnnotations}
+                      deleteAnnotation={deleteAnnotation} /> */}
+                  </>
+                ))
               }
 
             </div>
