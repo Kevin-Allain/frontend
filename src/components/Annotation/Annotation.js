@@ -38,7 +38,6 @@ const Annotation = ({
       {/* <AiOutlineStar className='icon' onClick={ () => console.log("star pressed") } /> */}
       <BiEdit className='icon' onClick={updateMode} />
       <AiFillDelete className='icon' onClick={deleteAnnotation} />
-      <div className="line"></div>
       {/* TODO set a CommentSystem according to this annotation when clicking on the icon */}
       {/* Probably a function passed such as getComments */}
       <AiOutlineComment className='icon'   onClick={ handleToggleCommentSystem }
