@@ -335,11 +335,12 @@ const addAnnotation = (
   setAnnotationInput, 
   setListAnnotations, 
   author = null,
+  privacy='public'
   ) => {
-  console.log(`HandeAPI addAnnotation: \n${baseUrl}/saveAnnotation`, { type, info, annotationInput, author, indexAnnotation });
+  console.log(`HandeAPI addAnnotation: \n${baseUrl}/saveAnnotation`, { type, info, annotationInput, author, indexAnnotation, privacy });
 
   axios
-    .post(`${baseUrl}/addAnnotation`, { type, info, indexAnnotation, annotationInput, author })
+    .post(`${baseUrl}/addAnnotation`, { type, info, indexAnnotation, annotationInput, author, privacy })
     .then((data) => {
       console.log(data);
       setAnnotationInput("");

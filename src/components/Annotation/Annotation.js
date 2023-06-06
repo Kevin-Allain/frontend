@@ -32,7 +32,7 @@ const Annotation = ({
 
   return (
     <div className='annotation'>
-      Annotation for <em>{type}</em> written by <em>{(author === null)? '?' : author } - IndexAnnotation: {indexAnnotation}</em>
+      Annotation for <em>{type}</em> written by <em>{(author === null)? '?' : author } - IndexAnnotation: {indexAnnotation}</em> - Privacy: {privacy}
       {/* {(info === '') ? <></> : <><p>About info: {info}</p></>} */}
       <h4><div className='annotationText'>{annotationInput}</div></h4>
       {/* <AiOutlineStar className='icon' onClick={ () => console.log("star pressed") } /> */}

@@ -23,6 +23,9 @@ const AnnotationSystem = ({ type, info, index=0 }) => {
 
   const [listAnnotations, setListAnnotations] = useState([]);
 
+  const [selectedPrivacyOption, setSelectedPrivacyOption] = useState('');
+
+
   const updateMode = (_id, text) => {
     console.log("updateMode AnnotationSystem. text: ",text);
     setIsUpdating(true);
@@ -42,6 +45,11 @@ const AnnotationSystem = ({ type, info, index=0 }) => {
         localStorage.username ? localStorage.username : null);
     }
   }
+
+  const handleChangeOption = (event) => {
+    setSelectedPrivacyOption(event.target.value);
+  };
+
 
   const handleShowAndLoadCommentsSystem = (annotationId) => {
     console.log("handleShowAndLoadCommentsSystem. annotationId: ", annotationId);
@@ -70,16 +78,23 @@ const AnnotationSystem = ({ type, info, index=0 }) => {
             className='annotation'
             value={textInputAnnotation}
             onChange={(e) => setTextInputAnnotation(e.target.value)} />
-          <div className="add" onClick={isUpdating
-            ? () => updateAnnotation( annotationId, textInputAnnotation , setTextInputAnnotation, index, type, info,
-              setListAnnotations, setIsUpdating,
-              localStorage?.username)
-            : () => addAnnotation( type, info, index, textInputAnnotation, 
-              setTextInputAnnotation,
-              setListAnnotations,
-              localStorage?.username)
+          <select value={selectedPrivacyOption} onChange={handleChangeOption}>
+            <option value="public">Public</option>
+            <option value="private">Private</option>
+          </select>
+          <div className="add" onClick={(textInputAnnotation!=='')?
+            (isUpdating
+              ? () => updateAnnotation( annotationId, textInputAnnotation , setTextInputAnnotation, index, type, info,
+                setListAnnotations, setIsUpdating,
+                localStorage?.username)
+              : () => addAnnotation( type, info, index, textInputAnnotation, 
+                setTextInputAnnotation,
+                setListAnnotations,
+                localStorage?.username, selectedPrivacyOption))
+              : () => console.log('empty')
           }
           >
+            
             {isUpdating ? "Update" : "Add"}
           </div>
           </div>
