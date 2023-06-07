@@ -312,12 +312,10 @@ const getMatchLevenshteinDistance = (
         setListLogNumbers(allLogNumber);
         setListSearchRes(resAggreg);
         // TODO
-        console.log("**** About to setListTracks: ", ([...new Set(resAggreg.map(obj => obj.recording))]) )
         setListTracks(  [...new Set(resAggreg.map(obj => obj.recording))].sort() )
 
         return d;
       }
-
 
       return d;
     })
@@ -339,12 +337,19 @@ const addAnnotation = (
   ) => {
   console.log(`HandeAPI addAnnotation: \n${baseUrl}/saveAnnotation`, { type, info, annotationInput, author, indexAnnotation, privacy });
 
+  let time = new Date();
+
   axios
-    .post(`${baseUrl}/addAnnotation`, { type, info, indexAnnotation, annotationInput, author, privacy })
+    .post(`${baseUrl}/addAnnotation`, { type, info, indexAnnotation, annotationInput, author, privacy, time })
     .then((data) => {
       console.log(data);
       setAnnotationInput("");
-      getAnnotations(type, info,setListAnnotations, indexAnnotation)
+      getAnnotations(
+        type, 
+        info,
+        setListAnnotations, 
+        indexAnnotation, 
+        localStorage.username ? localStorage.username : null)
     })
     .catch(err => console.log(err))
 }
@@ -369,19 +374,28 @@ const updateAnnotation = (
       setAnnotationInput("");
       setIsUpdating(false);
       // getAllJazzDap(setJazzDap);
-      getAnnotations(type, info, setListAnnotations, indexAnnotation);
+      getAnnotations(
+        type, 
+        info, 
+        setListAnnotations, 
+        indexAnnotation, 
+        localStorage.username ? localStorage.username : null);
     })
     .catch(err => console.log(err))
 }
 
 
 const getAnnotations = (type, info, setListAnnotations, indexAnnotation=0, user = null) => {
-  console.log("HandeAPI getAnnotations type: ", type, ", info: ", info, ", indexAnnotation: ",indexAnnotation);
+  console.log("HandeAPI getAnnotations type: ", type, ", info: ", info, ", indexAnnotation: ",indexAnnotation, ", user: ",user);
 
   axios
     .get(`${baseUrl}/getAnnotations`, {
-      params:
-        { type: type, info: info, indexAnnotation:indexAnnotation }
+      params: {
+        type: type,
+        info: info,
+        indexAnnotation: indexAnnotation,
+        user: user
+      }
     })
     .then(({ data }) => {
       console.log('data: ', data);
@@ -390,14 +404,19 @@ const getAnnotations = (type, info, setListAnnotations, indexAnnotation=0, user 
     .catch(err => console.log(err))
 }
 
-const deleteAnnotation = (annotationId, type, info, setListAnnotations) => {
+const deleteAnnotation = (annotationId, type, info, setListAnnotations, indexAnnotation=0) => {
   console.log("HandeAPI deleteAnnotation. annotationId: ", annotationId, ", setListAnnotations: ", setListAnnotations)
 
   axios
     .post(`${baseUrl}/deleteAnnotation`, { _id: annotationId })
     .then((data) => {
       console.log(data);
-      getAnnotations(type, info, setListAnnotations);
+      getAnnotations(
+        type, 
+        info, 
+        setListAnnotations, 
+        indexAnnotation,
+        localStorage.username ? localStorage.username : null);
     })
     .catch(err => console.log(err))
 }
@@ -417,8 +436,10 @@ const addComment = (
   ) => {
   console.log(`HandeAPI addComment: \n${baseUrl}/saveComment`, { type, info, commentInput, author, indexAnnotation });
 
+  let time = new Date();
+
   axios
-    .post(`${baseUrl}/addComment`, { type, info, indexAnnotation, commentInput, author })
+    .post(`${baseUrl}/addComment`, { type, info, indexAnnotation, commentInput, author, time })
     .then((data) => {
       console.log(data);
       setCommentInput("");
@@ -453,13 +474,18 @@ const updateComment = (
 }
 
 
-const getComments = (type, info, setListComments, indexAnnotation=0, user = null) => {
-  console.log("HandeAPI getComments type: ", type, ", info: ", info, ", indexAnnotation: ",indexAnnotation);
+const getComments = (
+  type,
+  info,
+  setListComments,
+  indexAnnotation = 0,
+  user = null) => {
+  console.log("HandeAPI getComments type: ", type, ", info: ", info, ", indexAnnotation: ", indexAnnotation);
 
   axios
     .get(`${baseUrl}/getComments`, {
       params:
-        { type: type, info: info, indexAnnotation:indexAnnotation }
+        { type: type, info: info, indexAnnotation: indexAnnotation }
     })
     .then(({ data }) => {
       console.log('data: ', data);
@@ -479,7 +505,6 @@ const deleteComment = (commentId, type, info, setListComments) => {
     })
     .catch(err => console.log(err))
 }
-
 
 
 

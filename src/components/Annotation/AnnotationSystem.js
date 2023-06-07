@@ -23,7 +23,7 @@ const AnnotationSystem = ({ type, info, index=0 }) => {
 
   const [listAnnotations, setListAnnotations] = useState([]);
 
-  const [selectedPrivacyOption, setSelectedPrivacyOption] = useState('');
+  const [selectedPrivacyOption, setSelectedPrivacyOption] = useState('public');
 
 
   const updateMode = (_id, text) => {
@@ -94,7 +94,6 @@ const AnnotationSystem = ({ type, info, index=0 }) => {
               : () => console.log('empty')
           }
           >
-            
             {isUpdating ? "Update" : "Add"}
           </div>
           </div>
@@ -109,6 +108,7 @@ const AnnotationSystem = ({ type, info, index=0 }) => {
                     author={item.author}
                     privacy={item.privacy}
                     indexAnnotation = {i}
+                    time={item.time}
                     // TODO (and think about more) e.g. star
                     handleShowAndLoadCommentsSystem={ 
                       () => handleShowAndLoadCommentsSystem(item._id, ) 

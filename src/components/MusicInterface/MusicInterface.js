@@ -341,23 +341,6 @@ const MusicInterface = () => {
                       infoMusicList={infoMusicList}
                       setInfoMusicList={setInfoMusicList}
                     />
-                    {/* <SampleRes
-                      key={i + '' + item.recording + '_' + item.arrNotes.toString().replaceAll(',', '-')}
-                      text={i + '-' + item.recording}
-                      lognumber={item.recording.split('-')[0]}
-                      length={item.arrTime[item.arrTime.length - 1] + item.arrDurations[item.arrDurations.length - 1] - item.arrTime[0]}
-                      notes={item.arrNotes.toString().replaceAll(',', '-')}
-                      durations={item.arrDurations.toString().replaceAll(',', '-')}
-                      times={item.arrTime.toString().replaceAll(',', '-')}
-                      distance={item.distCalc}
-                      // Need to format the structure 
-                      funcPlayMIDI={() => formatAndPlay(item)}
-                      getMusicInfo={() => getMusicInfo(item.recording, infoMusicList, setInfoMusicList)}
-                      infoMusicList={infoMusicList}
-                      addAnnotation={addAnnotation}
-                      updateAnnotation={updateAnnotation}
-                      getAnnotations={getAnnotations}
-                      deleteAnnotation={deleteAnnotation} /> */}
                   </>
                 ))
               }

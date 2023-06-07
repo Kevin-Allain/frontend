@@ -27,8 +27,6 @@ const TrackRes = ({
     setInfoMusicList
  }) => {
 
-    console.log("For ",text,"listSearchRes: ",listSearchRes);
-
     return (
         <div className="trackres" key={text}>
             <div className="text">

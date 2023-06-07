@@ -14,6 +14,7 @@ const Annotation = ({
   updateMode,
   handleShowAndLoadCommentsSystem,
   privacy = 'public',
+  time=null,
   starred_by = [],
   collaborators = []
 }) => {
@@ -32,7 +33,7 @@ const Annotation = ({
 
   return (
     <div className='annotation'>
-      Annotation for <em>{type}</em> written by <em>{(author === null)? '?' : author } - IndexAnnotation: {indexAnnotation}</em> - Privacy: {privacy}
+      Annotation for <em>{type}</em> written by <em>{(author === null)? '?' : author } - IndexAnnotation: {indexAnnotation}</em> - Privacy: {privacy} <em>{time}</em>
       {/* {(info === '') ? <></> : <><p>About info: {info}</p></>} */}
       <h4><div className='annotationText'>{annotationInput}</div></h4>
       {/* <AiOutlineStar className='icon' onClick={ () => console.log("star pressed") } /> */}
