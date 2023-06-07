@@ -13,6 +13,7 @@ const CommentSystem = ({
     type,
     info,
     indexAnnotation = 0,
+    annotationId = null
 }) => {
 
     const [textInputComment, setTextInputComment] = useState("");
@@ -24,7 +25,7 @@ const CommentSystem = ({
     const [listComments, setListComments] = useState([]);
 
     useEffect(() => {
-        getComments(type, info, setListComments, indexAnnotation, localStorage.username ? localStorage.username : null);
+        getComments(type, info, setListComments, indexAnnotation, localStorage.username ? localStorage.username : null, annotationId);
     }, []);
 
 
@@ -37,9 +38,9 @@ const CommentSystem = ({
 
     const handleShowAndLoad = (type, info, getComments) => {
         setShowInputComment(!showInputComment)
-        console.log("type: ", type, ", info: ", info, ", index: ", indexAnnotation, ", getComments: ", getComments, ", showInputComment: ", showInputComment)
+        console.log("type: ", type, ", info: ", info, ", indexAnnotation: ", indexAnnotation, ", getComments: ", getComments, ", showInputComment: ", showInputComment, ", annotationId: ",annotationId, ", (typeof annotationId): ",(typeof annotationId))
         if (!showInputComment) {
-            getComments(type, info, setListComments, indexAnnotation, localStorage.username ? localStorage.username : null);
+            getComments(type, info, setListComments, indexAnnotation, localStorage.username ? localStorage.username : null, annotationId);
         }
     }
 
@@ -58,11 +59,11 @@ const CommentSystem = ({
                     <div className="add" onClick={isUpdating
                         ? () => updateComment(commentId, textInputComment, setTextInputComment, indexAnnotation, type, info,
                             setListComments, setIsUpdating,
-                            localStorage?.username)
+                            localStorage?.username, annotationId)
                         : () => addComment(type, info, indexAnnotation, textInputComment,
                             setTextInputComment,
                             setListComments,
-                            localStorage?.username)
+                            localStorage?.username, annotationId)
                     }
                     >
                         {isUpdating ? "Update" : "Add"}

@@ -6,6 +6,7 @@ import CommentSystem from '../Comment/CommentSystem';
 
 const Annotation = ({
   type,
+  _id = null,
   info = '',
   indexAnnotation=0,
   annotationInput,
@@ -33,7 +34,7 @@ const Annotation = ({
 
   return (
     <div className='annotation'>
-      Annotation for <em>{type}</em> written by <em>{(author === null)? '?' : author } - IndexAnnotation: {indexAnnotation}</em> - Privacy: {privacy} <em>{time}</em>
+      Annotation for <em>{type}</em> written by <em>{(author === null)? '?' : author } - IndexAnnotation: {indexAnnotation}</em> - Privacy: <b>{privacy}</b> <em>{time}</em>
       {/* {(info === '') ? <></> : <><p>About info: {info}</p></>} */}
       <h4><div className='annotationText'>{annotationInput}</div></h4>
       {/* <AiOutlineStar className='icon' onClick={ () => console.log("star pressed") } /> */}
@@ -44,9 +45,10 @@ const Annotation = ({
       <AiOutlineComment className='icon'   onClick={ handleToggleCommentSystem }
       />
       {isCommentSystemVisible && (
-        <CommentSystem type={type} info={info} indexAnnotation={indexAnnotation} />
+        <CommentSystem type={type} info={info} indexAnnotation={indexAnnotation} annotationId={_id} />
       )}
-
+      <br/>
+      Unique Id: {_id}
     </div>
   );
 };

@@ -102,6 +102,7 @@ const AnnotationSystem = ({ type, info, index=0 }) => {
               {listAnnotations.map((item, i) => (
                   <Annotation
                     key={item._id}
+                    _id={item._id}
                     annotationInput={item.annotationInput}
                     info={item.info}
                     type={item.type}

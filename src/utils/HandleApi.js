@@ -385,8 +385,8 @@ const updateAnnotation = (
 }
 
 
-const getAnnotations = (type, info, setListAnnotations, indexAnnotation=0, user = null) => {
-  console.log("HandeAPI getAnnotations type: ", type, ", info: ", info, ", indexAnnotation: ",indexAnnotation, ", user: ",user);
+const getAnnotations = (type, info, setListAnnotations, indexAnnotation = 0, user = null) => {
+  console.log("HandeAPI getAnnotations type: ", type, ", info: ", info, ", indexAnnotation: ", indexAnnotation, ", user: ", user);
 
   axios
     .get(`${baseUrl}/getAnnotations`, {
@@ -433,17 +433,18 @@ const addComment = (
   setCommentInput, 
   setListComments, 
   author = null,
+  annotationId=null
   ) => {
-  console.log(`HandeAPI addComment: \n${baseUrl}/saveComment`, { type, info, commentInput, author, indexAnnotation });
+  console.log(`HandeAPI addComment: \n${baseUrl}/saveComment`, { type, info, commentInput, author, indexAnnotation, annotationId });
 
   let time = new Date();
 
   axios
-    .post(`${baseUrl}/addComment`, { type, info, indexAnnotation, commentInput, author, time })
+    .post(`${baseUrl}/addComment`, { type, info, indexAnnotation, commentInput, author, time, annotationId })
     .then((data) => {
       console.log(data);
       setCommentInput("");
-      getComments(type, info,setListComments, indexAnnotation)
+      getComments(type, info,setListComments, indexAnnotation, annotationId)
     })
     .catch(err => console.log(err))
 }
@@ -458,10 +459,12 @@ const updateComment = (
   info,
   setListComments,
   setIsUpdating,
-  userId = null) => {
-  console.log("HandleApi updateComment: ", commentId, commentInput, indexAnnotation);
+  userId = null,
+  annotationId = null
+  ) => {
+  console.log("HandleApi updateComment: ", commentId, commentInput, indexAnnotation, userId, annotationId);
   axios
-    .post(`${baseUrl}/updateComment`, { _id: commentId, commentInput, userId })
+    .post(`${baseUrl}/updateComment`, { _id: commentId, commentInput, userId, annotationId })
     .then((data) => {
       console.log("data: ", data);
       console.log("data[0]: ", data[0]);
@@ -473,19 +476,19 @@ const updateComment = (
     .catch(err => console.log(err))
 }
 
-
 const getComments = (
   type,
   info,
   setListComments,
   indexAnnotation = 0,
-  user = null) => {
-  console.log("HandeAPI getComments type: ", type, ", info: ", info, ", indexAnnotation: ", indexAnnotation);
+  user = null,
+  annotationId= null ) => {
+  console.log("HandeAPI getComments type: ", type, ", info: ", info, ", indexAnnotation: ", indexAnnotation, ", annotationId: ",annotationId);
 
   axios
     .get(`${baseUrl}/getComments`, {
       params:
-        { type: type, info: info, indexAnnotation: indexAnnotation }
+        { type: type, info: info, indexAnnotation: indexAnnotation, annotationId: annotationId }
     })
     .then(({ data }) => {
       console.log('data: ', data);
