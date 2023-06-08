@@ -6,9 +6,6 @@ import {AiFillDelete} from 'react-icons/ai'
 // Comments are meant to be public only. They are set as discussions for the annotations by researchers
 const Comment = ({
     annotationId,
-    type,
-    info = '',
-    index=0,
     commentInput,
     author,
     deleteComment,

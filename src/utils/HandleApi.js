@@ -1,21 +1,29 @@
 import axios from 'axios'
+import { setIsLoading } from '../App';
+
 
 const baseUrl = "http://localhost:5000" // can be used for development
 // const baseUrl = "https://fullstack-proto-jazzdap-backend.onrender.com"
 
+
 const getAllJazzDap = (setJazzDap) => {
   console.log("---- HandleApi / getAllJazzDap", new Date());
+  setIsLoading(true);
+
   axios
     .get(baseUrl)
     .then(({ data }) => {
       console.log('data: ', data);
       setJazzDap(data);
+
+      setIsLoading(false);
     })
     .catch(err => console.log(err))
 }
 
 const addJazzDap = (text, setText, setJazzDap, user = null) => {
   console.log(`HandeAPI addJazzDap: \n${baseUrl}/save`, { text });
+  // setIsLoading(true);
 
   axios
     .post(`${baseUrl}/saveJazzDap`, { text, user })
@@ -23,12 +31,16 @@ const addJazzDap = (text, setText, setJazzDap, user = null) => {
       console.log(data);
       setText("");
       getAllJazzDap(setJazzDap);
+
+      // setIsLoading(false);      
     })
     .catch(err => console.log(err))
 }
 
 const updateJazzDap = (jazzDapId, text, setJazzDap, setText, setIsUpdating, userId = null) => {  
   console.log("HandleApi updateJazzDap: ", jazzDapId, text);
+  // setIsLoading(true);
+
   axios
     .post(`${baseUrl}/updateJazzDap`, { _id: jazzDapId, text, userId })
     .then((data) => {
@@ -36,6 +48,8 @@ const updateJazzDap = (jazzDapId, text, setJazzDap, setText, setIsUpdating, user
       setText("");
       setIsUpdating(false);
       getAllJazzDap(setJazzDap);
+      // setIsLoading(false);
+
     })
     .catch(err => console.log(err))
 }
@@ -55,6 +69,7 @@ const deleteJazzDap = (jazzDapId, setJazzDap) => {
 
 const getMusicMIDI = (recording = "BGR0082-T1", user = null, transformFunc = null, playMusicFunc = null) => {
   console.log("-- handleAPI. getMusicMIDI. recording: ", recording, ", user: ", user, ", transformFunc: ", transformFunc, ", playMusicFunc: ", playMusicFunc);
+  // setIsLoading(true);
 
   axios
     .get(`${baseUrl}/getMusicMIDI`, {
@@ -87,6 +102,7 @@ const getMusicMIDI = (recording = "BGR0082-T1", user = null, transformFunc = nul
         }
       }
 
+      // setIsLoading(false);
       return d;
     })
     .catch((err) => console.log(err));
@@ -95,6 +111,7 @@ const getMusicMIDI = (recording = "BGR0082-T1", user = null, transformFunc = nul
 
 const getSampleMIDI = (recording = "BGR0082-T1", firstNoteIndex = 0, lastNodeIndex = null, user = null, transformFunc = null, playMusicFunc = null) => {
   console.log("-- handleAPI. getMusicMIDI. recording: ", recording, ", user: ", user, ", transformFunc: ", transformFunc, ", playMusicFunc: ", playMusicFunc);
+  // setIsLoading(true);
 
   axios
     .get(`${baseUrl}/getSampleMIDI`, {
@@ -129,6 +146,7 @@ const getSampleMIDI = (recording = "BGR0082-T1", firstNoteIndex = 0, lastNodeInd
         }
       }
 
+      // setIsLoading(false);
       return d;
     })
     .catch((err) => console.log(err));
@@ -136,6 +154,8 @@ const getSampleMIDI = (recording = "BGR0082-T1", firstNoteIndex = 0, lastNodeInd
 
 const getTracksMetadata = (lognumbers, infoMusicList, setInfoMusicList) => {
   console.log("---- HandleApi / getTracksMetadata. lognumbers: ", lognumbers,", infoMusicList: ",infoMusicList,", setInfoMusicList: ",setInfoMusicList);
+  // setIsLoading(true);
+
   axios
     .get(`${baseUrl}/getTracksMetadata`, {
       params: {
@@ -159,11 +179,14 @@ const getTracksMetadata = (lognumbers, infoMusicList, setInfoMusicList) => {
       }
       console.log("transf_info_metadata: ",transf_info_metadata);
       setInfoMusicList(transf_info_metadata);
-    })
+      // setIsLoading(false);
+    })    
 }
 
 /** TODO would make more sense if we loaded all the albums already returned. */
 const getTrackMetadata = (lognumber, infoMusicList, setInfoMusicList) => {
+  // setIsLoading(true);
+
   axios
     .get(`${baseUrl}/getTrackMetadata`, {
       params: {
@@ -187,6 +210,7 @@ const getTrackMetadata = (lognumber, infoMusicList, setInfoMusicList) => {
         }
         ])
       }
+      // setIsLoading(false);
     })
 }
 
@@ -208,6 +232,10 @@ const getMatchLevenshteinDistance = (
     ", playMusicFunc: ", playMusicFunc,
     ", levenshteinDistanceFunc: ", levenshteinDistanceFunc);
 
+
+    setIsLoading(true);
+
+
   axios
     .get(`${baseUrl}/getMatchLevenshteinDistance`, {
       params: {
@@ -220,6 +248,8 @@ const getMatchLevenshteinDistance = (
       console.log("#### Then of getMatchLevenshteinDistance ####");
       console.log("d", d);
       console.log("d.data: ", d.data);
+
+      setIsLoading(false);
 
       /** TODO
        * This is a lot of code and most likely should be passed as a function
@@ -336,6 +366,7 @@ const addAnnotation = (
   privacy='public'
   ) => {
   console.log(`HandeAPI addAnnotation: \n${baseUrl}/saveAnnotation`, { type, info, annotationInput, author, indexAnnotation, privacy });
+  // setIsLoading(true);
 
   let time = new Date();
 
@@ -350,6 +381,8 @@ const addAnnotation = (
         setListAnnotations, 
         indexAnnotation, 
         localStorage.username ? localStorage.username : null)
+
+        // setIsLoading(false);        
     })
     .catch(err => console.log(err))
 }
@@ -366,6 +399,8 @@ const updateAnnotation = (
   setIsUpdating,
   userId = null) => {
   console.log("HandleApi updateAnnotation: ", annotationId, annotationInput, indexAnnotation);
+  // setIsLoading(true);
+
   axios
     .post(`${baseUrl}/updateAnnotation`, { _id: annotationId, annotationInput, userId })
     .then((data) => {
@@ -380,6 +415,7 @@ const updateAnnotation = (
         setListAnnotations, 
         indexAnnotation, 
         localStorage.username ? localStorage.username : null);
+        // setIsLoading(false);
     })
     .catch(err => console.log(err))
 }
@@ -387,6 +423,7 @@ const updateAnnotation = (
 
 const getAnnotations = (type, info, setListAnnotations, indexAnnotation = 0, user = null) => {
   console.log("HandeAPI getAnnotations type: ", type, ", info: ", info, ", indexAnnotation: ", indexAnnotation, ", user: ", user);
+  // setIsLoading(true);
 
   axios
     .get(`${baseUrl}/getAnnotations`, {
@@ -400,6 +437,7 @@ const getAnnotations = (type, info, setListAnnotations, indexAnnotation = 0, use
     .then(({ data }) => {
       console.log('data: ', data);
       setListAnnotations(data);
+      // setIsLoading(false);
     })
     .catch(err => console.log(err))
 }
@@ -480,6 +518,8 @@ const updateComment = (
   annotationId = null
   ) => {
   console.log("HandleApi updateComment: ", commentId, commentInput, userId, annotationId);
+  // setIsLoading(true);
+  
   axios
     .post(`${baseUrl}/updateComment`, { _id: commentId, commentInput, userId, annotationId })
     .then((data) => {
@@ -494,6 +534,8 @@ const updateComment = (
         userId ,
         annotationId
       )
+
+      // setIsLoading(false);
     })
     .catch(err => console.log(err))
 }
@@ -508,6 +550,7 @@ const getComments = (
   ) => {
   console.log("HandeAPI getComments, annotationId: ",annotationId, ", user: ",user);
   // "type: ", type, ", info: ", info, ", indexAnnotation: ", indexAnnotation, 
+  // setIsLoading(true);
   
   axios
     .get(`${baseUrl}/getComments`, {
@@ -522,6 +565,7 @@ const getComments = (
     .then(({ data }) => {
       console.log('data: ', data);
       setListComments(data);
+      // setIsLoading(false);
     })
     .catch(err => console.log(err))
 }

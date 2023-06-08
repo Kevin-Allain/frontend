@@ -333,3 +333,60 @@ padding-bottom: 0.25rem;
 ::-webkit-scrollbar-thumb:hover {
   background: #1e202f;
 }
+
+.loading-container {
+  position: absolute;
+  top: -100%;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(255, 255, 255, 0.8);
+  transition: top 0.5s;
+}
+
+.loading-icon {
+  position: fixed;
+  top: 5%;
+  left: 5%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 90%;
+  width: 90%;
+  color: white;
+  background-color: #45465e;
+  opacity: 0.9;
+  border: solid;
+  border-radius: 0.5rem;
+  z-index: 999;
+  text-align: center;
+
+  animation: loading-fall 0.8s linear infinite;
+  margin-bottom: 10px;  
+}
+
+.spin {
+  animation: spin 1s infinite linear;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* @keyframes loading-fall {
+  0% {
+    transform: translateY(-200%);
+  }
+  100% {
+    transform: translateY(0);
+  }
+} */

@@ -9,7 +9,7 @@ import Dashboard from "./components/Dashboard/Dashboard";
 import Preferences from "./components/Preferences/Preferences";
 import Login from "./components/Login/Login";
 import Logout from "./components/Logout/Logout";
-
+import { AiOutlineLoading } from 'react-icons/ai';
 import {
   getAllJazzDap,
   addJazzDap,
@@ -23,6 +23,7 @@ import AuthContext from "./context/AuthProvider";
 import { UserContext } from "./context/UserContext";
 import MusicInterface from "./components/MusicInterface/MusicInterface";
 
+export let setIsLoading; // Export the function
 
 function App() {
   const [listJazzDap, setListJazzDap] = useState([]);
@@ -39,6 +40,10 @@ function App() {
 
   const [showDiv, setShowDiv] = useState(false);
 
+  const [isLoading, setIsLoadingState] = useState(false);
+  useEffect(() => {
+    setIsLoading = setIsLoadingState; // Assign the function to the exported variable
+  }, []);
 
   useEffect(() => {
     getAllJazzDap(setListJazzDap);
@@ -91,9 +96,7 @@ function App() {
 
       </div>
       <UserContext.Provider value="hello from context">
-
         <MusicInterface />
-
         <div className="container">
           <div className="jazzdapInput">
             <input
@@ -440,6 +443,14 @@ function App() {
           </div>
         </ul>
       </div>
+      {isLoading && (
+        <div className="loading-container">
+          <div className="loading-icon">
+            <h2>Loading...</h2>
+            <AiOutlineLoading className="spin" size={window.innerHeight / 10} />
+          </div>
+        </div>
+      )} 
     </div>
   );
 }
