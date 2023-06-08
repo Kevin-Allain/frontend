@@ -66,14 +66,25 @@ const CommentSystem = ({
                         value={textInputComment}
                         onChange={(e) => setTextInputComment(e.target.value)} />
                     <div className="add" onClick={isUpdating
-                        ? () => updateComment(commentId, textInputComment, setTextInputComment, indexAnnotation, type, info,
-                            setListComments, setIsUpdating,
-                            localStorage?.username, 
+                        ? () => updateComment(
+                            commentId,
+                            textInputComment,
+                            setTextInputComment,
+                            indexAnnotation,
+                            type,
+                            info,
+                            setListComments,
+                            setIsUpdating,
+                            localStorage?.username,
                             annotationId)
-                        : () => addComment(type, info, indexAnnotation, textInputComment,
+                        : () => addComment(
+                            type,
+                            info,
+                            indexAnnotation,
+                            textInputComment,
                             setTextInputComment,
                             setListComments,
-                            localStorage?.username, 
+                            localStorage?.username,
                             annotationId)
                     }
                     >
@@ -92,9 +103,19 @@ const CommentSystem = ({
                                 type={item.type}
                                 author={item.author}
                                 privacy={item.privacy}
+                                time={item.time}
                                 // TODO (and think about more) e.g. star, +1, -1 from people
-                                updateMode={() => updateMode(item._id, item.commentInput, localStorage?.username)}
-                                deleteComment={() => deleteComment(item._id, item.type, item.info, setListComments)} />
+                                updateMode={() => updateMode(
+                                    item._id, 
+                                    item.commentInput, 
+                                    localStorage?.username
+                                )}
+                                deleteComment={() => deleteComment(
+                                    item._id, 
+                                    setListComments,
+                                    localStorage?.username,
+                                    annotationId                                    
+                                )} />
                         </div>
                     ))}
                 </div>

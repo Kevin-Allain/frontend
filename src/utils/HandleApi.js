@@ -435,7 +435,15 @@ const addComment = (
   author = null,
   annotationId=null
   ) => {
-  console.log(`HandeAPI addComment: \n${baseUrl}/saveComment`, { type, info, commentInput, author, indexAnnotation, annotationId });
+  console.log(`HandeAPI addComment: \n${baseUrl}/addComment`, 
+  { 
+    type, 
+    info, 
+    commentInput, 
+    author, 
+    indexAnnotation, 
+    annotationId 
+  });
 
   let time = new Date();
 
@@ -453,11 +461,10 @@ const addComment = (
       console.log(data);
       setCommentInput("");
       getComments(
-        type, 
-        info,
         setListComments, 
-        indexAnnotation, 
-        annotationId)
+        author,
+        annotationId
+      )
     })
     .catch(err => console.log(err))
 }
@@ -483,7 +490,11 @@ const updateComment = (
       setIsUpdating(false);
       // getAllJazzDap(setJazzDap);
       // getComments(type, info, setListComments, indexAnnotation);
-      getComments(setListComments, userId ,annotationId)
+      getComments(
+        setListComments, 
+        userId ,
+        annotationId
+      )
     })
     .catch(err => console.log(err))
 }
@@ -499,7 +510,6 @@ const getComments = (
   console.log("HandeAPI getComments, annotationId: ",annotationId, ", user: ",user);
   // "type: ", type, ", info: ", info, ", indexAnnotation: ", indexAnnotation, 
   
-
   axios
     .get(`${baseUrl}/getComments`, {
       params:
@@ -517,14 +527,23 @@ const getComments = (
     .catch(err => console.log(err))
 }
 
-const deleteComment = (commentId, type, info, setListComments) => {
-  console.log("HandeAPI deleteComment. commentId: ", commentId, ", setListComments: ", setListComments)
+const deleteComment = (
+  commentId, 
+  setListComments,
+  user = null,
+  annotationId= null 
+  ) => {
+  console.log("HandeAPI deleteComment. commentId: ", commentId, ", setListComments: ", setListComments,", user: ",user,", annotationId: ",annotationId);
 
   axios
     .post(`${baseUrl}/deleteComment`, { _id: commentId })
     .then((data) => {
       console.log(data);
-      getComments(type, info, setListComments);
+      getComments(
+        setListComments,
+        user,
+        annotationId
+        );
     })
     .catch(err => console.log(err))
 }

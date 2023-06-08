@@ -13,6 +13,7 @@ const Comment = ({
     author,
     deleteComment,
     updateMode,
+    time=null
 }) => {
 
     return (
@@ -21,6 +22,7 @@ const Comment = ({
             {commentInput}
             <BiEdit className='icon' onClick={updateMode}/>
             <AiFillDelete className='icon' onClick={deleteComment} />
+            <br/> {time}
             <br/> <em>The annotationId is {annotationId}</em>
         </div>
     );
