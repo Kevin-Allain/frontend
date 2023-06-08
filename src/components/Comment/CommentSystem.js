@@ -25,7 +25,12 @@ const CommentSystem = ({
     const [listComments, setListComments] = useState([]);
 
     useEffect(() => {
-        getComments(type, info, setListComments, indexAnnotation, localStorage.username ? localStorage.username : null, annotationId);
+        console.log('useEffect CommentSystem. ', {type, info, indexAnnotation, annotationId })
+        getComments(
+            setListComments, 
+            localStorage.username ? localStorage.username : null, 
+            annotationId
+        );
     }, []);
 
 
@@ -36,11 +41,15 @@ const CommentSystem = ({
         setCommentId(_id);
     };
 
-    const handleShowAndLoad = (type, info, getComments) => {
+    const handleShowAndLoad = (getComments) => {
         setShowInputComment(!showInputComment)
-        console.log("type: ", type, ", info: ", info, ", indexAnnotation: ", indexAnnotation, ", getComments: ", getComments, ", showInputComment: ", showInputComment, ", annotationId: ",annotationId, ", (typeof annotationId): ",(typeof annotationId))
+        console.log("handleShowAndLoad ± indexAnnotation: ", indexAnnotation, ", getComments: ", getComments, ", showInputComment: ", showInputComment, ", annotationId: ",annotationId, ", (typeof annotationId): ",(typeof annotationId))
         if (!showInputComment) {
-            getComments(type, info, setListComments, indexAnnotation, localStorage.username ? localStorage.username : null, annotationId);
+            getComments(
+                setListComments, 
+                localStorage.username ? localStorage.username : null, 
+                annotationId
+            );
         }
     }
 
@@ -59,11 +68,13 @@ const CommentSystem = ({
                     <div className="add" onClick={isUpdating
                         ? () => updateComment(commentId, textInputComment, setTextInputComment, indexAnnotation, type, info,
                             setListComments, setIsUpdating,
-                            localStorage?.username, annotationId)
+                            localStorage?.username, 
+                            annotationId)
                         : () => addComment(type, info, indexAnnotation, textInputComment,
                             setTextInputComment,
                             setListComments,
-                            localStorage?.username, annotationId)
+                            localStorage?.username, 
+                            annotationId)
                     }
                     >
                         {isUpdating ? "Update" : "Add"}
@@ -76,6 +87,7 @@ const CommentSystem = ({
                             <Comment
                                 key={item._id}
                                 commentInput={item.commentInput}
+                                annotationId={annotationId}
                                 info={item.info}
                                 type={item.type}
                                 author={item.author}

@@ -440,11 +440,24 @@ const addComment = (
   let time = new Date();
 
   axios
-    .post(`${baseUrl}/addComment`, { type, info, indexAnnotation, commentInput, author, time, annotationId })
+    .post(`${baseUrl}/addComment`, { 
+      type, 
+      info, 
+      indexAnnotation, 
+      commentInput, 
+      author, 
+      time, 
+      annotationId 
+    })
     .then((data) => {
       console.log(data);
       setCommentInput("");
-      getComments(type, info,setListComments, indexAnnotation, annotationId)
+      getComments(
+        type, 
+        info,
+        setListComments, 
+        indexAnnotation, 
+        annotationId)
     })
     .catch(err => console.log(err))
 }
@@ -455,8 +468,6 @@ const updateComment = (
   commentInput,
   setCommentInput,
   indexAnnotation=0,
-  type,
-  info,
   setListComments,
   setIsUpdating,
   userId = null,
@@ -471,24 +482,33 @@ const updateComment = (
       setCommentInput("");
       setIsUpdating(false);
       // getAllJazzDap(setJazzDap);
-      getComments(type, info, setListComments, indexAnnotation);
+      // getComments(type, info, setListComments, indexAnnotation);
+      getComments(setListComments, userId ,annotationId)
     })
     .catch(err => console.log(err))
 }
 
 const getComments = (
-  type,
-  info,
+  // type,
+  // info,
   setListComments,
-  indexAnnotation = 0,
+  // indexAnnotation = 0,
   user = null,
-  annotationId= null ) => {
-  console.log("HandeAPI getComments type: ", type, ", info: ", info, ", indexAnnotation: ", indexAnnotation, ", annotationId: ",annotationId);
+  annotationId= null 
+  ) => {
+  console.log("HandeAPI getComments, annotationId: ",annotationId, ", user: ",user);
+  // "type: ", type, ", info: ", info, ", indexAnnotation: ", indexAnnotation, 
+  
 
   axios
     .get(`${baseUrl}/getComments`, {
       params:
-        { type: type, info: info, indexAnnotation: indexAnnotation, annotationId: annotationId }
+        { 
+          // type: type,
+          // info: info,
+          // indexAnnotation: indexAnnotation,
+          annotationId: annotationId
+        }
     })
     .then(({ data }) => {
       console.log('data: ', data);

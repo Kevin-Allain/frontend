@@ -21,6 +21,7 @@ const Comment = ({
             {commentInput}
             <BiEdit className='icon' onClick={updateMode}/>
             <AiFillDelete className='icon' onClick={deleteComment} />
+            <br/> <em>The annotationId is {annotationId}</em>
         </div>
     );
 }
