@@ -469,18 +469,17 @@ const addComment = (
     .catch(err => console.log(err))
 }
 
-
+// TODO fix
 const updateComment = (
   commentId,
   commentInput,
   setCommentInput,
-  indexAnnotation=0,
   setListComments,
   setIsUpdating,
   userId = null,
   annotationId = null
   ) => {
-  console.log("HandleApi updateComment: ", commentId, commentInput, indexAnnotation, userId, annotationId);
+  console.log("HandleApi updateComment: ", commentId, commentInput, userId, annotationId);
   axios
     .post(`${baseUrl}/updateComment`, { _id: commentId, commentInput, userId, annotationId })
     .then((data) => {
