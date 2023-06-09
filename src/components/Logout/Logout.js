@@ -3,6 +3,8 @@ import AuthContext from '../../context/AuthProvider';
 import axios from 'axios';
 import { UserContext } from '../../context/UserContext';
 
+import {getUserAnnotations } from '../../utils/HandleApi'
+
 const baseUrl = "http://localhost:5000" // can be used for development
 // const baseUrl = axios.baseUrl;
 const LOGOUT_URL = 'logoutUser';
@@ -17,15 +19,32 @@ export default function Logout() {
 
     const [success, setSuccess] = useState(false);
     const [errMsg, setErrMsg] = useState('');
-
     const msgContext = useContext(UserContext);
+
+    // user info
+    const [listAnnotations,setListAnnotations] = useState([]);
+    const [localUsername, setLocalUsername] = useState(localStorage?.username || '');
 
     useEffect(() => {
         setErrMsg('');
     }, [username, password])
 
-    const handleSubmit = async e => {
-        console.log("Logout handleSubmit")
+    // || Thinking about when and how I would make a call to see previous annotations made by user
+    useEffect(() => {
+        console.log("useEffect Logout for localStorage?.username : ", localStorage?.username)
+        if (localStorage?.username) {
+            setListAnnotations((prevArray) => [...prevArray, '' + new Date()])
+            getUserAnnotations(setListAnnotations, localStorage.username);
+        }
+    }, [localStorage?.username]);
+
+    useEffect(() => {
+        console.log("listAnnotations: ", listAnnotations);
+    }, [listAnnotations]);
+    // ||
+
+    const handleSubmitLogout = async e => {
+        console.log("handleSubmitLogout")
         e.preventDefault();
         try {
 
@@ -36,9 +55,12 @@ export default function Logout() {
             setUserName('');
             setPassword('');
 
+            // annotations load tryout
+            setListAnnotations([]);
+
             localStorage.clear();
             setAuth(null);
-            axios.defaults.headers.common['Authorization'] = null;                        
+            axios.defaults.headers.common['Authorization'] = null;
 
             window.location.reload();
 
@@ -83,9 +105,21 @@ export default function Logout() {
     return (
         <div className="logout-wrapper">
             Hello { localStorage.username ? localStorage.username : ''}. 
-            <button onClick={handleSubmit} >
+            <button onClick={handleSubmitLogout} >
             Logout
             </button>
+            {/* TODO probably a component later... */}
+            <div className='userInfo'>
+                Your annotations:
+                {listAnnotations.length>0?
+                listAnnotations.map((item) => (
+                    <div className='userAnnotation'>
+                      _id is {item._id}, type is {item.type}, info is {item.info}, privacy is {item.privacy}.
+                    </div>
+                  ))
+                : <>Empty</>
+                }
+            </div>
         </div>
     )
 }

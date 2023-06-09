@@ -28,6 +28,11 @@ export default function Login({ setToken }) {
         setErrMsg('');
     }, [username, password])
 
+    useEffect(() => {
+        console.log("useEffect Login. username: ",username,", password: ",password, ", localStorage?.username: ", localStorage?.username);
+      }, []);
+
+
     const handleSubmit = async e => {
         e.preventDefault();
         try {

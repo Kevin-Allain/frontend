@@ -249,12 +249,10 @@ const getMatchLevenshteinDistance = (
       console.log("d", d);
       console.log("d.data: ", d.data);
 
-      setIsLoading(false);
 
       /** TODO
        * This is a lot of code and most likely should be passed as a function
        */
-
       /**
        * TODO 2: what to do when the data returned is the result from a query without matches?
        */
@@ -343,10 +341,9 @@ const getMatchLevenshteinDistance = (
         setListSearchRes(resAggreg);
         // TODO
         setListTracks(  [...new Set(resAggreg.map(obj => obj.recording))].sort() )
-
-        return d;
       }
 
+      setIsLoading(false);
       return d;
     })
     .catch((err) => console.log(err));
@@ -507,7 +504,6 @@ const addComment = (
     .catch(err => console.log(err))
 }
 
-// TODO fix
 const updateComment = (
   commentId,
   commentInput,
@@ -565,7 +561,6 @@ const getComments = (
     .then(({ data }) => {
       console.log('data: ', data);
       setListComments(data);
-      // setIsLoading(false);
     })
     .catch(err => console.log(err))
 }
@@ -591,6 +586,25 @@ const deleteComment = (
     .catch(err => console.log(err))
 }
 
+/** User info */
+const getUserAnnotations = (setListAnnotations, user) => {
+  console.log("handleApi getUserAnnotations. user: ",user);
+
+  axios
+    .get(`${baseUrl}/getUserAnnotations`, {
+      params:
+        { 
+          user: user
+        }
+    })
+    .then(({ data }) => {
+      console.log('data: ', data);
+      setListAnnotations(data);
+    })
+    .catch(err => console.log(err))
+  
+
+}
 
 
 export {
@@ -598,5 +612,6 @@ export {
   getMusicMIDI, getSampleMIDI, getMatchLevenshteinDistance,
   getTrackMetadata, getTracksMetadata,
   addAnnotation, getAnnotations, deleteAnnotation, updateAnnotation,
-  addComment, getComments, deleteComment, updateComment
+  addComment, getComments, deleteComment, updateComment,
+  getUserAnnotations
 }

@@ -386,6 +386,12 @@ padding-bottom: 0.25rem;
   0% {
     transform: translateY(-200%);
   }
+  20% {
+    transform: translateY(-50%);
+  }  
+  30% {
+    transform: translateY(-60%);
+  }  
   100% {
     transform: translateY(0);
   }
