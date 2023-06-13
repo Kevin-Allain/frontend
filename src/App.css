@@ -396,3 +396,16 @@ padding-bottom: 0.25rem;
     transform: translateY(0);
   }
 } */
+
+.userInfo{
+  text-align: left;
+}
+
+.userAnnotation{
+  text-align: left;
+}
+
+.userAnnotation:hover{
+  background-color: #acadbd;
+  /* once buttons are set on them, change text color to orange */
+}

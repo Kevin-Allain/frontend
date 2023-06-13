@@ -2,8 +2,9 @@ import { useRef, useState, useEffect, useContext } from 'react';
 import AuthContext from '../../context/AuthProvider';
 import axios from 'axios';
 import { UserContext } from '../../context/UserContext';
-
+import {AiOutlineUser} from 'react-icons/ai';
 import {getUserAnnotations } from '../../utils/HandleApi'
+
 
 const baseUrl = "http://localhost:5000" // can be used for development
 // const baseUrl = axios.baseUrl;
@@ -24,6 +25,12 @@ export default function Logout() {
     // user info
     const [listAnnotations,setListAnnotations] = useState([]);
     const [localUsername, setLocalUsername] = useState(localStorage?.username || '');
+    const [isUserInfoVisible, setIsUserInfoVisible] = useState(false);
+
+    const handleToggleUserInfo = () => {
+        setIsUserInfoVisible(prevState => !prevState);
+      };
+    
 
     useEffect(() => {
         setErrMsg('');
@@ -109,17 +116,20 @@ export default function Logout() {
             Logout
             </button>
             {/* TODO probably a component later... */}
-            <div className='userInfo'>
+            <AiOutlineUser className='icon' onClick={ handleToggleUserInfo }/>
+            {isUserInfoVisible && (            
+            <div className='userInfo' >
                 Your annotations:
                 {listAnnotations.length>0?
                 listAnnotations.map((item) => (
                     <div className='userAnnotation'>
-                      _id is {item._id}, type is {item.type}, info is {item.info}, privacy is {item.privacy}.
+                      _id is {item._id}, type is {item.type}, info is <u>{item.info}</u>, privacy is {item.privacy} @{item.time}.
                     </div>
                   ))
                 : <>Empty</>
                 }
             </div>
+            )}
         </div>
     )
 }

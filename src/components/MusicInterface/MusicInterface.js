@@ -59,7 +59,9 @@ const MusicInterface = () => {
     e.preventDefault();
     console.log("", textSearch, ", (typeof textSearch): ", (typeof textSearch));
     // make a call to the database, then set string back to ''
-    findMatchLevenshteinDistance(textSearch);
+    if (textSearch !== '') {
+      findMatchLevenshteinDistance(textSearch);
+    }
   };
 
   useEffect(() => {
