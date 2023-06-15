@@ -602,9 +602,25 @@ const getUserAnnotations = (setListAnnotations, user) => {
       setListAnnotations(data);
     })
     .catch(err => console.log(err))
-  
-
 }
+
+const getUserWorkflows = (setListAnnotations, user) => {
+  console.log("handleApi getUserWorkflows. user: ",user);
+
+  axios
+    .get(`${baseUrl}/getUserWorkflows`, {
+      params:
+        { 
+          user: user
+        }
+    })
+    .then(({ data }) => {
+      console.log('data: ', data);
+      setListAnnotations(data);
+    })
+    .catch(err => console.log(err))
+}
+
 
 
 export {
@@ -613,5 +629,5 @@ export {
   getTrackMetadata, getTracksMetadata,
   addAnnotation, getAnnotations, deleteAnnotation, updateAnnotation,
   addComment, getComments, deleteComment, updateComment,
-  getUserAnnotations
+  getUserAnnotations, getUserWorkflows
 }

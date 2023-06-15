@@ -4,7 +4,7 @@ import axios from 'axios';
 import { UserContext } from '../../context/UserContext';
 import {AiOutlineUser} from 'react-icons/ai';
 import {getUserAnnotations } from '../../utils/HandleApi'
-
+import UserSystem from '../UserSystem/UserSystem'
 
 const baseUrl = "http://localhost:5000" // can be used for development
 // const baseUrl = axios.baseUrl;
@@ -115,8 +115,8 @@ export default function Logout() {
             <button onClick={handleSubmitLogout} >
             Logout
             </button>
-            {/* TODO probably a component later... */}
-            <AiOutlineUser className='icon' onClick={ handleToggleUserInfo }/>
+
+            {/* <AiOutlineUser className='icon' onClick={ handleToggleUserInfo }/>
             {isUserInfoVisible && (            
             <div className='userInfo' >
                 Your annotations:
@@ -129,7 +129,10 @@ export default function Logout() {
                 : <>Empty</>
                 }
             </div>
-            )}
+            )} */}
+
+            <UserSystem/>
+
         </div>
     )
 }
