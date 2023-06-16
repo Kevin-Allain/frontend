@@ -353,7 +353,7 @@ const MusicInterface = () => {
       </div>
 
       {/* ==== BUTTONS FOR TESTS ====  */}
-      <div className="buttonsMusicInterface">
+      {/* <div className="buttonsMusicInterface">
         <div className='playMusic' >
           Test Search
           <hr />
@@ -395,7 +395,7 @@ const MusicInterface = () => {
         >
           Reload Page
         </div>
-      </div>
+      </div> */}
     </div>
   );
 }

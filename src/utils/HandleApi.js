@@ -384,7 +384,6 @@ const addAnnotation = (
     .catch(err => console.log(err))
 }
 
-
 const updateAnnotation = (
   annotationId,
   annotationInput,
@@ -416,7 +415,6 @@ const updateAnnotation = (
     })
     .catch(err => console.log(err))
 }
-
 
 const getAnnotations = (type, info, setListAnnotations, indexAnnotation = 0, user = null) => {
   console.log("HandeAPI getAnnotations type: ", type, ", info: ", info, ", indexAnnotation: ", indexAnnotation, ", user: ", user);
@@ -606,22 +604,33 @@ const getUserAnnotations = (setListAnnotations, user) => {
 
 const getUserWorkflows = (setListAnnotations, user) => {
   console.log("handleApi getUserWorkflows. user: ",user);
-
-  axios
-    .get(`${baseUrl}/getUserWorkflows`, {
-      params:
-        { 
-          user: user
-        }
-    })
-    .then(({ data }) => {
-      console.log('data: ', data);
-      setListAnnotations(data);
-    })
-    .catch(err => console.log(err))
+  // TODO
+  // axios
+  //   .get(`${baseUrl}/getUserWorkflows`, {
+  //     params:
+  //       { 
+  //         user: user
+  //       }
+  //   })
+  //   .then(({ data }) => {
+  //     console.log('data: ', data);
+  //     setListAnnotations(data);
+  //   })
+  //   .catch(err => console.log(err))
 }
 
+const createWorkflow = (
+  title, 
+  description, 
+  date, 
+  author, 
+  objects=[],
+  objectsDates=[]
+  ) => {
+    console.log("handleApi createWorkflow. ", { title, description, date, author, objects, objectsDates} );
 
+  
+}
 
 export {
   getAllJazzDap, addJazzDap, updateJazzDap, deleteJazzDap,
@@ -629,5 +638,6 @@ export {
   getTrackMetadata, getTracksMetadata,
   addAnnotation, getAnnotations, deleteAnnotation, updateAnnotation,
   addComment, getComments, deleteComment, updateComment,
-  getUserAnnotations, getUserWorkflows
+  getUserAnnotations, getUserWorkflows, 
+  createWorkflow
 }

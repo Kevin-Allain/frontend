@@ -3,6 +3,7 @@ import AuthContext from '../../context/AuthProvider';
 import axios from 'axios';
 import { UserContext } from '../../context/UserContext';
 import {AiOutlineUser} from 'react-icons/ai';
+import {ImExit} from 'react-icons/im'
 import {getUserAnnotations } from '../../utils/HandleApi'
 import UserSystem from '../UserSystem/UserSystem'
 
@@ -113,7 +114,7 @@ export default function Logout() {
         <div className="logout-wrapper">
             Hello { localStorage.username ? localStorage.username : ''}. 
             <button onClick={handleSubmitLogout} >
-            Logout
+            Logout <ImExit/>
             </button>
 
             {/* <AiOutlineUser className='icon' onClick={ handleToggleUserInfo }/>
