@@ -13,7 +13,7 @@ const WorkflowManager = () => {
     const [listWorkflows, setListWorkflows] = useState([]);
 
     // creation
-    const [titleInput, setTitleinput] = useState('');
+    const [titleInput, setTitleInput] = useState('');
     const titleInputRef = useRef('');
     const [descriptionInput, setDescriptionInput] = useState('');
     const descriptionInputRef = useRef('');
@@ -26,15 +26,19 @@ const WorkflowManager = () => {
     const handleChangeTitleInput = (event) => {
         const value = event.target.value;    
         // Let's not allow a title too long
+        console.log("value title: ",value);
         if (value.length<=50){
-            setTitleinput(value)
+            setTitleInput(value)
+            console.log("titleInput: ",titleInput)
         }
       }
       const handleChangeDescriptionInput = (event) => {
         const value = event.target.value;    
+        console.log("value description: ",value);
         // Let's not allow the description to be extremely long
         if (value.length<=300){
             setDescriptionInput(value)
+            console.log("descriptionInput: ",descriptionInput)
         }
       }
 
@@ -81,10 +85,25 @@ const WorkflowManager = () => {
                     /> <br />
                     <em>All the rest will come later... Please be patient with us</em><br />
                     Save this workflow <TfiSave className='icon' 
-                        onClick={(title, descriptionInput) => {
-                            (title.length > 0 && descriptionInput.length > 0) ?
-                                createWorkflow(title, descriptionInput, new Date(), localStorage.username)
-                                : console.log("empty title or description")
+                        onClick={() => {
+                            (titleInput.length > 0 && descriptionInput.length > 0) ?
+                                createWorkflow(
+                                    titleInput, 
+                                    descriptionInput, 
+                                    new Date(), 
+                                    localStorage.username,
+                                    [],
+                                    [],
+                                    setTitleInput,
+                                    setDescriptionInput,
+                                    getUserWorkflows,
+                                    setListWorkflows
+                                    )
+                                : console.log("empty title or description. titleInput: ",titleInput
+                                ,"typeof titleInput: ",(typeof titleInput)
+                                ,", descriptionInput: ",descriptionInput
+                                ,"typeof descriptionInput: ",(typeof descriptionInput)
+                            )
                         }} />
                 </div>
             }

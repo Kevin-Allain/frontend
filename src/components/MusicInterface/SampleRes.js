@@ -33,18 +33,18 @@ const SampleRes = ({
                         <th>Duration</th>
                         <th>Notes</th>
                         <th>Times</th>
-                        <th>Distance (difference to query)</th>
                         <th>Durations</th>
+                        <th>Distance (difference to query)</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
                         <th>{lognumber}</th>
-                        <th>{length}</th>
+                        <th>{Number(length.toFixed(2))}</th>
                         <th>{notes}</th>
                         <th>{times}</th>
-                        <th>{distance}</th>
                         <th>{durations}</th>
+                        <th>{distance}</th>
                     </tr>
                 </tbody>
             </table> 

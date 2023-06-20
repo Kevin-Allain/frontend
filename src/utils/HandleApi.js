@@ -249,6 +249,8 @@ const getMatchLevenshteinDistance = (
       console.log("d", d);
       console.log("d.data: ", d.data);
 
+      console.log("TIME AFTER QUERY: ",new Date());
+
 
       /** TODO
        * This is a lot of code and most likely should be passed as a function
@@ -287,7 +289,8 @@ const getMatchLevenshteinDistance = (
 
         for (let i in dataSplitByRecording) {
           // sort notes
-          dataSplitByRecording[i].data = dataSplitByRecording[i].data.sort((a, b) => a.recording - b.recording || a.m_id - b.m_id);
+          dataSplitByRecording[i].data = 
+            dataSplitByRecording[i].data.sort((a, b) => a.recording - b.recording || a.m_id - b.m_id);
           dataSplitByRecording[i].sequences = [];
           // let startSeQuences = dataSplitByRecording[i].data.filter(a => a.startSequence);
           for (let ds in dataSplitByRecording[i].data) {
@@ -314,8 +317,8 @@ const getMatchLevenshteinDistance = (
             dataSplitByRecording[i].distances.push(distCalc);
             dataSplitByRecording[i].slicesDist.push({
               arrNotes: curArrNotes,
-              arrTime: curArrTime,
-              arrDurations: curArrDurations,
+              arrTime: curArrTime.map((num) => Number(num.toFixed(2))),
+              arrDurations: curArrDurations.map((num) => Number(num.toFixed(2))),
               distCalc: distCalc,
               recording: i
             });
@@ -329,6 +332,8 @@ const getMatchLevenshteinDistance = (
         }
 
         resAggreg.sort((a, b) => a.distCalc - b.distCalc);
+        console.log("TIME AFTER ORGANIZING RES, CALCULATING DISTANCE, AND SORTING: ",new Date());
+
         console.log("dataSplitByRecording: ", dataSplitByRecording);
         // Will be better to later allow filter
         console.log("resArray: ", resArray);
@@ -602,9 +607,9 @@ const getUserAnnotations = (setListAnnotations, user) => {
     .catch(err => console.log(err))
 }
 
+  // TODO
 const getUserWorkflows = (setListAnnotations, user) => {
   console.log("handleApi getUserWorkflows. user: ",user);
-  // TODO
   // axios
   //   .get(`${baseUrl}/getUserWorkflows`, {
   //     params:
@@ -622,13 +627,34 @@ const getUserWorkflows = (setListAnnotations, user) => {
 const createWorkflow = (
   title, 
   description, 
-  date, 
+  time, 
   author, 
   objects=[],
-  objectsDates=[]
+  objectsDates=[],
+  setTitleInput,
+  setDescriptionInput,
+  getUserWorkflows,
+  setListWorkflows
   ) => {
-    console.log("handleApi createWorkflow. ", { title, description, date, author, objects, objectsDates} );
+    console.log("handleApi createWorkflow. ", { title, description, time, author, objects, objectsDates} );
 
+    axios
+    .post(`${baseUrl}/createWorkflow`, { 
+      title, 
+      description, 
+      time, 
+      author, 
+      objects,
+      objectsDates 
+    })
+    .then((data) => {
+      console.log("Then handleApi createWorkflow");
+      setTitleInput("");
+      setDescriptionInput("");
+      // TODO
+      // getUserWorkflows(setListWorkflows,author)
+    })
+    .catch(err => console.log(err))
   
 }
 
