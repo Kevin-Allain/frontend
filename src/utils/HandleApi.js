@@ -237,7 +237,7 @@ const getMatchLevenshteinDistance = (
 
 
   axios
-    .get(`${baseUrl}/getMatchLevenshteinDistance`, {
+    .get(`${baseUrl}/getMatchLevenshteinDistance2`, { // test
       params: {
         stringNotes: stringNotes,
         percMatch: percMatch,
@@ -255,8 +255,8 @@ const getMatchLevenshteinDistance = (
       /** TODO
        * This is a lot of code and most likely should be passed as a function
        */
-      /**
-       * TODO 2: what to do when the data returned is the result from a query without matches?
+      /** TODO 2
+       * What to do when the data returned is the result from a query without matches?
        */
 
       // In retrospect, we probably don't want to play songs directly... we want to list the matching bits.

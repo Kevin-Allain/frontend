@@ -30,7 +30,7 @@ const SampleRes = ({
                 <thead>
                     <tr>
                         <th>Recording</th>
-                        <th>Duration</th>
+                        <th>Sample Duration</th>
                         <th>Notes</th>
                         <th>Times</th>
                         <th>Durations</th>
