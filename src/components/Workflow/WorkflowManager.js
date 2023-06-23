@@ -4,8 +4,7 @@ import {BsCardChecklist} from 'react-icons/bs'
 import {TfiSave} from 'react-icons/tfi'
 import "./Workflow.css";
 import {
-    getUserWorkflows,
-    createWorkflow
+    getWorkflow, getWorkflowsInfo, createWorkflow
 } from '../../utils/HandleApi'
 
 const WorkflowManager = () => {
@@ -26,7 +25,6 @@ const WorkflowManager = () => {
     const handleChangeTitleInput = (event) => {
         const value = event.target.value;    
         // Let's not allow a title too long
-        console.log("value title: ",value);
         if (value.length<=50){
             setTitleInput(value)
             console.log("titleInput: ",titleInput)
@@ -34,7 +32,6 @@ const WorkflowManager = () => {
       }
       const handleChangeDescriptionInput = (event) => {
         const value = event.target.value;    
-        console.log("value description: ",value);
         // Let's not allow the description to be extremely long
         if (value.length<=300){
             setDescriptionInput(value)
@@ -45,9 +42,7 @@ const WorkflowManager = () => {
     useEffect(() => {
         console.log("useEffect Logout for localStorage?.username : ", localStorage?.username)
         if (localStorage?.username) {
-            // This is wrong...
-            // setListWorkflows((prevArray) => [...prevArray, '' + new Date()])
-            getUserWorkflows(setListWorkflows, localStorage.username);
+            getWorkflowsInfo(setListWorkflows, { user: localStorage?.username });
         }
     }, []);
     useEffect(() => {
@@ -96,7 +91,7 @@ const WorkflowManager = () => {
                                     [],
                                     setTitleInput,
                                     setDescriptionInput,
-                                    getUserWorkflows,
+                                    getWorkflowsInfo,
                                     setListWorkflows
                                     )
                                 : console.log("empty title or description. titleInput: ",titleInput
@@ -108,7 +103,14 @@ const WorkflowManager = () => {
                 </div>
             }
             <div className='listWorkflows'>
-                Your workflows <BsCardChecklist className='icon' onClick={handleToggleUserWorkflows} />
+                Your workflows <BsCardChecklist className='icon' onClick={handleToggleUserWorkflows} /> <br/>
+                {isWorkflowsVisible &&
+                listWorkflows.map((item, i) => (
+                    <div className='workflowDetails'>
+                        Title: {item.title} | {item.time}
+                    </div>
+                ))
+                }
             </div>
         </div>
     )

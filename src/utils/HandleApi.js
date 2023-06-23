@@ -607,9 +607,11 @@ const getUserAnnotations = (setListAnnotations, user) => {
     .catch(err => console.log(err))
 }
 
-  // TODO
-const getUserWorkflows = (setListAnnotations, user) => {
-  console.log("handleApi getUserWorkflows. user: ",user);
+/** Workflows */
+
+// TODO
+const getWorkflow = (_id, user) => {
+  console.log("handleApi getWorkflow. _id: ",_id,", user: ",user);
   // axios
   //   .get(`${baseUrl}/getUserWorkflows`, {
   //     params:
@@ -622,6 +624,27 @@ const getUserWorkflows = (setListAnnotations, user) => {
   //     setListAnnotations(data);
   //   })
   //   .catch(err => console.log(err))
+}
+
+
+// TODO
+const getWorkflowsInfo = (setListAnnotations, { title = null, time = null, user = null } = {}) => {
+  console.log("handleApi getWorkflowsInfo.", { title, time, user });
+
+  axios
+    .get(`${baseUrl}/getWorkflowsInfo`, {
+      params:
+        { 
+          title:title,
+          time:time,
+          user: user
+        }
+    })
+    .then(({ data }) => {
+      console.log('getWorkflowsInfo data: ', data);
+      setListAnnotations(data);
+    })
+    .catch(err => console.log(err))
 }
 
 const createWorkflow = (
@@ -664,6 +687,6 @@ export {
   getTrackMetadata, getTracksMetadata,
   addAnnotation, getAnnotations, deleteAnnotation, updateAnnotation,
   addComment, getComments, deleteComment, updateComment,
-  getUserAnnotations, getUserWorkflows, 
-  createWorkflow
+  getUserAnnotations, 
+  getWorkflow, getWorkflowsInfo, createWorkflow
 }
