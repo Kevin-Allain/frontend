@@ -612,18 +612,20 @@ const getUserAnnotations = (setListAnnotations, user) => {
 // TODO
 const getWorkflow = (_id, user) => {
   console.log("handleApi getWorkflow. _id: ",_id,", user: ",user);
-  // axios
-  //   .get(`${baseUrl}/getUserWorkflows`, {
-  //     params:
-  //       { 
-  //         user: user
-  //       }
-  //   })
-  //   .then(({ data }) => {
-  //     console.log('data: ', data);
-  //     setListAnnotations(data);
-  //   })
-  //   .catch(err => console.log(err))
+  
+  axios
+    .get(`${baseUrl}/getWorkflow`, {
+      params:
+        { 
+          _id:_id,
+          user: user
+        }
+    })
+    .then(({ data }) => {
+      console.log('getWorkflow successful. data: ', data);
+      // TODO
+    })
+    .catch(err => console.log(err))
 }
 
 

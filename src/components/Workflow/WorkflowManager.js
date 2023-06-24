@@ -21,7 +21,10 @@ const WorkflowManager = () => {
 
     const handleShowWorkflowAddition = () => { setShowWorkflowAddition(!showWorkflowAddition) }
     
-    const handleToggleUserWorkflows = () => { setIsWorkflowsVisible(prevState => !prevState); }
+    const handleToggleUserWorkflows = () => { 
+        getWorkflowsInfo(setListWorkflows, { user: localStorage?.username });
+        setIsWorkflowsVisible(prevState => !prevState); 
+    }
     const handleChangeTitleInput = (event) => {
         const value = event.target.value;    
         // Let's not allow a title too long
@@ -45,10 +48,15 @@ const WorkflowManager = () => {
             getWorkflowsInfo(setListWorkflows, { user: localStorage?.username });
         }
     }, []);
-    useEffect(() => {
-        console.log("listWorkflows: ", listWorkflows);
-    }, [ listWorkflows]);
+    // useEffect(() => {
+    //     console.log("listWorkflows: ", listWorkflows);
+    // }, [ listWorkflows]);
 
+
+    const loadDetailWorkflow = (_id) => {
+        console.log("loadDetailWorkflow. _id: ",_id);
+        getWorkflow(_id, localStorage?.username);
+    }
 
     return (
         <div className='workflowManager'>
@@ -106,8 +114,8 @@ const WorkflowManager = () => {
                 Your workflows <BsCardChecklist className='icon' onClick={handleToggleUserWorkflows} /> <br/>
                 {isWorkflowsVisible &&
                 listWorkflows.map((item, i) => (
-                    <div className='workflowDetails'>
-                        Title: {item.title} | {item.time}
+                    <div className='workflowDetails' onClick={() => loadDetailWorkflow(item._id)}>
+                        Title: {item.title} | {item.time} | {item._id}
                     </div>
                 ))
                 }
