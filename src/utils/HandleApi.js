@@ -609,9 +609,8 @@ const getUserAnnotations = (setListAnnotations, user) => {
 
 /** Workflows */
 
-// TODO
-const getWorkflow = (_id, user) => {
-  console.log("handleApi getWorkflow. _id: ",_id,", user: ",user);
+const getWorkflow = (setIsWorkerVisible, setSelectedWorkflow, _id, user) => {
+  console.log("handleApi getWorkflow. setIsWorkerVisible: ",setIsWorkerVisible,", setSelectedWorkflow: ",setSelectedWorkflow,", _id: ",_id,", user: ",user);
   
   axios
     .get(`${baseUrl}/getWorkflow`, {
@@ -624,13 +623,14 @@ const getWorkflow = (_id, user) => {
     .then(({ data }) => {
       console.log('getWorkflow successful. data: ', data);
       // TODO
+      setSelectedWorkflow(data);
+      setIsWorkerVisible(true);
     })
     .catch(err => console.log(err))
 }
 
 
-// TODO
-const getWorkflowsInfo = (setListAnnotations, { title = null, time = null, user = null } = {}) => {
+const getWorkflowsInfo = (setListWorkflows, { title = null, time = null, user = null } = {}) => {
   console.log("handleApi getWorkflowsInfo.", { title, time, user });
 
   axios
@@ -644,7 +644,7 @@ const getWorkflowsInfo = (setListAnnotations, { title = null, time = null, user 
     })
     .then(({ data }) => {
       console.log('getWorkflowsInfo data: ', data);
-      setListAnnotations(data);
+      setListWorkflows(data);
     })
     .catch(err => console.log(err))
 }

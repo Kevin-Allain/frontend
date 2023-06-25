@@ -42,7 +42,6 @@ const UserSystem = () => {
                     }
                 </div>
             )}
-            {/* TODO get workflows */}
             <WorkflowManager />
 
         </div>

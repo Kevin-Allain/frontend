@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { AiOutlineComment, AiOutlineStar } from 'react-icons/ai' // doubt about inclusion of star button for annotation...
+import { AiOutlineComment } from 'react-icons/ai' // doubt about inclusion of star button for annotation...
 import {BiEdit} from 'react-icons/bi'
 import {AiFillDelete} from 'react-icons/ai'
 import CommentSystem from '../Comment/CommentSystem';

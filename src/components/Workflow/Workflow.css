@@ -5,6 +5,7 @@
     padding-left: 5px;
     padding-right: 5px;
     border-color: orange;
+    padding-bottom: 0.15rem;
 }
 
 .creationWorkflow{
@@ -29,6 +30,12 @@
     color:black;
     font-size: large;
     cursor:pointer;
+    border:solid;
+    border-width: thin;
+    border-color: orange;
+}
+
+.workflowInterface{
     border:solid;
     border-width: thin;
     border-color: orange;

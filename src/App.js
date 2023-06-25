@@ -450,7 +450,7 @@ function App() {
             <AiOutlineLoading className="spin" size={window.innerHeight / 10} />
           </div>
         </div>
-      )} 
+      )}
     </div>
   );
 }
