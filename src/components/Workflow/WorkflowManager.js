@@ -141,7 +141,8 @@ const WorkflowManager = () => {
               onClick={() => loadDetailWorkflow(item._id)}
               key={item._id}
             >
-              Title: {item.title} | {item.time} | {item._id}
+              Title: {item.title} | {item.time} 
+              {/* | {item._id} */}
             </div>
           ))}
       </div>

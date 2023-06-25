@@ -39,4 +39,27 @@
     border:solid;
     border-width: thin;
     border-color: orange;
+    border-radius: 3px;
+}
+
+.workFlowDescription{
+    border:solid;
+    border-width: thin;
+    border-color: white;
+    padding-top: 0.2rem;
+    padding-bottom: 0.2rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+}
+
+.workflowHeader{
+    padding-left: 1rem;
+    padding-right: 1rem;
+    padding-top: 0.1rem;
+    padding-bottom: 0.1rem;
+}
+.workflowObjects{
+    padding-top: 0.2rem;
+    padding-bottom: 0.2rem;
+    padding-left: 0.5rem;
 }
