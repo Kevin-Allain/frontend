@@ -694,11 +694,31 @@ const createWorkflow = (
       console.log("Then handleApi createWorkflow");
       setTitleInput("");
       setDescriptionInput("");
-      // TODO
-      // getUserWorkflows(setListWorkflows,author)
+      getUserWorkflows(setListWorkflows,author)
     })
     .catch(err => console.log(err))
   
+}
+
+const addContentWorkflow = (
+  _id, // _id of of the workflow
+  textNote, // text to set note related to the object
+  time, // time of input
+  userId, // identifier of author
+  idContent, // _id of object
+  typeContent // type of the content
+) => {
+  console.log("handleApi createWorkflow. ", { 
+    _id, // _id of of the workflow
+    textNote, // text to set note related to the object
+    time, // time of input
+    userId, // identifier of author
+    idContent, // _id of object
+    typeContent // type of the content
+  });
+
+  // axios call
+
 }
 
 export {
@@ -708,5 +728,5 @@ export {
   addAnnotation, getAnnotations, deleteAnnotation, updateAnnotation,
   addComment, getComments, deleteComment, updateComment,
   getUserAnnotations, 
-  getWorkflow, getWorkflowsInfo, createWorkflow
+  getWorkflow, getWorkflowsInfo, createWorkflow, addContentWorkflow
 }
