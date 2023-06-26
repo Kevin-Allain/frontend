@@ -11,10 +11,12 @@ const WorkflowInterface =({ workflow }) => {
         <div className='workFlowDescription'> <u>Description:</u><br/>{workflow.description}  </div>
         <em>{workflow.author} | {workflow.time} | {workflow._id}</em>
     </div>
-    <div className='workflowObjects'>
+    <div className='workflowListObjects'>
         Additional components and functionality for interacting with the workflow in progress... <br/>
         {workflow.objects.map( (item,i) => {
-            
+            <div className='workflowObject'>
+            i: {i}
+            </div>
         })}
     </div>
     </div>

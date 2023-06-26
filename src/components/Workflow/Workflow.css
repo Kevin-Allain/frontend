@@ -58,8 +58,12 @@
     padding-top: 0.1rem;
     padding-bottom: 0.1rem;
 }
-.workflowObjects{
+.workflowListObjects{
     padding-top: 0.2rem;
     padding-bottom: 0.2rem;
     padding-left: 0.5rem;
+}
+
+.workflowObject{
+    color: gray;
 }

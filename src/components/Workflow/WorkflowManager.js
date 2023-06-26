@@ -100,6 +100,7 @@ const WorkflowManager = () => {
           <em>All the rest will come later... Please be patient with us</em>
           <br />
           Save this workflow{" "}
+          {/* Note the call to this function is set with empty parameters as we set first the creation without objects to populate the workflow */}
           <TfiSave
             className="icon"
             onClick={() => {
@@ -110,6 +111,8 @@ const WorkflowManager = () => {
                     new Date(),
                     localStorage.username,
                     [],
+                    [],
+                    '', 
                     [],
                     setTitleInput,
                     setDescriptionInput,
