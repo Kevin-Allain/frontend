@@ -706,7 +706,8 @@ const addContentWorkflow = (
   time, // time of input
   userId, // identifier of author
   idContent, // _id of object
-  typeContent // type of the content
+  typeContent, // type of the content: recording / track / sample / annotation / comment / search (TODO) / ...
+  objectsIndex // make the assumption that this is calculated with the call as the workflow is passed as a parameter... (OR make another call if that isn't passed?! V1 assume it is passed)
 ) => {
   console.log("handleApi createWorkflow. ", { 
     _id, // _id of of the workflow
@@ -714,10 +715,25 @@ const addContentWorkflow = (
     time, // time of input
     userId, // identifier of author
     idContent, // _id of object
-    typeContent // type of the content
+    typeContent, // type of the content
+    objectsIndex // index of object passed
   });
 
   // axios call
+  axios.post(`${baseUrl}/addContentWorkflow`,{
+    _id, // _id of of the workflow
+    textNote, // text to set note related to the object
+    time, // time of input
+    userId, // identifier of author
+    idContent, // _id of object
+    typeContent, // type of the content
+    objectsIndex // index of object passed
+  })
+  .then((data) => {
+    console.log("Then handleApi addContentWorkflow");
+    // TODO ... do more?
+  })
+  .catch(err => console.log(err))
 
 }
 

@@ -97,7 +97,7 @@ const WorkflowManager = () => {
             onChange={handleChangeDescriptionInput}
           />{" "}
           <br />
-          <em>All the rest will come later... Please be patient with us</em>
+          <em>Once created, you will be able to save objects of interest in your workflow.</em>
           <br />
           Save this workflow{" "}
           {/* Note the call to this function is set with empty parameters as we set first the creation without objects to populate the workflow */}
