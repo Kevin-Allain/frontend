@@ -150,7 +150,7 @@ const WorkflowManager = () => {
           ))}
       </div>
       {isWorkflowVisible && selectedWorkflow && 
-          <WorkflowInterface workflow={selectedWorkflow} />      
+          <WorkflowInterface workflow={selectedWorkflow} setListWorkflows={setListWorkflows} />
       }
     </div>
   );

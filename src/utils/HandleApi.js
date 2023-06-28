@@ -701,13 +701,15 @@ const createWorkflow = (
 }
 
 const addContentWorkflow = (
+  setListWorkflows,
   _id, // _id of of the workflow
   textNote, // text to set note related to the object
   time, // time of input
   userId, // identifier of author
   idContent, // _id of object
   typeContent, // type of the content: recording / track / sample / annotation / comment / search (TODO) / ...
-  objectsIndex // make the assumption that this is calculated with the call as the workflow is passed as a parameter... (OR make another call if that isn't passed?! V1 assume it is passed)
+  objectsIndex, // make the assumption that this is calculated with the call as the workflow is passed as a parameter... (OR make another call if that isn't passed?! V1 assume it is passed)
+  workflow // TODO doubt about this!
 ) => {
   console.log("handleApi createWorkflow. ", { 
     _id, // _id of of the workflow
@@ -730,8 +732,10 @@ const addContentWorkflow = (
     objectsIndex // index of object passed
   })
   .then((data) => {
-    console.log("Then handleApi addContentWorkflow");
-    // TODO ... do more?
+    console.log("Then handleApi addContentWorkflow. data: ",data);
+    // TODO ... do more? Maybe do another call to get the list of workflows?
+    getWorkflowsInfo(setListWorkflows, {user:userId});
+    workflow.objects.push(data.data.objects[data.data.objects.length-1]); // TODO this works... but should find something better!
   })
   .catch(err => console.log(err))
 
