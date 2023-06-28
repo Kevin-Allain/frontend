@@ -114,9 +114,8 @@ const AnnotationSystem = ({ type, info, index=0 }) => {
                     handleShowAndLoadCommentsSystem={ 
                       () => handleShowAndLoadCommentsSystem(item._id, ) 
                     }
-                    updateMode={
-                      () => updateMode(item._id, item.annotationInput, localStorage?.username)}
-                    deleteAnnotation={() => deleteAnnotation(item._id, item.type, item.info, setListAnnotations)}
+                    updateMode={ () => updateMode(item._id, item.annotationInput, localStorage?.username) }
+                    deleteAnnotation={ () => deleteAnnotation(item._id, item.type, item.info, setListAnnotations) }
                   />
                 ))}
             </div>

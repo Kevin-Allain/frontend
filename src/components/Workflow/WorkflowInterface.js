@@ -1,17 +1,18 @@
 import React, { useState, useEffect, useRef } from "react";
 import { BsWrenchAdjustable } from "react-icons/bs";
-import { RiTestTubeLine } from "react-icons/ri";
+import { HiOutlineSaveAs } from "react-icons/hi";
 import "../../App.css";
 import { getWorkflowsInfo, addContentWorkflow } from "../../utils/HandleApi";
 
 const WorkflowInterface = ({ workflow , setListWorkflows }) => {
   
+  const [textInputObjectNote, setTextInputObjectNote] = useState("");
+
   const handleTestWorkflowEnrich = () => {
-    console.log("handleTestWorkflowEnrich");
+    console.log("handleTestWorkflowEnrich. textInputObjectNote: ",textInputObjectNote);
     // let's make a test with the seven nation army annotation search
     const idTest = "648b25f958abda06ad6d7cbb";
-    const textNoteTest =
-      "This is an interesting point to start thinking about... After all, it is the latest popular song that reached this impact.";
+    const textNoteTest = (textInputObjectNote.length>0)?textInputObjectNote:'N/A';
     const timeTest = new Date();
     const typeContentTest = "annotation";
     const objectsIndexesTest = workflow.objects.length;
@@ -31,6 +32,8 @@ const WorkflowInterface = ({ workflow , setListWorkflows }) => {
     );
   };
 
+
+
   return (
     <div className="workflowInterface">
       <h1>Workflow Interface</h1>
@@ -44,21 +47,32 @@ const WorkflowInterface = ({ workflow , setListWorkflows }) => {
         </div>
         <em>
           {workflow.author} | {workflow.time} | {workflow._id} |{" "}
-          {workflow.objects.length}{" "}objects
+          {workflow.objects.length} objects
         </em>
       </div>
       {/* TODO assess whether call works fine for addition of an object to a workflow */}
-      <RiTestTubeLine className="icon" onClick={handleTestWorkflowEnrich} />{" "}
-      <br />
+      <div className="infoAdditionWorkflow">
+        Note (this is a test): {" "} <input
+          type="text"
+          placeholder="Add note about this object"
+          name="AddObjectNote"
+          id="AddObjectNote"
+          class="objectNoteInput"
+          value= {textInputObjectNote}
+          onChange={(e) => setTextInputObjectNote(e.target.value)} 
+        />{" "}
+        <HiOutlineSaveAs className="icon" onClick={handleTestWorkflowEnrich} />{" "}
+      </div>
       {/* TODO change display according to the type of the workflow object */}
       <div className="workflowListObjects">
         {workflow.objects.map((item, i) => (
           <div className="workflowObject" key={i}>
-            Object id: {item.objectId} <br />
-            Object type: {item.objectType} <br /> 
-            Object index: {item.objectIndex} <br /> 
+            <u>Object id:</u> {item.objectId} <br />
+            <u>Object type:</u> {item.objectType} <br />
+            <u>Object index:</u> {item.objectIndex} <br />
             <div className="workflowContentDisplay">
-              Work in progress: display of content of object <BsWrenchAdjustable />{" "}
+              ... Work in progress: display of content of object{" "}
+              <BsWrenchAdjustable />{" "}
             </div>
             Object note: {item.objectNote} <br />
           </div>

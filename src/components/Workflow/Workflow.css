@@ -65,9 +65,13 @@
 }
 
 .workflowObject{
-    color: gray;
+    color: silver;
     border:solid;
     border-width: thin;
     padding-left: 0.25rem;    
     padding-right: 0.5rem;
+}
+
+.infoAdditionWorkflow{ 
+    padding-left: 0.25rem;
 }
