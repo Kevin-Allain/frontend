@@ -1,21 +1,29 @@
 import React, { useState, useEffect, useRef } from "react";
 import { BsWrenchAdjustable } from "react-icons/bs";
 import { HiOutlineSaveAs } from "react-icons/hi";
+import { AiFillDelete } from "react-icons/ai";
 import "../../App.css";
 import { getWorkflowsInfo, addContentWorkflow } from "../../utils/HandleApi";
 
-const WorkflowInterface = ({ workflow , setListWorkflows }) => {
-  
+const WorkflowInterface = ({ workflow, setListWorkflows }) => {
   const [textInputObjectNote, setTextInputObjectNote] = useState("");
 
+  // TODO see how this function can be used for later calls. We will need to have some way for elements to have access to listed workflows
   const handleTestWorkflowEnrich = () => {
-    console.log("handleTestWorkflowEnrich. textInputObjectNote: ",textInputObjectNote);
+    console.log(
+      "handleTestWorkflowEnrich. textInputObjectNote: ",
+      textInputObjectNote
+    );
     // let's make a test with the seven nation army annotation search
     const idTest = "648b25f958abda06ad6d7cbb";
-    const textNoteTest = (textInputObjectNote.length>0)?textInputObjectNote:'N/A';
+    const textNoteTest =
+      textInputObjectNote.length > 0 ? textInputObjectNote : "N/A";
     const timeTest = new Date();
     const typeContentTest = "annotation";
-    const objectsIndexesTest = workflow.objects.length;
+    console.log("workflow.objects: ",workflow.objects)
+    const objectsIndexesTest = 
+      Math.max(... workflow.objects.map( a => Number( (a===null)? -42 : a.objectIndex) )) + 1 // change to adding the maximum value+1. We need to ensure it won't have another one with the same index value
+
 
     // call to handleApi
     addContentWorkflow(
@@ -32,7 +40,11 @@ const WorkflowInterface = ({ workflow , setListWorkflows }) => {
     );
   };
 
-
+  const deleteWorkflowObject = (workflow_id,objectIndex) => {
+    console.log("workflow_id: ",workflow_id,",objectIndex: ", objectIndex)
+    // This is unique, so deletion of the workflow object should be simple
+    
+  }
 
   return (
     <div className="workflowInterface">
@@ -52,14 +64,15 @@ const WorkflowInterface = ({ workflow , setListWorkflows }) => {
       </div>
       {/* TODO assess whether call works fine for addition of an object to a workflow */}
       <div className="infoAdditionWorkflow">
-        Note (this is a test): {" "} <input
+        Note (this is a test):{" "}
+        <input
           type="text"
           placeholder="Add note about this object"
           name="AddObjectNote"
           id="AddObjectNote"
-          class="objectNoteInput"
-          value= {textInputObjectNote}
-          onChange={(e) => setTextInputObjectNote(e.target.value)} 
+          className="objectNoteInput"
+          value={textInputObjectNote}
+          onChange={(e) => setTextInputObjectNote(e.target.value)}
         />{" "}
         <HiOutlineSaveAs className="icon" onClick={handleTestWorkflowEnrich} />{" "}
       </div>
@@ -67,14 +80,14 @@ const WorkflowInterface = ({ workflow , setListWorkflows }) => {
       <div className="workflowListObjects">
         {workflow.objects.map((item, i) => (
           <div className="workflowObject" key={i}>
-            <u>Object id:</u> {item.objectId} <br />
-            <u>Object type:</u> {item.objectType} <br />
-            <u>Object index:</u> {item.objectIndex} <br />
+            <u>Object id:</u> {item.objectId} | <u>Object type:</u>{" "}
+            {item.objectType} | <u>Object index:</u> {item.objectIndex} <br />
             <div className="workflowContentDisplay">
-              ... Work in progress: display of content of object{" "}
-              <BsWrenchAdjustable />{" "}
+              <em>... Work in progress: display of content of object{" "}
+              <BsWrenchAdjustable />{" "} </em>
             </div>
-            Object note: {item.objectNote} <br />
+            <u>Object note:</u><br/> {item.objectNote} <br />
+            <AiFillDelete className="icon" onClick={() => deleteWorkflowObject(workflow._id, item.objectIndex)} />
           </div>
         ))}
       </div>
