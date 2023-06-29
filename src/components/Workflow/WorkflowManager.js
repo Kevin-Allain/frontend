@@ -116,7 +116,6 @@ const WorkflowManager = () => {
                     [],
                     setTitleInput,
                     setDescriptionInput,
-                    getWorkflowsInfo,
                     setListWorkflows
                   )
                 : console.log(

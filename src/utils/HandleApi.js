@@ -661,7 +661,6 @@ const createWorkflow = (
   objectsType=[],
   setTitleInput,
   setDescriptionInput,
-  getUserWorkflows,
   setListWorkflows
   ) => {
     console.log("handleApi createWorkflow. ", { 
@@ -694,7 +693,7 @@ const createWorkflow = (
       console.log("Then handleApi createWorkflow");
       setTitleInput("");
       setDescriptionInput("");
-      getUserWorkflows(setListWorkflows,author)
+      getWorkflowsInfo(setListWorkflows,{user:author})
     })
     .catch(err => console.log(err))
   
