@@ -21,9 +21,9 @@ const WorkflowInterface = ({ workflow, setListWorkflows }) => {
     const timeTest = new Date();
     const typeContentTest = "annotation";
     console.log("workflow.objects: ",workflow.objects)
-    const objectsIndexesTest = 
+    const objectsIndexesTest = (workflow.objects.length>0)?
       Math.max(... workflow.objects.map( a => Number( (a===null)? -42 : a.objectIndex) )) + 1 // change to adding the maximum value+1. We need to ensure it won't have another one with the same index value
-
+      : 0;
 
     // call to handleApi
     addContentWorkflow(
