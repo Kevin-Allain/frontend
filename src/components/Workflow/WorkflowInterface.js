@@ -3,7 +3,11 @@ import { BsWrenchAdjustable } from "react-icons/bs";
 import { HiOutlineSaveAs } from "react-icons/hi";
 import { AiFillDelete } from "react-icons/ai";
 import "../../App.css";
-import { getWorkflowsInfo, addContentWorkflow } from "../../utils/HandleApi";
+import { 
+  getWorkflowsInfo, 
+  addContentWorkflow,
+  deleteWorkflowObject 
+} from "../../utils/HandleApi";
 
 const WorkflowInterface = ({ workflow, setListWorkflows }) => {
   const [textInputObjectNote, setTextInputObjectNote] = useState("");
@@ -40,10 +44,10 @@ const WorkflowInterface = ({ workflow, setListWorkflows }) => {
     );
   };
 
-  const deleteWorkflowObject = (workflow_id,objectIndex) => {
+  const handleDeleteWorkflowObject = (workflow_id,objectIndex) => {
     console.log("workflow_id: ",workflow_id,",objectIndex: ", objectIndex)
     // This is unique, so deletion of the workflow object should be simple
-    
+    deleteWorkflowObject(workflow_id,objectIndex, workflow, setListWorkflows, localStorage?.username); // (and then we will want to load it again...) Maybe more things to add to that call...
   }
 
   return (
@@ -87,7 +91,7 @@ const WorkflowInterface = ({ workflow, setListWorkflows }) => {
               <BsWrenchAdjustable />{" "} </em>
             </div>
             <u>Object note:</u><br/> {item.objectNote} <br />
-            <AiFillDelete className="icon" onClick={() => deleteWorkflowObject(workflow._id, item.objectIndex)} />
+            <AiFillDelete className="icon" onClick={() => handleDeleteWorkflowObject(workflow._id, item.objectIndex)} />
           </div>
         ))}
       </div>

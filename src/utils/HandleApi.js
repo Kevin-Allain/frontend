@@ -741,6 +741,25 @@ const addContentWorkflow = (
 
 }
 
+// Note: the parameter passed is the _id of the workflow
+const deleteWorkflowObject = (_id, objectIndex, workflow, setListWorkflows, userId) => {
+  console.log("handleApi deleteWorkflowObject. ", { _id, objectIndex } );
+  // TODO assess whether we care about indexes having empty spots... I suppose not 
+  axios.post(`${baseUrl}/deleteWorkflowObject`,{
+    _id, objectIndex
+  })
+  .then((data) => {
+    console.log("Then handleApi deleteWorkflowObject. data: ",data);
+    // TODO
+    getWorkflowsInfo(setListWorkflows, {user:userId}); 
+    workflow.objects = workflow.objects.filter(item => item["objectIndex"] !== objectIndex);
+
+  })
+  .catch(err =>console.log(err));
+
+}
+
+
 export {
   getAllJazzDap, addJazzDap, updateJazzDap, deleteJazzDap,
   getMusicMIDI, getSampleMIDI, getMatchLevenshteinDistance,
@@ -748,5 +767,6 @@ export {
   addAnnotation, getAnnotations, deleteAnnotation, updateAnnotation,
   addComment, getComments, deleteComment, updateComment,
   getUserAnnotations, 
-  getWorkflow, getWorkflowsInfo, createWorkflow, addContentWorkflow
+  getWorkflow, getWorkflowsInfo, createWorkflow, 
+  addContentWorkflow, deleteWorkflowObject
 }
