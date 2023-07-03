@@ -632,7 +632,8 @@ const getWorkflow = (setIsWorkerVisible, setSelectedWorkflow, _id, user) => {
 
 const getWorkflowsInfo = (dispatch ,setWorkflows, { title = null, time = null, user = null } = {}) => {
   console.log("handleApi getWorkflowsInfo.", { title, time, user });
-
+  console.log("dispatch ,setWorkflows: ", {dispatch ,setWorkflows});
+  
   axios
     .get(`${baseUrl}/getWorkflowsInfo`, {
       params:
@@ -645,7 +646,7 @@ const getWorkflowsInfo = (dispatch ,setWorkflows, { title = null, time = null, u
     .then(({ data }) => {
       console.log('getWorkflowsInfo data: ', data);
       // setListWorkflows(data);
-      dispatch(setWorkflows(data))
+      dispatch(setWorkflows(data))      
     })
     .catch(err => console.log(err))
 }

@@ -72,7 +72,7 @@ const WorkflowManager = () => {
 
   useEffect(() => {
     if (localStorage?.username) {
-      getWorkflowsInfo(setListWorkflows, { user: localStorage?.username });
+      getWorkflowsInfo( dispatch ,setWorkflows, { user: localStorage?.username });
     }
   }, []);
 
