@@ -11,15 +11,29 @@ import {
 } from "../../utils/HandleApi";
 import WorkflowInterface from "./WorkflowInterface";
 
+// Work in progress: list of workflows with the reducer...
+import { useSelector, useDispatch } from 'react-redux';
+import { setWorkflows } from '../Reducers/WorkflowReducer';
+
 const WorkflowManager = () => {
   const [isWorkflowListVisible, setIsWorkflowListVisible] = useState(false);
+  
+  const workflows = useSelector(state => state.workflows);
+  const dispatch = useDispatch();
   const [listWorkflows, setListWorkflows] = useState([]);
+
+  // Example usage: dispatching an action to update the workflows list
+  const handleUpdateWorkflows = () => {
+    const newWorkflows = [...workflows, { title: 'New Workflow' }];
+    dispatch(setWorkflows(newWorkflows));
+  };
+
 
   const [isWorkflowVisible, setIsWorkerVisible] = useState(false);
   const [selectedWorkflow, setSelectedWorkflow] = useState(null);
 
 
-  // creation
+  // creation attributes
   const [titleInput, setTitleInput] = useState("");
   const titleInputRef = useRef("");
   const [descriptionInput, setDescriptionInput] = useState("");
@@ -31,8 +45,13 @@ const WorkflowManager = () => {
   };
 
   const handleToggleUserWorkflows = () => {
-    getWorkflowsInfo(setListWorkflows, { user: localStorage?.username });
+    // TODO change to call based on global variable... 
+    getWorkflowsInfo(
+      dispatch ,setWorkflows,
+      { user: localStorage?.username }
+    );
     setIsWorkflowListVisible((prevState) => !prevState);
+
   };
   const handleChangeTitleInput = (event) => {
     const value = event.target.value;
@@ -134,10 +153,14 @@ const WorkflowManager = () => {
       )}
       <div className="listWorkflows">
         Your workflows{" "}
-        <BsCardChecklist className="icon" onClick={handleToggleUserWorkflows} />{" "}
+        <BsCardChecklist 
+          className="icon" 
+          onClick={handleToggleUserWorkflows} 
+        />{" "}
         <br />
         {isWorkflowListVisible &&
-          listWorkflows.map((item, i) => (
+          // listWorkflows.map((item, i) => (
+            workflows.map((item,i) => (
             <div
               className="workflowDetails"
               onClick={() => loadDetailWorkflow(item._id)}

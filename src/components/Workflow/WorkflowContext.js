@@ -6,7 +6,8 @@ export const WorkflowProvider = ({ children }) => {
   const [listWorkflows, setListWorkflows] = useState([]);
 
   return (
-    <WorkflowContext.Provider value={{ listWorkflows, setListWorkflows }}>
+    <WorkflowContext.Provider 
+      value={{ listWorkflows, setListWorkflows }}>
       {children}
     </WorkflowContext.Provider>
   );
