@@ -221,7 +221,11 @@ const MusicInterface = () => {
 
   function getResultsInfo(lognumbers, infoMusicList, setInfoMusicList) {
     console.log("getResultsInfo, lognumbers: ", lognumbers, { infoMusicList, setInfoMusicList });
-    getTracksMetadata(lognumbers, infoMusicList, setInfoMusicList);
+    getTracksMetadata(
+      lognumbers, 
+      infoMusicList, 
+      setInfoMusicList
+    );
   }
 
 
@@ -312,7 +316,11 @@ const MusicInterface = () => {
 
               <div className='infoLogNumber'>Load information about the recordings<br />
                 <BsInfoCircleFill className='icon'
-                  onClick={() => getResultsInfo(listLogNumbers, infoMusicList, setInfoMusicList)}
+                  onClick={() => getResultsInfo(
+                    listLogNumbers, 
+                    infoMusicList, 
+                    setInfoMusicList
+                  )}
                 />
                 {(infoMusicList.length <= 0) ? (<></>) :
                   infoMusicList.map((item, i) => (
@@ -325,6 +333,7 @@ const MusicInterface = () => {
                         updateAnnotation={updateAnnotation}
                         getAnnotations={getAnnotations}
                         deleteAnnotation={deleteAnnotation}
+                        idDatabase = {item.idDatabase} // doubt about whether this will be present?
                       />
                   )
                   )

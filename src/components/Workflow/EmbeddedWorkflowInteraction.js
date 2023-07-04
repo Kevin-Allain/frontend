@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { HiOutlineViewGridAdd } from "react-icons/hi";
+import { HiOutlineViewGridAdd, HiOutlineSaveAs } from "react-icons/hi";
 import { BsThreeDotsVertical } from 'react-icons/bs'
 import { BsCardChecklist } from "react-icons/bs";
 import { TfiSave } from "react-icons/tfi";
@@ -16,12 +16,12 @@ import WorkflowInterface from "./WorkflowInterface";
 import { useSelector, useDispatch } from 'react-redux';
 import { setWorkflows } from '../Reducers/WorkflowReducer';
 
-// TODO consider attributes from object that calls the 
-const EmbeddedWorkflowInteraction = () => {
-
+// TODO consider attributes from object that calls the EmbeddedWorkflowInteraction
+// We will at first follow a structure based on the attributes of the caller:
+// -the type of caller... 
+// - the idCaller, an item to identify it (either existing to an item, or loaded _id in the MongoDB database) ...
+const EmbeddedWorkflowInteraction = ({idCaller, typeCaller}) => {
     // ## Attributes
-    const [isWorkflowListVisible, setIsWorkflowListVisible] = useState(false);
-
     // Global variable for workflows
     const workflows = useSelector(state => state.workflows);
     const dispatch = useDispatch();
@@ -29,8 +29,10 @@ const EmbeddedWorkflowInteraction = () => {
     const [titleInput, setTitleInput] = useState("");
     const titleInputRef = useRef("");
     const [descriptionInput, setDescriptionInput] = useState("");
+    const [noteInput, setNoteInput] = useState("");
     const descriptionInputRef = useRef("");
     // Display attributes
+    const [isWorkflowListVisible, setIsWorkflowListVisible] = useState(false);
     const [showWorkflowActions, setShowWorkflowActions] = useState(false);
     const [showWorkflowAddition, setShowWorkflowAddition] = useState(false);
 
@@ -43,6 +45,8 @@ const EmbeddedWorkflowInteraction = () => {
     }
     const handleShowWorkflowAddition = () => {
         setShowWorkflowAddition(!showWorkflowAddition);
+        // For test
+        console.log("idCaller: ",idCaller, ", typeCaller: ",typeCaller);
     };
 
     // ## Functions input
@@ -50,17 +54,25 @@ const EmbeddedWorkflowInteraction = () => {
         const value = event.target.value;
         // Let's not allow a title too long
         if (value.length <= 50) {
-          setTitleInput(value);
+            setTitleInput(value);
         }
-      };
-      const handleChangeDescriptionInput = (event) => {
+    };
+    const handleChangeDescriptionInput = (event) => {
         const value = event.target.value;
         // Let's not allow the description to be extremely long
         if (value.length <= 300) {
-          setDescriptionInput(value);
+            setDescriptionInput(value);
         }
-      };
-    
+    };
+    const handleChangeNoteInput = (event) => {
+        const value = event.target.value;
+        // Let's not allow the description to be extremely long
+        if (value.length <= 300) {
+            setNoteInput(value);
+        }
+    };
+
+
 
     // ## Functions actions
 
@@ -81,65 +93,74 @@ const EmbeddedWorkflowInteraction = () => {
             </div>
             {showWorkflowActions &&
                 <div className="listActionsWorkflowEmbedded">
-                    The actions of the workflows are in progress <br />
                     <div className="creationWorkFlowEmbedded">
                         Add to new workflow{" "}
                         <HiOutlineViewGridAdd
                             className="icon"
                             onClick={() => handleShowWorkflowAddition()}
                         />
-                    </div>
-                    {showWorkflowAddition && (
-                        <div className="creationWorkflow">
-                            Title (50 characters max): <br />
-                            <input
-                                type="text"
-                                placeholder="Write a short title"
-                                ref={titleInputRef}
-                                autoComplete="off"
-                                required
-                                value={titleInput}
-                                onChange={handleChangeTitleInput}
-                            />{" "}
-                            <br />
-                            Description (300 characters max): <br />
-                            <input
-                                type="text"
-                                placeholder="Describe shortly the objective of this workflow"
-                                ref={descriptionInputRef}
-                                autoComplete="off"
-                                required
-                                value={descriptionInput}
-                                onChange={handleChangeDescriptionInput}
-                            />{" "}
-                            <br />
-                            <em>Once created, you will be able to save objects of interest in your workflow.</em>
-                            <br />
-                            Save this workflow{" "}
-                            {/* Note the call to this function is set with empty parameters as we set first the creation without objects to populate the workflow */}
-                            <TfiSave
-                                className="icon"
-                                onClick={() => {
-                                    titleInput.length > 0 && descriptionInput.length > 0
-                                        ? createWorkflow(
-                                            titleInput,
-                                            descriptionInput,
-                                            new Date(),
-                                            localStorage.username,
-                                            [],
-                                            [],
-                                            '',
-                                            [],
-                                            setTitleInput,
-                                            setDescriptionInput,
-                                            dispatch,
-                                            setWorkflows
-                                        )
-                                        : console.log("empty title or description. titleInput: ", titleInput, "typeof titleInput: ", typeof titleInput, ", descriptionInput: ", descriptionInput, "typeof descriptionInput: ", typeof descriptionInput);
-                                }}
-                            />
-                        </div>
-                    )}
+                        {showWorkflowAddition && (
+                            <div className="creationWorkflow">
+                                Title (50 characters max): <br />
+                                <input
+                                    type="text"
+                                    placeholder="Write a short title"
+                                    ref={titleInputRef}
+                                    autoComplete="off"
+                                    required
+                                    value={titleInput}
+                                    onChange={handleChangeTitleInput}
+                                />{" "}
+                                <br />
+                                Description (300 characters max): <br />
+                                <input
+                                    type="text"
+                                    placeholder="Describe shortly the objective of this workflow"
+                                    ref={descriptionInputRef}
+                                    autoComplete="off"
+                                    required
+                                    value={descriptionInput}
+                                    onChange={handleChangeDescriptionInput}
+                                />{" "}
+                                <br />
+                                <div className="infoAdditionWorkflow">
+                                    Note about this object (500 characters max):{" "}
+                                    <input
+                                        type="text"
+                                        placeholder="Write a note about this object"
+                                        name="AddObjectNote"
+                                        id="AddObjectNote"
+                                        className="objectNoteInput"
+                                        value={noteInput}
+                                        onChange={(e) => setNoteInput(e.target.value)}
+                                    />{" "}
+                                </div>
+                                <br />
+                                Save this workflow{" "}
+                                <TfiSave
+                                    className="icon"
+                                    onClick={() => {
+                                        titleInput.length > 0 && descriptionInput.length > 0
+                                            ? createWorkflow(
+                                                titleInput,
+                                                descriptionInput,
+                                                new Date(),
+                                                localStorage.username,
+                                                [],
+                                                [],
+                                                '',
+                                                [],
+                                                setTitleInput,
+                                                setDescriptionInput,
+                                                dispatch,
+                                                setWorkflows
+                                            )
+                                            : console.log("empty title or description. titleInput: ", titleInput, "typeof titleInput: ", typeof titleInput, ", descriptionInput: ", descriptionInput, "typeof descriptionInput: ", typeof descriptionInput);
+                                    }}
+                                />
+                            </div>
+                        )}                    </div>
+
 
                     <div className="additionWorkFlowEmbedded">
                         Add to existing workflow{" "} <br />

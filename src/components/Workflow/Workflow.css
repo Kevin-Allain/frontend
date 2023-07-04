@@ -98,8 +98,12 @@
 
   .creationWorkFlowEmbedded{
     border:solid;
+    border-width: thin;
+    border-color:orange;
   }
 
   .additionWorkFlowEmbedded{
-    border: solid;
+    border:solid;
+    border-width: thin;
+    border-color:orange;
   }

@@ -7,10 +7,10 @@ import { getWorkflowsInfo } from '../../utils/HandleApi';
 import EmbeddedWorkflowInteraction from '../Workflow/EmbeddedWorkflowInteraction'
 
 // Global variables addition for workflow -> Might be changed to call an EmbeddedWorkflowManager
-import { useSelector, useDispatch } from 'react-redux';
-import { setWorkflows } from '../Reducers/WorkflowReducer';
+// import { useSelector, useDispatch } from 'react-redux';
+// import { setWorkflows } from '../Reducers/WorkflowReducer';
 
-// TODO update based on additional metadata...
+// TODO update based on additional metadata... + inclusion of _id in MongoDB database?
 const MusicInfo = ({
     lognumber,
     contents,
@@ -20,15 +20,13 @@ const MusicInfo = ({
     addAnnotation,
     getAnnotations,
     updateAnnotation,
-    deleteAnnotation }) => {
+    deleteAnnotation,
+    idDatabase
+}) => {
 
-    const workflows = useSelector(state => state.workflows);
-
-    const handleToggleUserWorkflows = () => {
-
-        console.log("workflows: ",workflows);
-    };
-
+    // const workflows = useSelector(state => state.workflows);
+    // const handleToggleUserWorkflows = () => { console.log("workflows: ",workflows); };
+    console.log("In MusicInfo. idDatabase: ",idDatabase);
 
     return (
         <div className="musicinfo">
@@ -61,16 +59,11 @@ const MusicInfo = ({
                 deleteAnnotation={deleteAnnotation}
                 updateAnnotation={updateAnnotation}
             />
-            {localStorage?.username && 
-                <>
-                    <div className='buttonDots'>
-                        Workflows actions{" "}
-                        <BsThreeDotsVertical
-                            className="icon"
-                            onClick={handleToggleUserWorkflows} />
-                    </div>
-                    <EmbeddedWorkflowInteraction />
-                </>
+            {localStorage?.username &&
+                <EmbeddedWorkflowInteraction
+                    idCaller={idDatabase}
+                    typeCaller={"recording"}
+                />
             }
         </div>
     );

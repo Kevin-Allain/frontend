@@ -175,6 +175,7 @@ const getTracksMetadata = (lognumbers, infoMusicList, setInfoMusicList) => {
           configuration: d.data[i].Configuration,
           tape_stock: d.data[i]["Tape stock"],
           recording_location: d.data[i]["Recording location"],
+          idDatabase: d.data[i]["_id"] // new addition. Get the _id stored in the database
         })
       }
       console.log("transf_info_metadata: ",transf_info_metadata);
