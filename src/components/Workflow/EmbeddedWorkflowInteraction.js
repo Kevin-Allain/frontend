@@ -142,14 +142,11 @@ const EmbeddedWorkflowInteraction = ({idCaller, typeCaller}) => {
                                     onClick={() => {
                                         titleInput.length > 0 && descriptionInput.length > 0
                                             ? createWorkflow(
-                                                titleInput,
-                                                descriptionInput,
-                                                new Date(),
-                                                localStorage.username,
-                                                [],
-                                                [],
-                                                '',
-                                                [],
+                                                titleInput, descriptionInput, new Date(), localStorage.username,
+                                                [idCaller],
+                                                [new Date()],
+                                                noteInput,
+                                                [typeCaller],
                                                 setTitleInput,
                                                 setDescriptionInput,
                                                 dispatch,
