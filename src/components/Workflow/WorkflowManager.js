@@ -17,10 +17,10 @@ import { setWorkflows } from '../Reducers/WorkflowReducer';
 
 const WorkflowManager = () => {
   const [isWorkflowListVisible, setIsWorkflowListVisible] = useState(false);
-  
+
+  // Global variable for workflows
   const workflows = useSelector(state => state.workflows);
   const dispatch = useDispatch();
-  const [listWorkflows, setListWorkflows] = useState([]);
 
   // Example usage: dispatching an action to update the workflows list
   const handleUpdateWorkflows = () => {
@@ -137,20 +137,10 @@ const WorkflowManager = () => {
                     [],
                     setTitleInput,
                     setDescriptionInput,
-                    // setListWorkflows
                     dispatch,
                     setWorkflows
                   )
-                : console.log(
-                    "empty title or description. titleInput: ",
-                    titleInput,
-                    "typeof titleInput: ",
-                    typeof titleInput,
-                    ", descriptionInput: ",
-                    descriptionInput,
-                    "typeof descriptionInput: ",
-                    typeof descriptionInput
-                  );
+                : console.log("empty title or description. titleInput: ", titleInput, "typeof titleInput: ", typeof titleInput, ", descriptionInput: ", descriptionInput, "typeof descriptionInput: ", typeof descriptionInput );
             }}
           />
         </div>
@@ -178,7 +168,6 @@ const WorkflowManager = () => {
       {isWorkflowVisible && selectedWorkflow && 
           <WorkflowInterface 
             workflow={selectedWorkflow} 
-            setListWorkflows={setListWorkflows} 
           />
       }
     </div>

@@ -44,7 +44,6 @@ body{
 
 .header{
   background-color: ghostwhite;
-  /* padding: 0.25rem; */
 }
 
 .footer{
@@ -59,6 +58,7 @@ body{
 .imageHeader{
   border-radius: 5px;
   margin-block: 5px;
+  height:70px;
   border:hidden;
 }
 
@@ -74,6 +74,7 @@ body{
 .imageFooter{
   border-radius: 5px;
   margin-block: 5px;
+  height:70px;
   border:hidden;
 }
 

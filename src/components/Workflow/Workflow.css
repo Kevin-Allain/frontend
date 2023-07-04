@@ -77,3 +77,29 @@
 .infoAdditionWorkflow{ 
     padding-left: 0.25rem;
 }
+
+.threedotsEmbedded{
+    background-color: red;
+}
+
+.embeddedWorkflowInteraction {
+    background-color: white;
+    border:solid;
+    border-width: thin;
+    border-color: #acadbd;
+  }
+
+  .listActionsWorkflowEmbedded {
+    font-size: 18px;
+    text-align: center;
+    background-color: red;
+    color:black;
+  }
+
+  .creationWorkFlowEmbedded{
+    border:solid;
+  }
+
+  .additionWorkFlowEmbedded{
+    border: solid;
+  }

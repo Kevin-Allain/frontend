@@ -3,10 +3,14 @@ import AnnotationSystem from '../Annotation/AnnotationSystem';
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { getWorkflowsInfo } from '../../utils/HandleApi';
 
+// workflow component
+import EmbeddedWorkflowInteraction from '../Workflow/EmbeddedWorkflowInteraction'
+
+// Global variables addition for workflow -> Might be changed to call an EmbeddedWorkflowManager
 import { useSelector, useDispatch } from 'react-redux';
 import { setWorkflows } from '../Reducers/WorkflowReducer';
 
-
+// TODO update based on additional metadata...
 const MusicInfo = ({
     lognumber,
     contents,
@@ -21,12 +25,7 @@ const MusicInfo = ({
     const workflows = useSelector(state => state.workflows);
 
     const handleToggleUserWorkflows = () => {
-        // // TODO change to call based on global variable... 
-        // getWorkflowsInfo(
-        //   dispatch ,setWorkflows,
-        //   { user: localStorage?.username }
-        // );
-        // // setIsWorkflowListVisible((prevState) => !prevState);
+
         console.log("workflows: ",workflows);
     };
 
@@ -63,15 +62,16 @@ const MusicInfo = ({
                 updateAnnotation={updateAnnotation}
             />
             {localStorage?.username && 
-                <div className='buttonDots'>
-                    Workflows actions{" "}
-                    <BsThreeDotsVertical 
-                        className="icon" 
-                        onClick={handleToggleUserWorkflows} 
-                    />
-                </div>
+                <>
+                    <div className='buttonDots'>
+                        Workflows actions{" "}
+                        <BsThreeDotsVertical
+                            className="icon"
+                            onClick={handleToggleUserWorkflows} />
+                    </div>
+                    <EmbeddedWorkflowInteraction />
+                </>
             }
-
         </div>
     );
 }

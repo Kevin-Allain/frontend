@@ -629,11 +629,8 @@ const getWorkflow = (setIsWorkerVisible, setSelectedWorkflow, _id, user) => {
     .catch(err => console.log(err))
 }
 
-
 const getWorkflowsInfo = (dispatch ,setWorkflows, { title = null, time = null, user = null } = {}) => {
   console.log("handleApi getWorkflowsInfo.", { title, time, user });
-  console.log("dispatch ,setWorkflows: ", {dispatch ,setWorkflows});
-  
   axios
     .get(`${baseUrl}/getWorkflowsInfo`, {
       params:
@@ -645,7 +642,6 @@ const getWorkflowsInfo = (dispatch ,setWorkflows, { title = null, time = null, u
     })
     .then(({ data }) => {
       console.log('getWorkflowsInfo data: ', data);
-      // setListWorkflows(data);
       dispatch(setWorkflows(data))      
     })
     .catch(err => console.log(err))
@@ -653,29 +649,17 @@ const getWorkflowsInfo = (dispatch ,setWorkflows, { title = null, time = null, u
 
 // In the case where we create one workflow with one object, there can be one note passed with it
 const createWorkflow = (
-  title, 
-  description, 
-  time, 
-  author, 
+  title, description, time, author, 
   objects=[],
   objectsTimes=[],
   objectNote = '',
   objectsType=[],
-  setTitleInput,
-  setDescriptionInput,
-  // setListWorkflows
+  setTitleInput, setDescriptionInput,
   dispatch,
   setWorkflows
   ) => {
     console.log("handleApi createWorkflow. ", { 
-      title, 
-      description, 
-      time, 
-      author, 
-      objects, 
-      objectsTimes,
-      objectNote,
-      objectsType
+      title, description, time, author, objects, objectsTimes, objectNote, objectsType
     } );
 
     const objectIndexes = [0];
@@ -683,10 +667,7 @@ const createWorkflow = (
 
     axios
     .post(`${baseUrl}/createWorkflow`, { 
-      title, 
-      description, 
-      time, 
-      author, 
+      title, description, time, author,
       objects,
       objectsTimes,
       objectNotes,
@@ -698,19 +679,14 @@ const createWorkflow = (
       setTitleInput("");
       setDescriptionInput("");
       getWorkflowsInfo(
-        dispatch,
-        setWorkflows,
-        {user:author}
+        dispatch, setWorkflows, {user:author}
       )
     })
-    .catch(err => console.log(err))
-  
+    .catch(err => console.log(err))  
 }
 
 const addContentWorkflow = (
-  // setListWorkflows,
-  dispatch,
-  setWorkflows,
+  dispatch, setWorkflows,
   _id, // _id of of the workflow
   textNote, // text to set note related to the object
   time, // time of input
@@ -721,24 +697,12 @@ const addContentWorkflow = (
   workflow // TODO doubt about this!
 ) => {
   console.log("handleApi createWorkflow. ", { 
-    _id, // _id of of the workflow
-    textNote, // text to set note related to the object
-    time, // time of input
-    userId, // identifier of author
-    idContent, // _id of object
-    typeContent, // type of the content
-    objectsIndex // index of object passed
+    _id, textNote, time, userId, idContent, typeContent, objectsIndex
   });
 
   // axios call
   axios.post(`${baseUrl}/addContentWorkflow`,{
-    _id, // _id of of the workflow
-    textNote, // text to set note related to the object
-    time, // time of input
-    userId, // identifier of author
-    idContent, // _id of object
-    typeContent, // type of the content
-    objectsIndex // index of object passed
+    _id, textNote, time, userId, idContent, typeContent, objectsIndex
   })
   .then((data) => {
     console.log("Then handleApi addContentWorkflow. data: ",data);
@@ -751,7 +715,6 @@ const addContentWorkflow = (
     workflow.objects.push(data.data.objects[data.data.objects.length-1]); // TODO this works... but should find something better!
   })
   .catch(err => console.log(err))
-
 }
 
 // Note: the parameter passed is the _id of the workflow
@@ -770,10 +733,8 @@ const deleteWorkflowObject = (_id, objectIndex, workflow,
     getWorkflowsInfo(dispatch,setWorkflows, {user:userId}); 
     // TODO check if this is the right way. Call of workflow should be made with the global variable I think.
     workflow.objects = workflow.objects.filter(item => item["objectIndex"] !== objectIndex);
-
   })
   .catch(err =>console.log(err));
-
 }
 
 
