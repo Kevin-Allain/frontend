@@ -96,9 +96,12 @@ function App() {
 
           { (auth !== null || localStorage.token ? "logout" : "offscreen") ?
             (
-              <div className={auth !== null || localStorage.token ? "logout" : "offscreen"}>
-                <Logout />
-              </div>
+              <>
+                <div className={auth !== null || localStorage.token ? "logout" : "offscreen"}>
+                  <Logout />
+                </div>
+                <MusicInterface />
+              </>
             )
             :
             <MusicInterface />

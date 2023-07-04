@@ -58,7 +58,6 @@ const WorkflowManager = () => {
     // Let's not allow a title too long
     if (value.length <= 50) {
       setTitleInput(value);
-      console.log("titleInput: ", titleInput);
     }
   };
   const handleChangeDescriptionInput = (event) => {
@@ -66,13 +65,16 @@ const WorkflowManager = () => {
     // Let's not allow the description to be extremely long
     if (value.length <= 300) {
       setDescriptionInput(value);
-      console.log("descriptionInput: ", descriptionInput);
     }
   };
 
   useEffect(() => {
     if (localStorage?.username) {
-      getWorkflowsInfo( dispatch ,setWorkflows, { user: localStorage?.username });
+      getWorkflowsInfo(
+        dispatch,
+        setWorkflows,
+        { user: localStorage?.username }
+      );
     }
   }, []);
 
@@ -97,7 +99,7 @@ const WorkflowManager = () => {
           Title: <br />
           <input
             type="text"
-            placeholder="Write a short title"
+            placeholder="Write a short title (50 characters max)"
             ref={titleInputRef}
             autoComplete="off"
             required
@@ -108,7 +110,7 @@ const WorkflowManager = () => {
           Description: <br />
           <input
             type="text"
-            placeholder="Describe shortly the objective of this workflow"
+            placeholder="Describe shortly the objective of this workflow (300 characters max)"
             ref={descriptionInputRef}
             autoComplete="off"
             required
@@ -135,7 +137,9 @@ const WorkflowManager = () => {
                     [],
                     setTitleInput,
                     setDescriptionInput,
-                    setListWorkflows
+                    // setListWorkflows
+                    dispatch,
+                    setWorkflows
                   )
                 : console.log(
                     "empty title or description. titleInput: ",
@@ -172,7 +176,10 @@ const WorkflowManager = () => {
           ))}
       </div>
       {isWorkflowVisible && selectedWorkflow && 
-          <WorkflowInterface workflow={selectedWorkflow} setListWorkflows={setListWorkflows} />
+          <WorkflowInterface 
+            workflow={selectedWorkflow} 
+            setListWorkflows={setListWorkflows} 
+          />
       }
     </div>
   );

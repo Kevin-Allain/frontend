@@ -663,7 +663,9 @@ const createWorkflow = (
   objectsType=[],
   setTitleInput,
   setDescriptionInput,
-  setListWorkflows
+  // setListWorkflows
+  dispatch,
+  setWorkflows
   ) => {
     console.log("handleApi createWorkflow. ", { 
       title, 
@@ -695,14 +697,20 @@ const createWorkflow = (
       console.log("Then handleApi createWorkflow");
       setTitleInput("");
       setDescriptionInput("");
-      getWorkflowsInfo(setListWorkflows,{user:author})
+      getWorkflowsInfo(
+        dispatch,
+        setWorkflows,
+        {user:author}
+      )
     })
     .catch(err => console.log(err))
   
 }
 
 const addContentWorkflow = (
-  setListWorkflows,
+  // setListWorkflows,
+  dispatch,
+  setWorkflows,
   _id, // _id of of the workflow
   textNote, // text to set note related to the object
   time, // time of input
@@ -735,7 +743,11 @@ const addContentWorkflow = (
   .then((data) => {
     console.log("Then handleApi addContentWorkflow. data: ",data);
     // TODO ... do more? Maybe do another call to get the list of workflows?
-    getWorkflowsInfo(setListWorkflows, {user:userId});
+    getWorkflowsInfo(
+      dispatch,
+      setWorkflows, 
+      {user:userId}
+    );
     workflow.objects.push(data.data.objects[data.data.objects.length-1]); // TODO this works... but should find something better!
   })
   .catch(err => console.log(err))
@@ -743,7 +755,11 @@ const addContentWorkflow = (
 }
 
 // Note: the parameter passed is the _id of the workflow
-const deleteWorkflowObject = (_id, objectIndex, workflow, setListWorkflows, userId) => {
+const deleteWorkflowObject = (_id, objectIndex, workflow, 
+  // setListWorkflows, 
+  dispatch,
+  setWorkflows,
+  userId) => {
   console.log("handleApi deleteWorkflowObject. ", { _id, objectIndex } );
   // TODO assess whether we care about indexes having empty spots... I suppose not 
   axios.post(`${baseUrl}/deleteWorkflowObject`,{
@@ -751,8 +767,8 @@ const deleteWorkflowObject = (_id, objectIndex, workflow, setListWorkflows, user
   })
   .then((data) => {
     console.log("Then handleApi deleteWorkflowObject. data: ",data);
-    // TODO
-    getWorkflowsInfo(setListWorkflows, {user:userId}); 
+    getWorkflowsInfo(dispatch,setWorkflows, {user:userId}); 
+    // TODO check if this is the right way. Call of workflow should be made with the global variable I think.
     workflow.objects = workflow.objects.filter(item => item["objectIndex"] !== objectIndex);
 
   })

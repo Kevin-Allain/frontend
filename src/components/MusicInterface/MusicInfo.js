@@ -1,5 +1,11 @@
 import React from 'react'
 import AnnotationSystem from '../Annotation/AnnotationSystem';
+import { BsThreeDotsVertical } from "react-icons/bs";
+import { getWorkflowsInfo } from '../../utils/HandleApi';
+
+import { useSelector, useDispatch } from 'react-redux';
+import { setWorkflows } from '../Reducers/WorkflowReducer';
+
 
 const MusicInfo = ({
     lognumber,
@@ -11,6 +17,20 @@ const MusicInfo = ({
     getAnnotations,
     updateAnnotation,
     deleteAnnotation }) => {
+
+    const workflows = useSelector(state => state.workflows);
+
+    const handleToggleUserWorkflows = () => {
+        // // TODO change to call based on global variable... 
+        // getWorkflowsInfo(
+        //   dispatch ,setWorkflows,
+        //   { user: localStorage?.username }
+        // );
+        // // setIsWorkflowListVisible((prevState) => !prevState);
+        console.log("workflows: ",workflows);
+    };
+
+
     return (
         <div className="musicinfo">
             <table>
@@ -42,6 +62,16 @@ const MusicInfo = ({
                 deleteAnnotation={deleteAnnotation}
                 updateAnnotation={updateAnnotation}
             />
+            {localStorage?.username && 
+                <div className='buttonDots'>
+                    Workflows actions{" "}
+                    <BsThreeDotsVertical 
+                        className="icon" 
+                        onClick={handleToggleUserWorkflows} 
+                    />
+                </div>
+            }
+
         </div>
     );
 }

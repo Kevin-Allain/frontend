@@ -9,8 +9,20 @@ import {
   deleteWorkflowObject 
 } from "../../utils/HandleApi";
 
-const WorkflowInterface = ({ workflow, setListWorkflows }) => {
+import { useSelector, useDispatch } from 'react-redux';
+import { setWorkflows } from '../Reducers/WorkflowReducer';
+
+
+const WorkflowInterface = ({ workflow, 
+  // setListWorkflows 
+}) => {
   const [textInputObjectNote, setTextInputObjectNote] = useState("");
+
+  // global variables
+  const workflows = useSelector(state => state.workflows);
+  const dispatch = useDispatch();
+
+
 
   // TODO see how this function can be used for later calls. We will need to have some way for elements to have access to listed workflows
   const handleTestWorkflowEnrich = () => {
@@ -31,7 +43,9 @@ const WorkflowInterface = ({ workflow, setListWorkflows }) => {
 
     // call to handleApi
     addContentWorkflow(
-      setListWorkflows,
+      // setListWorkflows,
+      dispatch,
+      setWorkflows,
       workflow._id,
       textNoteTest,
       timeTest,
@@ -47,7 +61,11 @@ const WorkflowInterface = ({ workflow, setListWorkflows }) => {
   const handleDeleteWorkflowObject = (workflow_id,objectIndex) => {
     console.log("workflow_id: ",workflow_id,",objectIndex: ", objectIndex)
     // This is unique, so deletion of the workflow object should be simple
-    deleteWorkflowObject(workflow_id,objectIndex, workflow, setListWorkflows, localStorage?.username); // (and then we will want to load it again...) Maybe more things to add to that call...
+    deleteWorkflowObject(workflow_id,objectIndex, workflow, 
+      // setListWorkflows, 
+      dispatch,
+      setWorkflows,
+      localStorage?.username); // (and then we will want to load it again...) Maybe more things to add to that call...
   }
 
   return (
@@ -90,8 +108,11 @@ const WorkflowInterface = ({ workflow, setListWorkflows }) => {
               <em>... Work in progress: display of content of object{" "}
               <BsWrenchAdjustable />{" "} </em>
             </div>
-            <u>Object note:</u><br/> {item.objectNote} <br />
-            <AiFillDelete className="icon" onClick={() => handleDeleteWorkflowObject(workflow._id, item.objectIndex)} />
+            <u>Object note:</u><br/> {item.objectNote} <br/>
+            <AiFillDelete 
+              className="icon" 
+              onClick={() => handleDeleteWorkflowObject(workflow._id, item.objectIndex)} 
+            />
           </div>
         ))}
       </div>
