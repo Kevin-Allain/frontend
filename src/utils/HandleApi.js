@@ -716,7 +716,7 @@ const addContentWorkflow = (
       setWorkflows, 
       {user:userId}
     );
-    // TODO change with dispatch and setWorkflows?
+    // change with dispatch and setWorkflows? (Probably not, it is done in getWorkflowsInfo)
     // workflow.objects.push(data.data.objects[data.data.objects.length-1]);
   })
   .catch(err => console.log(err))
