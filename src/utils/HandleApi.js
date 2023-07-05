@@ -716,7 +716,8 @@ const addContentWorkflow = (
       setWorkflows, 
       {user:userId}
     );
-    workflow.objects.push(data.data.objects[data.data.objects.length-1]); // TODO this works... but should find something better!
+    // TODO change with dispatch and setWorkflows?
+    // workflow.objects.push(data.data.objects[data.data.objects.length-1]);
   })
   .catch(err => console.log(err))
 }

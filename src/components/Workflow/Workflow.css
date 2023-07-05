@@ -1,4 +1,4 @@
-.workflowManager{
+.workflowManager {
     border: solid;
     border-width: thin;
     border-radius: 3px;
@@ -8,7 +8,7 @@
     padding-bottom: 0.15rem;
 }
 
-.creationWorkflow{
+.creationWorkflow {
     padding-left: 10px;
     padding-right: 10px;
     border: solid;
@@ -19,31 +19,31 @@
     padding-bottom: 0.25rem;
 }
 
-.workflowDetails{
+.workflowDetails {
     padding-left: 1rem;
-    padding-top: 0.1rem;    
-    padding-bottom: 0.1rem;        
+    padding-top: 0.1rem;
+    padding-bottom: 0.1rem;
 }
 
 .workflowDetails:hover {
     background-color: #acadbd;
-    color:black;
+    color: black;
     font-size: large;
-    cursor:pointer;
-    border:solid;
+    cursor: pointer;
+    border: solid;
     border-width: thin;
     border-color: orange;
 }
 
-.workflowInterface{
-    border:solid;
+.workflowInterface {
+    border: solid;
     border-width: thin;
     border-color: orange;
     border-radius: 3px;
 }
 
-.workFlowDescription{
-    border:solid;
+.workFlowDescription {
+    border: solid;
     border-width: thin;
     border-color: white;
     padding-top: 0.2rem;
@@ -52,58 +52,81 @@
     padding-right: 1rem;
 }
 
-.workflowHeader{
+.workflowHeader {
     padding-left: 1rem;
     padding-right: 1rem;
     padding-top: 0.1rem;
     padding-bottom: 0.1rem;
 }
-.workflowListObjects{
+
+.workflowListObjects {
     padding-top: 0.2rem;
     padding-bottom: 0.2rem;
     padding-left: 0.5rem;
 }
 
-.workflowObject{
+.workflowObject {
     color: silver;
-    border:solid;
+    border: solid;
     border-width: thin;
-    padding-left: 0.25rem;    
+    padding-left: 0.25rem;
     padding-right: 0.5rem;
     padding-top: 0.5rem;
     padding-bottom: 0.5rem;
 }
 
-.infoAdditionWorkflow{ 
+.infoAdditionWorkflow {
     padding-left: 0.25rem;
 }
 
-.threedotsEmbedded{
-    background-color: red;
+.threedotsEmbedded {
+    /* background-color: red; */
 }
 
 .embeddedWorkflowInteraction {
     background-color: white;
-    border:solid;
+    border: solid;
     border-width: thin;
     border-color: #acadbd;
-  }
+}
 
-  .listActionsWorkflowEmbedded {
+.listActionsWorkflowEmbedded {
     font-size: 18px;
     text-align: center;
-    background-color: red;
-    color:black;
-  }
+    /* background-color: red; */
+    color: black;
+}
 
-  .creationWorkFlowEmbedded{
-    border:solid;
+.creationWorkFlowEmbedded {
+    border: solid;
     border-width: thin;
-    border-color:orange;
-  }
+    border-color: orange;
+}
 
-  .additionWorkFlowEmbedded{
-    border:solid;
+.additionWorkFlowEmbedded {
+    border: solid;
     border-width: thin;
-    border-color:orange;
-  }
+    border-color: orange;
+}
+
+.listWorkflowEmbedded {
+    border: solid;
+    border-color: black;
+    border-width: thin;
+    border-radius: 5px;
+    margin-bottom: 0.2rem;
+    margin-left: 0.5rem;
+    margin-right: 0.5rem;
+}
+
+.listWorkflowEmbedded:hover {
+    background-color: gray;
+    color: white;
+}
+
+.objectNoteInput {
+    border: solid;
+    border-color: black;
+    border-width: thin;
+    margin-bottom: 0.2rem;
+}
