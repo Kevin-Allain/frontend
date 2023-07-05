@@ -145,7 +145,7 @@ const EmbeddedWorkflowInteraction = ({idCaller, typeCaller}) => {
                                                 titleInput, descriptionInput, new Date(), localStorage.username,
                                                 [idCaller],
                                                 [new Date()],
-                                                noteInput,
+                                                [noteInput],
                                                 [typeCaller],
                                                 setTitleInput,
                                                 setDescriptionInput,

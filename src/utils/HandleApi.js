@@ -229,13 +229,11 @@ const getMatchLevenshteinDistance = (
   console.log("-- handleAPI / getMatchLevenshteinDistance. stringNotes: ", stringNotes,
     ", percMatch: ", percMatch,
     " user: ", user,
-    ", transformFunc: ", transformFunc,
-    ", playMusicFunc: ", playMusicFunc,
-    ", levenshteinDistanceFunc: ", levenshteinDistanceFunc);
-
-
+    // ", transformFunc: ", transformFunc,
+    // ", playMusicFunc: ", playMusicFunc,
+    // ", levenshteinDistanceFunc: ", levenshteinDistanceFunc
+    );
     setIsLoading(true);
-
 
   axios
     .get(`${baseUrl}/getMatchLevenshteinDistance2`, { // test
@@ -651,7 +649,6 @@ const getWorkflowsInfo = (dispatch ,setWorkflows, { title = null, time = null, u
 // In the case where we create one workflow with one object, there can be one note passed with it
 const createWorkflow = (
   title, description, time, author, 
-  // TODO outdated, object is now an object!!! update accodingly
   objectsId=[], // the id of the object being listed
   objectsTimes=[],
   objectsNote = [],
@@ -664,15 +661,13 @@ const createWorkflow = (
       title, description, time, author, objectsId, objectsTimes, objectsNote, objectsType
     } );
 
-    // const objectIndexes = [0];
-    // const objectNotes = (objectNote!=='')?[objectNote]:[];
-
     const objects = [];
-    for (var i in objectsId){
+    for (var i=0; i<objectsId.length; i++){
+      console.log("i: ",i,", (typeof i): ",(typeof i),", (typeof objectsTimes[i]): ",objectsTimes[i]);
       objects.push({
         objectId: objectsId[i],
         objectTime: objectsTimes[i],
-        objectIndex: [i],
+        objectIndex: i,
         objectNote: objectsNote[i],
         objectType: objectsType[i]
       })
