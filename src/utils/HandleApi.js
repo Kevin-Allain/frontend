@@ -651,29 +651,37 @@ const getWorkflowsInfo = (dispatch ,setWorkflows, { title = null, time = null, u
 // In the case where we create one workflow with one object, there can be one note passed with it
 const createWorkflow = (
   title, description, time, author, 
-  objects=[],
+  // TODO outdated, object is now an object!!! update accodingly
+  objectsId=[], // the id of the object being listed
   objectsTimes=[],
-  objectNote = '',
+  objectsNote = [],
   objectsType=[],
   setTitleInput, setDescriptionInput,
   dispatch,
   setWorkflows
   ) => {
     console.log("handleApi createWorkflow. ", { 
-      title, description, time, author, objects, objectsTimes, objectNote, objectsType
+      title, description, time, author, objectsId, objectsTimes, objectsNote, objectsType
     } );
 
-    const objectIndexes = [0];
-    const objectNotes = (objectNote!=='')?[objectNote]:[];
+    // const objectIndexes = [0];
+    // const objectNotes = (objectNote!=='')?[objectNote]:[];
+
+    const objects = [];
+    for (var i in objectsId){
+      objects.push({
+        objectId: objectsId[i],
+        objectTime: objectsTimes[i],
+        objectIndex: [i],
+        objectNote: objectsNote[i],
+        objectType: objectsType[i]
+      })
+    }
 
     axios
     .post(`${baseUrl}/createWorkflow`, { 
       title, description, time, author,
-      objects,
-      objectsTimes,
-      objectNotes,
-      objectIndexes,
-      objectsType
+      objects
     })
     .then((data) => {
       console.log("Then handleApi createWorkflow");

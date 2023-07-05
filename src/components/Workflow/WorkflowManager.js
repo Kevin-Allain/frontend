@@ -131,10 +131,12 @@ const WorkflowManager = () => {
                     descriptionInput,
                     new Date(),
                     localStorage.username,
-                    [],
-                    [],
-                    '', 
-                    [],
+                    // These arrays are to be changed to objects, which contains an array of objects as: 
+                    [], // objectId: String
+                    [], // objectTime: Date
+                    // objectIndex: Number (not entered as function call)
+                    [], // objectNote: String
+                    [], // objectType: String
                     setTitleInput,
                     setDescriptionInput,
                     dispatch,
