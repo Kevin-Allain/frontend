@@ -119,6 +119,8 @@ const EmbeddedWorkflowInteraction = ({idCaller, typeCaller}) => {
         objectsIndexes,
         workflow
       );
+
+      setShowWorkflowActions(!showWorkflowActions);
     };
     
 
@@ -200,16 +202,14 @@ const EmbeddedWorkflowInteraction = ({idCaller, typeCaller}) => {
                             dispatch,
                             setWorkflows
                           )
-                        : console.log(
-                            "empty title or description. titleInput: ",
-                            titleInput,
-                            "typeof titleInput: ",
-                            typeof titleInput,
-                            ", descriptionInput: ",
-                            descriptionInput,
-                            "typeof descriptionInput: ",
-                            typeof descriptionInput
+                        : console.log( "empty title or description. titleInput: ", titleInput,
+                            "typeof titleInput: ", typeof titleInput,
+                            ", descriptionInput: ", descriptionInput,
+                            "typeof descriptionInput: ", typeof descriptionInput
                           );
+                      if (titleInput.length > 0 && descriptionInput.length > 0) {
+                        setShowWorkflowActions(!showWorkflowActions);
+                      }
                     }}
                   />
                 </div>
