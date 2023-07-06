@@ -355,13 +355,13 @@ padding-bottom: 0.25rem;
 
 .loading-icon {
   position: fixed;
-  top: 5%;
-  left: 5%;
+  top: 1%;
+  left: 1%;
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 90%;
-  width: 90%;
+  height: 98%;
+  width: 98%;
   color: white;
   background-color: #45465e;
   opacity: 0.9;

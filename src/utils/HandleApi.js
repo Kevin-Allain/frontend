@@ -163,8 +163,7 @@ const getTracksMetadata = (lognumbers, infoMusicList, setInfoMusicList) => {
       }
     })
     .then((d) => {
-      console.log("#### Then of getTracksMetadata ####");
-      console.log("d: ", d);
+      console.log("#### Then of getTracksMetadata #### d: ", d);
       
       // TODO low-priority change names of columns in the files, then updated in databased (automate with Python)
       let transf_info_metadata = [];
@@ -208,6 +207,7 @@ const getTrackMetadata = (lognumber, infoMusicList, setInfoMusicList) => {
           contents: d.data[0].Contents,
           tape_stock: d.data[0]["Tape stock"],
           recording_location: d.data[0]["Recording location"],
+          idDatabase: d.data[0]["_id"] // new addition. Get the _id stored in the database
         }
         ])
       }
@@ -226,23 +226,13 @@ const getMatchLevenshteinDistance = (
   setListLogNumbers = null, 
   setListTracks=null
 ) => {
-  console.log("-- handleAPI / getMatchLevenshteinDistance. stringNotes: ", stringNotes,
-    ", percMatch: ", percMatch,
-    " user: ", user,
-    // ", transformFunc: ", transformFunc,
-    // ", playMusicFunc: ", playMusicFunc,
-    // ", levenshteinDistanceFunc: ", levenshteinDistanceFunc
+  console.log("-- handleAPI / getMatchLevenshteinDistance. stringNotes: ", stringNotes, ", percMatch: ", percMatch, " user: ", user,
+    // ", transformFunc: ", transformFunc, // ", playMusicFunc: ", playMusicFunc, // ", levenshteinDistanceFunc: ", levenshteinDistanceFunc
     );
     setIsLoading(true);
 
   axios
-    .get(`${baseUrl}/getMatchLevenshteinDistance2`, { // test
-      params: {
-        stringNotes: stringNotes,
-        percMatch: percMatch,
-        user: user,
-      },
-    })
+    .get(`${baseUrl}/getMatchLevenshteinDistance2`, { params: { stringNotes: stringNotes, percMatch: percMatch, user: user,},})
     .then((d) => {
       console.log("#### Then of getMatchLevenshteinDistance ####");
       console.log("d", d);
@@ -250,25 +240,31 @@ const getMatchLevenshteinDistance = (
 
       console.log("TIME AFTER QUERY: ",new Date());
 
-
-      /** TODO
-       * This is a lot of code and most likely should be passed as a function
-       */
-      /** TODO 2
-       * What to do when the data returned is the result from a query without matches?
-       */
+      /** TODO * This is a lot of code and most likely should be passed as a function */
+      /** TODO 2 * What to do when the data returned is the result from a query without matches? */
 
       // In retrospect, we probably don't want to play songs directly... we want to list the matching bits.
       if (levenshteinDistanceFunc == null) {
         console.log("We are missing a function to calculate distance!");
       } else {
         // structure data
-        const arrayStrNotes = stringNotes.split('-')
-        const arrayNotesInput = arrayStrNotes.map(a => parseInt(a))
+        const arrayStrNotes = stringNotes.split('-');
+        const arrayNotesInput = arrayStrNotes.map(a => parseInt(a));
         const numNotesInput = arrayNotesInput.length;
-        console.log("numNotesInput: ", numNotesInput);
-        const allRecording = [...new Set(d.data.map(a => a.recording))]
-        console.log("allRecording: ", allRecording);
+        const allRecording = [...new Set(d.data.map(a => a.recording))];
+        console.log("numNotesInput: ", numNotesInput,", allRecording: ", allRecording);
+
+        console.log("TIME BEFORE METADATA QUERY: ", new Date());
+        // TODO we need to get the _id of the tracks (called logNumber)... this is garbage... it wil take even longer...!
+        axios.get(`${baseUrl}/getTracksMetadata`, {
+            params: { lognumbers: allRecording, }
+          })
+          .then((d) => {
+            console.log("#Levenshtein getTracksMetadata #### d: ", d);
+          });
+
+        console.log("TIME AFTER METADATA QUERY: ",new Date());
+
 
         let notesPerRecording = {};
         for (let i in allRecording) {
@@ -286,6 +282,8 @@ const getMatchLevenshteinDistance = (
           dataSplitByRecording[allRecording[i]].data = filteredByRecording;
         }
 
+        console.log("dataSplitByRecording: ", dataSplitByRecording);
+
         for (let i in dataSplitByRecording) {
           // sort notes
           dataSplitByRecording[i].data = 
@@ -294,14 +292,17 @@ const getMatchLevenshteinDistance = (
           // let startSeQuences = dataSplitByRecording[i].data.filter(a => a.startSequence);
           for (let ds in dataSplitByRecording[i].data) {
             if (dataSplitByRecording[i].data[ds].startSequence) {
-              let slice = dataSplitByRecording[i].data.slice(parseInt(ds), (parseInt(ds) + parseInt(numNotesInput)));
+              let slice = 
+                dataSplitByRecording[i].data.slice(
+                  parseInt(ds), (parseInt(ds) + parseInt(numNotesInput))
+                );
               dataSplitByRecording[i].sequences.push(slice);
             }
           }
         }
 
         // ugly... but we messed up structure here...
-        let resArray = []
+        // let resArray = []; 
         let resAggreg = [];
         for (let i in dataSplitByRecording) {
           dataSplitByRecording[i].distances = []
@@ -310,8 +311,7 @@ const getMatchLevenshteinDistance = (
             let curArrNotes = dataSplitByRecording[i].sequences[j].map(a => a.pitch)
             let curArrTime = dataSplitByRecording[i].sequences[j].map(a => a.onset)
             let curArrDurations = dataSplitByRecording[i].sequences[j].map(a => a.duration)
-            // console.log("arrNotes: ", arrNotes);
-            // let strArrNotes=arrNotes.toString().replaceAll(',','-');
+
             let distCalc = levenshteinDistanceFunc(arrayNotesInput, curArrNotes);
             dataSplitByRecording[i].distances.push(distCalc);
             dataSplitByRecording[i].slicesDist.push({
@@ -322,11 +322,11 @@ const getMatchLevenshteinDistance = (
               recording: i
             });
           }
-          resArray.push({ "recording": i })
-          resArray[resArray.length - 1].data = dataSplitByRecording[i].data;
-          resArray[resArray.length - 1].distances = dataSplitByRecording[i].distances;
-          resArray[resArray.length - 1].sequences = dataSplitByRecording[i].sequences;
-          resArray[resArray.length - 1].slicesDist = dataSplitByRecording[i].slicesDist;
+          // resArray.push({ "recording": i })
+          // resArray[resArray.length - 1].data = dataSplitByRecording[i].data;
+          // resArray[resArray.length - 1].distances = dataSplitByRecording[i].distances;
+          // resArray[resArray.length - 1].sequences = dataSplitByRecording[i].sequences;
+          // resArray[resArray.length - 1].slicesDist = dataSplitByRecording[i].slicesDist;
           resAggreg = resAggreg.concat(dataSplitByRecording[i].slicesDist);
         }
 
@@ -335,12 +335,12 @@ const getMatchLevenshteinDistance = (
 
         console.log("dataSplitByRecording: ", dataSplitByRecording);
         // Will be better to later allow filter
-        console.log("resArray: ", resArray);
+        // console.log("resArray: ", resArray);
         console.log("resAggreg: ", resAggreg);
         console.log("typeof resAggreg: ", typeof resAggreg);
 
         const allLogNumber =  [...new Set(resAggreg.map( a => a.recording.split('-')[0] ))] 
-        // console.log("allLogNumber: ", allLogNumber);
+        console.log("allLogNumber: ", allLogNumber);
         setListLogNumbers(allLogNumber);
         setListSearchRes(resAggreg);
         // TODO

@@ -79,18 +79,7 @@ const EmbeddedWorkflowInteraction = ({idCaller, typeCaller}) => {
 
     // ## Functions actions
     const handleWorkflowEnrich = (indexWorkflow) => {
-      console.log(
-        "handleTestWorkflowEnrich. textInputObjectNote: ",
-        textInputObjectNote,
-        ", indexWorkflow: ",
-        indexWorkflow,
-        ", workflows[indexWorkflow]: ",
-        workflows[indexWorkflow],
-        ", idCaller: ",
-        idCaller,
-        ", typeCaller: ",
-        typeCaller
-      );
+      console.log("handleTestWorkflowEnrich. textInputObjectNote: ", textInputObjectNote, ", indexWorkflow: ", indexWorkflow, ", workflows[indexWorkflow]: ", workflows[indexWorkflow], ", idCaller: ", idCaller, ", typeCaller: ", typeCaller);
       // let's make a test with the seven nation army annotation search
       const textNote =
         textInputObjectNote.length > 0 ? textInputObjectNote : "N/A";
@@ -189,27 +178,22 @@ const EmbeddedWorkflowInteraction = ({idCaller, typeCaller}) => {
                     onClick={() => {
                       titleInput.length > 0 && descriptionInput.length > 0
                         ? createWorkflow(
-                            titleInput,
-                            descriptionInput,
-                            new Date(),
-                            localStorage.username,
-                            [idCaller],
-                            [new Date()],
-                            [noteInput],
-                            [typeCaller],
-                            setTitleInput,
-                            setDescriptionInput,
-                            dispatch,
-                            setWorkflows
-                          )
-                        : console.log( "empty title or description. titleInput: ", titleInput,
-                            "typeof titleInput: ", typeof titleInput,
-                            ", descriptionInput: ", descriptionInput,
-                            "typeof descriptionInput: ", typeof descriptionInput
-                          );
-                      if (titleInput.length > 0 && descriptionInput.length > 0) {
-                        setShowWorkflowActions(!showWorkflowActions);
-                      }
+                          titleInput,
+                          descriptionInput,
+                          new Date(),
+                          localStorage.username,
+                          [idCaller],
+                          [new Date()],
+                          [noteInput],
+                          [typeCaller],
+                          setTitleInput,
+                          setDescriptionInput,
+                          dispatch,
+                          setWorkflows
+                        )
+                        : console.log("empty title or description. titleInput: ", titleInput, "typeof titleInput: ", typeof titleInput, ", descriptionInput: ", descriptionInput, "typeof descriptionInput: ", typeof descriptionInput);
+
+                      if (titleInput.length > 0 && descriptionInput.length > 0) { setShowWorkflowActions(!showWorkflowActions); }
                     }}
                   />
                 </div>
