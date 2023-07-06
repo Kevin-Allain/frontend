@@ -312,17 +312,20 @@ const getMatchLevenshteinDistance = (
             let curArrTime = dataSplitByRecording[i].sequences[j].map(a => a.onset)
             let curArrDurations = dataSplitByRecording[i].sequences[j].map(a => a.duration)
 
+            let currArrIdNotes = dataSplitByRecording[i].sequences[j].map(a => a._id)
+
             let distCalc = levenshteinDistanceFunc(arrayNotesInput, curArrNotes);
             dataSplitByRecording[i].distances.push(distCalc);
             dataSplitByRecording[i].slicesDist.push({
               arrNotes: curArrNotes,
+              arrIdNotes: currArrIdNotes,
               arrTime: curArrTime.map((num) => Number(num.toFixed(2))),
               arrDurations: curArrDurations.map((num) => Number(num.toFixed(2))),
               distCalc: distCalc,
               recording: i
             });
           }
-          // resArray.push({ "recording": i })
+          // resArray.push({ "recording": i });
           // resArray[resArray.length - 1].data = dataSplitByRecording[i].data;
           // resArray[resArray.length - 1].distances = dataSplitByRecording[i].distances;
           // resArray[resArray.length - 1].sequences = dataSplitByRecording[i].sequences;
@@ -337,7 +340,6 @@ const getMatchLevenshteinDistance = (
         // Will be better to later allow filter
         // console.log("resArray: ", resArray);
         console.log("resAggreg: ", resAggreg);
-        console.log("typeof resAggreg: ", typeof resAggreg);
 
         const allLogNumber =  [...new Set(resAggreg.map( a => a.recording.split('-')[0] ))] 
         console.log("allLogNumber: ", allLogNumber);

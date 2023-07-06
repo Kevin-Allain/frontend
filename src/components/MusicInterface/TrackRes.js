@@ -9,6 +9,7 @@ import {
     deleteAnnotation
 } from "../../utils/HandleApi";
 import AnnotationSystem from '../Annotation/AnnotationSystem';
+import EmbeddedWorkflowInteraction from '../Workflow/EmbeddedWorkflowInteraction';
 
 
 const TrackRes = ({ 
@@ -41,6 +42,7 @@ const TrackRes = ({
                 // updateAnnotation={updateAnnotation}
                 // deleteAnnotation={deleteAnnotation}
             />
+            <EmbeddedWorkflowInteraction idCaller={listSearchRes[0].arrIdNotes[0]}  typeCaller={"track"}/>
 
             {listSearchRes.map((item, i) => ( 
                 <SampleRes 
