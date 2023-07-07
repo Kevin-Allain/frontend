@@ -13,15 +13,14 @@ import { useSelector, useDispatch } from 'react-redux';
 import { setWorkflows } from '../Reducers/WorkflowReducer';
 
 
-const WorkflowInterface = ({ workflow, 
-  // setListWorkflows 
-}) => {
+const WorkflowInterface = ({ workflow }) => {
   const [textInputObjectNote, setTextInputObjectNote] = useState("");
 
   // global variables
   const workflows = useSelector(state => state.workflows);
   const dispatch = useDispatch();
 
+  // How can we load the content of the objects of the objects?
 
 
   // TODO see how this function can be used for later calls. We will need to have some way for elements to have access to listed workflows
@@ -68,6 +67,17 @@ const WorkflowInterface = ({ workflow,
       localStorage?.username); // (and then we will want to load it again...) Maybe more things to add to that call...
   }
 
+  // Information inside each object: 
+  /**
+   * objectId : "64907ea4c352872afba8250c"
+   * objectIndex : 0
+   *  objectNote : "N New Sample"
+   * objectTime :  "2023-07-07T13:37:58.126Z"
+   * objectType :  "sample"
+   * _id :  "64a81536729e414cff9aa0e8"
+   * objectIndexRange : 0 // can be non existent...
+   */
+
   return (
     <div className="workflowInterface">
       <h1>Workflow Interface</h1>
@@ -85,19 +95,7 @@ const WorkflowInterface = ({ workflow,
         </em>
       </div>
       {/* TODO assess whether call works fine for addition of an object to a workflow */}
-      <div className="infoAdditionWorkflow">
-        Note (this is a test):{" "}
-        <input
-          type="text"
-          placeholder="Add note about this object"
-          name="AddObjectNote"
-          id="AddObjectNote"
-          className="objectNoteInput"
-          value={textInputObjectNote}
-          onChange={(e) => setTextInputObjectNote(e.target.value)}
-        />{" "}
-        <HiOutlineSaveAs className="icon" onClick={handleTestWorkflowEnrich} />{" "}
-      </div>
+      {/* <div className="infoAdditionWorkflow"> Note (this is a test):{" "} <input type="text" placeholder="Add note about this object" name="AddObjectNote" id="AddObjectNote" className="objectNoteInput" value={textInputObjectNote} onChange={(e) => setTextInputObjectNote(e.target.value)} />{" "} <HiOutlineSaveAs className="icon" onClick={handleTestWorkflowEnrich} />{" "} </div> */}
       {/* TODO change display according to the type of the workflow object */}
       <div className="workflowListObjects">
         {workflow.objects.map((item, i) => (
@@ -106,7 +104,7 @@ const WorkflowInterface = ({ workflow,
             {item.objectType} | <u>Object index:</u> {item.objectIndex} <br />
             <div className="workflowContentDisplay">
               <em>... Work in progress: display of content of object{" "}
-              <BsWrenchAdjustable />{" "} </em>
+              <BsWrenchAdjustable />{" "} </em> 
             </div>
             <u>Object note:</u><br/> {item.objectNote} <br/>
             <AiFillDelete 

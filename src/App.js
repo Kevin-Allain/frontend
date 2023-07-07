@@ -107,7 +107,7 @@ function App() {
             <MusicInterface />
           } 
 
-          <div className="container">
+          {/* <div className="container">
             <div className="jazzdapInput">
               <input
                 type="text"
@@ -149,9 +149,10 @@ function App() {
                 />
               ))}
             </div>
-          </div>
+          </div> */}
 
           <div className="info">
+            <hr/><br/>
             <p>
               <font face="Helvetica, sans-serif" color="ghostwhite">
                 <b>
