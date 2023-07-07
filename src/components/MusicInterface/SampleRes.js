@@ -2,9 +2,11 @@ import { useState } from 'react'
 import { FiPlayCircle } from 'react-icons/fi'
 import MusicInfo from "./MusicInfo"
 import AnnotationSystem from '../Annotation/AnnotationSystem';
+import EmbeddedWorkflowInteraction from '../Workflow/EmbeddedWorkflowInteraction';
 
 
 const SampleRes = ({ 
+    key,
     text, 
     lognumber, 
     length, 
@@ -12,13 +14,14 @@ const SampleRes = ({
     durations, 
     times, 
     distance, 
+    idDBNotes,
     funcPlayMIDI, 
     getMusicInfo, 
     infoMusicList, 
  }) => {
 
     return (
-        <div className="sampleres" key={text}>
+        <div className="sampleres" key={key}>
             {/* <div className="text">
                 <h2>Song: {text.substr(text.indexOf("-") + 1)} </h2> </div>
             <AnnotationSystem
@@ -59,6 +62,12 @@ const SampleRes = ({
                         info={text.substr(text.indexOf("-")+1)+"_"+notes+'_'+Number(text.split('-')[0])}
                         index={Number(text.split('-')[0])}
                     />
+                {/* The indexRange is a way to know how many objects after the notes should be first one of the sample */}
+                <EmbeddedWorkflowInteraction 
+                    typeCaller={"sample"} 
+                    idCaller={idDBNotes[0]} 
+                    indexRange={idDBNotes.length}
+                />
             </div>
         </div>
     );

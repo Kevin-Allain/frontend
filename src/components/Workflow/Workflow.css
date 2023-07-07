@@ -17,6 +17,7 @@
     border-width: thin;
     padding-top: 0.25rem;
     padding-bottom: 0.25rem;
+    text-align: left;
 }
 
 .workflowDetails {
@@ -81,6 +82,7 @@
 
 .threedotsEmbedded {
     /* background-color: red; */
+    color: black;
 }
 
 .embeddedWorkflowInteraction {

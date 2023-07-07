@@ -33,15 +33,7 @@ const TrackRes = ({
             <div className="text">
                 <h2>Track: {text} </h2> 
             </div>
-            <AnnotationSystem
-                type={"track"}
-                info={text}
-                // index = {Number(text.split('-')[0])}
-                // addAnnotation={addAnnotation}
-                // getAnnotations={getAnnotations}
-                // updateAnnotation={updateAnnotation}
-                // deleteAnnotation={deleteAnnotation}
-            />
+            <AnnotationSystem type={"track"} info={text} />
             <EmbeddedWorkflowInteraction idCaller={listSearchRes[0].arrIdNotes[0]}  typeCaller={"track"}/>
 
             {listSearchRes.map((item, i) => ( 
@@ -54,6 +46,8 @@ const TrackRes = ({
                 durations={item.arrDurations.toString().replaceAll(',', '-')}
                 times={item.arrTime.toString().replaceAll(',', '-')}
                 distance={item.distCalc}
+                // addition
+                idDBNotes = {item.arrIdNotes}
                 // Need to format the structure 
                 funcPlayMIDI={() => formatAndPlay(item)}
                 getMusicInfo={() => getMusicInfo(item.recording, infoMusicList, setInfoMusicList)}

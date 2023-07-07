@@ -21,7 +21,7 @@ import { setWorkflows } from '../Reducers/WorkflowReducer';
 // We will at first follow a structure based on the attributes of the caller:
 // -the type of caller... 
 // - the idCaller, an item to identify it (either existing to an item, or loaded _id in the MongoDB database) ...
-const EmbeddedWorkflowInteraction = ({idCaller, typeCaller}) => {
+const EmbeddedWorkflowInteraction = ({idCaller, typeCaller, indexRange=0}) => {
     // ## Attributes
     // Global variable for workflows
     const workflows = useSelector(state => state.workflows);
@@ -42,40 +42,30 @@ const EmbeddedWorkflowInteraction = ({idCaller, typeCaller}) => {
 
     // ## Functions display
     const handleShowActionsWorkflow = () => {
-        console.log("handleShowActionsWorkflow");
         setShowWorkflowActions(!showWorkflowActions);
-        console.log("workflows: ", workflows);
     }
     const handleShowWorkflowAddition = () => {
         setShowWorkflowAddition(!showWorkflowAddition);
         // For test
-        console.log("idCaller: ",idCaller, ", typeCaller: ",typeCaller);
+        console.log("idCaller: ",idCaller, ", typeCaller: ",typeCaller,", indexRange: ",indexRange);
     };
 
     // ## Functions input
     const handleChangeTitleInput = (event) => {
         const value = event.target.value;
         // Let's not allow a title too long
-        if (value.length <= 50) {
-            setTitleInput(value);
-        }
+        if (value.length <= 50) { setTitleInput(value); }
     };
     const handleChangeDescriptionInput = (event) => {
         const value = event.target.value;
         // Let's not allow the description to be extremely long
-        if (value.length <= 300) {
-            setDescriptionInput(value);
-        }
+        if (value.length <= 300) { setDescriptionInput(value); }
     };
     const handleChangeNoteInput = (event) => {
         const value = event.target.value;
         // Let's not allow the description to be extremely long
-        if (value.length <= 300) {
-            setNoteInput(value);
-        }
+        if (value.length <= 300) { setNoteInput(value); }
     };
-
-
 
     // ## Functions actions
     const handleWorkflowEnrich = (indexWorkflow) => {
@@ -99,12 +89,8 @@ const EmbeddedWorkflowInteraction = ({idCaller, typeCaller}) => {
         // setListWorkflows,
         dispatch,
         setWorkflows,
-        workflow._id,
-        textNote,
-        time,
-        localStorage?.username,
-        idCaller,
-        typeCaller,
+        workflow._id, textNote, time, localStorage?.username,
+        idCaller, typeCaller, 
         objectsIndexes,
         workflow
       );
@@ -160,7 +146,7 @@ const EmbeddedWorkflowInteraction = ({idCaller, typeCaller}) => {
                   />{" "}
                   <br />
                   <div className="infoAdditionWorkflow">
-                    Note about this object (500 characters max):{" "}
+                    Note about this object (500 characters max):{" "}<br/>
                     <input
                       type="text"
                       placeholder="Write a note about this object"
@@ -204,11 +190,8 @@ const EmbeddedWorkflowInteraction = ({idCaller, typeCaller}) => {
               Add to existing workflow <br />
               Note:{" "}
               <input
-                type="text"
-                placeholder="Add note about this object"
-                name="AddObjectNote"
-                id="AddObjectNote"
-                className="objectNoteInput"
+                type="text" placeholder="Add note about this object"
+                name="AddObjectNote" id="AddObjectNote" className="objectNoteInput"
                 value={textInputObjectNote}
                 onChange={(e) => setTextInputObjectNote(e.target.value)}
               />{" "}
@@ -216,10 +199,7 @@ const EmbeddedWorkflowInteraction = ({idCaller, typeCaller}) => {
                 <div className="listWorkflowEmbedded" key={item._id} index={i}>
                   {item.title}
                   <br />
-                  <HiOutlineSaveAs
-                    className="icon"
-                    onClick={() => handleWorkflowEnrich(i)}
-                  />{" "}
+                  <HiOutlineSaveAs className="icon" onClick={() => handleWorkflowEnrich(i)} />{" "}
                 </div>
               ))}
             </div>
