@@ -96,6 +96,7 @@ const CommentSystem = ({
                                 key={item._id}
                                 commentInput={item.commentInput}
                                 annotationId={annotationId}
+                                commentId={item._id}
                                 info={item.info}
                                 type={item.type}
                                 author={item.author}

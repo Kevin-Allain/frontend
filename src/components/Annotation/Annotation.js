@@ -3,6 +3,7 @@ import { AiOutlineComment } from 'react-icons/ai' // doubt about inclusion of st
 import {BiEdit} from 'react-icons/bi'
 import {AiFillDelete} from 'react-icons/ai'
 import CommentSystem from '../Comment/CommentSystem';
+import EmbeddedWorkflowInteraction from '../Workflow/EmbeddedWorkflowInteraction';
 
 const Annotation = ({
   type,
@@ -44,6 +45,9 @@ const Annotation = ({
       {/* Probably a function passed such as getComments */}
       <AiOutlineComment className='icon'   onClick={ handleToggleCommentSystem }
       />
+
+      <EmbeddedWorkflowInteraction idCaller={_id} typeCaller={"annotation"} />
+
       {isCommentSystemVisible && (
         <CommentSystem type={type} info={info} indexAnnotation={indexAnnotation} annotationId={_id} />
       )}
