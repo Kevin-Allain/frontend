@@ -79,7 +79,12 @@ const WorkflowManager = () => {
   }, []);
 
   const loadDetailWorkflow = (_id) => {
-    getWorkflow( setIsWorkerVisible, setSelectedWorkflow ,_id, localStorage?.username);
+    getWorkflow( 
+      setIsWorkerVisible, 
+      setSelectedWorkflow ,
+      _id, 
+      localStorage?.username
+    );
   };
 
 

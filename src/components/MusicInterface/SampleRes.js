@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { FiPlayCircle } from 'react-icons/fi'
 import MusicInfo from "./MusicInfo"
 import AnnotationSystem from '../Annotation/AnnotationSystem';
@@ -20,6 +20,8 @@ const SampleRes = ({
     infoMusicList, 
  }) => {
 
+    // key is undefined... this isn't good!
+    
     return (
         <div className="sampleres" key={key}>
             {/* <div className="text">

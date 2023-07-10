@@ -422,7 +422,13 @@ const updateAnnotation = (
     .catch(err => console.log(err))
 }
 
-const getAnnotations = (type, info, setListAnnotations, indexAnnotation = 0, user = null) => {
+const getAnnotations = (
+  type, 
+  info, 
+  setListAnnotations, 
+  indexAnnotation = 0, 
+  user = null
+  ) => {
   console.log("HandeAPI getAnnotations type: ", type, ", info: ", info, ", indexAnnotation: ", indexAnnotation, ", user: ", user);
   // setIsLoading(true);
 
@@ -657,7 +663,8 @@ const createWorkflow = (
   objectsType=[],
   setTitleInput, setDescriptionInput,
   dispatch,
-  setWorkflows
+  setWorkflows, 
+  objectIndexRange = [] // For samples we need to know how far the search goes beyond the first note identified
   ) => {
     console.log("handleApi createWorkflow. ", { 
       title, description, time, author, objectsId, objectsTimes, objectsNote, objectsType
@@ -671,7 +678,8 @@ const createWorkflow = (
         objectTime: objectsTimes[i],
         objectIndex: i,
         objectNote: objectsNote[i],
-        objectType: objectsType[i]
+        objectType: objectsType[i], 
+        objectIndexRange: objectIndexRange[i]
       })
     }
 
@@ -700,7 +708,8 @@ const addContentWorkflow = (
   idContent, // _id of object
   typeContent, // type of the content: recording / track / sample / annotation / comment / search (TODO) / ...
   objectsIndex, // make the assumption that this is calculated with the call as the workflow is passed as a parameter... (OR make another call if that isn't passed?! V1 assume it is passed)
-  workflow // TODO doubt about this!
+  workflow, // TODO doubt about this!
+  indexRange=0 // For samples we need to know how far the search goes beyond the first note identified
 ) => {
   console.log("handleApi createWorkflow. ", { 
     _id, textNote, time, userId, idContent, typeContent, objectsIndex
@@ -708,7 +717,7 @@ const addContentWorkflow = (
 
   // axios call
   axios.post(`${baseUrl}/addContentWorkflow`,{
-    _id, textNote, time, userId, idContent, typeContent, objectsIndex
+    _id, textNote, time, userId, idContent, typeContent, objectsIndex, indexRange
   })
   .then((data) => {
     console.log("Then handleApi addContentWorkflow. data: ",data);
@@ -744,6 +753,12 @@ const deleteWorkflowObject = (_id, objectIndex, workflow,
   .catch(err =>console.log(err));
 }
 
+/** _id selection */
+const getDatabaseContent = (_id, typeCaller, indexRange)=>{
+  console.log("handleApi. getDatabaseContent: ",{_id, typeCaller, indexRange});
+
+
+}
 
 export {
   getAllJazzDap, addJazzDap, updateJazzDap, deleteJazzDap,
@@ -753,5 +768,6 @@ export {
   addComment, getComments, deleteComment, updateComment,
   getUserAnnotations, 
   getWorkflow, getWorkflowsInfo, createWorkflow, 
-  addContentWorkflow, deleteWorkflowObject
+  addContentWorkflow, deleteWorkflowObject,
+  getDatabaseContent
 }

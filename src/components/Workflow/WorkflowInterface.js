@@ -6,7 +6,8 @@ import "../../App.css";
 import { 
   getWorkflowsInfo, 
   addContentWorkflow,
-  deleteWorkflowObject 
+  deleteWorkflowObject ,
+  getDatabaseContent
 } from "../../utils/HandleApi";
 
 import { useSelector, useDispatch } from 'react-redux';
@@ -21,7 +22,34 @@ const WorkflowInterface = ({ workflow }) => {
   const dispatch = useDispatch();
 
   // How can we load the content of the objects of the objects?
+  const [arrayContent, setArrayContent] = useState([]);
 
+  useEffect( () => {
+    console.log("useEffect WorkflowInterface  workflow: ",workflow);
+    // This would be a fine place to call a function to load the content...
+
+    console.log("To load. workflow.objects: ",workflow.objects);
+    // change according to type and we make different loadings...  
+    for (var i = 0; i < workflow.objects.length; i++){
+      console.log("load type workflow.objects[i].objectType: ",workflow.objects[i].objectType);
+      // a series of calls to handleAPI?
+      // Functions include:
+      /**
+       * getTrackMetadata
+       * getAnnotations
+       * getComments
+       * getSampleMIDI
+       */
+      // Do we need to make specific alternative functions...?
+      // Our focus should be a selection based on _id in database! -> new function in the handleAPI code. 
+      // call getDatabaseContent
+      getDatabaseContent( 
+        workflow.objects[i].objectId, 
+        workflow.objects[i].objectType, 
+        workflow.objects[i].objectIndex
+      );
+    }
+  })
 
   // TODO see how this function can be used for later calls. We will need to have some way for elements to have access to listed workflows
   const handleTestWorkflowEnrich = () => {

@@ -92,7 +92,8 @@ const EmbeddedWorkflowInteraction = ({idCaller, typeCaller, indexRange=0}) => {
         workflow._id, textNote, time, localStorage?.username,
         idCaller, typeCaller, 
         objectsIndexes,
-        workflow
+        workflow,
+        indexRange
       );
 
       setShowWorkflowActions(!showWorkflowActions);
@@ -175,7 +176,8 @@ const EmbeddedWorkflowInteraction = ({idCaller, typeCaller, indexRange=0}) => {
                           setTitleInput,
                           setDescriptionInput,
                           dispatch,
-                          setWorkflows
+                          setWorkflows,
+                          [indexRange] // // For samples we need to know how far the search goes beyond the first note identified
                         )
                         : console.log("empty title or description. titleInput: ", titleInput, "typeof titleInput: ", typeof titleInput, ", descriptionInput: ", descriptionInput, "typeof descriptionInput: ", typeof descriptionInput);
 
