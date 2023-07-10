@@ -34,19 +34,14 @@ const WorkflowInterface = ({ workflow }) => {
       console.log("load type workflow.objects[i].objectType: ",workflow.objects[i].objectType);
       // a series of calls to handleAPI?
       // Functions include:
-      /**
-       * getTrackMetadata
-       * getAnnotations
-       * getComments
-       * getSampleMIDI
-       */
+      // getTrackMetadata, getAnnotations, getComments, getSampleMIDI
       // Do we need to make specific alternative functions...?
       // Our focus should be a selection based on _id in database! -> new function in the handleAPI code. 
       // call getDatabaseContent
       getDatabaseContent( 
         workflow.objects[i].objectId, 
         workflow.objects[i].objectType, 
-        workflow.objects[i].objectIndex
+        workflow.objects[i].objectIndexRange
       );
     }
   })

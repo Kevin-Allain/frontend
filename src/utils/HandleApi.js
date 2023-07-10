@@ -756,7 +756,25 @@ const deleteWorkflowObject = (_id, objectIndex, workflow,
 /** _id selection */
 const getDatabaseContent = (_id, typeCaller, indexRange)=>{
   console.log("handleApi. getDatabaseContent: ",{_id, typeCaller, indexRange});
+  // objects to databases matching go: 
+  // Annotations -> annotations
+  // Comments -> comments
+  // Recordings -> trackmetadatas
+  // Tracks -> tracks
+  // Samples ->tracks
+  axios.get(`${baseUrl}/get_idContent`, {
+    params:
+      { 
+        _id:_id,
+        typeCaller: typeCaller,
+        indexRange:indexRange
+      }
+  })
+  .then(({ data }) => {
+    console.log('getDatabaseContent successful. data: ', data);
 
+  })
+  .catch(err => console.log(err))
 
 }
 
