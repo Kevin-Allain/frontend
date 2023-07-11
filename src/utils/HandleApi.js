@@ -762,19 +762,26 @@ const getDatabaseContent = (_id, typeCaller, indexRange)=>{
   // Recordings -> trackmetadatas
   // Tracks -> tracks
   // Samples ->tracks
-  axios.get(`${baseUrl}/get_idContent`, {
-    params:
-      { 
-        _id:_id,
-        typeCaller: typeCaller,
-        indexRange:indexRange
-      }
-  })
-  .then(({ data }) => {
-    console.log('getDatabaseContent successful. data: ', data);
 
-  })
-  .catch(err => console.log(err))
+  // Vary the call based on typeCaller
+  if (["annotation","comment","recording","track","sample"].indexOf(typeCaller) !== -1) {
+    axios.get(`${baseUrl}/get_idContent_${typeCaller}`, {
+      params:
+      {
+        _id: _id,
+        typeCaller: typeCaller,
+        indexRange: indexRange
+      }
+    })
+      .then(({ data }) => {
+        console.log('getDatabaseContent successful. _id: ',_id,' data: ', data);
+        // TODO set different type of content based on typeCaller
+        
+      })
+      .catch(err => console.log(err))
+  } else {
+    console.log("Issue with typeCaller: (", typeCaller, "), it is not recognized.")
+  }
 
 }
 
