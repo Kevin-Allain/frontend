@@ -3,13 +3,7 @@ import { BsWrenchAdjustable } from "react-icons/bs";
 import { HiOutlineSaveAs } from "react-icons/hi";
 import { AiFillDelete } from "react-icons/ai";
 import "../../App.css";
-import { 
-  getWorkflowsInfo, 
-  addContentWorkflow,
-  deleteWorkflowObject ,
-  getDatabaseContent
-} from "../../utils/HandleApi";
-
+import { getWorkflowsInfo, addContentWorkflow, deleteWorkflowObject ,getDatabaseContent } from "../../utils/HandleApi";
 import { useSelector, useDispatch } from 'react-redux';
 import { setWorkflows } from '../Reducers/WorkflowReducer';
 
@@ -30,21 +24,18 @@ const WorkflowInterface = ({ workflow }) => {
 
     console.log("To load. workflow.objects: ",workflow.objects);
     // change according to type and we make different loadings...  
-    for (var i = 0; i < workflow.objects.length; i++){
-      console.log("load type workflow.objects[i].objectType: ",workflow.objects[i].objectType);
-      // a series of calls to handleAPI?
-      // Functions include:
-      // getTrackMetadata, getAnnotations, getComments, getSampleMIDI
-      // Do we need to make specific alternative functions...?
-      // Our focus should be a selection based on _id in database! -> new function in the handleAPI code. 
-      // call getDatabaseContent
+    // Several calls results in a loop of calls...?! Let's try one call with the array directly
       getDatabaseContent( 
-        workflow.objects[i].objectId, 
-        workflow.objects[i].objectType, 
-        workflow.objects[i].objectIndexRange
+        workflow.objects,
+        arrayContent,
+        setArrayContent
       );
-    }
-  })
+  },[]);
+
+  useEffect(() => {
+    console.log('arrayContent has changed:', arrayContent);
+  }, [arrayContent]);
+  
 
   // TODO see how this function can be used for later calls. We will need to have some way for elements to have access to listed workflows
   const handleTestWorkflowEnrich = () => {
@@ -81,7 +72,7 @@ const WorkflowInterface = ({ workflow }) => {
   };
 
   const handleDeleteWorkflowObject = (workflow_id,objectIndex) => {
-    console.log("workflow_id: ",workflow_id,",objectIndex: ", objectIndex)
+    console.log("handleDeleteWorkflowObject | workflow_id: ",workflow_id,",objectIndex: ", objectIndex)
     // This is unique, so deletion of the workflow object should be simple
     deleteWorkflowObject(workflow_id,objectIndex, workflow, 
       // setListWorkflows, 
@@ -127,7 +118,13 @@ const WorkflowInterface = ({ workflow }) => {
             {item.objectType} | <u>Object index:</u> {item.objectIndex} <br />
             <div className="workflowContentDisplay">
               <em>... Work in progress: display of content of object{" "}
-              <BsWrenchAdjustable />{" "} </em> 
+              <BsWrenchAdjustable />{" "} </em> <br/>
+              {/* TODO This is bad... We should do a series of queries in one go, rather than many queries */}
+              {arrayContent.map((o,indx)=>(
+                <div className='content' key={o._id}>
+                  id: {o._id}. index: {indx}
+                </div>
+              ))}
             </div>
             <u>Object note:</u><br/> {item.objectNote} <br/>
             <AiFillDelete 
@@ -136,6 +133,11 @@ const WorkflowInterface = ({ workflow }) => {
             />
           </div>
         ))}
+        <div className="contentTest">
+          {arrayContent.map((o,index)=>(
+            <p key={index}>Array content. {o._id}, {index}</p>
+        ))}
+        </div>
       </div>
     </div>
   );

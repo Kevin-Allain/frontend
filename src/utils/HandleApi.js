@@ -37,7 +37,7 @@ const addJazzDap = (text, setText, setJazzDap, user = null) => {
     .catch(err => console.log(err))
 }
 
-const updateJazzDap = (jazzDapId, text, setJazzDap, setText, setIsUpdating, userId = null) => {  
+const updateJazzDap = (jazzDapId, text, setJazzDap, setText, setIsUpdating, userId = null) => {
   console.log("HandleApi updateJazzDap: ", jazzDapId, text);
   // setIsLoading(true);
 
@@ -153,7 +153,7 @@ const getSampleMIDI = (recording = "BGR0082-T1", firstNoteIndex = 0, lastNodeInd
 };
 
 const getTracksMetadata = (lognumbers, infoMusicList, setInfoMusicList) => {
-  console.log("---- HandleApi / getTracksMetadata. lognumbers: ", lognumbers,", infoMusicList: ",infoMusicList,", setInfoMusicList: ",setInfoMusicList);
+  console.log("---- HandleApi / getTracksMetadata. lognumbers: ", lognumbers, ", infoMusicList: ", infoMusicList, ", setInfoMusicList: ", setInfoMusicList);
   // setIsLoading(true);
 
   axios
@@ -164,10 +164,10 @@ const getTracksMetadata = (lognumbers, infoMusicList, setInfoMusicList) => {
     })
     .then((d) => {
       console.log("#### Then of getTracksMetadata #### d: ", d);
-      
+
       // TODO low-priority change names of columns in the files, then updated in databased (automate with Python)
       let transf_info_metadata = [];
-      for ( let i in d.data){
+      for (let i in d.data) {
         transf_info_metadata.push({
           lognumber: d.data[i].lognumber,
           contents: d.data[i].Contents,
@@ -177,10 +177,10 @@ const getTracksMetadata = (lognumbers, infoMusicList, setInfoMusicList) => {
           idDatabase: d.data[i]["_id"] // new addition. Get the _id stored in the database
         })
       }
-      console.log("transf_info_metadata: ",transf_info_metadata);
+      console.log("transf_info_metadata: ", transf_info_metadata);
       setInfoMusicList(transf_info_metadata);
       // setIsLoading(false);
-    })    
+    })
 }
 
 /** TODO would make more sense if we loaded all the albums already returned. */
@@ -199,8 +199,8 @@ const getTrackMetadata = (lognumber, infoMusicList, setInfoMusicList) => {
       // Need to change to push into the array... if that's not something already queried for...? 
       // It might be arguable that one metadata search is enough
       // first, let's just add object if lognumber not already in the list
-      console.log("! infoMusicList.some(a => a.lognumber === d.data[0].lognumber ): ", ! infoMusicList.some(a => a.lognumber === d.data[0].lognumber ))
-      if ( ! infoMusicList.some(a => a.lognumber === d.data[0].lognumber ) ) {
+      console.log("! infoMusicList.some(a => a.lognumber === d.data[0].lognumber ): ", !infoMusicList.some(a => a.lognumber === d.data[0].lognumber))
+      if (!infoMusicList.some(a => a.lognumber === d.data[0].lognumber)) {
         setInfoMusicList([...infoMusicList,
         {
           lognumber: d.data[0].lognumber,
@@ -223,22 +223,22 @@ const getMatchLevenshteinDistance = (
   playMusicFunc = null,
   levenshteinDistanceFunc = null,
   setListSearchRes = null,
-  setListLogNumbers = null, 
-  setListTracks=null
+  setListLogNumbers = null,
+  setListTracks = null
 ) => {
   console.log("-- handleAPI / getMatchLevenshteinDistance. stringNotes: ", stringNotes, ", percMatch: ", percMatch, " user: ", user,
     // ", transformFunc: ", transformFunc, // ", playMusicFunc: ", playMusicFunc, // ", levenshteinDistanceFunc: ", levenshteinDistanceFunc
-    );
-    setIsLoading(true);
+  );
+  setIsLoading(true);
 
   axios
-    .get(`${baseUrl}/getMatchLevenshteinDistance2`, { params: { stringNotes: stringNotes, percMatch: percMatch, user: user,},})
+    .get(`${baseUrl}/getMatchLevenshteinDistance2`, { params: { stringNotes: stringNotes, percMatch: percMatch, user: user, }, })
     .then((d) => {
       console.log("#### Then of getMatchLevenshteinDistance ####");
       console.log("d", d);
       console.log("d.data: ", d.data);
 
-      console.log("TIME AFTER QUERY: ",new Date());
+      console.log("TIME AFTER QUERY: ", new Date());
 
       /** TODO * This is a lot of code and most likely should be passed as a function */
       /** TODO 2 * What to do when the data returned is the result from a query without matches? */
@@ -252,18 +252,18 @@ const getMatchLevenshteinDistance = (
         const arrayNotesInput = arrayStrNotes.map(a => parseInt(a));
         const numNotesInput = arrayNotesInput.length;
         const allRecording = [...new Set(d.data.map(a => a.recording))];
-        console.log("numNotesInput: ", numNotesInput,", allRecording: ", allRecording);
+        console.log("numNotesInput: ", numNotesInput, ", allRecording: ", allRecording);
 
         console.log("TIME BEFORE METADATA QUERY: ", new Date());
         // TODO we need to get the _id of the tracks (called logNumber)... this is garbage... it wil take even longer...!
         axios.get(`${baseUrl}/getTracksMetadata`, {
-            params: { lognumbers: allRecording, }
-          })
+          params: { lognumbers: allRecording, }
+        })
           .then((d) => {
             console.log("#Levenshtein getTracksMetadata #### d: ", d);
           });
 
-        console.log("TIME AFTER METADATA QUERY: ",new Date());
+        console.log("TIME AFTER METADATA QUERY: ", new Date());
 
 
         let notesPerRecording = {};
@@ -286,13 +286,13 @@ const getMatchLevenshteinDistance = (
 
         for (let i in dataSplitByRecording) {
           // sort notes
-          dataSplitByRecording[i].data = 
+          dataSplitByRecording[i].data =
             dataSplitByRecording[i].data.sort((a, b) => a.recording - b.recording || a.m_id - b.m_id);
           dataSplitByRecording[i].sequences = [];
           // let startSeQuences = dataSplitByRecording[i].data.filter(a => a.startSequence);
           for (let ds in dataSplitByRecording[i].data) {
             if (dataSplitByRecording[i].data[ds].startSequence) {
-              let slice = 
+              let slice =
                 dataSplitByRecording[i].data.slice(
                   parseInt(ds), (parseInt(ds) + parseInt(numNotesInput))
                 );
@@ -334,19 +334,19 @@ const getMatchLevenshteinDistance = (
         }
 
         resAggreg.sort((a, b) => a.distCalc - b.distCalc);
-        console.log("TIME AFTER ORGANIZING RES, CALCULATING DISTANCE, AND SORTING: ",new Date());
+        console.log("TIME AFTER ORGANIZING RES, CALCULATING DISTANCE, AND SORTING: ", new Date());
 
         console.log("dataSplitByRecording: ", dataSplitByRecording);
         // Will be better to later allow filter
         // console.log("resArray: ", resArray);
         console.log("resAggreg: ", resAggreg);
 
-        const allLogNumber =  [...new Set(resAggreg.map( a => a.recording.split('-')[0] ))] 
+        const allLogNumber = [...new Set(resAggreg.map(a => a.recording.split('-')[0]))]
         console.log("allLogNumber: ", allLogNumber);
         setListLogNumbers(allLogNumber);
         setListSearchRes(resAggreg);
         // TODO
-        setListTracks(  [...new Set(resAggreg.map(obj => obj.recording))].sort() )
+        setListTracks([...new Set(resAggreg.map(obj => obj.recording))].sort())
       }
 
       setIsLoading(false);
@@ -359,15 +359,15 @@ const getMatchLevenshteinDistance = (
 
 // indexAnnotation added because we can have one sequence occur several times in a track
 const addAnnotation = (
-  type, 
-  info, 
+  type,
+  info,
   indexAnnotation = 0,
-  annotationInput, 
-  setAnnotationInput, 
-  setListAnnotations, 
+  annotationInput,
+  setAnnotationInput,
+  setListAnnotations,
   author = null,
-  privacy='public'
-  ) => {
+  privacy = 'public'
+) => {
   console.log(`HandeAPI addAnnotation: \n${baseUrl}/saveAnnotation`, { type, info, annotationInput, author, indexAnnotation, privacy });
   // setIsLoading(true);
 
@@ -379,13 +379,13 @@ const addAnnotation = (
       console.log(data);
       setAnnotationInput("");
       getAnnotations(
-        type, 
+        type,
         info,
-        setListAnnotations, 
-        indexAnnotation, 
+        setListAnnotations,
+        indexAnnotation,
         localStorage.username ? localStorage.username : null)
 
-        // setIsLoading(false);        
+      // setIsLoading(false);        
     })
     .catch(err => console.log(err))
 }
@@ -394,7 +394,7 @@ const updateAnnotation = (
   annotationId,
   annotationInput,
   setAnnotationInput,
-  indexAnnotation=0,
+  indexAnnotation = 0,
   type,
   info,
   setListAnnotations,
@@ -412,23 +412,23 @@ const updateAnnotation = (
       setIsUpdating(false);
       // getAllJazzDap(setJazzDap);
       getAnnotations(
-        type, 
-        info, 
-        setListAnnotations, 
-        indexAnnotation, 
+        type,
+        info,
+        setListAnnotations,
+        indexAnnotation,
         localStorage.username ? localStorage.username : null);
-        // setIsLoading(false);
+      // setIsLoading(false);
     })
     .catch(err => console.log(err))
 }
 
 const getAnnotations = (
-  type, 
-  info, 
-  setListAnnotations, 
-  indexAnnotation = 0, 
+  type,
+  info,
+  setListAnnotations,
+  indexAnnotation = 0,
   user = null
-  ) => {
+) => {
   console.log("HandeAPI getAnnotations type: ", type, ", info: ", info, ", indexAnnotation: ", indexAnnotation, ", user: ", user);
   // setIsLoading(true);
 
@@ -449,7 +449,7 @@ const getAnnotations = (
     .catch(err => console.log(err))
 }
 
-const deleteAnnotation = (annotationId, type, info, setListAnnotations, indexAnnotation=0) => {
+const deleteAnnotation = (annotationId, type, info, setListAnnotations, indexAnnotation = 0) => {
   console.log("HandeAPI deleteAnnotation. annotationId: ", annotationId, ", setListAnnotations: ", setListAnnotations)
 
   axios
@@ -457,9 +457,9 @@ const deleteAnnotation = (annotationId, type, info, setListAnnotations, indexAnn
     .then((data) => {
       console.log(data);
       getAnnotations(
-        type, 
-        info, 
-        setListAnnotations, 
+        type,
+        info,
+        setListAnnotations,
         indexAnnotation,
         localStorage.username ? localStorage.username : null);
     })
@@ -471,42 +471,42 @@ const deleteAnnotation = (annotationId, type, info, setListAnnotations, indexAnn
 
 // indexAnnotation added because we can have one sequence occur several times in a track
 const addComment = (
-  type, 
-  info, 
+  type,
+  info,
   indexAnnotation = 0,
-  commentInput, 
-  setCommentInput, 
-  setListComments, 
+  commentInput,
+  setCommentInput,
+  setListComments,
   author = null,
-  annotationId=null
-  ) => {
-  console.log(`HandeAPI addComment: \n${baseUrl}/addComment`, 
-  { 
-    type, 
-    info, 
-    commentInput, 
-    author, 
-    indexAnnotation, 
-    annotationId 
-  });
+  annotationId = null
+) => {
+  console.log(`HandeAPI addComment: \n${baseUrl}/addComment`,
+    {
+      type,
+      info,
+      commentInput,
+      author,
+      indexAnnotation,
+      annotationId
+    });
 
   let time = new Date();
 
   axios
-    .post(`${baseUrl}/addComment`, { 
-      type, 
-      info, 
-      indexAnnotation, 
-      commentInput, 
-      author, 
-      time, 
-      annotationId 
+    .post(`${baseUrl}/addComment`, {
+      type,
+      info,
+      indexAnnotation,
+      commentInput,
+      author,
+      time,
+      annotationId
     })
     .then((data) => {
       console.log(data);
       setCommentInput("");
       getComments(
-        setListComments, 
+        setListComments,
         author,
         annotationId
       )
@@ -522,10 +522,10 @@ const updateComment = (
   setIsUpdating,
   userId = null,
   annotationId = null
-  ) => {
+) => {
   console.log("HandleApi updateComment: ", commentId, commentInput, userId, annotationId);
   // setIsLoading(true);
-  
+
   axios
     .post(`${baseUrl}/updateComment`, { _id: commentId, commentInput, userId, annotationId })
     .then((data) => {
@@ -536,8 +536,8 @@ const updateComment = (
       // getAllJazzDap(setJazzDap);
       // getComments(type, info, setListComments, indexAnnotation);
       getComments(
-        setListComments, 
-        userId ,
+        setListComments,
+        userId,
         annotationId
       )
 
@@ -552,21 +552,21 @@ const getComments = (
   setListComments,
   // indexAnnotation = 0,
   user = null,
-  annotationId= null 
-  ) => {
-  console.log("HandeAPI getComments, annotationId: ",annotationId, ", user: ",user);
+  annotationId = null
+) => {
+  console.log("HandeAPI getComments, annotationId: ", annotationId, ", user: ", user);
   // "type: ", type, ", info: ", info, ", indexAnnotation: ", indexAnnotation, 
   // setIsLoading(true);
-  
+
   axios
     .get(`${baseUrl}/getComments`, {
       params:
-        { 
-          // type: type,
-          // info: info,
-          // indexAnnotation: indexAnnotation,
-          annotationId: annotationId
-        }
+      {
+        // type: type,
+        // info: info,
+        // indexAnnotation: indexAnnotation,
+        annotationId: annotationId
+      }
     })
     .then(({ data }) => {
       console.log('data: ', data);
@@ -576,12 +576,12 @@ const getComments = (
 }
 
 const deleteComment = (
-  commentId, 
+  commentId,
   setListComments,
   user = null,
-  annotationId= null 
-  ) => {
-  console.log("HandeAPI deleteComment. commentId: ", commentId, ", setListComments: ", setListComments,", user: ",user,", annotationId: ",annotationId);
+  annotationId = null
+) => {
+  console.log("HandeAPI deleteComment. commentId: ", commentId, ", setListComments: ", setListComments, ", user: ", user, ", annotationId: ", annotationId);
 
   axios
     .post(`${baseUrl}/deleteComment`, { _id: commentId })
@@ -591,21 +591,21 @@ const deleteComment = (
         setListComments,
         user,
         annotationId
-        );
+      );
     })
     .catch(err => console.log(err))
 }
 
 /** User info */
 const getUserAnnotations = (setListAnnotations, user) => {
-  console.log("handleApi getUserAnnotations. user: ",user);
+  console.log("handleApi getUserAnnotations. user: ", user);
 
   axios
     .get(`${baseUrl}/getUserAnnotations`, {
       params:
-        { 
-          user: user
-        }
+      {
+        user: user
+      }
     })
     .then(({ data }) => {
       console.log('data: ', data);
@@ -617,15 +617,15 @@ const getUserAnnotations = (setListAnnotations, user) => {
 /** Workflows */
 
 const getWorkflow = (setIsWorkerVisible, setSelectedWorkflow, _id, user) => {
-  console.log("handleApi getWorkflow. setIsWorkerVisible: ",setIsWorkerVisible,", setSelectedWorkflow: ",setSelectedWorkflow,", _id: ",_id,", user: ",user);
-  
+  console.log("handleApi getWorkflow. setIsWorkerVisible: ", setIsWorkerVisible, ", setSelectedWorkflow: ", setSelectedWorkflow, ", _id: ", _id, ", user: ", user);
+
   axios
     .get(`${baseUrl}/getWorkflow`, {
       params:
-        { 
-          _id:_id,
-          user: user
-        }
+      {
+        _id: _id,
+        user: user
+      }
     })
     .then(({ data }) => {
       console.log('getWorkflow successful. data: ', data);
@@ -636,55 +636,55 @@ const getWorkflow = (setIsWorkerVisible, setSelectedWorkflow, _id, user) => {
     .catch(err => console.log(err))
 }
 
-const getWorkflowsInfo = (dispatch ,setWorkflows, { title = null, time = null, user = null } = {}) => {
+const getWorkflowsInfo = (dispatch, setWorkflows, { title = null, time = null, user = null } = {}) => {
   console.log("handleApi getWorkflowsInfo.", { title, time, user });
   axios
     .get(`${baseUrl}/getWorkflowsInfo`, {
       params:
-        { 
-          title:title,
-          time:time,
-          user: user
-        }
+      {
+        title: title,
+        time: time,
+        user: user
+      }
     })
     .then(({ data }) => {
       console.log('getWorkflowsInfo data: ', data);
-      dispatch(setWorkflows(data))      
+      dispatch(setWorkflows(data))
     })
     .catch(err => console.log(err))
 }
 
 // In the case where we create one workflow with one object, there can be one note passed with it
 const createWorkflow = (
-  title, description, time, author, 
-  objectsId=[], // the id of the object being listed
-  objectsTimes=[],
+  title, description, time, author,
+  objectsId = [], // the id of the object being listed
+  objectsTimes = [],
   objectsNote = [],
-  objectsType=[],
+  objectsType = [],
   setTitleInput, setDescriptionInput,
   dispatch,
-  setWorkflows, 
+  setWorkflows,
   objectIndexRange = [] // For samples we need to know how far the search goes beyond the first note identified
-  ) => {
-    console.log("handleApi createWorkflow. ", { 
-      title, description, time, author, objectsId, objectsTimes, objectsNote, objectsType
-    } );
+) => {
+  console.log("handleApi createWorkflow. ", {
+    title, description, time, author, objectsId, objectsTimes, objectsNote, objectsType
+  });
 
-    const objects = [];
-    for (var i=0; i<objectsId.length; i++){
-      console.log("i: ",i,", (typeof i): ",(typeof i),", (typeof objectsTimes[i]): ",objectsTimes[i]);
-      objects.push({
-        objectId: objectsId[i],
-        objectTime: objectsTimes[i],
-        objectIndex: i,
-        objectNote: objectsNote[i],
-        objectType: objectsType[i], 
-        objectIndexRange: objectIndexRange[i]
-      })
-    }
+  const objects = [];
+  for (var i = 0; i < objectsId.length; i++) {
+    console.log("i: ", i, ", (typeof i): ", (typeof i), ", (typeof objectsTimes[i]): ", objectsTimes[i]);
+    objects.push({
+      objectId: objectsId[i],
+      objectTime: objectsTimes[i],
+      objectIndex: i,
+      objectNote: objectsNote[i],
+      objectType: objectsType[i],
+      objectIndexRange: objectIndexRange[i]
+    })
+  }
 
-    axios
-    .post(`${baseUrl}/createWorkflow`, { 
+  axios
+    .post(`${baseUrl}/createWorkflow`, {
       title, description, time, author,
       objects
     })
@@ -693,10 +693,10 @@ const createWorkflow = (
       setTitleInput("");
       setDescriptionInput("");
       getWorkflowsInfo(
-        dispatch, setWorkflows, {user:author}
+        dispatch, setWorkflows, { user: author }
       )
     })
-    .catch(err => console.log(err))  
+    .catch(err => console.log(err))
 }
 
 const addContentWorkflow = (
@@ -709,81 +709,86 @@ const addContentWorkflow = (
   typeContent, // type of the content: recording / track / sample / annotation / comment / search (TODO) / ...
   objectsIndex, // make the assumption that this is calculated with the call as the workflow is passed as a parameter... (OR make another call if that isn't passed?! V1 assume it is passed)
   workflow, // TODO doubt about this!
-  indexRange=0 // For samples we need to know how far the search goes beyond the first note identified
+  indexRange = 0 // For samples we need to know how far the search goes beyond the first note identified
 ) => {
-  console.log("handleApi createWorkflow. ", { 
+  console.log("handleApi createWorkflow. ", {
     _id, textNote, time, userId, idContent, typeContent, objectsIndex
   });
 
   // axios call
-  axios.post(`${baseUrl}/addContentWorkflow`,{
+  axios.post(`${baseUrl}/addContentWorkflow`, {
     _id, textNote, time, userId, idContent, typeContent, objectsIndex, indexRange
   })
-  .then((data) => {
-    console.log("Then handleApi addContentWorkflow. data: ",data);
-    // TODO ... do more? Maybe do another call to get the list of workflows?
-    getWorkflowsInfo(
-      dispatch,
-      setWorkflows, 
-      {user:userId}
-    );
-    // change with dispatch and setWorkflows? (Probably not, it is done in getWorkflowsInfo)
-    // workflow.objects.push(data.data.objects[data.data.objects.length-1]);
-  })
-  .catch(err => console.log(err))
+    .then((data) => {
+      console.log("Then handleApi addContentWorkflow. data: ", data);
+      // TODO ... do more? Maybe do another call to get the list of workflows?
+      getWorkflowsInfo(
+        dispatch,
+        setWorkflows,
+        { user: userId }
+      );
+      // change with dispatch and setWorkflows? (Probably not, it is done in getWorkflowsInfo)
+      // workflow.objects.push(data.data.objects[data.data.objects.length-1]);
+    })
+    .catch(err => console.log(err))
 }
 
 // Note: the parameter passed is the _id of the workflow
-const deleteWorkflowObject = (_id, objectIndex, workflow, 
+const deleteWorkflowObject = (_id, objectIndex, workflow,
   // setListWorkflows, 
   dispatch,
   setWorkflows,
   userId) => {
-  console.log("handleApi deleteWorkflowObject. ", { _id, objectIndex } );
+  console.log("handleApi deleteWorkflowObject. ", { _id, objectIndex });
   // TODO assess whether we care about indexes having empty spots... I suppose not 
-  axios.post(`${baseUrl}/deleteWorkflowObject`,{
+  axios.post(`${baseUrl}/deleteWorkflowObject`, {
     _id, objectIndex
   })
-  .then((data) => {
-    console.log("Then handleApi deleteWorkflowObject. data: ",data);
-    getWorkflowsInfo(dispatch,setWorkflows, {user:userId}); 
-    // TODO check if this is the right way. Call of workflow should be made with the global variable I think.
-    workflow.objects = workflow.objects.filter(item => item["objectIndex"] !== objectIndex);
-  })
-  .catch(err =>console.log(err));
-}
-
-/** _id selection */
-const getDatabaseContent = (_id, typeCaller, indexRange)=>{
-  console.log("handleApi. getDatabaseContent: ",{_id, typeCaller, indexRange});
-  // objects to databases matching go: 
-  // Annotations -> annotations
-  // Comments -> comments
-  // Recordings -> trackmetadatas
-  // Tracks -> tracks
-  // Samples ->tracks
-
-  // Vary the call based on typeCaller
-  if (["annotation","comment","recording","track","sample"].indexOf(typeCaller) !== -1) {
-    axios.get(`${baseUrl}/get_idContent_${typeCaller}`, {
-      params:
-      {
-        _id: _id,
-        typeCaller: typeCaller,
-        indexRange: indexRange
-      }
+    .then((data) => {
+      console.log("Then handleApi deleteWorkflowObject. data: ", data);
+      getWorkflowsInfo(dispatch, setWorkflows, { user: userId });
+      // TODO check if this is the right way. Call of workflow should be made with the global variable I think.
+      workflow.objects = workflow.objects.filter(item => item["objectIndex"] !== objectIndex);
     })
-      .then(({ data }) => {
-        console.log('getDatabaseContent successful. _id: ',_id,' data: ', data);
-        // TODO set different type of content based on typeCaller
-        
-      })
-      .catch(err => console.log(err))
-  } else {
-    console.log("Issue with typeCaller: (", typeCaller, "), it is not recognized.")
-  }
-
+    .catch(err => console.log(err));
 }
+
+const getDatabaseContent = async (workflowObjects, arrayContent, setArrayContent) => {
+  console.log("getDatabaseContent. workflowObjects: ", workflowObjects);
+
+  const requests = workflowObjects.map((object) => {
+    const _id = object.objectId;
+    const typeCaller = object.objectType;
+    const indexRange = object.objectIndexRange;
+
+    if (["annotation", "comment", "recording", "track", "sample"].indexOf(typeCaller) !== -1) {
+      return axios.get(`${baseUrl}/get_idContent_${typeCaller}`, {
+        params: {
+          _id: _id,
+          typeCaller: typeCaller,
+          indexRange: indexRange
+        }
+      });
+    } else {
+      console.log("Issue with typeCaller: (", typeCaller, "), it is not recognized.");
+      return Promise.reject("Invalid typeCaller");
+    }
+  });
+
+  try {
+    const responses = await Promise.all(requests);
+    console.log("responses:", responses); // Add this line for logging
+  
+    const responseData = responses.map((response) => response.data);
+    console.log("responseData:", responseData);
+  
+    const updatedArrayContent = [...arrayContent, ...responseData];
+    setArrayContent(updatedArrayContent);
+    console.log('getDatabaseContent successful. updatedArrayContent:', updatedArrayContent);
+  } catch (error) {
+    console.log("Error:", error);
+  }
+  };
 
 export {
   getAllJazzDap, addJazzDap, updateJazzDap, deleteJazzDap,
@@ -791,8 +796,8 @@ export {
   getTrackMetadata, getTracksMetadata,
   addAnnotation, getAnnotations, deleteAnnotation, updateAnnotation,
   addComment, getComments, deleteComment, updateComment,
-  getUserAnnotations, 
-  getWorkflow, getWorkflowsInfo, createWorkflow, 
+  getUserAnnotations,
+  getWorkflow, getWorkflowsInfo, createWorkflow,
   addContentWorkflow, deleteWorkflowObject,
   getDatabaseContent
 }
