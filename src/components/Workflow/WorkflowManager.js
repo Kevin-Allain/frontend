@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { HiOutlineViewGridAdd } from "react-icons/hi";
 import { BsCardChecklist } from "react-icons/bs";
 import { BsWrenchAdjustable } from "react-icons/bs";
-import { AiFillDelete } from "react-icons/ai";
+import { AiFillDelete, AiOutlineEyeInvisible } from "react-icons/ai";
 import { TfiSave } from "react-icons/tfi";
 import Workflow from "./Workflow";
 import "./Workflow.css";
@@ -10,6 +10,7 @@ import {
   getWorkflow,
   getWorkflowsInfo,
   createWorkflow,
+  deleteWorkflow,
   deleteWorkflowObject
 } from "../../utils/HandleApi";
 import WorkflowInterface from "./WorkflowInterface";
@@ -31,14 +32,17 @@ const WorkflowManager = () => {
     dispatch(setWorkflows(newWorkflows));
   };
 
-  const handleDeleteWorkflowObject = (workflow_id,objectIndex) => {
-    console.log("handleDeleteWorkflowObject | workflow_id: ",workflow_id,",objectIndex: ", objectIndex)
-    // This is unique, so deletion of the workflow object should be simple
-    deleteWorkflowObject(workflow_id,objectIndex, selectedWorkflow, 
-      // setListWorkflows, 
+  const handleDeleteWorkflow=(workflow_id)=>{
+    console.log("handleDeleteWorkflow | workflow_id: ", workflow_id);
+    deleteWorkflow(workflow_id,
       dispatch,
       setWorkflows,
       localStorage?.username); // (and then we will want to load it again...) Maybe more things to add to that call...
+  }
+  const handleDeleteWorkflowObject = (workflow_id, objectIndex) => {
+    console.log("handleDeleteWorkflowObject | workflow_id: ", workflow_id, ",objectIndex: ", objectIndex)
+    // This is unique, so deletion of the workflow object should be simple
+    deleteWorkflowObject(workflow_id, objectIndex, selectedWorkflow, dispatch, setWorkflows, localStorage?.username);
   }
 
   const [isWorkflowVisible, setIsWorkerVisible] = useState(false);
@@ -54,11 +58,14 @@ const WorkflowManager = () => {
   const handleShowWorkflowAddition = () => {
     setShowWorkflowAddition(!showWorkflowAddition);
   };
+  const handleShowWorkflowDetail = () => {
+    setSelectedWorkflow(null);
+  }
 
   const handleToggleUserWorkflows = () => {
     // TODO change to call based on global variable... 
     getWorkflowsInfo(
-      dispatch ,setWorkflows,
+      dispatch, setWorkflows,
       { user: localStorage?.username }
     );
     setIsWorkflowListVisible((prevState) => !prevState);
@@ -79,6 +86,7 @@ const WorkflowManager = () => {
     }
   };
 
+
   useEffect(() => {
     if (localStorage?.username) {
       getWorkflowsInfo(
@@ -90,10 +98,10 @@ const WorkflowManager = () => {
   }, []);
 
   const loadDetailWorkflow = (_id) => {
-    getWorkflow( 
-      setIsWorkerVisible, 
-      setSelectedWorkflow ,
-      _id, 
+    getWorkflow(
+      setIsWorkerVisible,
+      setSelectedWorkflow,
+      _id,
       localStorage?.username
     );
   };
@@ -126,19 +134,19 @@ const WorkflowManager = () => {
             onClick={() => {
               titleInput.length > 0 && descriptionInput.length > 0
                 ? createWorkflow(
-                    titleInput, descriptionInput, new Date(), localStorage.username,
-                    // These arrays are to be changed to objects, which contains an array of objects as: 
-                    [], // objectId: String
-                    [], // objectTime: Date
-                    // objectIndex: Number (not entered as function call)
-                    [], // objectNote: String
-                    [], // objectType: String
-                    setTitleInput,
-                    setDescriptionInput,
-                    dispatch,
-                    setWorkflows
-                  )
-                : console.log("empty title or description. titleInput: ", titleInput, "typeof titleInput: ", typeof titleInput, ", descriptionInput: ", descriptionInput, "typeof descriptionInput: ", typeof descriptionInput );
+                  titleInput, descriptionInput, new Date(), localStorage.username,
+                  // These arrays are to be changed to objects, which contains an array of objects as: 
+                  [], // objectId: String
+                  [], // objectTime: Date
+                  // objectIndex: Number (not entered as function call)
+                  [], // objectNote: String
+                  [], // objectType: String
+                  setTitleInput,
+                  setDescriptionInput,
+                  dispatch,
+                  setWorkflows
+                )
+                : console.log("empty title or description. titleInput: ", titleInput, "typeof titleInput: ", typeof titleInput, ", descriptionInput: ", descriptionInput, "typeof descriptionInput: ", typeof descriptionInput);
             }}
           />
         </div>
@@ -148,80 +156,86 @@ const WorkflowManager = () => {
         <BsCardChecklist className="icon" onClick={handleToggleUserWorkflows} />{" "}
         <br />
         {isWorkflowListVisible &&
-            workflows.map((item,i) => (
-            <div className="workflowDetails" onClick={() => loadDetailWorkflow(item._id)} key={item._id} >
-              Title: {item.title} | {item.time} 
+          workflows.map((item, i) => (
+            <div className="containerWorkflowSummary">
+              <div className="workflowDetails" onClick={() => loadDetailWorkflow(item._id)} key={item._id} >
+                Title: {item.title} | {item.time}
+              </div>
+              <AiFillDelete className="icon" onClick={() => handleDeleteWorkflow(item._id)} />
             </div>
           ))}
       </div>
-      {isWorkflowVisible && selectedWorkflow && 
-          // <WorkflowInterface 
-          //   workflow={selectedWorkflow} 
-          // />
+      {isWorkflowVisible && selectedWorkflow &&
+        <div className="workflowInterface">
+          <h1>Workflow Interface</h1>{" "}<AiOutlineEyeInvisible className="icon" onClick={handleShowWorkflowDetail} />
           <div className="workflowHeader">
-          <h3>{selectedWorkflow.title}</h3>
-          <div className="workFlowDescription">
-            {" "}
-            <u>Description:</u>
-            <br />
-            {selectedWorkflow.description}{" "}
-          </div>
-          <em>
-            {selectedWorkflow.author} | {selectedWorkflow.time} | {selectedWorkflow._id} |{" "}
-            {selectedWorkflow.objects.length} objects
-          </em>
-          <div className="workflowListObjects">
-        {selectedWorkflow.objects.map((item, i) => (
-          <div className="workflowObject" key={i}>
-            <u>Object id:</u> {item.objectId} | <u>Object type:</u>{" "}
-            {item.objectType} | <u>Object index:</u> {item.objectIndex} <br />
-            <div className="workflowContentDisplay">
-              {/* <em>... Work in progress: display of content of object{" "}
+            <h3>{selectedWorkflow.title}</h3>
+            <div className="workFlowDescription">
+              {" "}
+              <u>Description:</u>
+              <br />
+              {selectedWorkflow.description}{" "}
+            </div>
+            <em>
+              {selectedWorkflow.author} | {selectedWorkflow.time} | {selectedWorkflow._id} |{" "}
+              {selectedWorkflow.objects.length} objects
+            </em>
+            <div className="workflowListObjects">
+              {selectedWorkflow.objects.map((item, i) => (
+                <div className="workflowObject" key={i}>
+                  <u>Object id:</u> {item.objectId} | <u>Object type:</u>{" "}
+                  {item.objectType} | <u>Object index:</u> {item.objectIndex} <br />
+                  <div className="workflowContentDisplay">
+                    {/* <em>... Work in progress: display of content of object{" "}
               <BsWrenchAdjustable />{" "} </em> <br/> */}
-              {item.content ? (
-                <div>
-                  {typeof(item.content)} and {item.content.length} and {item.content.length>0 && Object.keys(item.content[0]) && item.content[0]._id}
-                  <br/>
-                  {item.content && item.content.length>0 && (
-  <table>
-    <thead>
-      <tr>
-        {Object.keys(item.content[0]).map((key) => (
-          <th key={key}>{key}</th>
-        ))}
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        {Object.values(item.content[0]).map((value, index) => (
-          <td key={index}>{value}</td>
-        ))}
-      </tr>
-    </tbody>
-  </table>
-)}
-                </div>
-              ) : (
-                <em>Loading content...</em>
-              )}
-              {/* {item.content}
+                    {item.content ? (
+                      <div>
+                        {typeof (item.content)} and {item.content.length} and {item.content.length > 0 && Object.keys(item.content[0]) && item.content[0]._id}
+                        <br />
+                        {item.content && item.content.length > 0 && (
+                          item.content.map((contentI,index)=> (
+                            <> Index: {index}
+                              <table>
+                                <thead>
+                                  <tr>
+                                    {Object.keys(contentI).map((key) => (
+                                      <th key={key}>{key}</th>
+                                    ))}
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  <tr>
+                                    {Object.values(contentI).map((value, index) => (
+                                      <td key={index}>{value}</td>
+                                    ))}
+                                  </tr>
+                                </tbody>
+                              </table>
+                            </>
+                          ))
+                        )}
+                      </div>
+                    ) : (
+                      <em>Loading content...</em>
+                    )}
+                    {/* {item.content}
               {arrayContent.map((o,indx)=>(
                 <div className='content' key={o._id}>
                   id: {o._id}. index: {indx}
                 </div>
               ))} */}
+                  </div>
+                  <u>Object note:</u><br /> {item.objectNote} <br />
+                  <AiFillDelete
+                    className="icon"
+                    onClick={() => handleDeleteWorkflowObject(selectedWorkflow._id, item.objectIndex)}
+                  />
+                </div>
+              ))}
             </div>
-            <u>Object note:</u><br/> {item.objectNote} <br/>
-            <AiFillDelete 
-              className="icon" 
-              onClick={() => handleDeleteWorkflowObject(selectedWorkflow._id, item.objectIndex)} 
-            />
-          </div>
-        ))}
-      </div>
 
+          </div>
         </div>
-  
       }
     </div>
   );

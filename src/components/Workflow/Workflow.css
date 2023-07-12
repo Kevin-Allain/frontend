@@ -132,3 +132,8 @@
     border-width: thin;
     margin-bottom: 0.2rem;
 }
+
+.containerWorkflowSummary {
+    display: grid;
+    grid-template-columns: 1fr auto;
+}

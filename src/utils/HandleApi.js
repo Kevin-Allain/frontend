@@ -713,6 +713,20 @@ const addContentWorkflow = (
     .catch(err => console.log(err))
 }
 
+const deleteWorkflow = (_id, dispatch, setWorkflows, userId) => {
+  console.log("handleApi deleteWorkflow. ", { _id });
+  axios.post(`${baseUrl}/deleteWorkflow`, {
+    _id
+  })
+    .then((data) => {
+      console.log("Then handleApi deleteWorkflow. data: ", data);
+      getWorkflowsInfo(dispatch, setWorkflows, { user: userId });
+    })
+    .catch(err => console.log(err));
+}
+  
+
+
 // Note: the parameter passed is the _id of the workflow
 const deleteWorkflowObject = (_id, objectIndex, workflow,
   // setListWorkflows, 
@@ -812,7 +826,7 @@ export {
   addAnnotation, getAnnotations, deleteAnnotation, updateAnnotation,
   addComment, getComments, deleteComment, updateComment,
   getUserAnnotations,
-  getWorkflow, getWorkflowsInfo, createWorkflow,
+  getWorkflow, getWorkflowsInfo, createWorkflow, deleteWorkflow,
   addContentWorkflow, deleteWorkflowObject,
   getDatabaseContent
 }
