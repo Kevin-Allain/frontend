@@ -18,24 +18,28 @@ const WorkflowInterface = ({ workflow }) => {
   // How can we load the content of the objects of the objects?
   const [arrayContent, setArrayContent] = useState([]);
 
-  useEffect( () => {
-    console.log("useEffect WorkflowInterface  workflow: ",workflow);
-    // This would be a fine place to call a function to load the content...
+  // useEffect( () => {
+  //   console.log("useEffect WorkflowInterface  workflow: ",workflow);
+  //   // This would be a fine place to call a function to load the content...
 
-    console.log("To load. workflow.objects: ",workflow.objects);
-    // change according to type and we make different loadings...  
-    // Several calls results in a loop of calls...?! Let's try one call with the array directly
-      getDatabaseContent( 
-        workflow.objects,
-        arrayContent,
-        setArrayContent
-      );
-  },[]);
+  //   console.log("To load. workflow.objects: ",workflow.objects);
+  //   // change according to type and we make different loadings...  
+  //   // Several calls results in a loop of calls...?! Let's try one call with the array directly
+  //     getDatabaseContent( 
+  //       workflow.objects,
+  //       arrayContent,
+  //       setArrayContent
+  //     );
+  // },[]);
 
   useEffect(() => {
     console.log('arrayContent has changed:', arrayContent);
   }, [arrayContent]);
-  
+
+  useEffect(() => {
+    console.log('workflow in useEffect:', workflow,", workflow.objects[0]: ",workflow.objects[0]);
+  }, [workflow]);
+
 
   // TODO see how this function can be used for later calls. We will need to have some way for elements to have access to listed workflows
   const handleTestWorkflowEnrich = () => {
@@ -119,12 +123,19 @@ const WorkflowInterface = ({ workflow }) => {
             <div className="workflowContentDisplay">
               <em>... Work in progress: display of content of object{" "}
               <BsWrenchAdjustable />{" "} </em> <br/>
-              {/* TODO This is bad... We should do a series of queries in one go, rather than many queries */}
+              {item.content ? (
+                <div>
+                  {item.content._id} - 
+                </div>
+              ) : (
+                <em>Loading content...</em>
+              )}
+              {/* {item.content}
               {arrayContent.map((o,indx)=>(
                 <div className='content' key={o._id}>
                   id: {o._id}. index: {indx}
                 </div>
-              ))}
+              ))} */}
             </div>
             <u>Object note:</u><br/> {item.objectNote} <br/>
             <AiFillDelete 

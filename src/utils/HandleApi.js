@@ -616,26 +616,6 @@ const getUserAnnotations = (setListAnnotations, user) => {
 
 /** Workflows */
 
-const getWorkflow = (setIsWorkerVisible, setSelectedWorkflow, _id, user) => {
-  console.log("handleApi getWorkflow. setIsWorkerVisible: ", setIsWorkerVisible, ", setSelectedWorkflow: ", setSelectedWorkflow, ", _id: ", _id, ", user: ", user);
-
-  axios
-    .get(`${baseUrl}/getWorkflow`, {
-      params:
-      {
-        _id: _id,
-        user: user
-      }
-    })
-    .then(({ data }) => {
-      console.log('getWorkflow successful. data: ', data);
-      // TODO
-      setSelectedWorkflow(data);
-      setIsWorkerVisible(true);
-    })
-    .catch(err => console.log(err))
-}
-
 const getWorkflowsInfo = (dispatch, setWorkflows, { title = null, time = null, user = null } = {}) => {
   console.log("handleApi getWorkflowsInfo.", { title, time, user });
   axios
@@ -753,7 +733,35 @@ const deleteWorkflowObject = (_id, objectIndex, workflow,
     .catch(err => console.log(err));
 }
 
-const getDatabaseContent = async (workflowObjects, arrayContent, setArrayContent) => {
+// Loading up detail of workflow once as it is loaded is surprisingly complicated... Might as well load everything from the start
+const getWorkflow = (setIsWorkerVisible, setSelectedWorkflow, _id, user) => {
+  console.log("handleApi getWorkflow. setIsWorkerVisible: ", setIsWorkerVisible, ", setSelectedWorkflow: ", setSelectedWorkflow, ", _id: ", _id, ", user: ", user);
+
+  axios
+    .get(`${baseUrl}/getWorkflow`, {
+      params:
+      {
+        _id: _id,
+        user: user
+      }
+    })
+    .then(({ data }) => {
+      console.log('getWorkflow successful. data: ', data);
+      // TODO load the full details?
+
+      console.log("All objects: ",data.objects)
+
+      // So we will add content to the data...
+      getDatabaseContent(data, setSelectedWorkflow, setIsWorkerVisible);
+
+      // setSelectedWorkflow(data);
+      // setIsWorkerVisible(true);
+    })
+    .catch(err => console.log(err))
+}
+
+const getDatabaseContent = async (workflow, setSelectedWorkflow, setIsWorkerVisible) => {
+  const workflowObjects = workflow.objects;
   console.log("getDatabaseContent. workflowObjects: ", workflowObjects);
 
   const requests = workflowObjects.map((object) => {
@@ -761,13 +769,13 @@ const getDatabaseContent = async (workflowObjects, arrayContent, setArrayContent
     const typeCaller = object.objectType;
     const indexRange = object.objectIndexRange;
 
-    if (["annotation", "comment", "recording", "track", "sample"].indexOf(typeCaller) !== -1) {
+    if (["annotation", "comment", "recording", "track", "sample"].includes(typeCaller)) {
       return axios.get(`${baseUrl}/get_idContent_${typeCaller}`, {
         params: {
           _id: _id,
           typeCaller: typeCaller,
-          indexRange: indexRange
-        }
+          indexRange: indexRange,
+        },
       });
     } else {
       console.log("Issue with typeCaller: (", typeCaller, "), it is not recognized.");
@@ -776,19 +784,26 @@ const getDatabaseContent = async (workflowObjects, arrayContent, setArrayContent
   });
 
   try {
-    const responses = await Promise.all(requests);
-    console.log("responses:", responses); // Add this line for logging
-  
-    const responseData = responses.map((response) => response.data);
+    const responses = await Promise.allSettled(requests);
+    console.log("responses:", responses);
+    const responseData = responses.map((response) =>
+      response.status === "fulfilled" ? response.value.data : null
+    );
     console.log("responseData:", responseData);
-  
-    const updatedArrayContent = [...arrayContent, ...responseData];
-    setArrayContent(updatedArrayContent);
-    console.log('getDatabaseContent successful. updatedArrayContent:', updatedArrayContent);
+
+    const updatedWorkflowObjects = workflowObjects.map((object, i) => {
+      return { ...object, content: responseData[i] };
+    });
+
+    const updatedWorkflow = { ...workflow, objects: updatedWorkflowObjects };
+    console.log("updatedWorkflow after enrichment: ", updatedWorkflow);
+
+    setSelectedWorkflow(updatedWorkflow);
+    setIsWorkerVisible(true);
   } catch (error) {
     console.log("Error:", error);
   }
-  };
+};
 
 export {
   getAllJazzDap, addJazzDap, updateJazzDap, deleteJazzDap,
