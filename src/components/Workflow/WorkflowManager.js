@@ -176,15 +176,30 @@ const WorkflowManager = () => {
             <u>Object id:</u> {item.objectId} | <u>Object type:</u>{" "}
             {item.objectType} | <u>Object index:</u> {item.objectIndex} <br />
             <div className="workflowContentDisplay">
-              <em>... Work in progress: display of content of object{" "}
-              <BsWrenchAdjustable />{" "} </em> <br/>
+              {/* <em>... Work in progress: display of content of object{" "}
+              <BsWrenchAdjustable />{" "} </em> <br/> */}
               {item.content ? (
                 <div>
                   {typeof(item.content)} and {item.content.length} and {item.content.length>0 && Object.keys(item.content[0]) && item.content[0]._id}
                   <br/>
-                  {item.content.map((a,index)=>(
-                    <div className="contentItem">{item.objectType}: {a._id} with keys: {Object.keys(a)} </div>
-                  ))}
+                  {item.content && item.content.length>0 && (
+  <table>
+    <thead>
+      <tr>
+        {Object.keys(item.content[0]).map((key) => (
+          <th key={key}>{key}</th>
+        ))}
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        {Object.values(item.content[0]).map((value, index) => (
+          <td key={index}>{value}</td>
+        ))}
+      </tr>
+    </tbody>
+  </table>
+)}
                 </div>
               ) : (
                 <em>Loading content...</em>
