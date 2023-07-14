@@ -749,8 +749,6 @@ const deleteWorkflowObject = (_id, objectIndex, workflow,
 
 // Loading up detail of workflow once as it is loaded is surprisingly complicated... Might as well load everything from the start
 const getWorkflow = (setIsWorkerVisible, setSelectedWorkflow, _id, user) => {
-  console.log("handleApi getWorkflow. setIsWorkerVisible: ", setIsWorkerVisible, ", setSelectedWorkflow: ", setSelectedWorkflow, ", _id: ", _id, ", user: ", user);
-
   axios
     .get(`${baseUrl}/getWorkflow`, {
       params:
@@ -761,8 +759,6 @@ const getWorkflow = (setIsWorkerVisible, setSelectedWorkflow, _id, user) => {
     })
     .then(({ data }) => {
       console.log('getWorkflow successful. data: ', data);
-      // TODO load the full details?
-
       console.log("All objects: ",data.objects)
 
       // So we will add content to the data...

@@ -45,12 +45,13 @@
 
 .workFlowDescription {
     border: solid;
-    border-width: thin;
+    border-width: medium;
     border-color: white;
     padding-top: 0.2rem;
     padding-bottom: 0.2rem;
     padding-left: 1rem;
     padding-right: 1rem;
+    border-radius: 0.5rem;
 }
 
 .workflowHeader {
@@ -90,6 +91,10 @@
     border: solid;
     border-width: thin;
     border-color: #acadbd;
+    /* height: 25px;
+    width: 30px;     */
+    border-radius: 0.25rem;
+    text-align: center;
 }
 
 .listActionsWorkflowEmbedded {
@@ -136,4 +141,59 @@
 .containerWorkflowSummary {
     display: grid;
     grid-template-columns: 1fr auto;
+}
+
+.contentItem{
+    border: solid;
+    border-color: orange;
+    border-width: thin;    
+}
+
+.tableItemContentAndFirst,
+.tableItemContentBody {
+  table-layout: fixed;
+  width: 100%;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  word-break: break-word;
+
+}
+
+.tableItemContentAndFirst th,
+.tableItemContentBody td {
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  word-break: break-word;
+}
+
+.tableCellContent {
+    overflow-x: auto;
+}
+.tableCellContent::-webkit-scrollbar {
+    height: 5px;
+}
+
+.tableCellContent::-webkit-scrollbar-track {
+    background-color: lightgray;
+}
+.tableCellContent::-webkit-scrollbar-thumb {
+    background-color: gray;
+    border-radius: 4px;
+}
+.tableCellContent::-webkit-scrollbar-thumb:hover {
+    background-color: lightgray;
+    cursor:pointer;
+}
+.tableCellContent::-webkit-scrollbar-thumb:horizontal {
+    min-width: 20px;
+}
+.tableCellContent::-webkit-scrollbar-thumb:horizontal:hover {
+    background-color: gray;
+}
+.tableCellContent.scrollbar-dragging::-webkit-scrollbar-thumb {
+    background-color: lightgray;
+}
+
+.textInputWorkflowCreation{
+    width:600px;
 }

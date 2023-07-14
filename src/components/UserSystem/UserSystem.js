@@ -29,9 +29,9 @@ const UserSystem = () => {
 
     return (
         <div className='userInfo'>
-            Your annotations <FaRegStickyNote className='icon' onClick={handleToggleUserAnnotations} /><br/>
+            {/* Your annotations <FaRegStickyNote className='icon' onClick={handleToggleUserAnnotations} /><br/> */}
             {isAnnotationsVisible && (
-                <div className='userInfo' >
+                <div className='userInfoBox' >
                     {listAnnotations.length > 0 ?
                         listAnnotations.map((item) => (
                             <div className='userAnnotation'>

@@ -116,24 +116,7 @@ export default function Logout() {
             <button onClick={handleSubmitLogout} >
             Logout <ImExit/>
             </button>
-
-            {/* <AiOutlineUser className='icon' onClick={ handleToggleUserInfo }/>
-            {isUserInfoVisible && (            
-            <div className='userInfo' >
-                Your annotations:
-                {listAnnotations.length>0?
-                listAnnotations.map((item) => (
-                    <div className='userAnnotation'>
-                      _id is {item._id}, type is {item.type}, info is <u>{item.info}</u>, privacy is {item.privacy} @{item.time}.
-                    </div>
-                  ))
-                : <>Empty</>
-                }
-            </div>
-            )} */}
-
             <UserSystem/>
-
         </div>
     )
 }

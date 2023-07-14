@@ -104,12 +104,13 @@ h1 {
   justify-content: center;
 }
 
+/* TODO consider how to change this... */
 input{
   border:none;
   outline: none;
   width: 400px;
   padding: 0 0.5rem;
-  border-bottom: 1px solid #282c34;
+  border: 1px solid #282c34;
 }
 
 .add{
