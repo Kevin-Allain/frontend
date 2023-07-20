@@ -182,3 +182,20 @@ th {
 .buttonListLogsNumbers{
     width: 100%;
 }
+
+.recordingItem{
+    width:100%;
+    text-align: center;
+    color: gray;
+    background-color: ghostwhite;
+    border: solid;
+    border-width: thin;
+    border-color: black;
+}
+
+.metadataRecording{
+    width: 100%;
+}
+.matchedTracksOfRecording{
+    width: 100%;
+}

@@ -389,6 +389,20 @@ const MusicInterface = () => {
                   )
                 }
               </div>
+              {listLogNumbers.length > 0 &&
+                listLogNumbers.map((lln, index) => (
+                  <div className='recordingItem' key={'recordingItem' + index}>
+                    Recording: {lln}
+                    <div className='metadataRecording'> </div>
+                    <div className='matchedTracksOfRecording'>
+                      {listTracks.length>0 &&
+                        listTracks.map((track,ndx) => (
+                          <>{(track.includes(lln))? track:''}</>
+                        ))
+                      }
+                    </div>
+                  </div>
+                ))}
               {(listSearchRes.length <= 0) ? (<></>) :
                 listTracks.map((item, i) => (
                   <>
