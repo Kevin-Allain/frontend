@@ -30,7 +30,7 @@ const TrackRes = ({
 
     return (
         <div className="trackres" key={text}>
-            <div className="text">
+            <div className="texttrackres">
                 <h2>Track: {text} </h2> 
             </div>
             <AnnotationSystem type={"track"} info={text} />

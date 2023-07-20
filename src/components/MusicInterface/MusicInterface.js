@@ -1,4 +1,4 @@
-import { useRef, useState, useEffect, useContext } from 'react';
+import React, { useRef, useState, useEffect, useContext } from 'react';
 import * as Tone from "tone"
 import {
   getMusicMIDI,
@@ -53,7 +53,40 @@ const MusicInterface = () => {
   const [listAnnotSearch, setListAnnotSearch] = useState([]);
   const [listAnnotMusRes, setListAnnotMusRes] = useState([]);
 
+  // References for scrolling
+  const catNames = ['Tom', 'Maru', 'Jellylorum', 'Whiskers', 'Mittens'];
+  const catRefs = useRef(catNames.map(() => React.createRef()));
+  const lognumbersNames = useState([]);
+  const lognumbersRefs = useRef(lognumbersNames.map(() => React.createRef()));
 
+
+ const handleScrollToCat = (index) => {
+    catRefs.current[index].current.scrollIntoView({
+      behavior: 'smooth', block: 'nearest', inline: 'center'
+    });
+  }
+  const handleScrollToRecording = (index) => {
+    lognumbersRefs.current[index].current.scrollIntoView({
+      behavior: 'smooth', block: 'nearest', inline: 'center'
+    });
+  }
+
+
+  // ---- React functions
+  useEffect(() => {
+    setValidPitchQuery(PITCH_QUERY_REGEX.test(textSearch))
+    console.log("useEffect textSearch, validPitchQuery: ", validPitchQuery)
+  }, [textSearch, validPitchQuery])
+
+
+  // ---- Functions handle
+  const handleChangeQueryPitch = (event) => {
+    const value = event.target.value;
+
+    if (PITCH_QUERY_REGEX.test(value) || value[value.length - 1] === '-') {
+      setTextSearch(value)
+    }
+  }
 
   const handleClickTextSearch = async (e) => {
     e.preventDefault();
@@ -64,19 +97,10 @@ const MusicInterface = () => {
     }
   };
 
-  useEffect(() => {
-    setValidPitchQuery(PITCH_QUERY_REGEX.test(textSearch))
-    console.log("useEffect textSearch, validPitchQuery: ", validPitchQuery)
-  }, [textSearch, validPitchQuery])
-
-  const handleChangeQueryPitch = (event) => {
-    const value = event.target.value;
-
-    if (PITCH_QUERY_REGEX.test(value) || value[value.length - 1] === '-') {
-      setTextSearch(value)
-    }
+  function handleKeyPress(keyName) {
+    setTextSearch((prevText) => (prevText === '') ? NotetoMIDI[keyName] : prevText + '-' + NotetoMIDI[keyName]);
+    textSearchRef.current.value += NotetoMIDI[keyName];
   }
-
 
   // TODO use for note playing!!! https://tonejs.github.io/
   // const sampler = new Tone.Sampler({
@@ -85,6 +109,7 @@ const MusicInterface = () => {
   // 	baseUrl: "https://tonejs.github.io/audio/salamander/",
   // }).toDestination();
 
+  // ---- Functions
   // Function for distance : strings
   function calcLevenshteinDistance_str(s1, s2) {
     // Create two-dimensional array of distances
@@ -269,10 +294,6 @@ const MusicInterface = () => {
     setAudioMp3(new Audio("https://www.learningcontainer.com/wp-content/uploads/2020/02/Kalimba.mp3"));
   }
 
-  function handleKeyPress(keyName) {
-    setTextSearch((prevText) => (prevText === '') ? NotetoMIDI[keyName] : prevText + '-' + NotetoMIDI[keyName]);
-    textSearchRef.current.value += NotetoMIDI[keyName];
-  }
 
 
 
@@ -297,6 +318,29 @@ const MusicInterface = () => {
         <button onClick={handleClickTextSearch}>Submit search</button>
       </div>
 
+      {/* Test Scrolling. Works but need to be updated for work with... recording. */}
+      <nav>
+        {catNames.map((name, index) => (
+          <button key={index+'catButton'} onClick={() => handleScrollToCat(index)}>
+            {name}
+          </button>
+        ))}
+      </nav>
+      <div>
+        <ul>
+          {catNames.map((name, index) => (
+            <li key={index}>
+              <img
+                src={`https://placekitten.com/g/200/200`}
+                alt={name}
+                ref={catRefs.current[index]}
+              />
+            </li>
+          ))}
+        </ul>
+      </div>
+      
+
       {/* ==== OUTPUT SEARCH ==== */}
       <div className='wrapperMusicSearch'>
         {(listSearchRes.length <= 0) ? (<></>) :
@@ -306,11 +350,17 @@ const MusicInterface = () => {
             <AnnotationSystem
               type={"search"}
               info={oldSearch}
-              // addAnnotation={addAnnotation}
-              // updateAnnotation={updateAnnotation}
-              // getAnnotations = {getAnnotations}
-              // deleteAnnotation={deleteAnnotation}
-            />
+            /> 
+            <div className='buttonListLogsNumbers'>
+              The list of recordings is: 
+              <nav>
+                {listLogNumbers.map((a,index) => (
+                  <button key={index+'lognumberButton'} onClick={() => handleScrollToRecording(index)}>
+                    {a}
+                  </button>
+                ))}.
+              </nav>
+            </div>
 
           <div className='musicInterfaceContent'>
 
@@ -338,7 +388,6 @@ const MusicInterface = () => {
                   )
                   )
                 }
-                
               </div>
               {(listSearchRes.length <= 0) ? (<></>) :
                 listTracks.map((item, i) => (

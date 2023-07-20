@@ -226,9 +226,7 @@ const getMatchLevenshteinDistance = (
   setListLogNumbers = null,
   setListTracks = null
 ) => {
-  console.log("-- handleAPI / getMatchLevenshteinDistance. stringNotes: ", stringNotes, ", percMatch: ", percMatch, " user: ", user,
-    // ", transformFunc: ", transformFunc, // ", playMusicFunc: ", playMusicFunc, // ", levenshteinDistanceFunc: ", levenshteinDistanceFunc
-  );
+  console.log("-- handleAPI / getMatchLevenshteinDistance. stringNotes: ", stringNotes, ", percMatch: ", percMatch, " user: ", user);
   setIsLoading(true);
 
   axios
