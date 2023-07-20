@@ -56,8 +56,7 @@ const MusicInterface = () => {
   // References for scrolling
   const catNames = ['Tom', 'Maru', 'Jellylorum', 'Whiskers', 'Mittens'];
   const catRefs = useRef(catNames.map(() => React.createRef()));
-  const lognumbersNames = useState([]);
-  const lognumbersRefs = useRef(lognumbersNames.map(() => React.createRef()));
+  const lognumbersRefs = useRef(listLogNumbers.map(() => React.createRef()));
 
 
  const handleScrollToCat = (index) => {
@@ -66,6 +65,7 @@ const MusicInterface = () => {
     });
   }
   const handleScrollToRecording = (index) => {
+    // Need t haver a the html elements with the right ref
     lognumbersRefs.current[index].current.scrollIntoView({
       behavior: 'smooth', block: 'nearest', inline: 'center'
     });
