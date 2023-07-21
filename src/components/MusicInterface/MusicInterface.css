@@ -179,18 +179,22 @@ th {
     margin-bottom: 0.2rem;    
 }
 
-.buttonListLogsNumbers{
+#buttonListLogsNumbers{
     width: 100%;
 }
 
 .recordingItem{
     width:100%;
     text-align: center;
-    color: gray;
+    color: black;
     background-color: ghostwhite;
     border: solid;
     border-width: thin;
     border-color: black;
+}
+
+.texttrackres{
+    color: black;
 }
 
 .metadataRecording{

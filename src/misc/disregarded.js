@@ -209,3 +209,36 @@ function playMidiDatabase(){
                 </div>)
             })
             )}  */}
+
+
+            // ------------------
+      {/* Test Scrolling. Works but need to be updated for work with... recording. */}
+      // const catNames = ['Tom', 'Maru', 'Jellylorum', 'Whiskers', 'Mittens'];
+      // const catRefs = useRef(catNames.map(() => React.createRef()));    
+      // const handleScrollToCat = (index) => {
+      //   catRefs.current[index].current.scrollIntoView({
+      //     behavior: 'smooth', block: 'nearest', inline: 'center'
+      //   });
+      // }          
+      {/* 
+      <nav>
+        {catNames.map((name, index) => (
+          <button key={index+'catButton'} onClick={() => handleScrollToCat(index)}>
+            {name}
+          </button>
+        ))}
+      </nav>
+      <div>
+        <ul>
+          {catNames.map((name, index) => (
+            <li key={'catNames'+index}>
+              <img
+                src={`https://placekitten.com/g/200/200`}
+                alt={name}
+                ref={catRefs.current[index]}
+              />
+            </li>
+          ))}
+        </ul>
+      </div> 
+      */}

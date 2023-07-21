@@ -31,7 +31,7 @@ const TrackRes = ({
     return (
         <div className="trackres" key={text}>
             <div className="texttrackres">
-                <h2>Track: {text} </h2> 
+                <h3>Track: {text} </h3> 
             </div>
             <AnnotationSystem type={"track"} info={text} />
             <EmbeddedWorkflowInteraction idCaller={listSearchRes[0].arrIdNotes[0]}  typeCaller={"track"}/>

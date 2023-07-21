@@ -18,7 +18,8 @@ import NotetoMIDI from "./NotetoMIDI.json"
 import MIDItoNote from "./MIDItoNote.json"
 import Annotation from '../Annotation/Annotation';
 import AnnotationSystem from '../Annotation/AnnotationSystem';
-import { AiFillPlayCircle, AiFillPauseCircle, AiOutlineArrowRight } from 'react-icons/ai'
+import { AiFillPlayCircle, AiFillPauseCircle, AiOutlineArrowRight, AiOutlineLoading } from 'react-icons/ai'
+import {MdKeyboardDoubleArrowUp} from 'react-icons/md'
 import { ImLoop2 } from 'react-icons/im'
 import { BiDotsHorizontalRounded } from 'react-icons/bi'
 import { BsInfoCircleFill } from 'react-icons/bs'
@@ -54,19 +55,40 @@ const MusicInterface = () => {
   const [listAnnotMusRes, setListAnnotMusRes] = useState([]);
 
   // References for scrolling
-  const catNames = ['Tom', 'Maru', 'Jellylorum', 'Whiskers', 'Mittens'];
-  const catRefs = useRef(catNames.map(() => React.createRef()));
   const lognumbersRefs = useRef([]);
+  const buttonListLogsNumbersRef = useRef(null);
 
-
- const handleScrollToCat = (index) => {
-    catRefs.current[index].current.scrollIntoView({
-      behavior: 'smooth', block: 'nearest', inline: 'center'
-    });
+  function handleScroll() {
+    const buttonListLogsNumbers = buttonListLogsNumbersRef.current;
+    if (buttonListLogsNumbers) {
+      const buttonListLogsNumbersPosition = buttonListLogsNumbers.offsetTop;
+      if (window.pageYOffset > buttonListLogsNumbersPosition) {
+        // Move the buttonListLogsNumbers to the left when scroll position is lower than its position
+        buttonListLogsNumbers.style.position = 'fixed';
+        buttonListLogsNumbers.style.left = '10px'; // Adjust the left position as needed
+      } else {
+        // Reset the position when scroll position is above its position
+        buttonListLogsNumbers.style.position = 'static';
+        buttonListLogsNumbers.style.left = 'auto';
+      }
+    }
   }
+
+  const scrollToButtonListLogsNumbers = () => {
+    const buttonListLogsNumbers = document.getElementById('buttonListLogsNumbers');
+    if (buttonListLogsNumbers) {
+      buttonListLogsNumbers.scrollIntoView({
+        behavior: 'smooth',
+        block: 'nearest',
+        inline: 'start',
+      });
+    }
+  };
+  
+
+
   const handleScrollToRecording = (index) => {
     console.log("handleScrollToRecording | lognumbersRefs: ",lognumbersRefs, ", index: ",index);
-    console.log("... for comparison | catRefs.current: ",catRefs.current);
     // Need to have a the html elements with the right ref
     // lognumbersRefs.current[index].current.scrollIntoView({
     //   behavior: 'smooth', block: 'nearest', inline: 'center'
@@ -84,20 +106,20 @@ const MusicInterface = () => {
   }, [textSearch, validPitchQuery])
 
   useEffect(() => {
-    console.log("useEffect listLogNumbers: ",listLogNumbers," ... for comparison | catNames: ",catNames);
+    console.log("useEffect listLogNumbers: ",listLogNumbers);
     lognumbersRefs.current = 
       lognumbersRefs.current.slice(0, listLogNumbers.length).map(
         (ref, index) => ref || React.createRef()
       );
 
-    // // Callback ref approach to update the refs array directly
-    // listLogNumbers.forEach((lln, index) => {
-    //   console.log(lln);
-    //   lognumbersRefs.current[index].current = React.createRef(lln);
-    // });
+      // TODO buggy
+      // window.addEventListener('scroll', handleScroll);
+      // return () => {
+      //   window.removeEventListener('scroll', handleScroll);
+      // };
+  
 
-    console.log("lognumbersRefs.current: ",lognumbersRefs.current,"... for comparison | : catRefs: ",catRefs);
-  }, [listLogNumbers,catNames]);
+  }, [listLogNumbers]);
 
 
   // ---- Functions handle
@@ -339,29 +361,6 @@ const MusicInterface = () => {
         <button onClick={handleClickTextSearch}>Submit search</button>
       </div>
 
-      {/* Test Scrolling. Works but need to be updated for work with... recording. */}
-      <nav>
-        {catNames.map((name, index) => (
-          <button key={index+'catButton'} onClick={() => handleScrollToCat(index)}>
-            {name}
-          </button>
-        ))}
-      </nav>
-      <div>
-        <ul>
-          {catNames.map((name, index) => (
-            <li key={'catNames'+index}>
-              <img
-                src={`https://placekitten.com/g/200/200`}
-                alt={name}
-                ref={catRefs.current[index]}
-              />
-            </li>
-          ))}
-        </ul>
-      </div>
-      
-
       {/* ==== OUTPUT SEARCH ==== */}
       <div className='wrapperMusicSearch'>
         {(listSearchRes.length <= 0) ? (<></>) :
@@ -372,7 +371,8 @@ const MusicInterface = () => {
               type={"search"}
               info={oldSearch}
             /> 
-            <div className='buttonListLogsNumbers'>
+            {/* TODO set it to left as the user scrolls down  */}
+            <div id='buttonListLogsNumbers' ref={buttonListLogsNumbersRef}>
               The list of recordings is: 
               <nav>
         {listLogNumbers.map((a, index) => (
@@ -419,10 +419,12 @@ const MusicInterface = () => {
                     alt={lln}
                     ref={ref => (lognumbersRefs.current[index] = ref)}
                   >
-                    Recording: {lln}
-                    <div
-                      className='metadataRecording'
-                    > </div>
+                    <h2>Recording: {lln}</h2>
+                    <em>List of recordings <MdKeyboardDoubleArrowUp className='icon' onClick={scrollToButtonListLogsNumbers}/></em>
+                    <div className='metadataRecording'> 
+                      Metadata  
+                      <AiOutlineLoading className="spin" size={"20px"} />                      
+                    </div>
                     <div className='matchedTracksOfRecording'>
                       {listTracks.length > 0 &&
                         listTracks.map((track, ndx) => {
@@ -431,7 +433,17 @@ const MusicInterface = () => {
                               <div
                                 className='trackItem'
                               >
-                                {track}
+                                {/* {track} */}
+                                <TrackRes
+                                  key={"Track" + ndx + '' + track}
+                                  text={track}
+                                  listSearchRes={listSearchRes.filter(a => a.recording === track)}
+                                  formatAndPlay={formatAndPlay}
+                                  getMusicInfo={getMusicInfo}
+                                  infoMusicList={infoMusicList}
+                                  setInfoMusicList={setInfoMusicList}
+                                />
+
                               </div>
                             );
                           } else {
@@ -442,7 +454,7 @@ const MusicInterface = () => {
                   </div>
                 ))}
 
-              {(listSearchRes.length <= 0) ? (<></>) :
+              {/* {(listSearchRes.length <= 0) ? (<></>) :
                 listTracks.map((item, i) => (
                   <>
                     <TrackRes
@@ -456,7 +468,7 @@ const MusicInterface = () => {
                     />
                   </>
                 ))
-              }
+              } */}
 
             </div>
           </div>
