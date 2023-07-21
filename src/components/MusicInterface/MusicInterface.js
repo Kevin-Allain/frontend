@@ -56,16 +56,20 @@ const MusicInterface = () => {
   // References for scrolling
   const catNames = ['Tom', 'Maru', 'Jellylorum', 'Whiskers', 'Mittens'];
   const catRefs = useRef(catNames.map(() => React.createRef()));
-  const lognumbersRefs = useRef(listLogNumbers.map(() => React.createRef()));
+  // const lognumbersRefs = useRef(  listLogNumbers.map(() => React.createRef()) );
+  const recordingItemDivs = useRef([]);
+  const lognumbersRefs = useLogNumbersRefs(recordingItemDivs.current.length);
 
 
- const handleScrollToCat = (index) => {
+  const handleScrollToCat = (index) => {
     catRefs.current[index].current.scrollIntoView({
       behavior: 'smooth', block: 'nearest', inline: 'center'
     });
   }
   const handleScrollToRecording = (index) => {
-    // Need t haver a the html elements with the right ref
+    console.log("handleScrollToRecording | lognumbersRefs: ", lognumbersRefs, ", index: ", index);
+    console.log("... for comparison | catRefs.current: ", catRefs.current);
+    // Need to have a the html elements with the right ref
     lognumbersRefs.current[index].current.scrollIntoView({
       behavior: 'smooth', block: 'nearest', inline: 'center'
     });
@@ -77,6 +81,31 @@ const MusicInterface = () => {
     setValidPitchQuery(PITCH_QUERY_REGEX.test(textSearch))
     console.log("useEffect textSearch, validPitchQuery: ", validPitchQuery)
   }, [textSearch, validPitchQuery])
+
+  // ---- Custom hooks
+  // Custom hook to create and update refs
+  function useLogNumbersRefs(count) {
+    const lognumbersRefs = useRef([]);
+    useEffect(() => {
+      lognumbersRefs.current = Array(count).fill().map((_, index) => lognumbersRefs.current[index] || React.createRef());
+    }, [count]);
+
+    return lognumbersRefs;
+  }
+
+
+  useEffect(() => {
+    // Update the recordingItem divs whenever listLogNumbers changes
+    recordingItemDivs.current = listLogNumbers.map(() => React.createRef());
+  }, [listLogNumbers]);
+  useEffect(() => {
+    // Callback ref approach to update the refs array directly
+    recordingItemDivs.current.forEach((divRef, index) => {
+      lognumbersRefs.current[index].current = divRef.current;
+    });
+    console.log("recordingItemDivs: ",recordingItemDivs);
+  }, [lognumbersRefs, recordingItemDivs]);
+
 
 
   // ---- Functions handle
@@ -247,8 +276,8 @@ const MusicInterface = () => {
   function getResultsInfo(lognumbers, infoMusicList, setInfoMusicList) {
     console.log("getResultsInfo, lognumbers: ", lognumbers, { infoMusicList, setInfoMusicList });
     getTracksMetadata(
-      lognumbers, 
-      infoMusicList, 
+      lognumbers,
+      infoMusicList,
       setInfoMusicList
     );
   }
@@ -321,7 +350,7 @@ const MusicInterface = () => {
       {/* Test Scrolling. Works but need to be updated for work with... recording. */}
       <nav>
         {catNames.map((name, index) => (
-          <button key={index+'catButton'} onClick={() => handleScrollToCat(index)}>
+          <button key={index + 'catButton'} onClick={() => handleScrollToCat(index)}>
             {name}
           </button>
         ))}
@@ -329,7 +358,7 @@ const MusicInterface = () => {
       <div>
         <ul>
           {catNames.map((name, index) => (
-            <li key={index}>
+            <li key={'catNames' + index}>
               <img
                 src={`https://placekitten.com/g/200/200`}
                 alt={name}
@@ -339,7 +368,7 @@ const MusicInterface = () => {
           ))}
         </ul>
       </div>
-      
+
 
       {/* ==== OUTPUT SEARCH ==== */}
       <div className='wrapperMusicSearch'>
@@ -350,66 +379,84 @@ const MusicInterface = () => {
             <AnnotationSystem
               type={"search"}
               info={oldSearch}
-            /> 
+            />
             <div className='buttonListLogsNumbers'>
-              The list of recordings is: 
+              The list of recordings is:
               <nav>
-                {listLogNumbers.map((a,index) => (
-                  <button key={index+'lognumberButton'} onClick={() => handleScrollToRecording(index)}>
+                {listLogNumbers.map((a, index) => (
+                  <button key={index + 'lognumberButton'} onClick={() => handleScrollToRecording(index)}>
                     {a}
                   </button>
-                ))}.
+                ))}
               </nav>
+
             </div>
 
-          <div className='musicInterfaceContent'>
+            <div className='musicInterfaceContent'>
 
               <div className='infoLogNumber'>Load information about the recordings<br />
                 <BsInfoCircleFill className='icon'
                   onClick={() => getResultsInfo(
-                    listLogNumbers, 
-                    infoMusicList, 
+                    listLogNumbers,
+                    infoMusicList,
                     setInfoMusicList
                   )}
                 />
                 {(infoMusicList.length <= 0) ? (<></>) :
                   infoMusicList.map((item, i) => (
-                      <MusicInfo className='musicinfo'
-                        key={`${i}-${item.lognumber}`} // for some reason warning about keys?!
-                        lognumber={item.lognumber}
-                        contents={item.contents}
-                        recording_location={item.recording_location}
-                        addAnnotation={addAnnotation}
-                        updateAnnotation={updateAnnotation}
-                        getAnnotations={getAnnotations}
-                        deleteAnnotation={deleteAnnotation}
-                        idDatabase = {item.idDatabase} // doubt about whether this will be present?
-                      />
+                    <MusicInfo className='musicinfo'
+                      key={`${i}-${item.lognumber}`} // for some reason warning about keys?!
+                      lognumber={item.lognumber}
+                      contents={item.contents}
+                      recording_location={item.recording_location}
+                      addAnnotation={addAnnotation}
+                      updateAnnotation={updateAnnotation}
+                      getAnnotations={getAnnotations}
+                      deleteAnnotation={deleteAnnotation}
+                      idDatabase={item.idDatabase} // doubt about whether this will be present?
+                    />
                   )
                   )
                 }
               </div>
+
               {listLogNumbers.length > 0 &&
                 listLogNumbers.map((lln, index) => (
-                  <div className='recordingItem' key={'recordingItem' + index}>
+                  <div className='recordingItem' key={'recordingItem' + index} 
+                    ref={recordingItemDivs.current[index]}
+                  >
                     Recording: {lln}
                     <div className='metadataRecording'> </div>
                     <div className='matchedTracksOfRecording'>
-                      {listTracks.length>0 &&
-                        listTracks.map((track,ndx) => (
-                          <>{(track.includes(lln))? track:''}</>
-                        ))
-                      }
+                      {listTracks.length > 0 &&
+                        listTracks.map((track, ndx) => {
+                          if (track.includes(lln)) {
+                            return (
+                              <div
+                                className='trackItem'
+                                key={'trackItem' + ndx}
+                                ref={lognumbersRefs.current[index]}
+                              >
+                                {track}
+                              </div>
+                            );
+                          } else {
+                            return null; // or any fallback if track doesn't match
+                          }
+                        })}
                     </div>
                   </div>
                 ))}
+
+
+
               {(listSearchRes.length <= 0) ? (<></>) :
                 listTracks.map((item, i) => (
                   <>
                     <TrackRes
-                      key={"Track"+i + '' + item}
+                      key={"Track" + i + '' + item}
                       text={item}
-                      listSearchRes={listSearchRes.filter(a => a.recording===item)}
+                      listSearchRes={listSearchRes.filter(a => a.recording === item)}
                       formatAndPlay={formatAndPlay}
                       getMusicInfo={getMusicInfo}
                       infoMusicList={infoMusicList}

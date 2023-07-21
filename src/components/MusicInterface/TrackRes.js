@@ -38,7 +38,7 @@ const TrackRes = ({
 
             {listSearchRes.map((item, i) => ( 
                 <SampleRes 
-                key={i + '' + item.recording + '_' + item.arrNotes.toString().replaceAll(',', '-')}
+                // key={i + '' + item.recording + '_' + item.arrNotes.toString().replaceAll(',', '-')}
                 text={i + '-' + item.recording}
                 lognumber={item.recording.split('-')[0]}
                 length={item.arrTime[item.arrTime.length - 1] + item.arrDurations[item.arrDurations.length - 1] - item.arrTime[0]}
