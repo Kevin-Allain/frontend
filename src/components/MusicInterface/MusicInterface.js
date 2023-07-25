@@ -19,7 +19,7 @@ import MIDItoNote from "./MIDItoNote.json"
 import Annotation from '../Annotation/Annotation';
 import AnnotationSystem from '../Annotation/AnnotationSystem';
 import { AiFillPlayCircle, AiFillPauseCircle, AiOutlineArrowRight, AiOutlineLoading } from 'react-icons/ai'
-import {MdKeyboardDoubleArrowUp} from 'react-icons/md'
+import {MdKeyboardDoubleArrowUp, MdOutlineKeyboardArrowRight, MdOutlineKeyboardArrowLeft} from 'react-icons/md'
 import { ImLoop2 } from 'react-icons/im'
 import { BiDotsHorizontalRounded } from 'react-icons/bi'
 import { BsInfoCircleFill } from 'react-icons/bs'
@@ -57,6 +57,8 @@ const MusicInterface = () => {
   // References for scrolling
   const lognumbersRefs = useRef([]);
   const buttonListLogsNumbersRef = useRef(null);
+  const tracksRefs = useRef([]);
+  const buttonListTracksRef = useRef(null);
 
   function handleScroll() {
     const buttonListLogsNumbers = buttonListLogsNumbersRef.current;
@@ -84,19 +86,37 @@ const MusicInterface = () => {
       });
     }
   };
-  
+  const scrollToButtonListTracksNext = (e, nextIndex, track) => {
+    console.log("scrollToButtonListTracksNext | e: ",e,", nextIndex: ", nextIndex,", track: ", track,", selec: ",Math.min( listTracks.length, nextIndex+1));
+    const nextTrack = listTracks[Math.min( listTracks.length, nextIndex+1)];
+    console.log("nextTrack: ",nextTrack);
+    console.log("listTracks: ",listTracks);
+    const buttonTrack = document.getElementById(nextTrack);
+    if (buttonTrack) {
+      buttonTrack.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'start', });
+    }
+  }
 
+  const scrollToButtonListTracksPrev = (e, prevIndex, track) => {
+    console.log("scrollToButtonListTracksPrev | e: ",e,", prevIndex: ", prevIndex,", track: ", track,", selec: ",Math.max( listTracks.length-1, prevIndex-1));
+    const prevTrack = listTracks[Math.max( 0, prevIndex-1)];
+    console.log("listTracks: ",listTracks);
+    const buttonTrack = document.getElementById(prevTrack);
+    if (buttonTrack) {
+      buttonTrack.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'start', });
+    }
+  }
 
   const handleScrollToRecording = (index) => {
     console.log("handleScrollToRecording | lognumbersRefs: ",lognumbersRefs, ", index: ",index);
-    // Need to have a the html elements with the right ref
-    // lognumbersRefs.current[index].current.scrollIntoView({
-    //   behavior: 'smooth', block: 'nearest', inline: 'center'
-    // });
-    lognumbersRefs.current[index].scrollIntoView({
-      behavior: 'smooth', block: 'nearest', inline: 'center'
-    });    
+    lognumbersRefs.current[index].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });    
   }
+
+  const handleScrollToTrack = (index) => {
+    console.log("handleScrollToTrack | tracksRefs: ",tracksRefs, ", index: ",index);
+    tracksRefs.current[index].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+  }
+
 
 
   // ---- React functions
@@ -107,19 +127,30 @@ const MusicInterface = () => {
 
   useEffect(() => {
     console.log("useEffect listLogNumbers: ",listLogNumbers);
+
+    // new approach: sorting based on alphabet
+    const sorted = listLogNumbers.sort();
+    setListLogNumbers(sorted);
+
     lognumbersRefs.current = 
       lognumbersRefs.current.slice(0, listLogNumbers.length).map(
         (ref, index) => ref || React.createRef()
       );
-
-      // TODO buggy
-      // window.addEventListener('scroll', handleScroll);
-      // return () => {
-      //   window.removeEventListener('scroll', handleScroll);
-      // };
-  
-
   }, [listLogNumbers]);
+
+  useEffect(() => {
+    console.log("useEffect listTracks: ",listTracks);
+
+    // new approach: sorting based on alphabet
+    const sorted = listTracks.sort();
+    setListTracks(sorted);
+    
+    tracksRefs.current = 
+    tracksRefs.current.slice(0, listTracks.length).map(
+        (ref, index) => ref || React.createRef()
+      );
+  }, [listTracks]);
+
 
 
   // ---- Functions handle
@@ -370,27 +401,26 @@ const MusicInterface = () => {
             <AnnotationSystem
               type={"search"}
               info={oldSearch}
-            /> 
+            />
             {/* TODO set it to left as the user scrolls down  */}
             <div id='buttonListLogsNumbers' ref={buttonListLogsNumbersRef}>
-              The list of recordings is: 
+              The list of recordings is:
               <nav>
-        {listLogNumbers.map((a, index) => (
-          <button key={index + 'lognumberButton'} onClick={() => handleScrollToRecording(index)}>
-            {a}
-          </button>
-        ))}
-      </nav>
-
+                {listLogNumbers.map((a, index) => (
+                  <button key={index + 'lognumberButton'} onClick={() => handleScrollToRecording(index)}>
+                    {a}
+                  </button>
+                ))}
+              </nav>
             </div>
 
-          <div className='musicInterfaceContent'>
+            <div className='musicInterfaceContent'>
 
               <div className='infoLogNumber'>Load information about the recordings<br />
                 <BsInfoCircleFill className='icon'
                   onClick={() => getResultsInfo(
-                    listLogNumbers, 
-                    infoMusicList, 
+                    listLogNumbers,
+                    infoMusicList,
                     setInfoMusicList
                   )}
                 />
@@ -420,7 +450,12 @@ const MusicInterface = () => {
                     ref={ref => (lognumbersRefs.current[index] = ref)}
                   >
                     <h2>Recording: {lln}</h2>
-                    <em>List of recordings <MdKeyboardDoubleArrowUp className='icon' onClick={scrollToButtonListLogsNumbers}/></em>
+                    <em>List of recordings 
+                      <MdKeyboardDoubleArrowUp 
+                        className='icon' 
+                        onClick={scrollToButtonListLogsNumbers}
+                      />
+                    </em>
                     <div className='metadataRecording'> 
                       Metadata  
                       <AiOutlineLoading className="spin" size={"20px"} />                      
@@ -431,9 +466,12 @@ const MusicInterface = () => {
                           if (track.includes(lln)) {
                             return (
                               <div
-                                className='trackItem'
+                                className='trackItem' id={track}
                               >
-                                {/* {track} */}
+                                Previous Track{" "}
+                                <MdOutlineKeyboardArrowLeft className='icon' onClick={(e) => scrollToButtonListTracksPrev(e, ndx, track)}/> 
+                                |{" "}Next Track{" "}
+                                <MdOutlineKeyboardArrowRight className='icon' onClick={(e) => scrollToButtonListTracksNext(e, ndx, track)}/>
                                 <TrackRes
                                   key={"Track" + ndx + '' + track}
                                   text={track}

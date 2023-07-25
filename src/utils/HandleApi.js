@@ -341,10 +341,11 @@ const getMatchLevenshteinDistance = (
 
         const allLogNumber = [...new Set(resAggreg.map(a => a.recording.split('-')[0]))]
         console.log("allLogNumber: ", allLogNumber);
-        setListLogNumbers(allLogNumber);
+        const sortedLogNumbers = allLogNumber.sort();
+        const sortedTracks = [...new Set(resAggreg.map(obj => obj.recording))].sort()
+        setListLogNumbers(sortedLogNumbers);
         setListSearchRes(resAggreg);
-        // TODO
-        setListTracks([...new Set(resAggreg.map(obj => obj.recording))].sort())
+        setListTracks(sortedTracks);
       }
 
       setIsLoading(false);
