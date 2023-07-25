@@ -103,7 +103,7 @@ const MusicInterface = () => {
     console.log("listTracks: ",listTracks);
     const buttonTrack = document.getElementById(prevTrack);
     if (buttonTrack) {
-      buttonTrack.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'start', });
+      buttonTrack.scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'start', });
     }
   }
 
