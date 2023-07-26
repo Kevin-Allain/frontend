@@ -170,8 +170,6 @@ const MusicInterface = () => {
   }, [textSearch, validPitchQuery])
 
   useEffect(() => {
-    console.log("useEffect listLogNumbers: ",listLogNumbers);
-
     // new approach: sorting based on alphabet
     const sorted = listLogNumbers.sort();
     setListLogNumbers(sorted);
@@ -183,8 +181,6 @@ const MusicInterface = () => {
   }, [listLogNumbers]);
 
   useEffect(() => {
-    console.log("useEffect listTracks: ",listTracks);
-
     // new approach: sorting based on alphabet
     const sorted = listTracks.sort();
     setListTracks(sorted);
@@ -195,6 +191,9 @@ const MusicInterface = () => {
       );
   }, [listTracks]);
 
+  useEffect(() => {
+    console.log("useEffect to infoMusicList. infoMusicList: ",infoMusicList);
+  },[infoMusicList])
 
 
   // ---- Functions handle
@@ -501,8 +500,10 @@ const MusicInterface = () => {
                       />
                     </em>
                     <div className='metadataRecording'> 
-                      Metadata  
-                      <AiOutlineLoading className="spin" size={"20px"} />                      
+                      Metadata for recording {lln} <br/>
+                      {}{/* This is where I want to display the content if index matches. We will use infoMusicList */} 
+                      <AiOutlineLoading className="spin" size={"20px"} />
+
                     </div>
                     <div className='matchedTracksOfRecording'>
                       {listTracks.length > 0 &&
