@@ -90,25 +90,68 @@ const MusicInterface = () => {
   };
 
   const scrollToButtonListTracksFollowing = (e, indexButton, track, direction='next') => {
-    console.log("scrollToButtonListTracksPrev | e: ",e,", indexButton: ", indexButton,", track: ", track);
+    // console.log("scrollToButtonListTracksPrev | e: ",e,", indexButton: ", indexButton,", track: ", track);
     const prevTrack = listTracks[Math.max( 0, indexButton-1)];
     const nextTrack = listTracks[Math.min( listTracks.length, indexButton+1)];
-    console.log("listTracks: ",listTracks);
     const buttonTrack = (direction==='next')?document.getElementById(nextTrack) : document.getElementById(prevTrack);
-    if (buttonTrack) { buttonTrack.scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'start', }); }
+    if (buttonTrack) { 
+      
+      // Temporarily set 'overflow' to 'visible' on .musicInterface to allow the scrolling
+      const outputMusicSearch = document.querySelector('.outputMusicSearch');
+      const originalOverflow = outputMusicSearch.style.overflow;
+      outputMusicSearch.style.overflow = 'visible';
+
+      // Calculate the offset of the buttonTrack relative to the .musicInterface div
+      const outputMusicSearchRect = outputMusicSearch.getBoundingClientRect();
+      const buttonTrackRect = buttonTrack.getBoundingClientRect();
+      const relativeOffset = buttonTrackRect.top - outputMusicSearchRect.top;
+
+      // Calculate the desired scrollTop to ensure the element is visible in the .musicInterface div
+      const scrollTop = outputMusicSearch.scrollTop + relativeOffset;
+
+      // Perform the scroll on .outputMusicSearch
+      outputMusicSearch.scrollTo({
+        top: scrollTop,
+        behavior: 'smooth',
+      });
+
+      // Reset 'overflow' back to its original value after the scrolling
+      outputMusicSearch.style.overflow = originalOverflow;
+      buttonTrack.scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'start', });       
+    }
   }
 
   const scrollToButtonListRecordingsFollowing = (e, recording, direction='next') => {
-    console.log("scrollToButtonListRecordingsFollowing | e: ",e,", recording: ", recording,", direction: ",direction);
+    // console.log("scrollToButtonListRecordingsFollowing | e: ",e,", recording: ", recording,", direction: ",direction);
     const curIndex = listLogNumbers.indexOf(recording);
     const prevSelecIndex = Math.max( 0, curIndex-1);
     const nextSelecIndex = Math.min( listLogNumbers.length, curIndex+1);
     const selecIndex = (direction==='next')?nextSelecIndex:prevSelecIndex;
-    console.log("selecIndex: ",selecIndex," | lognumbersRefs: ",lognumbersRefs);
-    lognumbersRefs.current[selecIndex].scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'start' });    
-    // console.log("listLogNumbers: ",listLogNumbers,", prevRecording: ",prevRecording,", nextRecording: ",nextRecording );
-  }
+    // console.log("selecIndex: ",selecIndex," | lognumbersRefs: ",lognumbersRefs);
+    
+      // Temporarily set 'overflow' to 'visible' on .musicInterface to allow the scrolling
+      const outputMusicSearch = document.querySelector('.outputMusicSearch');
+      const originalOverflow = outputMusicSearch.style.overflow;
+      outputMusicSearch.style.overflow = 'visible';
 
+      // Calculate the offset of the buttonTrack relative to the .musicInterface div
+      const outputMusicSearchRect = outputMusicSearch.getBoundingClientRect();
+      const buttonTrackRect = lognumbersRefs.current[curIndex].getBoundingClientRect();
+      const relativeOffset = buttonTrackRect.top - outputMusicSearchRect.top;
+
+      // Calculate the desired scrollTop to ensure the element is visible in the .musicInterface div
+      const scrollTop = outputMusicSearch.scrollTop + relativeOffset;
+
+      // Perform the scroll on .outputMusicSearch
+      outputMusicSearch.scrollTo({
+        top: scrollTop,
+        behavior: 'smooth',
+      });
+
+      // Reset 'overflow' back to its original value after the scrolling
+      outputMusicSearch.style.overflow = originalOverflow;
+    lognumbersRefs.current[selecIndex].scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'start' });
+  }
 
   const handleScrollToRecording = (index) => {
     console.log("handleScrollToRecording | lognumbersRefs: ",lognumbersRefs, ", index: ",index);
@@ -119,8 +162,6 @@ const MusicInterface = () => {
     console.log("handleScrollToTrack | tracksRefs: ",tracksRefs, ", index: ",index);
     tracksRefs.current[index].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
   }
-
-
 
   // ---- React functions
   useEffect(() => {
