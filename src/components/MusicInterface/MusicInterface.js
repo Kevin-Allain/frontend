@@ -19,7 +19,9 @@ import MIDItoNote from "./MIDItoNote.json"
 import Annotation from '../Annotation/Annotation';
 import AnnotationSystem from '../Annotation/AnnotationSystem';
 import { AiFillPlayCircle, AiFillPauseCircle, AiOutlineArrowRight, AiOutlineLoading } from 'react-icons/ai'
-import {MdKeyboardDoubleArrowUp, MdOutlineKeyboardArrowRight, MdOutlineKeyboardArrowLeft} from 'react-icons/md'
+import {
+  MdKeyboardDoubleArrowUp, MdOutlineKeyboardArrowRight, MdOutlineKeyboardArrowLeft, MdKeyboardDoubleArrowLeft, MdKeyboardDoubleArrowRight
+} from 'react-icons/md'
 import { ImLoop2 } from 'react-icons/im'
 import { BiDotsHorizontalRounded } from 'react-icons/bi'
 import { BsInfoCircleFill } from 'react-icons/bs'
@@ -86,26 +88,27 @@ const MusicInterface = () => {
       });
     }
   };
-  const scrollToButtonListTracksNext = (e, nextIndex, track) => {
-    console.log("scrollToButtonListTracksNext | e: ",e,", nextIndex: ", nextIndex,", track: ", track,", selec: ",Math.min( listTracks.length, nextIndex+1));
-    const nextTrack = listTracks[Math.min( listTracks.length, nextIndex+1)];
-    console.log("nextTrack: ",nextTrack);
+
+  const scrollToButtonListTracksFollowing = (e, indexButton, track, direction='next') => {
+    console.log("scrollToButtonListTracksPrev | e: ",e,", indexButton: ", indexButton,", track: ", track);
+    const prevTrack = listTracks[Math.max( 0, indexButton-1)];
+    const nextTrack = listTracks[Math.min( listTracks.length, indexButton+1)];
     console.log("listTracks: ",listTracks);
-    const buttonTrack = document.getElementById(nextTrack);
-    if (buttonTrack) {
-      buttonTrack.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'start', });
-    }
+    const buttonTrack = (direction==='next')?document.getElementById(nextTrack) : document.getElementById(prevTrack);
+    if (buttonTrack) { buttonTrack.scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'start', }); }
   }
 
-  const scrollToButtonListTracksPrev = (e, prevIndex, track) => {
-    console.log("scrollToButtonListTracksPrev | e: ",e,", prevIndex: ", prevIndex,", track: ", track,", selec: ",Math.max( listTracks.length-1, prevIndex-1));
-    const prevTrack = listTracks[Math.max( 0, prevIndex-1)];
-    console.log("listTracks: ",listTracks);
-    const buttonTrack = document.getElementById(prevTrack);
-    if (buttonTrack) {
-      buttonTrack.scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'start', });
-    }
+  const scrollToButtonListRecordingsFollowing = (e, recording, direction='next') => {
+    console.log("scrollToButtonListRecordingsFollowing | e: ",e,", recording: ", recording,", direction: ",direction);
+    const curIndex = listLogNumbers.indexOf(recording);
+    const prevSelecIndex = Math.max( 0, curIndex-1);
+    const nextSelecIndex = Math.min( listLogNumbers.length, curIndex+1);
+    const selecIndex = (direction==='next')?nextSelecIndex:prevSelecIndex;
+    console.log("selecIndex: ",selecIndex," | lognumbersRefs: ",lognumbersRefs);
+    lognumbersRefs.current[selecIndex].scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'start' });    
+    // console.log("listLogNumbers: ",listLogNumbers,", prevRecording: ",prevRecording,", nextRecording: ",nextRecording );
   }
+
 
   const handleScrollToRecording = (index) => {
     console.log("handleScrollToRecording | lognumbersRefs: ",lognumbersRefs, ", index: ",index);
@@ -468,10 +471,14 @@ const MusicInterface = () => {
                               <div
                                 className='trackItem' id={track}
                               >
-                                Previous Track{" "}
-                                <MdOutlineKeyboardArrowLeft className='icon' onClick={(e) => scrollToButtonListTracksPrev(e, ndx, track)}/> 
+                                Previous Recording{" "}
+                                <MdKeyboardDoubleArrowLeft className='icon' onClick={(e) => scrollToButtonListRecordingsFollowing(e, lln,'prev')}/>
+                                |{" "}Previous Track{" "}
+                                <MdOutlineKeyboardArrowLeft className='icon' onClick={(e) => scrollToButtonListTracksFollowing(e, ndx, track,'prev')}/> 
                                 |{" "}Next Track{" "}
-                                <MdOutlineKeyboardArrowRight className='icon' onClick={(e) => scrollToButtonListTracksNext(e, ndx, track)}/>
+                                <MdOutlineKeyboardArrowRight className='icon' onClick={(e) => scrollToButtonListTracksFollowing(e, ndx, track,'next')}/>
+                                |{" "}Next Recording
+                                <MdKeyboardDoubleArrowRight className='icon' onClick={(e) => scrollToButtonListRecordingsFollowing(e, lln,'next')}/>
                                 <TrackRes
                                   key={"Track" + ndx + '' + track}
                                   text={track}
