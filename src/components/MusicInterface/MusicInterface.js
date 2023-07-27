@@ -62,6 +62,10 @@ const MusicInterface = () => {
   const tracksRefs = useRef([]);
   const buttonListTracksRef = useRef(null);
 
+  // References for loading metadata within recording component
+  const [hashMetaMatch,setHashMetaMatch] = useState(new Map());
+
+
   function handleScroll() {
     const buttonListLogsNumbers = buttonListLogsNumbersRef.current;
     if (buttonListLogsNumbers) {
@@ -191,10 +195,19 @@ const MusicInterface = () => {
       );
   }, [listTracks]);
 
-  useEffect(() => {
-    console.log("useEffect to infoMusicList. infoMusicList: ",infoMusicList);
-  },[infoMusicList])
+  // useEffect(() => {
+  //   console.log("useEffect to infoMusicList. infoMusicList: ",infoMusicList,", hashMetaMatch: ",hashMetaMatch);
+  //   for(var i in infoMusicList){
+  //     setHashMetaMatch(map => new Map(map.set( infoMusicList[i].lognumber , infoMusicList[i])))
+  //   }
+  //   console.log("hashMetaMatch: ",hashMetaMatch);
+  // },[infoMusicList])
 
+  const findMatchRecording = (lln) => {
+    const matchIndex = infoMusicList.findIndex(item => item.lognumber === lln);
+    return matchIndex !== -1;
+  }
+  
 
   // ---- Functions handle
   const handleChangeQueryPitch = (event) => {
@@ -486,7 +499,7 @@ const MusicInterface = () => {
               </div>
 
               {listLogNumbers.length > 0 &&
-                listLogNumbers.map((lln, index) => (
+                listLogNumbers.map((lln, index) => (          
                   <div
                     className='recordingItem' key={'recordingItem' + index}
                     alt={lln}
@@ -499,11 +512,17 @@ const MusicInterface = () => {
                         onClick={scrollToButtonListLogsNumbers}
                       />
                     </em>
-                    <div className='metadataRecording'> 
-                      Metadata for recording {lln} <br/>
-                      {}{/* This is where I want to display the content if index matches. We will use infoMusicList */} 
-                      <AiOutlineLoading className="spin" size={"20px"} />
-
+                    <div className='metadataRecording'>
+                      {(infoMusicList.length === 0) ? (<AiOutlineLoading className="spin" size={"20px"} />) :
+                        findMatchRecording(lln) ? (
+                          <div>
+                            {/* Content to display if the index matches */}
+                            <p>lognumber: {lln}</p>
+                            {/* Add more properties from the matched object here */}
+                          </div>
+                        ) : (
+                          <>No match for metadata</>
+                        )}
                     </div>
                     <div className='matchedTracksOfRecording'>
                       {listTracks.length > 0 &&
