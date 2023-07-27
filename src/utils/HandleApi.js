@@ -224,7 +224,11 @@ const getMatchLevenshteinDistance = (
   levenshteinDistanceFunc = null,
   setListSearchRes = null,
   setListLogNumbers = null,
-  setListTracks = null
+  setListTracks = null,
+  // Additions for loading of metadata after the loading of tracks
+  getTracksMetadata=null,
+  infoMusicList=null, 
+  setInfoMusicList=null
 ) => {
   console.log("-- handleAPI / getMatchLevenshteinDistance. stringNotes: ", stringNotes, ", percMatch: ", percMatch, " user: ", user);
   setIsLoading(true);
@@ -323,11 +327,6 @@ const getMatchLevenshteinDistance = (
               recording: i
             });
           }
-          // resArray.push({ "recording": i });
-          // resArray[resArray.length - 1].data = dataSplitByRecording[i].data;
-          // resArray[resArray.length - 1].distances = dataSplitByRecording[i].distances;
-          // resArray[resArray.length - 1].sequences = dataSplitByRecording[i].sequences;
-          // resArray[resArray.length - 1].slicesDist = dataSplitByRecording[i].slicesDist;
           resAggreg = resAggreg.concat(dataSplitByRecording[i].slicesDist);
         }
 
@@ -346,6 +345,13 @@ const getMatchLevenshteinDistance = (
         setListLogNumbers(sortedLogNumbers);
         setListSearchRes(resAggreg);
         setListTracks(sortedTracks);
+
+        // Calls for loading of metadata
+        getTracksMetadata(
+          sortedLogNumbers, 
+          infoMusicList, 
+          setInfoMusicList
+        );        
       }
 
       setIsLoading(false);

@@ -205,7 +205,7 @@ const MusicInterface = () => {
 
   const findMatchRecording = (lln) => {
     const matchIndex = infoMusicList.findIndex(item => item.lognumber === lln);
-    return matchIndex !== -1;
+    return matchIndex;
   }
   
 
@@ -397,7 +397,11 @@ const MusicInterface = () => {
       calcLevenshteinDistance_int,
       setListSearchRes,
       setListLogNumbers,
-      setListTracks
+      setListTracks,
+      // Additions for loading of metadata after the loading of tracks
+      getTracksMetadata,
+      infoMusicList, 
+      setInfoMusicList
     );
     setTextSearch('');
   }
@@ -514,11 +518,12 @@ const MusicInterface = () => {
                     </em>
                     <div className='metadataRecording'>
                       {(infoMusicList.length === 0) ? (<AiOutlineLoading className="spin" size={"20px"} />) :
-                        findMatchRecording(lln) ? (
+                        (findMatchRecording(lln) !== -1) ? (
                           <div>
                             {/* Content to display if the index matches */}
                             <p>lognumber: {lln}</p>
                             {/* Add more properties from the matched object here */}
+                            From item: {infoMusicList[findMatchRecording(lln)].lognumber}
                           </div>
                         ) : (
                           <>No match for metadata</>
