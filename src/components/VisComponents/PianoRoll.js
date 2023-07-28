@@ -3,23 +3,38 @@ import * as d3 from 'd3';
 import MIDItoNote from '../MusicInterface/MIDItoNote.json'
 import './PianoRoll.css'
 
-  const noteToColor = {
-    A: "#FE2712",
-    "A#": "#FC600A",
-    B: "#FB9902",
-    C: "#FCCC1A",
-    "C#": "#FEFE33",
-    D: "#B2D732",
-    "D#": "#66B032",
-    E: "#347C98",
-    F: "#0247FE",
-    "F#": "#4424D6",
-    G: "#8601AF",
-    "G#": "#C21460",
-  };
+  // const noteToColor = {
+  //   A: "#FE2712",
+  //   "A#": "#FC600A",
+  //   B: "#FB9902",
+  //   C: "#FCCC1A",
+  //   "C#": "#F5DF4D",
+  //   D: "#B2D732",
+  //   "D#": "#66B032",
+  //   E: "#347C98",
+  //   F: "#0247FE",
+  //   "F#": "#4424D6",
+  //   G: "#8601AF",
+  //   "G#": "#C21460",
+  // };
 
-  
-
+//   const noteToColor = {
+//     'A':"#ae4247",
+//     "A#": "#FC600A",
+//     'B':'#FFA500',
+//     'C': '#56C6A9',
+//     "C#": "#F5DF4D",
+//     'D':'#4B5335',
+//     "D#": "#66B032",    
+//     'E':'#798EA4',
+//     'F':'#FA7A35',
+//     "F#": "#4424D6",
+//     'G':'#00758F',
+//     "G#": "#C21460",
+// }
+const noteToColor = {
+'A':'#003f5c', 'B':'#58508d', 'C':'#8a508f', 'D':'#bc5090','E':'#de5a79','F':'#ff6361', 'G':'#ff8531'
+}
 const PianoRoll = ({ notes, occurrences, durations, width, height }) => {
   const svgRef = useRef(null);
 
@@ -84,7 +99,7 @@ const PianoRoll = ({ notes, occurrences, durations, width, height }) => {
           noteToColor[MIDItoNote[d].replaceAll("s", "").replace(/\d+/g, "")]
       )
       .attr("stroke", "black")
-      .attr('opacity','0.65')
+      // .attr('opacity','0.65')
 
     // Append vertical dotted lines for the x-axis values
     svg
