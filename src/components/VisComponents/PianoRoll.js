@@ -27,6 +27,7 @@ const PianoRoll = ({ notes, occurrences, durations, width, height }) => {
 
   useEffect(() => {
     const svg = d3.select(svgRef.current);
+    svg.selectAll("*").remove(); // Clear the SVG by removing all elements
     const margin = { top: 10, right: 10, bottom: 20, left: 50 };
 
     const minNote = Math.min(...notes);

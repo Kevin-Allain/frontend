@@ -443,7 +443,7 @@ const MusicInterface = () => {
       {/* ==== Test Piano Roll === */}
       <div>
         <h1>Piano Roll</h1>
-        <PianoRoll notes={notes} occurrences={occurrences} durations={durations} width={500} height={250}/>
+        <PianoRoll notes={notes} occurrences={occurrences} durations={durations} width={400} height={250}/>
       </div>
       {/* ==== PIANO INPUT ==== */}
       <Piano onKeyPress={handleKeyPress} />
