@@ -1,8 +1,24 @@
 import React, { useEffect, useRef } from 'react';
 import * as d3 from 'd3';
+import MIDItoNote from '../MusicInterface/MIDItoNote.json'
 
 const PianoRoll = ({ notes, occurrences, durations, width, height }) => {
   const svgRef = useRef(null);
+
+  const noteToColor = {
+    'A': '#FE2712',
+    'A#': '#FC600A',
+    'B': '#FB9902',
+    'C': '#FCCC1A',
+    'C#': '#FEFE33',
+    'D': '#B2D732',
+    'D#': '#66B032',
+    'E': '#347C98',
+    'F': '#0247FE',
+    'F#': '#4424D6',
+    'G': '#8601AF',
+    'G#': '#C21460',
+  }
 
   useEffect(() => {
     const svg = d3.select(svgRef.current);
@@ -46,7 +62,7 @@ const PianoRoll = ({ notes, occurrences, durations, width, height }) => {
       .attr('y', (d) => yScale(d) - barHeight / 2)
       .attr('width', (d, i) => xScale(durations[i] + occurrences[i]) - xScale(occurrences[i]))
       .attr('height', barHeight)
-      .attr('fill', 'steelblue')
+      .attr('fill', (d => noteToColor[MIDItoNote[d].replaceAll('s','').replace(/\d+/g, '')]))
       .attr('stroke', 'black'); // Set the stroke attribute to black
 
     // TODO not working here...
@@ -66,7 +82,9 @@ const PianoRoll = ({ notes, occurrences, durations, width, height }) => {
 
 
     const xAxis = d3.axisBottom(xScale).ticks(10);
-    const yAxis = d3.axisLeft(yScale).ticks(maxNote - minNote + 1).tickFormat((d) => d);
+    const yAxis = d3.axisLeft(yScale).tickValues(notes).tickFormat((d, index) =>
+      MIDItoNote[d].replaceAll('s', '')
+    );
 
     svg.append('g')
       .attr('transform', `translate(0, ${height - margin.bottom})`)
@@ -74,7 +92,10 @@ const PianoRoll = ({ notes, occurrences, durations, width, height }) => {
 
     svg.append('g')
       .attr('transform', `translate(${margin.left}, 0)`)
-      .call(yAxis);
+      .call(yAxis)
+      .selectAll('text') // Select all tick labels
+      .attr('dx', (_, i) => (i % 2 === 0) ? '-12px' : '3px'); // Apply negative offset to every alternate label  
+      ;
   }, [notes, occurrences, durations, width, height]);
 
   return (
