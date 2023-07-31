@@ -84,6 +84,9 @@ ul .black-key {
     align-items: flex-end;
     padding-bottom: 10px;
     color: white;
+    /* unclear if we want to keep it, but might be nicer with border */
+    border: solid;
+    border-color: black;
 }
 
 .labelWhiteKey{
@@ -92,6 +95,8 @@ ul .black-key {
     border-radius: 0.25rem;
     color: white;
     padding: 0.1rem;    
+    /* border: solid;
+    border-color: white; */
 }
 .regularWhiteKey{
     padding: 0.1rem;    
