@@ -40,6 +40,12 @@ body {
     opacity: 0.9;
 }
 
+.white{
+    border: solid;
+    border-width: medium;
+}
+
+
 .activeWhiteNote:hover {
     color: orange;
 }

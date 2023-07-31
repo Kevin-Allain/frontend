@@ -51,7 +51,7 @@ const Piano = (props) => {
 
         const handleKeyDown = (event) => {
             const note = event.target.dataset.note;
-            console.log("note: ", note);
+            console.log("handleKeyDown note: ", note,", event: ",event);
             const now = Tone.now();
             synth.current.triggerAttackRelease(note, "8n", now + 0.25);
             Tone.Transport.stop();
@@ -73,407 +73,330 @@ const Piano = (props) => {
 
     return (
         <ul id="piano" className='keys'>
-            {/* <li data-note="C0"
-                className={`key note white ${activeWhiteNote === "C0" ? "active" : ""}`} >
-                <div data-note="C#0s"
-                    className={`black-key note white ${activeBlackNote === "C#0s" ? "active" : ""}`} >
-                    C#0
-                </div>
-                C0
-            </li>
-            <li data-note="D0"
-                className={`key note white ${activeWhiteNote === "D0" ? "active" : ""}`} >
-                <div data-note="D#0s"
-                    className={`black-key note white ${activeBlackNote === "D#0s" ? "active" : "" }`} >
-                    D#0
-                </div>
-                D0
-            </li>
-            <li data-note="E0"
-                className={`key note white ${activeWhiteNote === "E0" ? "active" : ""}`} >
-                E0
-            </li>
-            <li data-note="F0"
-                className={`key note white ${activeWhiteNote === "F0" ? "active" : ""}`} >
-                <div data-note="F#0s"
-                    className={`black-key note white ${activeBlackNote === "F#0s" ? "active" : "" }`} >
-                    F#0
-                </div>
-                F0
-            </li>
-            <li data-note="G0"
-                className={`key note white ${activeWhiteNote === "G0" ? "active" : ""}`} >
-                <div data-note="G#0s"
-                    className={`black-key note white ${activeBlackNote === "G#0s" ? "active" : "" }`} >
-                    G#0
-                </div>
-                G0
-            </li>
-            <li data-note="A0"
-                className={`key note white ${activeWhiteNote === "A0" ? "active" : ""}`} >
-                <div data-note="A#0s"
-                    className={`black-key note white ${activeBlackNote === "A#0s" ? "active" : "" }`} >
-                    A#0
-                </div>
-                A0
-            </li>
-            <li data-note="B0" className={`key note white ${activeWhiteNote === "A0" ? "active" : ""}`} >
-                B0
-            </li>             */}
-            {/* <li data-note="C1"
-                className={`key note white ${activeWhiteNote === "C1" ? "active" : ""}`} >
-                <div data-note="C#1s"
-                    className={`black-key note white ${activeBlackNote === "C#1s" ? "active" : ""}`} >
-                    C#1
-                </div>
-                C1
-            </li>
-            <li data-note="D1"
-                className={`key note white ${activeWhiteNote === "D1" ? "active" : ""}`} >
-                <div data-note="D#1s"
-                    className={`black-key note white ${activeBlackNote === "D#1s" ? "active" : "" }`} >
-                    D#1
-                </div>
-                D1
-            </li>
-            <li data-note="E1"
-                className={`key note white ${activeWhiteNote === "E1" ? "active" : ""}`} >
-                E1
-            </li>
-            <li data-note="F1"
-                className={`key note white ${activeWhiteNote === "F1" ? "active" : ""}`} >
-                <div data-note="F#1s"
-                    className={`black-key note white ${activeBlackNote === "F#1s" ? "active" : "" }`} >
-                    F#1
-                </div>
-                F1
-            </li>
-            <li data-note="G1"
-                className={`key note white ${activeWhiteNote === "G1" ? "active" : ""}`} >
-                <div data-note="G#1s"
-                    className={`black-key note white ${activeBlackNote === "G#1s" ? "active" : "" }`} >
-                    G#1
-                </div>
-                G1
-            </li>
-            <li data-note="A1"
-                className={`key note white ${activeWhiteNote === "A1" ? "active" : ""}`} >
-                <div data-note="A#1s"
-                    className={`black-key note white ${activeBlackNote === "A#1s" ? "active" : "" }`} >
-                    A#1
-                </div>
-                A1
-            </li>
-            <li data-note="B1" className={`key note white ${activeWhiteNote === "A1" ? "active" : ""}`} >
-                B1
-            </li>             */}
-            {/* <li data-note="C2"
-                className={`key note white ${activeWhiteNote === "C2" ? "active" : ""}`} >
-                <div data-note="C#2s"
-                    className={`black-key note white ${activeBlackNote === "C#2s" ? "active" : ""}`} >
-                    C#2
-                </div>
-                C2
-            </li>
-            <li data-note="D2"
-                className={`key note white ${activeWhiteNote === "D2" ? "active" : ""}`} >
-                <div data-note="D#2s"
-                    className={`black-key note white ${activeBlackNote === "D#2s" ? "active" : "" }`} >
-                    D#2
-                </div>
-                D2
-            </li>
-            <li data-note="E2"
-                className={`key note white ${activeWhiteNote === "E2" ? "active" : ""}`} >
-                E2
-            </li>
-            <li data-note="F2"
-                className={`key note white ${activeWhiteNote === "F2" ? "active" : ""}`} >
-                <div data-note="F#2s"
-                    className={`black-key note white ${activeBlackNote === "F#2s" ? "active" : "" }`} >
-                    F#2
-                </div>
-                F2
-            </li>
-            <li data-note="G2"
-                className={`key note white ${activeWhiteNote === "G2" ? "active" : ""}`} >
-                <div data-note="G#2s"
-                    className={`black-key note white ${activeBlackNote === "G#2s" ? "active" : "" }`} >
-                    G#2
-                </div>
-                G2
-            </li>
-            <li data-note="A2"
-                className={`key note white ${activeWhiteNote === "A2" ? "active" : ""}`} >
-                <div data-note="A#2s"
-                    className={`black-key note white ${activeBlackNote === "A#2s" ? "active" : "" }`} >
-                    A#2
-                </div>
-                A2
-            </li>
-            <li data-note="B2" className={`key note white ${activeWhiteNote === "A2" ? "active" : ""}`} >
-                B2
-            </li>             */}
+            {/* Could go from 0 to 8 */}
             <li data-note="C3"
                 className={`key note white ${activeWhiteNote === "C3" ? "active" : ""}`} 
-                style={{color: NoteToColor["C"] }}
+                style={{
+                    color: NoteToColor["C"], border:"solid", borderWidth:"medium",
+                }}
                 >
                 <div data-note="C#3s"
                     className={`black-key note white ${activeBlackNote === "C#3s" ? "active" : ""}`} 
-                    style={{background: NoteToColor["C#"] }}
+                    style={{color: NoteToColor["C#"], border:"solid",borderColor:NoteToColor["C#"]}}
                     >
                     C#3
                 </div>
-                <div className='labelWhiteKey' style={{background: NoteToColor["C"] }}> C3 </div>
+                C3
             </li>
             <li data-note="D3"
                 className={`key note white ${activeWhiteNote === "D3" ? "active" : ""}`} 
-                style={{color: NoteToColor["D"] }}                
+                style={{color: NoteToColor["D"], border:"solid", borderWidth:"medium", }}                
                 >
                 <div data-note="D#3s"
                     className={`black-key note white ${activeBlackNote === "D#3s" ? "active" : ""}`} 
-                    style={{background: NoteToColor["D#"] }}
+                    style={{color: NoteToColor["D#"], border:"solid",borderColor:NoteToColor["D#"]}}
                     >
                     D#3
                 </div>
-                <div className='labelWhiteKey' style={{background: NoteToColor["D"] }}> D3 </div>
+                D3
             </li>
             <li data-note="E3"
                 className={`key note white ${activeWhiteNote === "E3" ? "active" : ""}`} 
-                style={{color: NoteToColor["E"] }}
+                style={{
+                    color: NoteToColor["E"], border:"solid", borderWidth:"medium",
+                }}
                 >
-                <div className='labelWhiteKey' style={{background: NoteToColor["E"] }}>E3</div>
+                E3
             </li>
             <li data-note="F3"
                 className={`key note white ${activeWhiteNote === "F3" ? "active" : ""}`} 
-                style={{color: NoteToColor["F"] }}
+                style={{
+                    color: NoteToColor["F"], border:"solid", borderWidth:"medium",
+                    }}
                 >
                 <div data-note="F#3s"
                     className={`black-key note white ${activeBlackNote === "F#3s" ? "active" : ""}`} 
-                    style={{background: NoteToColor["F#"] }}
-                    >
+                    style={{color: NoteToColor["F#"], border:"solid",borderColor:NoteToColor["F#"]}}                    >
                     F#3
                 </div>
-                <div className='labelWhiteKey' style={{background: NoteToColor["F"] }}>F3</div>
+                F3
             </li>
             <li data-note="G3"
                 className={`key note white ${activeWhiteNote === "G3" ? "active" : ""}`} 
-                style={{color: NoteToColor["G"] }}
+                style={{
+                    color: NoteToColor["G"], border:"solid", borderWidth:"medium", 
+                    }}
                 >
                 <div data-note="G#3s"
                     className={`black-key note white ${activeBlackNote === "G#3s" ? "active" : ""}`} 
-                    style={{background: NoteToColor["G#"] }}
-                    >
+                    style={{color: NoteToColor["G#"], border:"solid",borderColor:NoteToColor["G#"]}}                    >
                     G#3
                 </div>
-                <div className='labelWhiteKey' style={{background: NoteToColor["G"] }}>G3</div>
+                G3
             </li>
             <li data-note="A3"
                 className={`key note white ${activeWhiteNote === "A3" ? "active" : ""}`} 
-                style={{color: NoteToColor["A"] }}
+                style={{
+                    color: NoteToColor["A"], border:"solid", borderWidth:"medium", 
+                    }}
                 >
                 <div data-note="A#3s"
                     className={`black-key note white ${activeBlackNote === "A#3s" ? "active" : ""}`} 
-                    style={{background: NoteToColor["A#"] }}
-                    >
+                    style={{color: NoteToColor["A#"], border:"solid",borderColor:NoteToColor["A#"]}}                    >
                     A#3
                 </div>
-                <div className='labelWhiteKey' style={{background: NoteToColor["A"] }}>A3</div>
+                A3
             </li>
             <li data-note="B3" className={`key note white ${activeWhiteNote === "A3" ? "active" : ""}`} 
-            style={{color: NoteToColor["B"] }}
+            style={{
+                color: NoteToColor["B"], border:"solid", borderWidth:"medium", 
+                }}
             >
-                <div className='labelWhiteKey' style={{background: NoteToColor["B"] }}>B3</div>
+                B3
             </li>
             <li data-note="C4"
-                className={`key note white ${activeWhiteNote === "C4" ? "active" : ""}`} >
+                className={`key note white ${activeWhiteNote === "C4" ? "active" : ""}`} 
+                style={{
+                    color: NoteToColor["C"], border:"solid", borderWidth:"medium",
+                }}
+                >
                 <div data-note="C#4s"
-                    className={`black-key note white ${activeBlackNote === "C#4s" ? "active" : ""}`} >
+                    className={`black-key note white ${activeBlackNote === "C#4s" ? "active" : ""}`} 
+                    style={{color: NoteToColor["C#"], border:"solid",borderColor:NoteToColor["C#"]}}
+                    >
                     C#4
                 </div>
-                <div className='regularWhiteKey'>C4</div>
+                C4
             </li>
             <li data-note="D4"
-                className={`key note white ${activeWhiteNote === "D4" ? "active" : ""}`} >
+                className={`key note white ${activeWhiteNote === "D4" ? "active" : ""}`} 
+                style={{color: NoteToColor["D"], border:"solid", borderWidth:"medium", }}                
+                >
                 <div data-note="D#4s"
-                    className={`black-key note white ${activeBlackNote === "D#4s" ? "active" : ""}`} >
+                    className={`black-key note white ${activeBlackNote === "D#4s" ? "active" : ""}`} 
+                    style={{color: NoteToColor["D#"], border:"solid",borderColor:NoteToColor["D#"]}}
+                    >
                     D#4
                 </div>
-                <div className='regularWhiteKey'>D4</div>
+                D4
             </li>
             <li data-note="E4"
-                className={`key note white ${activeWhiteNote === "E4" ? "active" : ""}`} >
-                <div className='regularWhiteKey'>E4</div>
+                className={`key note white ${activeWhiteNote === "E4" ? "active" : ""}`} 
+                style={{
+                    color: NoteToColor["E"], border:"solid", borderWidth:"medium",
+                }}
+                >
+                E4
             </li>
             <li data-note="F4"
-                className={`key note white ${activeWhiteNote === "F4" ? "active" : ""}`} >
+                className={`key note white ${activeWhiteNote === "F4" ? "active" : ""}`} 
+                style={{
+                    color: NoteToColor["F"], border:"solid", borderWidth:"medium",
+                    }}
+                >
                 <div data-note="F#4s"
-                    className={`black-key note white ${activeBlackNote === "F#4s" ? "active" : ""}`} >
+                    className={`black-key note white ${activeBlackNote === "F#4s" ? "active" : ""}`} 
+                    style={{color: NoteToColor["F#"], border:"solid",borderColor:NoteToColor["F#"]}}                    >
                     F#4
                 </div>
-                <div className='regularWhiteKey'>F4</div>
+                F4
             </li>
             <li data-note="G4"
-                className={`key note white ${activeWhiteNote === "G4" ? "active" : ""}`} >
+                className={`key note white ${activeWhiteNote === "G4" ? "active" : ""}`} 
+                style={{
+                    color: NoteToColor["G"], border:"solid", borderWidth:"medium", 
+                    }}
+                >
                 <div data-note="G#4s"
-                    className={`black-key note white ${activeBlackNote === "G#4s" ? "active" : ""}`} >
+                    className={`black-key note white ${activeBlackNote === "G#4s" ? "active" : ""}`} 
+                    style={{color: NoteToColor["G#"], border:"solid",borderColor:NoteToColor["G#"]}}                    >
                     G#4
                 </div>
-                <div className='regularWhiteKey'>G4</div>
+                G4
             </li>
             <li data-note="A4"
-                className={`key note white ${activeWhiteNote === "A4" ? "active" : ""}`} >
+                className={`key note white ${activeWhiteNote === "A4" ? "active" : ""}`} 
+                style={{
+                    color: NoteToColor["A"], border:"solid", borderWidth:"medium", 
+                    }}
+                >
                 <div data-note="A#4s"
-                    className={`black-key note white ${activeBlackNote === "A#4s" ? "active" : ""}`} >
+                    className={`black-key note white ${activeBlackNote === "A#4s" ? "active" : ""}`} 
+                    style={{color: NoteToColor["A#"], border:"solid",borderColor:NoteToColor["A#"]}}                    >
                     A#4
                 </div>
-                <div className='regularWhiteKey'>A4</div>
+                A4
             </li>
-            <li data-note="B4" className={`key note white ${activeWhiteNote === "A4" ? "active" : ""}`} >
-            <div className='regularWhiteKey'>B4</div>
+            <li data-note="B4" className={`key note white ${activeWhiteNote === "A4" ? "active" : ""}`} 
+            style={{
+                color: NoteToColor["B"], border:"solid", borderWidth:"medium", 
+                }}
+            >
+                B4
             </li>
             <li data-note="C5"
-                className={`key note white ${activeWhiteNote === "C5" ? "active" : ""}`} >
+                className={`key note white ${activeWhiteNote === "C5" ? "active" : ""}`} 
+                style={{
+                    color: NoteToColor["C"], border:"solid", borderWidth:"medium",
+                }}
+                >
                 <div data-note="C#5s"
-                    className={`black-key note white ${activeBlackNote === "C#5s" ? "active" : ""}`} >
+                    className={`black-key note white ${activeBlackNote === "C#5s" ? "active" : ""}`} 
+                    style={{color: NoteToColor["C#"], border:"solid",borderColor:NoteToColor["C#"]}}
+                    >
                     C#5
                 </div>
-                <div className='regularWhiteKey'>C5</div>
+                C5
             </li>
             <li data-note="D5"
-                className={`key note white ${activeWhiteNote === "D5" ? "active" : ""}`} >
+                className={`key note white ${activeWhiteNote === "D5" ? "active" : ""}`} 
+                style={{color: NoteToColor["D"], border:"solid", borderWidth:"medium", }}                
+                >
                 <div data-note="D#5s"
-                    className={`black-key note white ${activeBlackNote === "D#5s" ? "active" : ""}`} >
+                    className={`black-key note white ${activeBlackNote === "D#5s" ? "active" : ""}`} 
+                    style={{color: NoteToColor["D#"], border:"solid",borderColor:NoteToColor["D#"]}}
+                    >
                     D#5
                 </div>
-                <div className='regularWhiteKey'>D5</div>
+                D5
             </li>
             <li data-note="E5"
-                className={`key note white ${activeWhiteNote === "E5" ? "active" : ""}`} >
-                <div className='regularWhiteKey'>E5</div>
+                className={`key note white ${activeWhiteNote === "E5" ? "active" : ""}`} 
+                style={{
+                    color: NoteToColor["E"], border:"solid", borderWidth:"medium",
+                }}
+                >
+                E5
             </li>
             <li data-note="F5"
-                className={`key note white ${activeWhiteNote === "F5" ? "active" : ""}`} >
+                className={`key note white ${activeWhiteNote === "F5" ? "active" : ""}`} 
+                style={{
+                    color: NoteToColor["F"], border:"solid", borderWidth:"medium",
+                    }}
+                >
                 <div data-note="F#5s"
-                    className={`black-key note white ${activeBlackNote === "F#5s" ? "active" : ""}`} >
+                    className={`black-key note white ${activeBlackNote === "F#5s" ? "active" : ""}`} 
+                    style={{color: NoteToColor["F#"], border:"solid",borderColor:NoteToColor["F#"]}}                    >
                     F#5
                 </div>
-                <div className='regularWhiteKey'>F5</div>
+                F5
             </li>
             <li data-note="G5"
-                className={`key note white ${activeWhiteNote === "G5" ? "active" : ""}`} >
+                className={`key note white ${activeWhiteNote === "G5" ? "active" : ""}`} 
+                style={{
+                    color: NoteToColor["G"], border:"solid", borderWidth:"medium", 
+                    }}
+                >
                 <div data-note="G#5s"
-                    className={`black-key note white ${activeBlackNote === "G#5s" ? "active" : ""}`} >
+                    className={`black-key note white ${activeBlackNote === "G#5s" ? "active" : ""}`} 
+                    style={{color: NoteToColor["G#"], border:"solid",borderColor:NoteToColor["G#"]}}                    >
                     G#5
                 </div>
-                <div className='regularWhiteKey'>G5</div>
+                G5
             </li>
             <li data-note="A5"
-                className={`key note white ${activeWhiteNote === "A5" ? "active" : ""}`} >
+                className={`key note white ${activeWhiteNote === "A5" ? "active" : ""}`} 
+                style={{
+                    color: NoteToColor["A"], border:"solid", borderWidth:"medium", 
+                    }}
+                >
                 <div data-note="A#5s"
-                    className={`black-key note white ${activeBlackNote === "A#5s" ? "active" : ""}`} >
+                    className={`black-key note white ${activeBlackNote === "A#5s" ? "active" : ""}`} 
+                    style={{color: NoteToColor["A#"], border:"solid",borderColor:NoteToColor["A#"]}}                    >
                     A#5
                 </div>
-                <div className='regularWhiteKey'>A5</div>
+                A5
             </li>
-            <li data-note="B5" className={`key note white ${activeWhiteNote === "A5" ? "active" : ""}`} >
-                <div className='regularWhiteKey'>B5</div>
+            <li data-note="B5" className={`key note white ${activeWhiteNote === "A5" ? "active" : ""}`} 
+            style={{
+                color: NoteToColor["B"], border:"solid", borderWidth:"medium", 
+                }}
+            >
+                B5
             </li>
             <li data-note="C6"
-                className={`key note white ${activeWhiteNote === "C6" ? "active" : ""}`} >
+                className={`key note white ${activeWhiteNote === "C6" ? "active" : ""}`} 
+                style={{
+                    color: NoteToColor["C"], border:"solid", borderWidth:"medium",
+                }}
+                >
                 <div data-note="C#6s"
-                    className={`black-key note white ${activeBlackNote === "C#6s" ? "active" : ""}`} >
+                    className={`black-key note white ${activeBlackNote === "C#6s" ? "active" : ""}`} 
+                    style={{color: NoteToColor["C#"], border:"solid",borderColor:NoteToColor["C#"]}}
+                    >
                     C#6
                 </div>
-                <div className='regularWhiteKey'>C6</div>
+                C6
             </li>
             <li data-note="D6"
-                className={`key note white ${activeWhiteNote === "D6" ? "active" : ""}`} >
+                className={`key note white ${activeWhiteNote === "D6" ? "active" : ""}`} 
+                style={{color: NoteToColor["D"], border:"solid", borderWidth:"medium", }}                
+                >
                 <div data-note="D#6s"
-                    className={`black-key note white ${activeBlackNote === "D#6s" ? "active" : ""}`} >
+                    className={`black-key note white ${activeBlackNote === "D#6s" ? "active" : ""}`} 
+                    style={{color: NoteToColor["D#"], border:"solid",borderColor:NoteToColor["D#"]}}
+                    >
                     D#6
                 </div>
-                <div className='regularWhiteKey'>D6</div>
+                D6
             </li>
             <li data-note="E6"
-                className={`key note white ${activeWhiteNote === "E6" ? "active" : ""}`} >
-                <div className='regularWhiteKey'>E6</div>
+                className={`key note white ${activeWhiteNote === "E6" ? "active" : ""}`} 
+                style={{
+                    color: NoteToColor["E"], border:"solid", borderWidth:"medium",
+                }}
+                >
+                E6
             </li>
             <li data-note="F6"
-                className={`key note white ${activeWhiteNote === "F6" ? "active" : ""}`} >
+                className={`key note white ${activeWhiteNote === "F6" ? "active" : ""}`} 
+                style={{
+                    color: NoteToColor["F"], border:"solid", borderWidth:"medium",
+                    }}
+                >
                 <div data-note="F#6s"
-                    className={`black-key note white ${activeBlackNote === "F#6s" ? "active" : ""}`} >
+                    className={`black-key note white ${activeBlackNote === "F#6s" ? "active" : ""}`} 
+                    style={{color: NoteToColor["F#"], border:"solid",borderColor:NoteToColor["F#"]}}                    >
                     F#6
                 </div>
-                <div className='regularWhiteKey'>F6</div>
+                F6
             </li>
             <li data-note="G6"
-                className={`key note white ${activeWhiteNote === "G6" ? "active" : ""}`} >
+                className={`key note white ${activeWhiteNote === "G6" ? "active" : ""}`} 
+                style={{
+                    color: NoteToColor["G"], border:"solid", borderWidth:"medium", 
+                    }}
+                >
                 <div data-note="G#6s"
-                    className={`black-key note white ${activeBlackNote === "G#6s" ? "active" : ""}`} >
+                    className={`black-key note white ${activeBlackNote === "G#6s" ? "active" : ""}`} 
+                    style={{color: NoteToColor["G#"], border:"solid",borderColor:NoteToColor["G#"]}}                    >
                     G#6
                 </div>
-                <div className='regularWhiteKey'>G6</div>
+                G6
             </li>
             <li data-note="A6"
-                className={`key note white ${activeWhiteNote === "A6" ? "active" : ""}`} >
+                className={`key note white ${activeWhiteNote === "A6" ? "active" : ""}`} 
+                style={{
+                    color: NoteToColor["A"], border:"solid", borderWidth:"medium", 
+                    }}
+                >
                 <div data-note="A#6s"
-                    className={`black-key note white ${activeBlackNote === "A#6s" ? "active" : ""}`} >
+                    className={`black-key note white ${activeBlackNote === "A#6s" ? "active" : ""}`} 
+                    style={{color: NoteToColor["A#"], border:"solid",borderColor:NoteToColor["A#"]}}                    >
                     A#6
                 </div>
-                <div className='regularWhiteKey'>A6</div>
+                A6
             </li>
-            <li data-note="B6" className={`key note white ${activeWhiteNote === "A6" ? "active" : ""}`} >
-                <div className='regularWhiteKey'>B6</div>
-            </li>
-            {/* <li data-note="C7"
-                className={`key note white ${activeWhiteNote === "C7" ? "active" : ""}`} >
-                <div data-note="C#7s"
-                    className={`black-key note white ${activeBlackNote === "C#7s" ? "active" : ""}`} >
-                    C#7
-                </div>
-                C7
-            </li>
-            <li data-note="D7"
-                className={`key note white ${activeWhiteNote === "D7" ? "active" : ""}`} >
-                <div data-note="D#7s"
-                    className={`black-key note white ${activeBlackNote === "D#7s" ? "active" : "" }`} >
-                    D#7
-                </div>
-                D7
-            </li>
-            <li data-note="E7"
-                className={`key note white ${activeWhiteNote === "E7" ? "active" : ""}`} >
-                E7
-            </li>
-            <li data-note="F7"
-                className={`key note white ${activeWhiteNote === "F7" ? "active" : ""}`} >
-                <div data-note="F#7s"
-                    className={`black-key note white ${activeBlackNote === "F#7s" ? "active" : "" }`} >
-                    F#7
-                </div>
-                F7
-            </li>
-            <li data-note="G7"
-                className={`key note white ${activeWhiteNote === "G7" ? "active" : ""}`} >
-                <div data-note="G#7s"
-                    className={`black-key note white ${activeBlackNote === "G#7s" ? "active" : "" }`} >
-                    G#7
-                </div>
-                G7
-            </li>
-            <li data-note="A7"
-                className={`key note white ${activeWhiteNote === "A7" ? "active" : ""}`} >
-                <div data-note="A#7s"
-                    className={`black-key note white ${activeBlackNote === "A#7s" ? "active" : "" }`} >
-                    A#7
-                </div>
-                A7
-            </li>
-            <li data-note="B7" className={`key note white ${activeWhiteNote === "A7" ? "active" : ""}`} >
-                B7
-            </li>             */}
+            <li data-note="B6" className={`key note white ${activeWhiteNote === "A6" ? "active" : ""}`} 
+            style={{
+                color: NoteToColor["B"], border:"solid", borderWidth:"medium", 
+                }}
+            >
+                B6
+            </li>                        
+
         </ul>
+        
     );
 }
 
