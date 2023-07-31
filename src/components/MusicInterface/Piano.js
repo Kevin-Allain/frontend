@@ -224,7 +224,7 @@ const Piano = (props) => {
                     >
                     C#3
                 </div>
-                C3
+                <div className='labelWhiteKey' style={{background: NoteToColor["C"] }}> C3 </div>
             </li>
             <li data-note="D3"
                 className={`key note white ${activeWhiteNote === "D3" ? "active" : ""}`} 
@@ -236,13 +236,13 @@ const Piano = (props) => {
                     >
                     D#3
                 </div>
-                D3
+                <div className='labelWhiteKey' style={{background: NoteToColor["D"] }}> D3 </div>
             </li>
             <li data-note="E3"
                 className={`key note white ${activeWhiteNote === "E3" ? "active" : ""}`} 
                 style={{color: NoteToColor["E"] }}
                 >
-                E3
+                <div className='labelWhiteKey' style={{background: NoteToColor["E"] }}>E3</div>
             </li>
             <li data-note="F3"
                 className={`key note white ${activeWhiteNote === "F3" ? "active" : ""}`} 
@@ -254,7 +254,7 @@ const Piano = (props) => {
                     >
                     F#3
                 </div>
-                F3
+                <div className='labelWhiteKey' style={{background: NoteToColor["F"] }}>F3</div>
             </li>
             <li data-note="G3"
                 className={`key note white ${activeWhiteNote === "G3" ? "active" : ""}`} 
@@ -266,7 +266,7 @@ const Piano = (props) => {
                     >
                     G#3
                 </div>
-                G3
+                <div className='labelWhiteKey' style={{background: NoteToColor["G"] }}>G3</div>
             </li>
             <li data-note="A3"
                 className={`key note white ${activeWhiteNote === "A3" ? "active" : ""}`} 
@@ -278,12 +278,12 @@ const Piano = (props) => {
                     >
                     A#3
                 </div>
-                A3
+                <div className='labelWhiteKey' style={{background: NoteToColor["A"] }}>A3</div>
             </li>
             <li data-note="B3" className={`key note white ${activeWhiteNote === "A3" ? "active" : ""}`} 
             style={{color: NoteToColor["B"] }}
             >
-                B3
+                <div className='labelWhiteKey' style={{background: NoteToColor["B"] }}>B3</div>
             </li>
             <li data-note="C4"
                 className={`key note white ${activeWhiteNote === "C4" ? "active" : ""}`} >
@@ -291,7 +291,7 @@ const Piano = (props) => {
                     className={`black-key note white ${activeBlackNote === "C#4s" ? "active" : ""}`} >
                     C#4
                 </div>
-                C4
+                <div className='regularWhiteKey'>C4</div>
             </li>
             <li data-note="D4"
                 className={`key note white ${activeWhiteNote === "D4" ? "active" : ""}`} >
@@ -299,11 +299,11 @@ const Piano = (props) => {
                     className={`black-key note white ${activeBlackNote === "D#4s" ? "active" : ""}`} >
                     D#4
                 </div>
-                D4
+                <div className='regularWhiteKey'>D4</div>
             </li>
             <li data-note="E4"
                 className={`key note white ${activeWhiteNote === "E4" ? "active" : ""}`} >
-                E4
+                <div className='regularWhiteKey'>E4</div>
             </li>
             <li data-note="F4"
                 className={`key note white ${activeWhiteNote === "F4" ? "active" : ""}`} >
@@ -311,7 +311,7 @@ const Piano = (props) => {
                     className={`black-key note white ${activeBlackNote === "F#4s" ? "active" : ""}`} >
                     F#4
                 </div>
-                F4
+                <div className='regularWhiteKey'>F4</div>
             </li>
             <li data-note="G4"
                 className={`key note white ${activeWhiteNote === "G4" ? "active" : ""}`} >
@@ -319,7 +319,7 @@ const Piano = (props) => {
                     className={`black-key note white ${activeBlackNote === "G#4s" ? "active" : ""}`} >
                     G#4
                 </div>
-                G4
+                <div className='regularWhiteKey'>G4</div>
             </li>
             <li data-note="A4"
                 className={`key note white ${activeWhiteNote === "A4" ? "active" : ""}`} >
@@ -327,10 +327,10 @@ const Piano = (props) => {
                     className={`black-key note white ${activeBlackNote === "A#4s" ? "active" : ""}`} >
                     A#4
                 </div>
-                A4
+                <div className='regularWhiteKey'>A4</div>
             </li>
             <li data-note="B4" className={`key note white ${activeWhiteNote === "A4" ? "active" : ""}`} >
-                B4
+            <div className='regularWhiteKey'>B4</div>
             </li>
             <li data-note="C5"
                 className={`key note white ${activeWhiteNote === "C5" ? "active" : ""}`} >
@@ -338,7 +338,7 @@ const Piano = (props) => {
                     className={`black-key note white ${activeBlackNote === "C#5s" ? "active" : ""}`} >
                     C#5
                 </div>
-                C5
+                <div className='regularWhiteKey'>C5</div>
             </li>
             <li data-note="D5"
                 className={`key note white ${activeWhiteNote === "D5" ? "active" : ""}`} >
@@ -346,11 +346,11 @@ const Piano = (props) => {
                     className={`black-key note white ${activeBlackNote === "D#5s" ? "active" : ""}`} >
                     D#5
                 </div>
-                D5
+                <div className='regularWhiteKey'>D5</div>
             </li>
             <li data-note="E5"
                 className={`key note white ${activeWhiteNote === "E5" ? "active" : ""}`} >
-                E5
+                <div className='regularWhiteKey'>E5</div>
             </li>
             <li data-note="F5"
                 className={`key note white ${activeWhiteNote === "F5" ? "active" : ""}`} >
@@ -358,7 +358,7 @@ const Piano = (props) => {
                     className={`black-key note white ${activeBlackNote === "F#5s" ? "active" : ""}`} >
                     F#5
                 </div>
-                F5
+                <div className='regularWhiteKey'>F5</div>
             </li>
             <li data-note="G5"
                 className={`key note white ${activeWhiteNote === "G5" ? "active" : ""}`} >
@@ -366,7 +366,7 @@ const Piano = (props) => {
                     className={`black-key note white ${activeBlackNote === "G#5s" ? "active" : ""}`} >
                     G#5
                 </div>
-                G5
+                <div className='regularWhiteKey'>G5</div>
             </li>
             <li data-note="A5"
                 className={`key note white ${activeWhiteNote === "A5" ? "active" : ""}`} >
@@ -374,10 +374,10 @@ const Piano = (props) => {
                     className={`black-key note white ${activeBlackNote === "A#5s" ? "active" : ""}`} >
                     A#5
                 </div>
-                A5
+                <div className='regularWhiteKey'>A5</div>
             </li>
             <li data-note="B5" className={`key note white ${activeWhiteNote === "A5" ? "active" : ""}`} >
-                B5
+                <div className='regularWhiteKey'>B5</div>
             </li>
             <li data-note="C6"
                 className={`key note white ${activeWhiteNote === "C6" ? "active" : ""}`} >
@@ -385,7 +385,7 @@ const Piano = (props) => {
                     className={`black-key note white ${activeBlackNote === "C#6s" ? "active" : ""}`} >
                     C#6
                 </div>
-                C6
+                <div className='regularWhiteKey'>C6</div>
             </li>
             <li data-note="D6"
                 className={`key note white ${activeWhiteNote === "D6" ? "active" : ""}`} >
@@ -393,11 +393,11 @@ const Piano = (props) => {
                     className={`black-key note white ${activeBlackNote === "D#6s" ? "active" : ""}`} >
                     D#6
                 </div>
-                D6
+                <div className='regularWhiteKey'>D6</div>
             </li>
             <li data-note="E6"
                 className={`key note white ${activeWhiteNote === "E6" ? "active" : ""}`} >
-                E6
+                <div className='regularWhiteKey'>E6</div>
             </li>
             <li data-note="F6"
                 className={`key note white ${activeWhiteNote === "F6" ? "active" : ""}`} >
@@ -405,7 +405,7 @@ const Piano = (props) => {
                     className={`black-key note white ${activeBlackNote === "F#6s" ? "active" : ""}`} >
                     F#6
                 </div>
-                F6
+                <div className='regularWhiteKey'>F6</div>
             </li>
             <li data-note="G6"
                 className={`key note white ${activeWhiteNote === "G6" ? "active" : ""}`} >
@@ -413,7 +413,7 @@ const Piano = (props) => {
                     className={`black-key note white ${activeBlackNote === "G#6s" ? "active" : ""}`} >
                     G#6
                 </div>
-                G6
+                <div className='regularWhiteKey'>G6</div>
             </li>
             <li data-note="A6"
                 className={`key note white ${activeWhiteNote === "A6" ? "active" : ""}`} >
@@ -421,10 +421,10 @@ const Piano = (props) => {
                     className={`black-key note white ${activeBlackNote === "A#6s" ? "active" : ""}`} >
                     A#6
                 </div>
-                A6
+                <div className='regularWhiteKey'>A6</div>
             </li>
             <li data-note="B6" className={`key note white ${activeWhiteNote === "A6" ? "active" : ""}`} >
-                B6
+                <div className='regularWhiteKey'>B6</div>
             </li>
             {/* <li data-note="C7"
                 className={`key note white ${activeWhiteNote === "C7" ? "active" : ""}`} >

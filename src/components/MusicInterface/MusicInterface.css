@@ -86,6 +86,17 @@ ul .black-key {
     color: white;
 }
 
+.labelWhiteKey{
+    border: solid;
+    border-width: medium;
+    border-radius: 0.25rem;
+    color: white;
+    padding: 0.1rem;    
+}
+.regularWhiteKey{
+    padding: 0.1rem;    
+}
+
 td,
 th {
     border: 1px solid #dddddd;
