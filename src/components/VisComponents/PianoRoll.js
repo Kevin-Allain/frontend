@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import * as d3 from 'd3';
 import MIDItoNote from '../MusicInterface/MIDItoNote.json'
+import NoteToColor from '../MusicInterface/NoteToColor.json'
 import './PianoRoll.css'
 
   // const noteToColor = {
@@ -32,15 +33,33 @@ import './PianoRoll.css'
 //     'G':'#00758F',
 //     "G#": "#C21460",
 // }
-const noteToColor = {
-'A':'#003f5c', 'B':'#58508d', 'C':'#8a508f', 'D':'#bc5090','E':'#de5a79','F':'#ff6361', 'G':'#ff8531'
-}
+
+// const noteToColor = {
+// 'A':'#003f5c', 'B':'#58508d', 'C':'hsl(199,100,18)','C#':'hsl(199,100,38)' , 'D':'#bc5090','E':'#de5a79','F':'#ff6361', 'G':'#ff8531'
+// }
+
+
 const PianoRoll = ({ notes, occurrences, durations, width, height }) => {
   const svgRef = useRef(null);
 
   let barHeight = height/20;
 
   useEffect(() => {
+
+
+    // ###### FOR TEST
+    const colorScheme = d3.schemeCategory10; // Get the schemeCategory10 color scheme
+    console.log(colorScheme);
+    // Adjust the saturation of each color to make them less saturated
+    const lessSaturatedColors = colorScheme.map(color => d3.color(color).darker(0.5).toString());
+    const keys = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
+    const colors = {};
+    keys.forEach((key, index) => {
+      colors[key] = lessSaturatedColors[index % lessSaturatedColors.length];
+    });
+    console.log("colors: ",colors);
+
+
     const svg = d3.select(svgRef.current);
     svg.selectAll("*").remove(); // Clear the SVG by removing all elements
     const margin = { top: 10, right: 10, bottom: 20, left: 50 };
@@ -96,7 +115,7 @@ const PianoRoll = ({ notes, occurrences, durations, width, height }) => {
       )
       .attr("height", barHeight)
       .attr( "fill", (d) =>
-          noteToColor[MIDItoNote[d].replaceAll("s", "").replace(/\d+/g, "")]
+        NoteToColor[MIDItoNote[d].replaceAll("s", "").replace(/\d+/g, "")]
       )
       .attr("stroke", "black")
       // .attr('opacity','0.65')
@@ -132,8 +151,10 @@ const PianoRoll = ({ notes, occurrences, durations, width, height }) => {
       .selectAll("text")
       .attr("dx", (d, i) => 
         (MIDItoNote[d].indexOf('#')===-1 ? "-17px" : "3px")) // Apply negative offset to every alternate label
-      .attr("fill", (d) => (MIDItoNote[d].replaceAll("s", "").replace(/\d+/g, "").indexOf('#') !== -1)?'#000':
-          noteToColor[MIDItoNote[d].replaceAll("s", "").replace(/\d+/g, "")] || "#000" )
+      // .attr("fill", (d) => (MIDItoNote[d].replaceAll("s", "").replace(/\d+/g, "").indexOf('#') !== -1)?'#000':
+      //   NoteToColor[MIDItoNote[d].replaceAll("s", "").replace(/\d+/g, "")] || "#000" )
+      .attr("fill", (d) => NoteToColor[MIDItoNote[d].replaceAll("s", "").replace(/\d+/g, "")] || "#000" )
+
       .attr("font-size",`${1.5 + Math.log(height*4)}px`) // size of font is ok at 8px if height is 150px.
       ;
 

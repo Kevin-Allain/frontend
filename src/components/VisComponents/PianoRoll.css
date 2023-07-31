@@ -1,0 +1,13 @@
+.bar {
+    z-index: -1; /* Set a lower z-index for the bars */
+  }
+  
+
+  .white_background {
+    z-index: -5; /* Set a lower z-index for the background */
+  }
+    
+
+  .svg_background{
+    background-color: white;
+  }

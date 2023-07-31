@@ -4,6 +4,8 @@ import "./MusicInterface.css"
 import NotetoMIDI from "./NotetoMIDI.json"
 import MIDItoNote from "./MIDItoNote.json"
 
+import NoteToColor from './NoteToColor.json'
+
 const Piano = (props) => {
 
     // let { textSearch, setTextSearch } = props;
@@ -213,50 +215,74 @@ const Piano = (props) => {
                 B2
             </li>             */}
             <li data-note="C3"
-                className={`key note white ${activeWhiteNote === "C3" ? "active" : ""}`} >
+                className={`key note white ${activeWhiteNote === "C3" ? "active" : ""}`} 
+                style={{color: NoteToColor["C"] }}
+                >
                 <div data-note="C#3s"
-                    className={`black-key note white ${activeBlackNote === "C#3s" ? "active" : ""}`} >
+                    className={`black-key note white ${activeBlackNote === "C#3s" ? "active" : ""}`} 
+                    style={{background: NoteToColor["C#"] }}
+                    >
                     C#3
                 </div>
                 C3
             </li>
             <li data-note="D3"
-                className={`key note white ${activeWhiteNote === "D3" ? "active" : ""}`} >
+                className={`key note white ${activeWhiteNote === "D3" ? "active" : ""}`} 
+                style={{color: NoteToColor["D"] }}                
+                >
                 <div data-note="D#3s"
-                    className={`black-key note white ${activeBlackNote === "D#3s" ? "active" : ""}`} >
+                    className={`black-key note white ${activeBlackNote === "D#3s" ? "active" : ""}`} 
+                    style={{background: NoteToColor["D#"] }}
+                    >
                     D#3
                 </div>
                 D3
             </li>
             <li data-note="E3"
-                className={`key note white ${activeWhiteNote === "E3" ? "active" : ""}`} >
+                className={`key note white ${activeWhiteNote === "E3" ? "active" : ""}`} 
+                style={{color: NoteToColor["E"] }}
+                >
                 E3
             </li>
             <li data-note="F3"
-                className={`key note white ${activeWhiteNote === "F3" ? "active" : ""}`} >
+                className={`key note white ${activeWhiteNote === "F3" ? "active" : ""}`} 
+                style={{color: NoteToColor["F"] }}
+                >
                 <div data-note="F#3s"
-                    className={`black-key note white ${activeBlackNote === "F#3s" ? "active" : ""}`} >
+                    className={`black-key note white ${activeBlackNote === "F#3s" ? "active" : ""}`} 
+                    style={{background: NoteToColor["F#"] }}
+                    >
                     F#3
                 </div>
                 F3
             </li>
             <li data-note="G3"
-                className={`key note white ${activeWhiteNote === "G3" ? "active" : ""}`} >
+                className={`key note white ${activeWhiteNote === "G3" ? "active" : ""}`} 
+                style={{color: NoteToColor["G"] }}
+                >
                 <div data-note="G#3s"
-                    className={`black-key note white ${activeBlackNote === "G#3s" ? "active" : ""}`} >
+                    className={`black-key note white ${activeBlackNote === "G#3s" ? "active" : ""}`} 
+                    style={{background: NoteToColor["G#"] }}
+                    >
                     G#3
                 </div>
                 G3
             </li>
             <li data-note="A3"
-                className={`key note white ${activeWhiteNote === "A3" ? "active" : ""}`} >
+                className={`key note white ${activeWhiteNote === "A3" ? "active" : ""}`} 
+                style={{color: NoteToColor["A"] }}
+                >
                 <div data-note="A#3s"
-                    className={`black-key note white ${activeBlackNote === "A#3s" ? "active" : ""}`} >
+                    className={`black-key note white ${activeBlackNote === "A#3s" ? "active" : ""}`} 
+                    style={{background: NoteToColor["A#"] }}
+                    >
                     A#3
                 </div>
                 A3
             </li>
-            <li data-note="B3" className={`key note white ${activeWhiteNote === "A3" ? "active" : ""}`} >
+            <li data-note="B3" className={`key note white ${activeWhiteNote === "A3" ? "active" : ""}`} 
+            style={{color: NoteToColor["B"] }}
+            >
                 B3
             </li>
             <li data-note="C4"
