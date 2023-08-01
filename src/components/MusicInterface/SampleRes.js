@@ -3,7 +3,7 @@ import { FiPlayCircle } from 'react-icons/fi'
 import MusicInfo from "./MusicInfo"
 import AnnotationSystem from '../Annotation/AnnotationSystem';
 import EmbeddedWorkflowInteraction from '../Workflow/EmbeddedWorkflowInteraction';
-
+import PianoRoll from '../VisComponents/PianoRoll';
 
 const SampleRes = ({ 
     key,
@@ -19,18 +19,10 @@ const SampleRes = ({
     getMusicInfo, 
     infoMusicList, 
  }) => {
-
-    // key is undefined... this isn't good!
     
     return (
         <div className="sampleres" key={key}>
-            {/* <div className="text">
-                <h2>Song: {text.substr(text.indexOf("-") + 1)} </h2> </div>
-            <AnnotationSystem
-                type={"track"}
-                info={text.substr(text.indexOf("-") + 1)}
-                // index = {Number(text.split('-')[0])}
-            /> */}
+            {/* <div className="text"> <h2>Song: {text.substr(text.indexOf("-") + 1)} </h2> </div> <AnnotationSystem type={"track"} info={text.substr(text.indexOf("-") + 1)} /> */}
             <table>
                 <thead>
                     <tr>
@@ -52,8 +44,15 @@ const SampleRes = ({
                         <th>{distance}</th>
                     </tr>
                 </tbody>
-            </table> 
-
+            </table>
+            <PianoRoll
+                notes={notes.split("-").map(Number)}
+                occurrences={times.split("-").map(Number)}
+                durations={durations.split("-").map(Number)}
+                width={600}
+                height={200}
+            />
+            {/* {notes && console.log(notes.split("-").map(Number))} */}
             <div className='buttonSampleRes'>
                 <div className="iconsSampleRes">
                     <FiPlayCircle className='icon'

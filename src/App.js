@@ -10,12 +10,7 @@ import Preferences from "./components/Preferences/Preferences";
 import Login from "./components/Login/Login";
 import Logout from "./components/Logout/Logout";
 import { AiOutlineLoading } from 'react-icons/ai';
-import {
-  getAllJazzDap,
-  addJazzDap,
-  updateJazzDap,
-  deleteJazzDap,
-} from "./utils/HandleApi";
+import { getAllJazzDap, addJazzDap, updateJazzDap, deleteJazzDap, } from "./utils/HandleApi";
 import logoJazzDap from "./Logo1.jpg";
 import Register from "./components/Register/Register";
 import AuthContext from "./context/AuthProvider";

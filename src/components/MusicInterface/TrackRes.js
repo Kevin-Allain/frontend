@@ -37,7 +37,7 @@ const TrackRes = ({
             <EmbeddedWorkflowInteraction idCaller={listSearchRes[0].arrIdNotes[0]}  typeCaller={"track"}/>
 
             {listSearchRes.map((item, i) => ( 
-                <SampleRes 
+                <SampleRes
                 // key={i + '' + item.recording + '_' + item.arrNotes.toString().replaceAll(',', '-')}
                 text={i + '-' + item.recording}
                 lognumber={item.recording.split('-')[0]}

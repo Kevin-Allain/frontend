@@ -10,29 +10,26 @@ const PianoRoll = ({ notes, occurrences, durations, width, height }) => {
   let barHeight = height/20;
 
   useEffect(() => {
-
-
-    // ###### FOR TEST
-    const colorScheme = d3.schemeCategory10; // Get the schemeCategory10 color scheme
-    console.log(colorScheme);
-    // Adjust the saturation of each color to make them less saturated
-    const lessSaturatedColors = colorScheme.map(color => d3.color(color).darker(0.5).toString());
-    const keys = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
-    const colors = {};
-    keys.forEach((key, index) => {
-      colors[key] = lessSaturatedColors[index % lessSaturatedColors.length];
-    });
-    console.log("colors: ",colors);
-
+    // // ###### FOR TEST
+    // const colorScheme = d3.schemeCategory10; // Get the schemeCategory10 color scheme
+    // // Adjust the saturation of each color to make them less saturated
+    // const lessSaturatedColors = colorScheme.map(color => d3.color(color).darker(0.5).toString());
+    // const keys = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
+    // const colors = {};
+    // keys.forEach((key, index) => {
+    //   colors[key] = lessSaturatedColors[index % lessSaturatedColors.length];
+    // });
 
     const svg = d3.select(svgRef.current);
-    svg.selectAll("*").remove(); // Clear the SVG by removing all elements
-    const margin = { top: 10, right: 10, bottom: 20, left: 50 };
+    // TODO doubt about keeping this one
+    // svg.selectAll("*").remove(); // Clear the SVG by removing all elements
+    const margin = { top: 20, right: 40, bottom: 20, left: 50 };
 
     const minNote = Math.min(...notes);
     const maxNote = Math.max(...notes);
     const minOccurrence = Math.min(...occurrences);
     // const maxOccurrence = Math.max(...occurrences);
+    const minTime = occurrences[0]; // We assume the times are ordered...
     let maxTime = Number.MIN_VALUE;
     for (let i = 0; i < occurrences.length; i++) {
       const sum = occurrences[i] + durations[i];
@@ -42,7 +39,7 @@ const PianoRoll = ({ notes, occurrences, durations, width, height }) => {
     }
     const xScale = d3
       .scaleLinear()
-      .domain([0, maxTime])
+      .domain([minTime, maxTime])
       .range([margin.left, width - margin.right]);
 
     const yScale = d3
@@ -50,21 +47,11 @@ const PianoRoll = ({ notes, occurrences, durations, width, height }) => {
       .domain([minNote, maxNote])
       .range([height - margin.bottom, margin.top]);
 
-    // svg
-    //   .append("rect")
-    //   .attr('class','white_background')
-    //   .attr("x", 0)
-    //   .attr("y", 0)
-    //   .attr("width", width)
-    //   .attr("height", height)
-    //   .attr("fill", "white");
-
     // Generate an array of all integer occurrences
     const occurrenceArray = Array.from(
       { length: maxTime - minOccurrence + 1 },
       (_, i) => i + minOccurrence
     );
-    console.log("occurrenceArray: ", occurrenceArray);
 
     svg
       .selectAll("rect.bar")
@@ -100,8 +87,15 @@ const PianoRoll = ({ notes, occurrences, durations, width, height }) => {
       .attr("stroke-width", 1)
       .attr("stroke-dasharray", "2,2"); // Dotted line style
 
-    const xAxis = d3.axisBottom(xScale).ticks(10);
+    const xAxis = d3.axisBottom(xScale)
+      .ticks(10);
     
+    svg
+      .append("g")
+      .attr("transform", `translate(0, ${height - margin.bottom})`)
+      .attr("class", "x-axis") // Add class name for x-axis
+      .call(xAxis);
+
     const yAxis = d3
       .axisLeft(yScale)
       .tickValues(notes)
@@ -109,7 +103,8 @@ const PianoRoll = ({ notes, occurrences, durations, width, height }) => {
 
     const yAxisElement = svg
       .append("g")
-      .attr("transform", `translate(${margin.left}, 0)`)
+      .attr("transform", `translate(${margin.left}, 0)`)      
+      .attr("class", "y-axis") // Add class name for x-axis
       .call(yAxis);
 
     yAxisElement
@@ -119,14 +114,30 @@ const PianoRoll = ({ notes, occurrences, durations, width, height }) => {
       // .attr("fill", (d) => (MIDItoNote[d].replaceAll("s", "").replace(/\d+/g, "").indexOf('#') !== -1)?'#000':
       //   NoteToColor[MIDItoNote[d].replaceAll("s", "").replace(/\d+/g, "")] || "#000" )
       .attr("fill", (d) => NoteToColor[MIDItoNote[d].replaceAll("s", "").replace(/\d+/g, "")] || "#000" )
-
       .attr("font-size",`${1.5 + Math.log(height*4)}px`) // size of font is ok at 8px if height is 150px.
       ;
 
+
+
+    // Append text for the horizontal axis label "time" after the end of the horizontal axis
     svg
-      .append("g")
-      .attr("transform", `translate(0, ${height - margin.bottom})`)
-      .call(xAxis);
+      .append("text")
+      .attr("x", width - margin.right + 10) // Adjust the x position to go after the end of the axis
+      .attr("y", height - margin.bottom / 2)
+      .attr("text-anchor", "start") // Set text-anchor to "start" to align the text to the left
+      .attr("font-size", "12px") // Set a smaller font size
+      .text("Time");
+
+    // Append text for the vertical axis label "notes" after the end of the vertical axis
+    svg
+      .append("text")
+      .attr("x", margin.left)
+      .attr("y", margin.top / 2) // Adjust the y position to go after the end of the axis
+      .attr("text-anchor", "start") // Set text-anchor to "start" to align the text to the left
+      .attr("font-size", "12px") // Set a smaller font size
+      .text("Notes");
+
+
 
 
   }, [notes, occurrences, durations, width, height, barHeight]);

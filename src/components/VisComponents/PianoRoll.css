@@ -1,13 +1,29 @@
 .bar {
-    z-index: -1; /* Set a lower z-index for the bars */
-  }
-  
+  z-index: -1;
+  /* Set a lower z-index for the bars */
+}
 
-  .white_background {
-    z-index: -5; /* Set a lower z-index for the background */
-  }
-    
 
-  .svg_background{
-    background-color: white;
-  }
+.white_background {
+  z-index: -5;
+  /* Set a lower z-index for the background */
+}
+
+
+.svg_background {
+  background-color: white;
+}
+
+.x-axis line,
+.x-axis path {
+  stroke: black;
+}
+
+.y-axis line,
+.y-axis path {
+  stroke: black;
+}
+
+.x-axis text{
+  fill: black;
+}

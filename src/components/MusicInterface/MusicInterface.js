@@ -30,9 +30,9 @@ import PianoRoll from '../VisComponents/PianoRoll';
 
 const PITCH_QUERY_REGEX = /^$|(^(?!.*--)(?!-)([0-9]{1,2}|1[01][0-9]|12[0-7])(-([0-9]{1,2}|1[01][0-9]|12[0-7]))*(-?)$)/;
 // Test attributes
-const notes = [60, 61, 62,63, 64,65,66, 59, 67,68,69, 55, 77, 89,90, 82];
-const occurrences = [0,1, 2,3, 4,5,6, 7, 6.5, 7.5,7.5,8, 8, 8,9, 13.25];
-const durations = [0.5,1, 1,1, 2, 3,1,1, 4, 5, 2, 1,1, 1,0.5, 1.82];
+const notes = [60, 61, 62, 63, 64, 65, 66, 59, 67, 68, 69, 55, 77, 89, 90, 82];
+const occurrences = [5, 6, 6.5, 7, 8, 8, 9, 10, 10.5, 11.5, 11.5, 12, 13, 13, 14, 15.25];
+const durations = [0.5, 1, 1, 1, 2, 3, 1, 1, 4, 5, 2, 1, 1, 1, 0.5, 1.82];
 
 
 const MusicInterface = () => {
@@ -435,15 +435,19 @@ const MusicInterface = () => {
   }
 
 
-
-
   return (
     <div className="musicInterface">
       <h1>Music Interface</h1>
       {/* ==== Test Piano Roll === */}
       <div>
         <h1>Piano Roll</h1>
-        <PianoRoll notes={notes} occurrences={occurrences} durations={durations} width={400} height={350}/>
+        <PianoRoll
+          notes={notes}
+          occurrences={occurrences}
+          durations={durations}
+          width={600}
+          height={200}
+        />
       </div>
       {/* ==== PIANO INPUT ==== */}
       <Piano onKeyPress={handleKeyPress} />
