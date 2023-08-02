@@ -10,25 +10,13 @@ const PianoRoll = ({ notes, occurrences, durations, width, height }) => {
   let barHeight = height/20;
 
   useEffect(() => {
-    // // ###### FOR TEST
-    // const colorScheme = d3.schemeCategory10; // Get the schemeCategory10 color scheme
-    // // Adjust the saturation of each color to make them less saturated
-    // const lessSaturatedColors = colorScheme.map(color => d3.color(color).darker(0.5).toString());
-    // const keys = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
-    // const colors = {};
-    // keys.forEach((key, index) => {
-    //   colors[key] = lessSaturatedColors[index % lessSaturatedColors.length];
-    // });
-
     const svg = d3.select(svgRef.current);
-    // TODO doubt about keeping this one
     // svg.selectAll("*").remove(); // Clear the SVG by removing all elements
     const margin = { top: 20, right: 40, bottom: 20, left: 50 };
 
     const minNote = Math.min(...notes);
     const maxNote = Math.max(...notes);
     const minOccurrence = Math.min(...occurrences);
-    // const maxOccurrence = Math.max(...occurrences);
     const minTime = occurrences[0]; // We assume the times are ordered...
     let maxTime = Number.MIN_VALUE;
     for (let i = 0; i < occurrences.length; i++) {

@@ -45,13 +45,15 @@ const SampleRes = ({
                     </tr>
                 </tbody>
             </table>
-            <PianoRoll
+            
+            {/* <PianoRoll
                 notes={notes.split("-").map(Number)}
                 occurrences={times.split("-").map(Number)}
                 durations={durations.split("-").map(Number)}
                 width={600}
-                height={200}
-            />
+                height={150}
+            /> */}
+
             {/* {notes && console.log(notes.split("-").map(Number))} */}
             <div className='buttonSampleRes'>
                 <div className="iconsSampleRes">

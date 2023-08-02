@@ -6,16 +6,20 @@ import MIDItoNote from "./MIDItoNote.json"
 
 import NoteToColor from './NoteToColor.json'
 
+const sampler = new Tone.Sampler({
+    urls: { "C4": "C4.mp3", "D#4": "Ds4.mp3", "F#4": "Fs4.mp3", "A4": "A4.mp3", },
+    release: 1,
+    baseUrl: "https://tonejs.github.io/audio/salamander/",
+}).toDestination();
+
+
 const Piano = (props) => {
-
-    // let { textSearch, setTextSearch } = props;
     const { onKeyPress } = props;
-
-    const synth = useRef(new Tone.Synth());
-    // Set the tone to sine
-    synth.current.oscillator.type = "sine";
-    // connect it to the master output (your speakers)
-    synth.current.toDestination();
+    // const synth = useRef(new Tone.Synth());
+    // // Set the tone to sine
+    // synth.current.oscillator.type = "sine";
+    // // connect it to the master output (your speakers)
+    // synth.current.toDestination();
 
     const [activeWhiteNote, setActiveWhiteNote] = useState(null);
     const [activeBlackNote, setActiveBlackNote] = useState(null);
@@ -26,50 +30,73 @@ const Piano = (props) => {
         } else if (activeBlackNote === null) {
             setActiveWhiteNote(note);
         }
-        // console.log(`Note ${note} down. activeBlackNote: ${activeBlackNote}. activeWhiteNote: ${activeWhiteNote}`);
-        // console.log("NotetoMIDI[note]: ", NotetoMIDI[note]); // This is correct. We thus need for the piano to somehow call the function that fills in the search
-
-        // console.log("textSearch: ",textSearch ,", typeof textSearch: ",(typeof textSearch)  ,", setTextSearch: ",setTextSearch)
-        // setTextSearch(textSearch+= (textSearch.length===0)? NotetoMIDI[note] :  "-"+NotetoMIDI[note])
         onKeyPress(note);
     };
-
     const handleNoteUp = (note) => {
         if (note.endsWith("s")) {
             setActiveBlackNote(null);
         } else {
             setActiveWhiteNote(null);
         }
-        console.log(`Note ${note} up. activeBlackNote: ${activeBlackNote}. activeWhiteNote: ${activeWhiteNote}`);
     };
 
+    // useEffect(() => {
+    //     const handleKeyUp = (event) => {
+    //         const note = event.target.dataset.note;
+    //         handleNoteUp(note);
+    //     };
+
+    //     const handleKeyDown = (event) => {
+    //         const note = event.target.dataset.note;
+    //         console.log("handleKeyDown note: ", note,", event: ",event);
+    //         const now = Tone.now();
+    //         synth.current.triggerAttackRelease(note, "8n", now + 0.25);
+    //         Tone.Transport.stop();
+    //         handleNoteDown(note);
+    //     };
+
+    //     document.querySelectorAll(".key").forEach((key) => {
+    //         key.addEventListener("mousedown", handleKeyDown);
+    //         key.addEventListener("mouseup", handleKeyUp);
+    //     });
+
+    //     return () => {
+    //         document.querySelectorAll(".key").forEach((key) => {
+    //             key.removeEventListener("mousedown", handleKeyDown);
+    //             key.removeEventListener("mouseup", handleKeyUp);
+    //         });
+    //     };
+    // }, [activeWhiteNote, activeBlackNote]);
+
     useEffect(() => {
-        const handleKeyUp = (event) => {
-            const note = event.target.dataset.note;
-            handleNoteUp(note);
+        const handlePointerUp = (event) => {
+          const note = event.target.dataset.note;
+          handleNoteUp(note);
         };
-
-        const handleKeyDown = (event) => {
-            const note = event.target.dataset.note;
-            console.log("handleKeyDown note: ", note,", event: ",event);
-            const now = Tone.now();
-            synth.current.triggerAttackRelease(note, "8n", now + 0.25);
-            Tone.Transport.stop();
-            handleNoteDown(note);
+      
+        const handlePointerDown = (event) => {
+          const note = event.target.dataset.note;
+          console.log("handlePointerDown note: ", note, ", event: ", event);
+          const now = Tone.now();
+        //   synth.current.triggerAttackRelease(note, "8n", now + 0.25);
+        sampler.triggerAttackRelease([note], 1,now);
+        // Tone.Transport.stop();
+          handleNoteDown(note);
         };
-
+      
         document.querySelectorAll(".key").forEach((key) => {
-            key.addEventListener("mousedown", handleKeyDown);
-            key.addEventListener("mouseup", handleKeyUp);
+          key.addEventListener("pointerdown", handlePointerDown);
+          key.addEventListener("pointerup", handlePointerUp);
         });
-
+      
         return () => {
-            document.querySelectorAll(".key").forEach((key) => {
-                key.removeEventListener("mousedown", handleKeyDown);
-                key.removeEventListener("mouseup", handleKeyUp);
-            });
+          document.querySelectorAll(".key").forEach((key) => {
+            key.removeEventListener("pointerdown", handlePointerDown);
+            key.removeEventListener("pointerup", handlePointerUp);
+          });
         };
-    }, [activeWhiteNote, activeBlackNote]);
+      }, [activeWhiteNote, activeBlackNote]);
+      
 
     return (
         <ul id="piano" className='keys'>

@@ -276,3 +276,83 @@ function playMidiDatabase(){
 //   "A#":"#ffc8c7",
 //   "B": "#AA3E13"
 // }
+
+// ######## MIGHT BE USEFUL LATER
+// ---- Cleaning some code from MusicInterface
+function handleScroll() {
+  const buttonListLogsNumbers = buttonListLogsNumbersRef.current;
+  if (buttonListLogsNumbers) {
+    const buttonListLogsNumbersPosition = buttonListLogsNumbers.offsetTop;
+    if (window.pageYOffset > buttonListLogsNumbersPosition) {
+      // Move the buttonListLogsNumbers to the left when scroll position is lower than its position
+      buttonListLogsNumbers.style.position = 'fixed';
+      buttonListLogsNumbers.style.left = '10px'; // Adjust the left position as needed
+    } else {
+      // Reset the position when scroll position is above its position
+      buttonListLogsNumbers.style.position = 'static';
+      buttonListLogsNumbers.style.left = 'auto';
+    }
+  }
+}
+
+
+function getResultsInfo(lognumbers, infoMusicList, setInfoMusicList) {
+  console.log("getResultsInfo, lognumbers: ", lognumbers, { infoMusicList, setInfoMusicList });
+  getTracksMetadata(
+    lognumbers, 
+    infoMusicList, 
+    setInfoMusicList
+  );
+}
+
+
+function playMp3() {
+  console.log("---- playMp3. playing: ", playingMp3)
+  if (playingMp3) {
+    audioMp3.pause();
+    setIconPlayMp3(<AiFillPlayCircle className='icon'></AiFillPlayCircle>)
+  } else {
+    audioMp3.play();
+    setIconPlayMp3(<AiFillPauseCircle className='icon'></AiFillPauseCircle>)
+  }
+  setPlayingMp3(!playingMp3);
+}
+
+function resetMp3() {
+  if (playingMp3) {
+    audioMp3.pause();
+    setIconPlayMp3(<AiFillPlayCircle></AiFillPlayCircle>)
+    setPlayingMp3(!playingMp3);
+  }
+  setAudioMp3(new Audio("https://www.learningcontainer.com/wp-content/uploads/2020/02/Kalimba.mp3"));
+}
+
+  // Function for distance : strings
+  function calcLevenshteinDistance_str(s1, s2) {
+    // Create two-dimensional array of distances
+    const distances = [];
+    for (let i = 0; i <= s1.length; i++) { distances[i] = [i]; }
+    for (let j = 0; j <= s2.length; j++) { distances[0][j] = j; }
+    // Calculate Levenshtein distance
+    for (let j = 1; j <= s2.length; j++) {
+      for (let i = 1; i <= s1.length; i++) {
+        if (s1.charAt(i - 1) === s2.charAt(j - 1)) {
+          distances[i][j] = distances[i - 1][j - 1];
+        } else {
+          const deletion = distances[i - 1][j] + 1;
+          const insertion = distances[i][j - 1] + 1;
+          const substitution = distances[i - 1][j - 1] + 1;
+          distances[i][j] = Math.min(deletion, insertion, substitution);
+        }
+      }
+    }
+    return distances[s1.length][s2.length];
+  }
+
+  // TODO use for note playing!!! https://tonejs.github.io/
+  // const sampler = new Tone.Sampler({
+  // 	urls: { "C4": "C4.mp3", "D#4": "Ds4.mp3", "F#4": "Fs4.mp3", "A4": "A4.mp3", },
+  // 	release: 1,
+  // 	baseUrl: "https://tonejs.github.io/audio/salamander/",
+  // }).toDestination();
+
