@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect, useRef, useCallback} from 'react'
 import * as Tone from "tone"
 import "./MusicInterface.css"
 import NotetoMIDI from "./NotetoMIDI.json"
@@ -24,21 +24,39 @@ const Piano = (props) => {
     const [activeWhiteNote, setActiveWhiteNote] = useState(null);
     const [activeBlackNote, setActiveBlackNote] = useState(null);
 
-    const handleNoteDown = (note) => {
-        if (note.endsWith("s")) {
-            setActiveBlackNote(note);
-        } else if (activeBlackNote === null) {
-            setActiveWhiteNote(note);
-        }
-        onKeyPress(note);
-    };
-    const handleNoteUp = (note) => {
-        if (note.endsWith("s")) {
-            setActiveBlackNote(null);
-        } else {
-            setActiveWhiteNote(null);
-        }
-    };
+    // const handleNoteDown = (note) => {
+    //     if (note.endsWith("s")) {
+    //         setActiveBlackNote(note);
+    //     } else if (activeBlackNote === null) {
+    //         setActiveWhiteNote(note);
+    //     }
+    //     onKeyPress(note);
+    // };
+    // const handleNoteUp = (note) => {
+    //     if (note.endsWith("s")) {
+    //         setActiveBlackNote(null);
+    //     } else {
+    //         setActiveWhiteNote(null);
+    //     }
+    // };
+
+  // useCallback for handleNoteDown and handleNoteUp event handlers
+  const handleNoteDown = useCallback((note) => {
+    if (note.endsWith('s')) {
+      setActiveBlackNote(note);
+    } else if (activeBlackNote === null) {
+      setActiveWhiteNote(note);
+    }
+    onKeyPress(note);
+  }, [activeBlackNote, setActiveBlackNote, activeWhiteNote, setActiveWhiteNote, onKeyPress]);
+
+  const handleNoteUp = useCallback((note) => {
+    if (note.endsWith('s')) {
+      setActiveBlackNote(null);
+    } else {
+      setActiveWhiteNote(null);
+    }
+  }, [setActiveBlackNote, setActiveWhiteNote]);
 
 
     useEffect(() => {

@@ -273,9 +273,9 @@ const MusicInterface = () => {
     // - Track times of input, manually set timers before next song can be played and then played one by one
     // - Modify the notes times to ensure they have enough time to be played (avoid several notes at the same time with a single synth player?)
 
-    // synth2.current.dispose(); // this may be something good, but really unsure!
-    // synth2.current = new Tone.Synth();
-    // synth2.current.toDestination();
+    synth2.current.dispose(); // this may be something good, but really unsure!
+    synth2.current = new Tone.Synth();
+    synth2.current.toDestination();
 
     console.log("-1- Tone.Transport.state |", Tone.Transport.state, '|, Tone.Transport.state !== "started" ', (Tone.Transport.state !== "started"), ", typeof (Tone.Transport.state): ", (typeof Tone.Transport.state));
     // const now = Tone.now(); // const synth3 = new Tone.MembraneSynth().toDestination();
@@ -339,6 +339,7 @@ const MusicInterface = () => {
     console.log("---- findMatchLevenshteinDistance.")
     setInfoMusicList([]);
     setOldSearch(strNotes);
+    setTextSearch('');    
     getMatchLevenshteinDistance(
       strNotes,
       1,
@@ -354,7 +355,7 @@ const MusicInterface = () => {
       infoMusicList, 
       setInfoMusicList
     );
-    setTextSearch('');
+
   }
 
   return (
@@ -389,9 +390,8 @@ const MusicInterface = () => {
           value={textSearch}
           onChange={handleChangeQueryPitch}
         />
-        {/* TODO replace later */}
-        {/* <button onClick={handleClickTextSearch}>Submit search</button> */}
-        <button onClick={handleClickTextSearchTEST}>Submit search</button>
+        <button onClick={handleClickTextSearch}>Submit search</button>
+        {/* <button onClick={handleClickTextSearchTEST}>Submit search</button> */}
       </div>
 
       {/* ==== OUTPUT SEARCH ==== */}
