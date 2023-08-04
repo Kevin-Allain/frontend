@@ -356,3 +356,45 @@ function resetMp3() {
   // 	baseUrl: "https://tonejs.github.io/audio/salamander/",
   // }).toDestination();
 
+
+  // ---- Piano disregarded
+    // useEffect(() => {
+    //     const handleKeyUp = (event) => {
+    //         const note = event.target.dataset.note;
+    //         handleNoteUp(note);
+    //     };
+
+    //     const handleKeyDown = (event) => {
+    //         const note = event.target.dataset.note;
+    //         console.log("handleKeyDown note: ", note,", event: ",event);
+    //         const now = Tone.now();
+    //         synth.current.triggerAttackRelease(note, "8n", now + 0.25);
+    //         Tone.Transport.stop();
+    //         handleNoteDown(note);
+    //     };
+
+    //     document.querySelectorAll(".key").forEach((key) => {
+    //         key.addEventListener("mousedown", handleKeyDown);
+    //         key.addEventListener("mouseup", handleKeyUp);
+    //     });
+
+    //     return () => {
+    //         document.querySelectorAll(".key").forEach((key) => {
+    //             key.removeEventListener("mousedown", handleKeyDown);
+    //             key.removeEventListener("mouseup", handleKeyUp);
+    //         });
+    //     };
+    // }, [activeWhiteNote, activeBlackNote]);
+
+    // -- Previous part of useEffect in Piano
+        // document.querySelectorAll(".key").forEach((key) => {
+    //   key.addEventListener("pointerdown", handlePointerDown);
+    //   key.addEventListener("pointerup", handlePointerUp);
+    // });
+  
+    // return () => {
+    //   document.querySelectorAll(".key").forEach((key) => {
+    //     key.removeEventListener("pointerdown", handlePointerDown);
+    //     key.removeEventListener("pointerup", handlePointerUp);
+    //   });
+    // };

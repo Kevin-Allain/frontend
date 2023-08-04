@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect, useContext } from 'react';
+import React, { useRef, useState, useEffect, useContext, useMemo  } from 'react';
 import * as Tone from "tone"
 import {
   getMusicMIDI,
@@ -122,10 +122,7 @@ const MusicInterface = () => {
       const scrollTop = outputMusicSearch.scrollTop + relativeOffset;
 
       // Perform the scroll on .outputMusicSearch
-      outputMusicSearch.scrollTo({
-        top: scrollTop,
-        behavior: 'smooth',
-      });
+      outputMusicSearch.scrollTo({ top: scrollTop, behavior: 'smooth', });
 
       // Reset 'overflow' back to its original value after the scrolling
       outputMusicSearch.style.overflow = originalOverflow;
@@ -186,6 +183,7 @@ const MusicInterface = () => {
   // ######## TEST FOR PERFORMANCES ########
   const handleClickTextSearchTEST = async(e) => {
     console.log("We do nothing. T: ",new Date());
+    setTextSearch('');
   }
   function playMp3() {
     console.log("---- playMp3. playing: ", playingMp3)
@@ -225,11 +223,14 @@ const MusicInterface = () => {
   }
   // #######
 
-
   function handleKeyPress(keyName) {
     setTextSearch((prevText) => (prevText === '') ? NotetoMIDI[keyName] : prevText + '-' + NotetoMIDI[keyName]);
     textSearchRef.current.value += NotetoMIDI[keyName];
   }
+
+  // Memoize the value of textSearch
+  const memoizedTextSearch = useMemo(() => textSearch, [textSearch]);
+
 
   // ---- Functions
   // Function for distance: arrays of int

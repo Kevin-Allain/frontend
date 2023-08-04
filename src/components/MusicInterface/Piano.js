@@ -40,33 +40,6 @@ const Piano = (props) => {
         }
     };
 
-    // useEffect(() => {
-    //     const handleKeyUp = (event) => {
-    //         const note = event.target.dataset.note;
-    //         handleNoteUp(note);
-    //     };
-
-    //     const handleKeyDown = (event) => {
-    //         const note = event.target.dataset.note;
-    //         console.log("handleKeyDown note: ", note,", event: ",event);
-    //         const now = Tone.now();
-    //         synth.current.triggerAttackRelease(note, "8n", now + 0.25);
-    //         Tone.Transport.stop();
-    //         handleNoteDown(note);
-    //     };
-
-    //     document.querySelectorAll(".key").forEach((key) => {
-    //         key.addEventListener("mousedown", handleKeyDown);
-    //         key.addEventListener("mouseup", handleKeyUp);
-    //     });
-
-    //     return () => {
-    //         document.querySelectorAll(".key").forEach((key) => {
-    //             key.removeEventListener("mousedown", handleKeyDown);
-    //             key.removeEventListener("mouseup", handleKeyUp);
-    //         });
-    //     };
-    // }, [activeWhiteNote, activeBlackNote]);
 
     useEffect(() => {
         const handlePointerUp = (event) => {
@@ -78,26 +51,20 @@ const Piano = (props) => {
           const note = event.target.dataset.note;
           console.log("handlePointerDown note: ", note, ", event: ", event);
           const now = Tone.now();
-        //   synth.current.triggerAttackRelease(note, "8n", now + 0.25);
-        sampler.triggerAttackRelease([note], 1,now);
-        // Tone.Transport.stop();
+          sampler.triggerAttackRelease([note], 1,now); //   synth.current.triggerAttackRelease(note, "8n", now + 0.25);
           handleNoteDown(note);
         };
       
-        document.querySelectorAll(".key").forEach((key) => {
-          key.addEventListener("pointerdown", handlePointerDown);
-          key.addEventListener("pointerup", handlePointerUp);
-        });
-      
+        const pianoElement = document.getElementById("piano");
+        pianoElement.addEventListener("pointerdown", handlePointerDown);
+        pianoElement.addEventListener("pointerup", handlePointerUp);
+    
         return () => {
-          document.querySelectorAll(".key").forEach((key) => {
-            key.removeEventListener("pointerdown", handlePointerDown);
-            key.removeEventListener("pointerup", handlePointerUp);
-          });
-        };
+          pianoElement.removeEventListener("pointerdown", handlePointerDown);
+          pianoElement.removeEventListener("pointerup", handlePointerUp);
+        };    
       }, [activeWhiteNote, activeBlackNote]);
       
-
     return (
         <ul id="piano" className='keys'>
             {/* Could go from 0 to 8 */}
