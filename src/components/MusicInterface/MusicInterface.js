@@ -13,6 +13,7 @@ import {
 } from "../../utils/HandleApi";
 import SampleRes from "./SampleRes"
 import MusicInfo from "./MusicInfo"
+import ResultsComponent from './ResultsComponent';
 import Piano from "./Piano"
 import NotetoMIDI from "./NotetoMIDI.json"
 import MIDItoNote from "./MIDItoNote.json"
@@ -395,6 +396,8 @@ const MusicInterface = () => {
         <div className='disclaimerSearchPitch'>Play the piano keys or enter a query based on pitch notes (from 0 to 127) separated with - characters.</div>
         <input
           type="text"
+          className='inputMusicSearch'
+          placeholder="Enter melody here"
           ref={textSearchRef}
           autoComplete="off"
           required
@@ -411,15 +414,12 @@ const MusicInterface = () => {
           <div className='outputMusicSearch'>
             {/* TODO fix imperfect implementation, makes more sense for oldSearch to be updated with handleAPi output. */}
             List of results for your search: <h4>{oldSearch}</h4>
-            <AnnotationSystem
-              type={"search"}
-              info={oldSearch}
-            />
+            <AnnotationSystem type={"search"} info={oldSearch} />
             {/* TODO set it to left as the user scrolls down  */}
             <div id='buttonListLogsNumbers' ref={buttonListLogsNumbersRef}>
               The list of recordings is:
               <nav>
-                {listLogNumbers.map((a, index) => (
+                {listLogNumbers.map((a, index) =>(
                   <button key={index + 'lognumberButton'} onClick={() => handleScrollToRecording(index)}>
                     {a}
                   </button>
@@ -428,34 +428,26 @@ const MusicInterface = () => {
             </div>
 
             <div className='musicInterfaceContent'>
+              {/* <div className='infoLogNumber'>Load information about the recordings<br/> <BsInfoCircleFill className='icon' onClick={() => getResultsInfo( listLogNumbers, infoMusicList, setInfoMusicList )} />
+                {(infoMusicList.length <= 0) ? (<></>) : infoMusicList.map((item, i) => ( <MusicInfo className='musicinfo' key={`${i}-${item.lognumber}`} lognumber={item.lognumber} contents={item.contents} recording_location={item.recording_location} addAnnotation={addAnnotation} updateAnnotation={updateAnnotation} getAnnotations={getAnnotations} deleteAnnotation={deleteAnnotation} idDatabase = {item.idDatabase} // doubt about whether this will be present? /> ) ) } </div> */}
 
-              {/* <div className='infoLogNumber'>Load information about the recordings<br />
-                <BsInfoCircleFill className='icon'
-                  onClick={() => getResultsInfo(
-                    listLogNumbers,
-                    infoMusicList,
-                    setInfoMusicList
-                  )}
-                />
-                {(infoMusicList.length <= 0) ? (<></>) :
-                  infoMusicList.map((item, i) => (
-                      <MusicInfo className='musicinfo'
-                        key={`${i}-${item.lognumber}`} // for some reason warning about keys?!
-                        lognumber={item.lognumber}
-                        contents={item.contents}
-                        recording_location={item.recording_location}
-                        addAnnotation={addAnnotation}
-                        updateAnnotation={updateAnnotation}
-                        getAnnotations={getAnnotations}
-                        deleteAnnotation={deleteAnnotation}
-                        idDatabase = {item.idDatabase} // doubt about whether this will be present?
-                      />
-                  )
-                  )
-                }
-              </div> */}
+              <ResultsComponent
+                listLogNumbers={listLogNumbers}
+                lognumbersRefs={lognumbersRefs}
+                scrollToButtonListLogsNumbers={scrollToButtonListLogsNumbers}
+                findMatchRecording={findMatchRecording}
+                infoMusicList={infoMusicList}
+                listTracks={listTracks}
+                scrollToButtonListRecordingsFollowing={scrollToButtonListRecordingsFollowing}
+                scrollToButtonListTracksFollowing={scrollToButtonListTracksFollowing}
+                listSearchRes={listSearchRes}
+                formatAndPlay={formatAndPlay}
+                getMusicInfo={getMusicInfo}
+                setInfoMusicList={setInfoMusicList}
+              />
 
-              {listLogNumbers.length > 0 &&
+              {/* ---- works, but no impact on performance */}
+              {/* {listLogNumbers.length > 0 &&
                 listLogNumbers.map((lln, index) => (          
                   <div
                     className='recordingItem' key={'recordingItem' + index}
@@ -473,9 +465,7 @@ const MusicInterface = () => {
                       {(infoMusicList.length === 0) ? (<AiOutlineLoading className="spin" size={"20px"} />) :
                         (findMatchRecording(lln) !== -1) ? (
                           <div>
-                            {/* Content to display if the index matches */}
                             <p>lognumber: {lln}</p>
-                            {/* Add more properties from the matched object here */}
                             From item: {infoMusicList[findMatchRecording(lln)].lognumber}
                           </div>
                         ) : (
@@ -516,23 +506,7 @@ const MusicInterface = () => {
                         })}
                     </div>
                   </div>
-                ))}
-
-              {/* {(listSearchRes.length <= 0) ? (<></>) :
-                listTracks.map((item, i) => (
-                  <>
-                    <TrackRes
-                      key={"Track"+i + '' + item}
-                      text={item}
-                      listSearchRes={listSearchRes.filter(a => a.recording===item)}
-                      formatAndPlay={formatAndPlay}
-                      getMusicInfo={getMusicInfo}
-                      infoMusicList={infoMusicList}
-                      setInfoMusicList={setInfoMusicList}
-                    />
-                  </>
-                ))
-              } */}
+                ))} */}
 
             </div>
           </div>

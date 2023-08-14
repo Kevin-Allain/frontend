@@ -117,7 +117,14 @@ const WorkflowManager = () => {
         <div className="creationWorkflow">
           Title: <br />
           <input
-            type="text" className="textInputWorkflowCreation" placeholder="Write a short title (50 characters max)" ref={titleInputRef} autoComplete="off" required value={titleInput} onChange={handleChangeTitleInput}
+            type="text" 
+            className="textInputWorkflowCreation" 
+            placeholder="Write a short title (50 characters max)" 
+            ref={titleInputRef} 
+            autoComplete="off" 
+            required 
+            value={titleInput} 
+            onChange={handleChangeTitleInput}
           />{" "}
           <br />
           Description: <br />
