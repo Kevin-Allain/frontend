@@ -14,6 +14,7 @@ const sampler = new Tone.Sampler({
 
 
 const Piano = (props) => {
+    
     const { onKeyPress } = props;
     // const synth = useRef(new Tone.Synth());
     // // Set the tone to sine
@@ -42,6 +43,7 @@ const Piano = (props) => {
 
   // useCallback for handleNoteDown and handleNoteUp event handlers
   const handleNoteDown = useCallback((note) => {
+    console.log(">>> props: ",props);
     if (note.endsWith('s')) {
       setActiveBlackNote(note);
     } else if (activeBlackNote === null) {

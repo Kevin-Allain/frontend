@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect, useContext, useMemo  } from 'react';
+import React, { useRef, useState, useEffect, useContext, useMemo, useCallback  } from 'react';
 import * as Tone from "tone"
 import {
   getMusicMIDI,
@@ -164,21 +164,32 @@ const MusicInterface = () => {
   }
   
   // ---- Functions handle
-  const handleChangeQueryPitch = (event) => {
+  // const handleChangeQueryPitch = (event) => {
+  //   const value = event.target.value;
+  //   if (PITCH_QUERY_REGEX.test(value) || value[value.length - 1] === '-') {
+  //     setTextSearch(value)
+  //   }
+  // }
+  const handleChangeQueryPitch = useCallback((event) => {
     const value = event.target.value;
     if (PITCH_QUERY_REGEX.test(value) || value[value.length - 1] === '-') {
-      setTextSearch(value)
+      setTextSearch(value);
     }
-  }
+  }, [setTextSearch]);
 
-  const handleClickTextSearch = async (e) => {
+
+  // const handleClickTextSearch = async (e) => {
+  //   e.preventDefault();
+  //   console.log("", textSearch, ", (typeof textSearch): ", (typeof textSearch));
+  //   // make a call to the database, then set string back to ''
+  //   if (textSearch !== '') { findMatchLevenshteinDistance(textSearch); }
+  // };
+  const handleClickTextSearch = useCallback(async (e) => {
     e.preventDefault();
     console.log("", textSearch, ", (typeof textSearch): ", (typeof textSearch));
-    // make a call to the database, then set string back to ''
-    if (textSearch !== '') {
-      findMatchLevenshteinDistance(textSearch);
-    }
-  };
+    if (textSearch !== '') { findMatchLevenshteinDistance(textSearch); }
+  }, [textSearch, findMatchLevenshteinDistance]);
+  
 
   // ######## TEST FOR PERFORMANCES ########
   const handleClickTextSearchTEST = async(e) => {
@@ -228,8 +239,8 @@ const MusicInterface = () => {
     textSearchRef.current.value += NotetoMIDI[keyName];
   }
 
-  // Memoize the value of textSearch
-  const memoizedTextSearch = useMemo(() => textSearch, [textSearch]);
+  // // Memoize the value of textSearch
+  // const memoizedTextSearch = useMemo(() => textSearch, [textSearch]);
 
 
   // ---- Functions
@@ -367,16 +378,16 @@ const MusicInterface = () => {
         </div>
       <div className='playMusic' onClick={(c)=>{playToneSalamander();}}> Play from tone loaded </div>
       {/* ==== Test Piano Roll === */}
-      <div>
-        <h1>Piano Roll</h1>
-        <PianoRoll
-          notes={notes}
-          occurrences={occurrences}
-          durations={durations}
-          width={600}
-          height={200}
-        />
-      </div>
+        <div className='pianoArea'>
+          <h1>Piano Roll</h1>
+          <PianoRoll
+            notes={notes}
+            occurrences={occurrences}
+            durations={durations}
+            width={600}
+            height={200}
+          />
+        </div>
       {/* ==== PIANO INPUT ==== */}
       <Piano onKeyPress={handleKeyPress} />
       {/* ==== SEARCH INPUT ==== */}
