@@ -343,6 +343,7 @@ const MusicInterface = () => {
   }
 
   function getMusicInfo(track, infoMusicList, setInfoMusicList = null) {
+    console.log("getMusicInfo -- infoMusicList: ",infoMusicList);
     const lognumber = track.split("-")[0];
     getTrackMetadata(lognumber, infoMusicList, setInfoMusicList);
   }

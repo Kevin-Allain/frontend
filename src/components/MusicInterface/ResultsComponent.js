@@ -45,7 +45,14 @@ const ResultsComponent = ({
                   {/* Content to display if the index matches */}
                   <p>lognumber: {lln}</p>
                   {/* Add more properties from the matched object here */}
-                  From item: {infoMusicList[findMatchRecording(lln)].lognumber}
+                  {/* From item: {infoMusicList[findMatchRecording(lln)].lognumber} */}
+                  From item: 
+                  {Object.entries(infoMusicList[findMatchRecording(lln)]).map(([key, value]) => (
+                    <p key={key}>
+                      {key}: {value}
+                    </p>
+                  ))}
+
                 </div>
               ) : (
                 <>No match for metadata</>
