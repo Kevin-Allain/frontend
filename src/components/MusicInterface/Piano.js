@@ -53,6 +53,7 @@ const Piano = (props) => {
   }, [activeBlackNote, setActiveBlackNote, activeWhiteNote, setActiveWhiteNote, onKeyPress]);
 
   const handleNoteUp = useCallback((note) => {
+    if (typeof note === 'undefined') { return; }
     if (note.endsWith('s')) {
       setActiveBlackNote(null);
     } else {
@@ -68,11 +69,12 @@ const Piano = (props) => {
         };
       
         const handlePointerDown = (event) => {
-          const note = event.target.dataset.note;
-          console.log("handlePointerDown note: ", note, ", event: ", event);
-          const now = Tone.now();
-          sampler.triggerAttackRelease([note], 1,now); //   synth.current.triggerAttackRelease(note, "8n", now + 0.25);
-          handleNoteDown(note);
+            const note = event.target.dataset.note;
+            const now = Tone.now();
+            console.log("handlePointerDown note: ", note, ", event: ", event);
+            if (typeof note === 'undefined') { return; }
+            sampler.triggerAttackRelease([note], 1, now); //   synth.current.triggerAttackRelease(note, "8n", now + 0.25);
+            handleNoteDown(note);
         };
       
         const pianoElement = document.getElementById("piano");

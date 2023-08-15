@@ -420,16 +420,13 @@ const MusicInterface = () => {
               The list of recordings is:
               <nav>
                 {listLogNumbers.map((a, index) =>(
-                  <button key={index + 'lognumberButton'} onClick={() => handleScrollToRecording(index)}>
-                    {a}
-                  </button>
+                  <button key={index + 'lognumberButton'} onClick={() => handleScrollToRecording(index)}> {a} </button>
                 ))}
               </nav>
             </div>
 
             <div className='musicInterfaceContent'>
-              {/* <div className='infoLogNumber'>Load information about the recordings<br/> <BsInfoCircleFill className='icon' onClick={() => getResultsInfo( listLogNumbers, infoMusicList, setInfoMusicList )} />
-                {(infoMusicList.length <= 0) ? (<></>) : infoMusicList.map((item, i) => ( <MusicInfo className='musicinfo' key={`${i}-${item.lognumber}`} lognumber={item.lognumber} contents={item.contents} recording_location={item.recording_location} addAnnotation={addAnnotation} updateAnnotation={updateAnnotation} getAnnotations={getAnnotations} deleteAnnotation={deleteAnnotation} idDatabase = {item.idDatabase} // doubt about whether this will be present? /> ) ) } </div> */}
+              {/* <div className='infoLogNumber'>Load information about the recordings<br/> <BsInfoCircleFill className='icon' onClick={() => getResultsInfo( listLogNumbers, infoMusicList, setInfoMusicList )} /> {(infoMusicList.length <= 0) ? (<></>) : infoMusicList.map((item, i) => ( <MusicInfo className='musicinfo' key={`${i}-${item.lognumber}`} lognumber={item.lognumber} contents={item.contents} recording_location={item.recording_location} addAnnotation={addAnnotation} updateAnnotation={updateAnnotation} getAnnotations={getAnnotations} deleteAnnotation={deleteAnnotation} idDatabase = {item.idDatabase} // doubt about whether this will be present? /> ) ) } </div> */}
 
               <ResultsComponent
                 listLogNumbers={listLogNumbers}
@@ -444,6 +441,7 @@ const MusicInterface = () => {
                 formatAndPlay={formatAndPlay}
                 getMusicInfo={getMusicInfo}
                 setInfoMusicList={setInfoMusicList}
+                testPerformances={false}
               />
 
               {/* ---- works, but no impact on performance */}

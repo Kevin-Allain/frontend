@@ -15,9 +15,11 @@ const ResultsComponent = ({
   listSearchRes,
   formatAndPlay,
   getMusicInfo,
-  setInfoMusicList
+  setInfoMusicList,
+  testPerformances=false
 }) => {
   return (
+    testPerformances?<></>:
     <>
       {listLogNumbers.length > 0 &&
         listLogNumbers.map((lln, index) => (
@@ -85,7 +87,7 @@ const ResultsComponent = ({
                             scrollToButtonListRecordingsFollowing( e, lln, 'next' )
                           }
                         />
-                        <TrackRes
+                        {/* <TrackRes
                           key={'Track' + ndx + '' + track}
                           text={track}
                           listSearchRes={listSearchRes.filter(
@@ -95,7 +97,7 @@ const ResultsComponent = ({
                           getMusicInfo={getMusicInfo}
                           infoMusicList={infoMusicList}
                           setInfoMusicList={setInfoMusicList}
-                        />
+                        /> */}
                       </div>
                     );
                   } else {

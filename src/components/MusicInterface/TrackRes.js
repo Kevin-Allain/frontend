@@ -14,14 +14,9 @@ import EmbeddedWorkflowInteraction from '../Workflow/EmbeddedWorkflowInteraction
 
 const TrackRes = ({ 
     text, 
-    // lognumber, // length, // notes, // durations, // times, // distance, 
-    // funcPlayMIDI, 
-    // getMusicInfo, 
+    // lognumber, // length, // notes, // durations, // times, // distance, // funcPlayMIDI,  // getMusicInfo, 
     infoMusicList, 
-    // addAnnotation,
-    // getAnnotations,
-    // updateAnnotation,
-    // deleteAnnotation, 
+    // addAnnotation, // getAnnotations, // updateAnnotation, // deleteAnnotation, 
     listSearchRes,
     formatAndPlay,
     getMusicInfo,
