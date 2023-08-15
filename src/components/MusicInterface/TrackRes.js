@@ -20,7 +20,8 @@ const TrackRes = ({
     listSearchRes,
     formatAndPlay,
     getMusicInfo,
-    setInfoMusicList
+    setInfoMusicList,
+    testPerformances=false
  }) => {
 
     return (
@@ -29,27 +30,27 @@ const TrackRes = ({
                 <h3>Track: {text} </h3> 
             </div>
             <AnnotationSystem type={"track"} info={text} />
-            <EmbeddedWorkflowInteraction idCaller={listSearchRes[0].arrIdNotes[0]}  typeCaller={"track"}/>
-
-            {listSearchRes.map((item, i) => ( 
-                <SampleRes
-                // key={i + '' + item.recording + '_' + item.arrNotes.toString().replaceAll(',', '-')}
-                text={i + '-' + item.recording}
-                lognumber={item.recording.split('-')[0]}
-                length={item.arrTime[item.arrTime.length - 1] + item.arrDurations[item.arrDurations.length - 1] - item.arrTime[0]}
-                notes={item.arrNotes.toString().replaceAll(',', '-')}
-                durations={item.arrDurations.toString().replaceAll(',', '-')}
-                times={item.arrTime.toString().replaceAll(',', '-')}
-                distance={item.distCalc}
-                // addition
-                idDBNotes = {item.arrIdNotes}
-                // Need to format the structure 
-                funcPlayMIDI={() => formatAndPlay(item)}
-                getMusicInfo={() => getMusicInfo(item.recording, infoMusicList, setInfoMusicList)}
-                infoMusicList={infoMusicList}
-                />
-            ))}
-
+            <EmbeddedWorkflowInteraction idCaller={listSearchRes[0].arrIdNotes[0]} typeCaller={"track"} />
+            {(testPerformances) ? (<></>) :
+                listSearchRes.map((item, i) => (
+                    <SampleRes
+                        // key={i + '' + item.recording + '_' + item.arrNotes.toString().replaceAll(',', '-')}
+                        text={i + '-' + item.recording}
+                        lognumber={item.recording.split('-')[0]}
+                        length={item.arrTime[item.arrTime.length - 1] + item.arrDurations[item.arrDurations.length - 1] - item.arrTime[0]}
+                        notes={item.arrNotes.toString().replaceAll(',', '-')}
+                        durations={item.arrDurations.toString().replaceAll(',', '-')}
+                        times={item.arrTime.toString().replaceAll(',', '-')}
+                        distance={item.distCalc}
+                        // addition
+                        idDBNotes={item.arrIdNotes}
+                        // Need to format the structure 
+                        funcPlayMIDI={() => formatAndPlay(item)}
+                        getMusicInfo={() => getMusicInfo(item.recording, infoMusicList, setInfoMusicList)}
+                        infoMusicList={infoMusicList}
+                    />
+                ))
+            }
         </div>
     );
 }

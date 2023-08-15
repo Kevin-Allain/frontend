@@ -1,7 +1,17 @@
-import React from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import { MdKeyboardDoubleArrowUp, MdKeyboardDoubleArrowLeft, MdOutlineKeyboardArrowLeft, MdOutlineKeyboardArrowRight, MdKeyboardDoubleArrowRight } from 'react-icons/md';
 import { AiOutlineLoading } from 'react-icons/ai';
 import TrackRes from './TrackRes'; // You should adjust the import path
+
+  const LazyLoadedTrack = ({ track, ndx }) => {
+    // Add your track rendering logic here
+    return (
+      <div className='trackItem' id={track}>
+        {/* Track content */}
+      </div>
+    );
+  };
+
 
 const ResultsComponent = ({
   listLogNumbers,
@@ -18,6 +28,39 @@ const ResultsComponent = ({
   setInfoMusicList,
   testPerformances=false
 }) => {
+
+  
+  
+  const [visibleTracks, setVisibleTracks] = useState([]);
+  const tracksContainerRef = useRef(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver((entries) => {
+      const newVisibleTracks = entries
+        .filter((entry) => entry.isIntersecting)
+        .map((entry) => entry.target.getAttribute('data-track'));
+
+      setVisibleTracks(newVisibleTracks);
+    });
+
+    if (tracksContainerRef.current) {
+      const trackElements = tracksContainerRef.current.querySelectorAll('.trackItem');
+      trackElements.forEach((element) => {
+        observer.observe(element);
+      });
+    }
+
+    return () => {
+      if (tracksContainerRef.current) {
+        const trackElements = tracksContainerRef.current.querySelectorAll('.trackItem');
+        trackElements.forEach((element) => {
+          observer.unobserve(element);
+        });
+      }
+    };
+  }, [listTracks]);
+
+
   return (
     testPerformances?<></>:
     <>
@@ -42,11 +85,11 @@ const ResultsComponent = ({
                 <AiOutlineLoading className='spin' size={'20px'} />
               ) : findMatchRecording(lln) !== -1 ? (
                 <div>
-                  {/* Content to display if the index matches */}
-                  <p>lognumber: {lln}</p>
+                  {/* Content to display if the index matches
+                  <p>lognumber: {lln}</p> */}
                   {/* Add more properties from the matched object here */}
                   {/* From item: {infoMusicList[findMatchRecording(lln)].lognumber} */}
-                  From item: 
+                  <u>Info from item:</u>
                   {Object.entries(infoMusicList[findMatchRecording(lln)]).map(([key, value]) => (
                     <p key={key}>
                       {key}: {value}
@@ -58,12 +101,23 @@ const ResultsComponent = ({
                 <>No match for metadata</>
               )}
             </div>
-            <div className='matchedTracksOfRecording'>
+            <div 
+              className='matchedTracksOfRecording' 
+              ref={tracksContainerRef}
+            >
               {listTracks.length > 0 &&
                 listTracks.map((track, ndx) => {
                   if (track.includes(lln)) {
                     return (
-                      <div className='trackItem' id={track} key={track}>
+                      // <div className='trackItem' id={track} key={track}>
+          <div
+            className='trackItem'
+            id={track}
+            key={track}
+            data-track={track}
+            style={{ visibility: visibleTracks.includes(track) ? 'visible' : 'hidden' }}
+          >
+
                         Previous Recording{' '}
                         <MdKeyboardDoubleArrowLeft
                           className='icon'
@@ -94,7 +148,8 @@ const ResultsComponent = ({
                             scrollToButtonListRecordingsFollowing( e, lln, 'next' )
                           }
                         />
-                        {/* <TrackRes
+                        {/* This is the one element that results in too many elements for good performances... */}
+                        <TrackRes
                           key={'Track' + ndx + '' + track}
                           text={track}
                           listSearchRes={listSearchRes.filter(
@@ -104,7 +159,8 @@ const ResultsComponent = ({
                           getMusicInfo={getMusicInfo}
                           infoMusicList={infoMusicList}
                           setInfoMusicList={setInfoMusicList}
-                        /> */}
+                          testPerformances={true}
+                        />
                       </div>
                     );
                   } else {
@@ -116,6 +172,6 @@ const ResultsComponent = ({
         ))}
     </>
   );
-};
+}
 
 export default ResultsComponent;
