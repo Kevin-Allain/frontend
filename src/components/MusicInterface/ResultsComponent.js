@@ -3,15 +3,6 @@ import { MdKeyboardDoubleArrowUp, MdKeyboardDoubleArrowLeft, MdOutlineKeyboardAr
 import { AiOutlineLoading } from 'react-icons/ai';
 import TrackRes from './TrackRes'; // You should adjust the import path
 
-const LazyLoadedTrack = ({ track, ndx }) => {
-  // Add your track rendering logic here
-  {/* Track content */ }
-  return (
-    <div className='trackItem' id={track}> 
-      Track to display (should call TrackRes I guess) Index is {ndx}.
-    </div>
-  );
-};
 
 const ResultsComponent = ({
   listLogNumbers,
@@ -32,6 +23,29 @@ const ResultsComponent = ({
   const [visibleTracks, setVisibleTracks] = useState([]);
   const tracksContainerRef = useRef(null);
 
+  const LazyLoadedTrack = ({ track, ndx }) => {
+    // Add your track rendering logic here
+    if(ndx===3){console.log({listSearchRes,formatAndPlay,getMusicInfo,infoMusicList,setInfoMusicList})}
+  //   <div className='trackItem' id={track}>
+    // <TrackRes key={'Track' + ndx + '' + track} text={track}
+    //   listSearchRes={listSearchRes.filter((a) => a.recording === track)}
+    //   formatAndPlay={formatAndPlay} getMusicInfo={getMusicInfo} infoMusicList={infoMusicList} setInfoMusicList={setInfoMusicList}
+    //   testPerformances={false} />
+  // </div>
+    // console.log({track, ndx});
+    {/* Track content */ }
+    return (
+      // <div className='trackItem' id={track}> 
+      //   Track to display (should call TrackRes I guess) Index is {ndx}.
+      // </div>
+      <TrackRes key={'Track' + ndx + '' + track} text={track}
+      listSearchRes={listSearchRes.filter((a) => a.recording === track)}
+      formatAndPlay={formatAndPlay} getMusicInfo={getMusicInfo} infoMusicList={infoMusicList} setInfoMusicList={setInfoMusicList}
+      testPerformances={true} />
+    );
+  };
+  
+
   useEffect(() => {
     console.log("listTracks in useEffect: ",listTracks);
     const observer = new IntersectionObserver((entries) => {
@@ -39,16 +53,21 @@ const ResultsComponent = ({
         .filter((entry) => entry.isIntersecting)
         .map((entry) => entry.target.getAttribute('data-track'));
 
+      console.log("entries in useEffect: ",entries,", #: ",entries.length);
+      console.log("newVisibleTracks in useEffect: ",newVisibleTracks,", #: ",newVisibleTracks.length);
+
       setVisibleTracks(newVisibleTracks);
     });
-
+  
     if (tracksContainerRef.current) {
       const trackElements = tracksContainerRef.current.querySelectorAll('.trackItem');
-      trackElements.forEach((element) => {
+      trackElements.forEach((element, index) => {
+        const track = listTracks[index]; // Make sure this matches the index of the element
+        element.setAttribute('data-track', track);
         observer.observe(element);
       });
     }
-    console.log("useEffect, about to return. visibleTracks: ",visibleTracks,", tracksContainerRef: ",tracksContainerRef);
+  
     return () => {
       if (tracksContainerRef.current) {
         const trackElements = tracksContainerRef.current.querySelectorAll('.trackItem');
@@ -58,7 +77,7 @@ const ResultsComponent = ({
       }
     };
   }, [listTracks]);
-
+  
 
   return (
     testPerformances?<></>:
@@ -72,13 +91,7 @@ const ResultsComponent = ({
             ref={(ref) => (lognumbersRefs.current[index] = ref)}
           >
             <h2>Recording: {lln}</h2>
-            <em>
-              List of recordings{' '}
-              <MdKeyboardDoubleArrowUp
-                className='icon'
-                onClick={scrollToButtonListLogsNumbers}
-              />
-            </em>
+            <em> List of recordings{' '} <MdKeyboardDoubleArrowUp className='icon' onClick={scrollToButtonListLogsNumbers} /> </em>
             <div className='metadataRecording'>
               {infoMusicList.length === 0 ? (
                 <AiOutlineLoading className='spin' size={'20px'} />
@@ -91,9 +104,7 @@ const ResultsComponent = ({
                   {/* TODO prettify (set different div and make it nicer) */}
                   <u>Info from item:</u>
                   {Object.entries(infoMusicList[findMatchRecording(lln)]).map(([key, value]) => (
-                    <p key={key}>
-                      {key}: {value}
-                    </p>
+                    <p key={key}> {key}: {value} </p>
                   ))}
 
                 </div>
@@ -114,7 +125,8 @@ const ResultsComponent = ({
                         key={track}
                         data-track={track}
                         style={{ 
-                          visibility: visibleTracks.includes(track) ? 'visible' : 'hidden' 
+                          visibility: visibleTracks.includes(track) ? 'visible' : 'hidden',
+                          color:'red'
                         }}
                       >
                         Previous Recording{' '}

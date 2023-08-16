@@ -46,8 +46,8 @@ const TrackRes = ({
                         idDBNotes={item.arrIdNotes}
                         // Need to format the structure 
                         funcPlayMIDI={() => formatAndPlay(item)}
-                        getMusicInfo={() => getMusicInfo(item.recording, infoMusicList, setInfoMusicList)}
-                        infoMusicList={infoMusicList}
+                        // getMusicInfo={() => getMusicInfo(item.recording, infoMusicList, setInfoMusicList)}
+                        // infoMusicList={infoMusicList}
                     />
                 ))
             }
