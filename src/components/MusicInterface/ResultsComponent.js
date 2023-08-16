@@ -3,15 +3,15 @@ import { MdKeyboardDoubleArrowUp, MdKeyboardDoubleArrowLeft, MdOutlineKeyboardAr
 import { AiOutlineLoading } from 'react-icons/ai';
 import TrackRes from './TrackRes'; // You should adjust the import path
 
-  const LazyLoadedTrack = ({ track, ndx }) => {
-    // Add your track rendering logic here
-    return (
-      <div className='trackItem' id={track}>
-        {/* Track content */}
-      </div>
-    );
-  };
-
+const LazyLoadedTrack = ({ track, ndx }) => {
+  // Add your track rendering logic here
+  {/* Track content */ }
+  return (
+    <div className='trackItem' id={track}> 
+      Track to display (should call TrackRes I guess) Index is {ndx}.
+    </div>
+  );
+};
 
 const ResultsComponent = ({
   listLogNumbers,
@@ -28,13 +28,12 @@ const ResultsComponent = ({
   setInfoMusicList,
   testPerformances=false
 }) => {
-
-  
   
   const [visibleTracks, setVisibleTracks] = useState([]);
   const tracksContainerRef = useRef(null);
 
   useEffect(() => {
+    console.log("listTracks in useEffect: ",listTracks);
     const observer = new IntersectionObserver((entries) => {
       const newVisibleTracks = entries
         .filter((entry) => entry.isIntersecting)
@@ -49,7 +48,7 @@ const ResultsComponent = ({
         observer.observe(element);
       });
     }
-
+    console.log("useEffect, about to return. visibleTracks: ",visibleTracks,", tracksContainerRef: ",tracksContainerRef);
     return () => {
       if (tracksContainerRef.current) {
         const trackElements = tracksContainerRef.current.querySelectorAll('.trackItem');
@@ -89,6 +88,7 @@ const ResultsComponent = ({
                   <p>lognumber: {lln}</p> */}
                   {/* Add more properties from the matched object here */}
                   {/* From item: {infoMusicList[findMatchRecording(lln)].lognumber} */}
+                  {/* TODO prettify (set different div and make it nicer) */}
                   <u>Info from item:</u>
                   {Object.entries(infoMusicList[findMatchRecording(lln)]).map(([key, value]) => (
                     <p key={key}>
@@ -101,67 +101,39 @@ const ResultsComponent = ({
                 <>No match for metadata</>
               )}
             </div>
-            <div 
-              className='matchedTracksOfRecording' 
-              ref={tracksContainerRef}
-            >
+            <div className='matchedTracksOfRecording' ref={tracksContainerRef}>
               {listTracks.length > 0 &&
                 listTracks.map((track, ndx) => {
                   if (track.includes(lln)) {
                     return (
                       // <div className='trackItem' id={track} key={track}>
-          <div
-            className='trackItem'
-            id={track}
-            key={track}
-            data-track={track}
-            style={{ visibility: visibleTracks.includes(track) ? 'visible' : 'hidden' }}
-          >
-
+                      <> A MATCH with {track} and {lln}
+                      <div
+                        className='trackItem'
+                        id={track}
+                        key={track}
+                        data-track={track}
+                        style={{ 
+                          visibility: visibleTracks.includes(track) ? 'visible' : 'hidden' 
+                        }}
+                      >
                         Previous Recording{' '}
-                        <MdKeyboardDoubleArrowLeft
-                          className='icon'
-                          onClick={(e) =>
-                            scrollToButtonListRecordingsFollowing(
-                              e,
-                              lln,
-                              'prev'
-                            )
-                          }
-                        />
+                        <MdKeyboardDoubleArrowLeft className='icon' onClick={(e) => scrollToButtonListRecordingsFollowing(e, lln, 'prev')} />
                         | Previous Track{' '}
-                        <MdOutlineKeyboardArrowLeft
-                          className='icon'
-                          onClick={(e) => scrollToButtonListTracksFollowing( e, ndx, track, 'prev' ) }
-                        />
+                        <MdOutlineKeyboardArrowLeft className='icon' onClick={(e) => scrollToButtonListTracksFollowing(e, ndx, track, 'prev')} />
                         | Next Track{' '}
-                        <MdOutlineKeyboardArrowRight
-                          className='icon'
-                          onClick={(e) =>
-                            scrollToButtonListTracksFollowing( e, ndx, track, 'next' )
-                          }
-                        />
+                        <MdOutlineKeyboardArrowRight className='icon' onClick={(e) => scrollToButtonListTracksFollowing(e, ndx, track, 'next')} />
                         | Next Recording
-                        <MdKeyboardDoubleArrowRight
-                          className='icon'
-                          onClick={(e) =>
-                            scrollToButtonListRecordingsFollowing( e, lln, 'next' )
-                          }
-                        />
+                        <MdKeyboardDoubleArrowRight className='icon' onClick={(e) => scrollToButtonListRecordingsFollowing(e, lln, 'next')} />
                         {/* This is the one element that results in too many elements for good performances... */}
-                        <TrackRes
-                          key={'Track' + ndx + '' + track}
-                          text={track}
-                          listSearchRes={listSearchRes.filter(
-                            (a) => a.recording === track
-                          )}
-                          formatAndPlay={formatAndPlay}
-                          getMusicInfo={getMusicInfo}
-                          infoMusicList={infoMusicList}
-                          setInfoMusicList={setInfoMusicList}
-                          testPerformances={true}
-                        />
+                        {/* <TrackRes key={'Track' + ndx + '' + track} text={track} listSearchRes={listSearchRes.filter( (a) => a.recording === track )}
+                          formatAndPlay={formatAndPlay} getMusicInfo={getMusicInfo} infoMusicList={infoMusicList} setInfoMusicList={setInfoMusicList}
+                          testPerformances={true} /> */}
+
+                        {/* Render only the visible tracks */}
+                        <LazyLoadedTrack track={track} ndx={ndx} />
                       </div>
+                      </>
                     );
                   } else {
                     return null; // or any fallback if track doesn't match
