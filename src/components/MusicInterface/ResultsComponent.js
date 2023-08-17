@@ -72,22 +72,36 @@ const ResultsComponent = ({
   // }, [listTracks]);
 
   useEffect(() => {
+    console.log("======== useEffect ResultsComponent");
     const containerElement = tracksContainerRef.current;
     // const trackElements = containerElement.querySelectorAll('.trackItem');
-    const trackElementsDocument =
+    let trackElementsDocument =
       Array.from(document.getElementsByClassName('trackItem'))
         .filter((a, ndx) => ndx < 10); // For test. Will need to change it to another way based on... scrolling of view.
 
-    const observer = new IntersectionObserver((entries) => {      
-      console.log("entries: ", entries, ", #: ",entries.length); // Check the logged entries in the browser's console
+    const observer = new IntersectionObserver((entries) => {
+      console.log('trackElementsDocument[0]: ', trackElementsDocument[0], ", trackElementsDocument.length: ", trackElementsDocument.length);
+      console.log("entries: ", entries, ", #: ", entries.length, ", time: ", new Date()); // Check the logged entries in the browser's console
       entries.map(a => console.log(a.target));
       console.log("containerElement: ", containerElement);
       // console.log("trackElements: ",trackElements);
       // console.log("trackElementsDocument: ",trackElementsDocument);
       // trackElementsDocument.forEach((a)=>{ console.log('element of trackElementsDocument. a: ',a); })
       // console.log('trackElements[0]: ', trackElements[0], ", trackElements.length: ", trackElements.length);
-      console.log('trackElementsDocument[0]: ', trackElementsDocument[0], ", trackElementsDocument.length: ", trackElementsDocument.length);
 
+      entries.forEach((entry) => {
+        const track = entry.target.getAttribute('data-track');
+        const isVisible = entry.isIntersecting;
+        // Set CSS visibility based on intersection
+        if (isVisible) {
+          entry.target.style.visibility = 'visible';
+        } else {
+          entry.target.style.visibility = 'hidden';
+        }
+        console.log('Track:', track, 'Is Visible:', isVisible);
+      });
+
+      // Other console logs...      
       const newVisibleTracks = entries.map((entry) => ({
         track: entry.target.getAttribute('data-track'),
         isVisible: entry.isIntersecting,
@@ -95,7 +109,7 @@ const ResultsComponent = ({
 
       setVisibleTracks(newVisibleTracks);
     });
-  
+
   
     // trackElements.forEach((element) => {
     //   observer.observe(element);
@@ -115,7 +129,7 @@ const ResultsComponent = ({
       });
 
     };
-  }, []);
+  }, [listTracks]);
    
   
 
