@@ -23,9 +23,13 @@ const ResultsComponent = ({
   const [visibleTracks, setVisibleTracks] = useState([]);
   const tracksContainerRef = useRef(null);
 
+  // TODO update based on indexes of visible elements. (and consider clicks with buttons!)
+  const [indexBegObserver, setIndexBegObserver] = useState(0); 
+  const [indexEndObserver, setIndexEndObserver] = useState(10);
+
   const LazyLoadedTrack = ({ track, ndx }) => {
     // Add your track rendering logic here
-    if(ndx===0){console.log("Loaded lazy. Info is: ",{track,ndx,listSearchRes,formatAndPlay,getMusicInfo,infoMusicList,setInfoMusicList})}
+    // if(ndx===0){console.log("Loaded lazy. Info is: ",{track,ndx,listSearchRes,formatAndPlay,getMusicInfo,infoMusicList,setInfoMusicList})}
     {/* Track content */ }
     return (
       // Test render. Better to work with the Trackres directly.
@@ -39,67 +43,67 @@ const ResultsComponent = ({
   
 
   // useEffect(() => {
-  //   console.log("listTracks in useEffect: ", listTracks,", tracksContainerRef: ",tracksContainerRef);
   //   const observer = new IntersectionObserver((entries) => {
-  //     const newVisibleTracks = entries
-  //       .filter((entry) => entry.isIntersecting)
-  //       .map((entry) => entry.target.getAttribute('data-track'));
-
-  //     console.log("newVisibleTracks in useEffect: ", newVisibleTracks, ", #: ", newVisibleTracks.length);
-
-  //     setVisibleTracks(newVisibleTracks);
+  //     const newVisibleTracks = entries.filter((entry) => entry.isIntersecting).map((entry) => entry.target.getAttribute('data-track')); setVisibleTracks(newVisibleTracks);
   //   });
-
   //   if (tracksContainerRef.current) {
   //     const trackElements = tracksContainerRef.current.querySelectorAll('.trackItem');
-  //     trackElements.forEach((element, index) => {
-  //       const track = listTracks[index]; // Make sure this matches the index of the element
-  //       element.setAttribute('data-track', track);
-  //       observer.observe(element);
-  //     });
+  //     trackElements.forEach((element, index) => { const track = listTracks[index]; element.setAttribute('data-track', track); observer.observe(element); });
   //   }
-
-  //   console.log("---- observer in useEffect: ", observer);
-  //   console.log("---- visibleTracks: ",visibleTracks,", #: ",visibleTracks.length);
   //   return () => {
-  //     if (tracksContainerRef.current) {
-  //       const trackElements = tracksContainerRef.current.querySelectorAll('.trackItem');
-  //       trackElements.forEach((element) => {
-  //         observer.unobserve(element);
-  //       });
-  //     }
-  //   };
+  //     if (tracksContainerRef.current) { const trackElements = tracksContainerRef.current.querySelectorAll('.trackItem');
+  //       trackElements.forEach((element) => { observer.unobserve(element); });
+  //     }};
   // }, [listTracks]);
 
   useEffect(() => {
     console.log("======== useEffect ResultsComponent");
-    const containerElement = tracksContainerRef.current;
+    // const containerElement = tracksContainerRef.current;
     // const trackElements = containerElement.querySelectorAll('.trackItem');
-    let trackElementsDocument =
-      Array.from(document.getElementsByClassName('trackItem'))
-        .filter((a, ndx) => ndx < 10); // For test. Will need to change it to another way based on... scrolling of view.
 
     const observer = new IntersectionObserver((entries) => {
       console.log('trackElementsDocument[0]: ', trackElementsDocument[0], ", trackElementsDocument.length: ", trackElementsDocument.length);
-      console.log("entries: ", entries, ", #: ", entries.length, ", time: ", new Date()); // Check the logged entries in the browser's console
-      entries.map(a => console.log(a.target));
-      console.log("containerElement: ", containerElement);
-      // console.log("trackElements: ",trackElements);
-      // console.log("trackElementsDocument: ",trackElementsDocument);
-      // trackElementsDocument.forEach((a)=>{ console.log('element of trackElementsDocument. a: ',a); })
-      // console.log('trackElements[0]: ', trackElements[0], ", trackElements.length: ", trackElements.length);
+      console.log("entries: ", entries,", #: ", entries.length);
+      let entriesId = entries.map(a => a.target.id); console.log("entriesId: ",entriesId);
+      // entries.map(a => console.log(a.target));
+      // console.log("containerElement: ", containerElement);
 
-      entries.forEach((entry) => {
+      // Calculate the visible range based on scroll position and container dimensions
+      // const containerRect = containerElement.getBoundingClientRect(); const scrollTop = containerElement.scrollTop; const containerHeight = containerRect.height; console.log({containerRect,scrollTop,containerHeight});
+      let entriesVisibility = {};
+      let indexesObservers = [];
+      entries.forEach((entry, index) => {
         const track = entry.target.getAttribute('data-track');
         const isVisible = entry.isIntersecting;
         // Set CSS visibility based on intersection
-        if (isVisible) {
-          entry.target.style.visibility = 'visible';
-        } else {
-          entry.target.style.visibility = 'hidden';
-        }
+        // TODO later: draw content, rather than just change css
+        if (isVisible) { entry.target.style.visibility = 'visible'; }
+        else { entry.target.style.visibility = 'hidden'; }
+        entriesVisibility[entry.target.id] = entry.isIntersecting;
+        indexesObservers.push(index);
         console.log('Track:', track, 'Is Visible:', isVisible);
       });
+      console.log('entriesVisibility: ', entriesVisibility,", indexesObservers: ", indexesObservers);
+
+      let tracksIdsInRange = Array.from(document.getElementsByClassName('trackItem'))
+        .filter((a, ndx) => indexBegObserver + ndx < indexEndObserver)
+        .map(a => a.id);
+      console.log("tracksIdsInRange: ",tracksIdsInRange);
+
+      // start loading from middle (direction to consider later, start loading down)
+      // cases to consider:
+      // - beginning of track items
+      // - end of track items
+      // - middle of tracks
+      let indexOfIndexIntersect = tracksIdsInRange.indexOf(entriesId[0]);
+      console.log("}}} indexOfIndexIntersect: ", indexOfIndexIntersect, ", entriesId: ", entriesId, ", tracksIdsInRange: ", tracksIdsInRange);
+      if (entriesId.length === 1) {
+        // almost certainly wrong approach...
+        if (indexOfIndexIntersect === 5) {
+          console.log("Changing attributes for selection of tracks");
+          setIndexBegObserver(indexBegObserver + 5); setIndexEndObserver(indexEndObserver + 5);
+        }
+      }
 
       // Other console logs...      
       const newVisibleTracks = entries.map((entry) => ({
@@ -110,32 +114,32 @@ const ResultsComponent = ({
       setVisibleTracks(newVisibleTracks);
     });
 
-  
-    // trackElements.forEach((element) => {
-    //   observer.observe(element);
-    // });
+    
+    let trackElementsDocument =
+      Array.from(document.getElementsByClassName('trackItem'))
+        .filter((a, ndx) => indexBegObserver+ndx < indexEndObserver); // For test. Will need to change it to another way based on... which elements are visible
+
+    console.log("selection of trackElementsDocument: ", trackElementsDocument,
+      ", indexBegObserver: ", indexBegObserver,
+      ", indexEndObserver: ", indexEndObserver);
+
     trackElementsDocument.forEach((element) => {
       observer.observe(element);
     });
 
-  
     // Clean up the observer when the component is unmounted
     return () => {
-      // trackElements.forEach((element) => {
-      //   observer.unobserve(element);
-      // });
       trackElementsDocument.forEach((element) => {
         observer.unobserve(element);
       });
-
     };
-  }, [listTracks]);
+  }, [listTracks,indexBegObserver]);
    
   
 
   return (
     testPerformances ? <></> :
-      <>
+      <div className='resultsComponent' ref={tracksContainerRef}>
         {listLogNumbers.length > 0 &&
           listLogNumbers.map((lln, index) => (
             <div
@@ -166,7 +170,7 @@ const ResultsComponent = ({
                   <>No match for metadata</>
                 )}
               </div>
-              <div className='matchedTracksOfRecording' ref={tracksContainerRef}>
+              <div className='matchedTracksOfRecording'>
                 {listTracks.length > 0 &&
                   listTracks.map((track, ndx) => {
                     if (track.includes(lln)) {
@@ -209,7 +213,7 @@ const ResultsComponent = ({
               </div>
             </div>
           ))}
-      </>
+      </div>
   );
 }
 

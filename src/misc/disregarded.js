@@ -391,10 +391,16 @@ function resetMp3() {
     //   key.addEventListener("pointerdown", handlePointerDown);
     //   key.addEventListener("pointerup", handlePointerUp);
     // });
-  
+
     // return () => {
     //   document.querySelectorAll(".key").forEach((key) => {
     //     key.removeEventListener("pointerdown", handlePointerDown);
     //     key.removeEventListener("pointerup", handlePointerUp);
     //   });
     // };
+
+
+    // previously part of ResultsComponent
+        // trackElements.forEach((element) => { observer.observe(element);  });
+
+    //       // trackElements.forEach((element) => { observer.unobserve(element); });
