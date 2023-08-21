@@ -226,10 +226,12 @@ th {
     width: 100%;
 }
 
-.trackItem {
+    /* display: none; */
+/* .trackItem {
     opacity: 0;
-}
+} */
 
-.trackItem.show{
-    opacity: 1;
-}
+/* display: inline; */
+/* .trackItem.show {
+opacity: 1;
+} */

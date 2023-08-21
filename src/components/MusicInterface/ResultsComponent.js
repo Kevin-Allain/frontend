@@ -108,17 +108,35 @@ const ResultsComponent = ({
     //   });
     // };
 
-    // ----
+    // ---- New approach
     // Actually working fine...?! It wasn't working before.
     let tracksQuerySelection = document.querySelectorAll(".trackItem");
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
-        entry.target.classList.toggle('show', entry.isIntersecting);
+        const trackId = entry.target.id;
+        const addDivId = "additionalDiv-" + trackId;
+        const addDiv = document.getElementById(addDivId);
+        if (entry.isIntersecting) {
+          if (!addDiv) {
+            // Create a new div element
+            const newDiv = document.createElement("div");
+            // Set the unique ID for the new div based on track ID
+            newDiv.id = addDivId;
+            // Set the content for the new div
+            newDiv.textContent = "Test addition for entry " + trackId;
+            // Append the new div as a child of the existing div (entry.target)
+            entry.target.appendChild(newDiv);
+          }
+          observer.unobserve(entry.target);
+        } else {
+          // Remove the div if it exists and is out of view
+          if (addDiv) {
+            entry.target.removeChild(addDiv);
+          }
+        }
+
       })
-    },
-    {
-      threshold:1
-    }
+    }, { threshold: 0.25 }
     )
     tracksQuerySelection.forEach(t => observer.observe(t));
     // ----
@@ -174,7 +192,7 @@ const ResultsComponent = ({
                             data-track={track}
                             style={{
                               // visibility: visibleTracks.includes(track) ? 'visible' : 'hidden',
-                              color: 'red'
+                              // color: 'red'
                             }}
                           >
                             Previous Recording{' '}
