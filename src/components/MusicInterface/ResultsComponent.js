@@ -1,4 +1,5 @@
 import React, { useRef, useEffect, useState } from 'react';
+import {useInView} from 'react-intersection-observer'
 import { MdKeyboardDoubleArrowUp, MdKeyboardDoubleArrowLeft, MdOutlineKeyboardArrowLeft, MdOutlineKeyboardArrowRight, MdKeyboardDoubleArrowRight } from 'react-icons/md';
 import { AiOutlineLoading } from 'react-icons/ai';
 import TrackRes from './TrackRes'; // You should adjust the import path
@@ -42,36 +43,20 @@ const ResultsComponent = ({
   };
   
 
-  // useEffect(() => {
-  //   const observer = new IntersectionObserver((entries) => {
-  //     const newVisibleTracks = entries.filter((entry) => entry.isIntersecting).map((entry) => entry.target.getAttribute('data-track')); setVisibleTracks(newVisibleTracks);
-  //   });
-  //   if (tracksContainerRef.current) {
-  //     const trackElements = tracksContainerRef.current.querySelectorAll('.trackItem');
-  //     trackElements.forEach((element, index) => { const track = listTracks[index]; element.setAttribute('data-track', track); observer.observe(element); });
-  //   }
-  //   return () => {
-  //     if (tracksContainerRef.current) { const trackElements = tracksContainerRef.current.querySelectorAll('.trackItem');
-  //       trackElements.forEach((element) => { observer.unobserve(element); });
-  //     }};
-  // }, [listTracks]);
-
   useEffect(() => {
     console.log("======== useEffect ResultsComponent");
-    // const containerElement = tracksContainerRef.current;
-    // const trackElements = containerElement.querySelectorAll('.trackItem');
+    let tracksIdsInRange = Array.from(document.getElementsByClassName('trackItem'))
+      .filter((a, ndx) => indexBegObserver + ndx < indexEndObserver)
+      .map(a => a.id);
+    console.log("tracksIdsInRange: ",tracksIdsInRange,", indexBegObserver: ",indexBegObserver,", indexEndObserver: ",indexEndObserver,", visibleTracks: ",visibleTracks);
 
     const observer = new IntersectionObserver((entries) => {
-      console.log('trackElementsDocument[0]: ', trackElementsDocument[0], ", trackElementsDocument.length: ", trackElementsDocument.length);
-      console.log("entries: ", entries,", #: ", entries.length);
+      console.log('trackElementsDocument[0]: ', trackElementsDocument[0], ", trackElementsDocument.length: ", trackElementsDocument.length,", entries: ", entries,", #: ", entries.length);
       let entriesId = entries.map(a => a.target.id); console.log("entriesId: ",entriesId);
-      // entries.map(a => console.log(a.target));
-      // console.log("containerElement: ", containerElement);
 
-      // Calculate the visible range based on scroll position and container dimensions
-      // const containerRect = containerElement.getBoundingClientRect(); const scrollTop = containerElement.scrollTop; const containerHeight = containerRect.height; console.log({containerRect,scrollTop,containerHeight});
       let entriesVisibility = {};
       let indexesObservers = [];
+      let countEntriesListed = 0;
       entries.forEach((entry, index) => {
         const track = entry.target.getAttribute('data-track');
         const isVisible = entry.isIntersecting;
@@ -82,13 +67,9 @@ const ResultsComponent = ({
         entriesVisibility[entry.target.id] = entry.isIntersecting;
         indexesObservers.push(index);
         console.log('Track:', track, 'Is Visible:', isVisible);
+        countEntriesListed++;
       });
-      console.log('entriesVisibility: ', entriesVisibility,", indexesObservers: ", indexesObservers);
-
-      let tracksIdsInRange = Array.from(document.getElementsByClassName('trackItem'))
-        .filter((a, ndx) => indexBegObserver + ndx < indexEndObserver)
-        .map(a => a.id);
-      console.log("tracksIdsInRange: ",tracksIdsInRange);
+      console.log('entriesVisibility: ', entriesVisibility,", indexesObservers: ", indexesObservers,", countEntriesListed: ",countEntriesListed);
 
       // start loading from middle (direction to consider later, start loading down)
       // cases to consider:
@@ -110,11 +91,12 @@ const ResultsComponent = ({
         track: entry.target.getAttribute('data-track'),
         isVisible: entry.isIntersecting,
       }));
-
       setVisibleTracks(newVisibleTracks);
     });
 
-    
+    // Actually working fine...?! It wasn't working before.
+    let tracksQuerySelection = document.querySelectorAll(".trackItem")
+    console.log("tracksQuerySelection: ",tracksQuerySelection,", tracksQuerySelection.length: ",tracksQuerySelection.length);
     let trackElementsDocument =
       Array.from(document.getElementsByClassName('trackItem'))
         .filter((a, ndx) => indexBegObserver+ndx < indexEndObserver); // For test. Will need to change it to another way based on... which elements are visible

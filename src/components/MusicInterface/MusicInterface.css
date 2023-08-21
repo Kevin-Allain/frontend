@@ -225,3 +225,11 @@ th {
 .matchedTracksOfRecording{
     width: 100%;
 }
+
+.trackItem {
+    opacity: 0;
+}
+
+.trackItem.show{
+    opacity: 1;
+}

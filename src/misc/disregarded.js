@@ -404,3 +404,18 @@ function resetMp3() {
         // trackElements.forEach((element) => { observer.observe(element);  });
 
     //       // trackElements.forEach((element) => { observer.unobserve(element); });
+
+
+      // useEffect(() => {
+  //   const observer = new IntersectionObserver((entries) => {
+  //     const newVisibleTracks = entries.filter((entry) => entry.isIntersecting).map((entry) => entry.target.getAttribute('data-track')); setVisibleTracks(newVisibleTracks);
+  //   });
+  //   if (tracksContainerRef.current) {
+  //     const trackElements = tracksContainerRef.current.querySelectorAll('.trackItem');
+  //     trackElements.forEach((element, index) => { const track = listTracks[index]; element.setAttribute('data-track', track); observer.observe(element); });
+  //   }
+  //   return () => {
+  //     if (tracksContainerRef.current) { const trackElements = tracksContainerRef.current.querySelectorAll('.trackItem');
+  //       trackElements.forEach((element) => { observer.unobserve(element); });
+  //     }};
+  // }, [listTracks]);
