@@ -419,3 +419,9 @@ function resetMp3() {
   //       trackElements.forEach((element) => { observer.unobserve(element); });
   //     }};
   // }, [listTracks]);
+
+
+  // Removed from MusicInfo
+  // Global variables addition for workflow -> Might be changed to call an EmbeddedWorkflowManager
+// import { useSelector, useDispatch } from 'react-redux';
+// import { setWorkflows } from '../Reducers/WorkflowReducer';

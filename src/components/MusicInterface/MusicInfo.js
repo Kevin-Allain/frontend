@@ -6,10 +6,6 @@ import { getWorkflowsInfo } from '../../utils/HandleApi';
 // workflow component
 import EmbeddedWorkflowInteraction from '../Workflow/EmbeddedWorkflowInteraction'
 
-// Global variables addition for workflow -> Might be changed to call an EmbeddedWorkflowManager
-// import { useSelector, useDispatch } from 'react-redux';
-// import { setWorkflows } from '../Reducers/WorkflowReducer';
-
 // TODO update based on additional metadata... + inclusion of _id in MongoDB database?
 const MusicInfo = ({
     lognumber,

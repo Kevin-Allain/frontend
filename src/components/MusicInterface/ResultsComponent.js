@@ -1,4 +1,5 @@
 import React, { useRef, useEffect, useState } from 'react';
+import ReactDOM from 'react-dom';
 import {useInView} from 'react-intersection-observer'
 import { MdKeyboardDoubleArrowUp, MdKeyboardDoubleArrowLeft, MdOutlineKeyboardArrowLeft, MdOutlineKeyboardArrowRight, MdKeyboardDoubleArrowRight } from 'react-icons/md';
 import { AiOutlineLoading } from 'react-icons/ai';
@@ -28,6 +29,9 @@ const ResultsComponent = ({
   const [indexBegObserver, setIndexBegObserver] = useState(0); 
   const [indexEndObserver, setIndexEndObserver] = useState(10);
 
+  const [showComponent, setShowComponent] = useState(false);
+
+
   const LazyLoadedTrack = ({ track, ndx }) => {
     // Add your track rendering logic here
     // if(ndx===0){console.log("Loaded lazy. Info is: ",{track,ndx,listSearchRes,formatAndPlay,getMusicInfo,infoMusicList,setInfoMusicList})}
@@ -45,11 +49,10 @@ const ResultsComponent = ({
 
   useEffect(() => {
     console.log("======== useEffect ResultsComponent");
-    let tracksIdsInRange = Array.from(document.getElementsByClassName('trackItem'))
-      .filter((a, ndx) => indexBegObserver + ndx < indexEndObserver)
-      .map(a => a.id);
-    console.log("tracksIdsInRange: ",tracksIdsInRange,", indexBegObserver: ",indexBegObserver,", indexEndObserver: ",indexEndObserver,", visibleTracks: ",visibleTracks);
-
+    // let tracksIdsInRange = Array.from(document.getElementsByClassName('trackItem'))
+    //   .filter((a, ndx) => indexBegObserver + ndx < indexEndObserver)
+    //   .map(a => a.id);
+    // console.log("tracksIdsInRange: ",tracksIdsInRange,", indexBegObserver: ",indexBegObserver,", indexEndObserver: ",indexEndObserver,", visibleTracks: ",visibleTracks);
     // const observer = new IntersectionObserver((entries) => {
     //   console.log('trackElementsDocument[0]: ', trackElementsDocument[0], ", trackElementsDocument.length: ", trackElementsDocument.length,", entries: ", entries,", #: ", entries.length);
     //   let entriesId = entries.map(a => a.target.id); console.log("entriesId: ",entriesId);
@@ -90,7 +93,6 @@ const ResultsComponent = ({
     //   }));
     //   setVisibleTracks(newVisibleTracks);
     // });
-
     // console.log("tracksQuerySelection: ",tracksQuerySelection,", tracksQuerySelection.length: ",tracksQuerySelection.length);
     // let trackElementsDocument =
     //   Array.from(document.getElementsByClassName('trackItem'))
@@ -114,27 +116,37 @@ const ResultsComponent = ({
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         const trackId = entry.target.id;
-        const addDivId = "additionalDiv-" + trackId;
-        const addDiv = document.getElementById(addDivId);
+        const track = trackId;
+        // const addDivId = "additionalDiv-" + trackId;
+        // const addDiv = document.getElementById(addDivId);
+        const addTrackResId = "additionalTrackRes-" + trackId;
+        const addTrackRes = document.getElementById(addTrackResId);
+
         if (entry.isIntersecting) {
-          if (!addDiv) {
-            // Create a new div element
-            const newDiv = document.createElement("div");
-            // Set the unique ID for the new div based on track ID
-            newDiv.id = addDivId;
-            // Set the content for the new div
-            newDiv.textContent = "Test addition for entry " + trackId;
-            // Append the new div as a child of the existing div (entry.target)
-            entry.target.appendChild(newDiv);
+        // if (!addDiv) {
+        //   const newDiv = document.createElement("div");
+        //   newDiv.id = addDivId;
+        //   newDiv.textContent = "Test addition for entry " + trackId;
+        //   entry.target.appendChild(newDiv);
+        if (!addTrackRes) {
+          // Create a new TrackRes component
+            // const newTrackRes = <TrackRes key={'Track'+ track} text={track}
+            // listSearchRes={listSearchRes.filter((a) => a.recording === track)}
+            // formatAndPlay={formatAndPlay} getMusicInfo={getMusicInfo} infoMusicList={infoMusicList} setInfoMusicList={setInfoMusicList}
+            // testPerformances={true} />;
+            // ReactDOM.render(newTrackRes, document.getElementById(trackId));            
+            setShowComponent(true);
+
           }
           observer.unobserve(entry.target);
         } else {
           // Remove the div if it exists and is out of view
-          if (addDiv) {
-            entry.target.removeChild(addDiv);
-          }
-        }
+          // if (addDiv) { entry.target.removeChild(addDiv); }
+          // if (addTrackRes) { ReactDOM.unmountComponentAtNode(entry.target); }
+          // if (addTrackRes) { entry.target.removeChild(addTrackRes); }
 
+          setShowComponent(false);
+        }
       })
     }, { threshold: 0.25 }
     )
@@ -209,7 +221,12 @@ const ResultsComponent = ({
                           testPerformances={true} /> */}
 
                             {/* Render only the visible tracks */}
-                            <LazyLoadedTrack track={track} ndx={ndx} />
+                            {/* <LazyLoadedTrack track={track} ndx={ndx} /> */}
+
+                            {/* Render based on intersection of observer */}
+                            {showComponent && <TrackRes key={'Track' + ndx + '' + track} text={track} listSearchRes={listSearchRes.filter((a) => a.recording === track)}
+                              formatAndPlay={formatAndPlay} getMusicInfo={getMusicInfo} infoMusicList={infoMusicList} setInfoMusicList={setInfoMusicList}
+                              testPerformances={false} />}
                           </div>
                         </>
                       );
