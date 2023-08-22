@@ -232,6 +232,7 @@ const getMatchLevenshteinDistance = (
 ) => {
   console.log("-- handleAPI / getMatchLevenshteinDistance. stringNotes: ", stringNotes, ", percMatch: ", percMatch, " user: ", user);
   setIsLoading(true);
+  stringNotes += '';
 
   axios
     .get(`${baseUrl}/getMatchLevenshteinDistance2`, { params: { stringNotes: stringNotes, percMatch: percMatch, user: user, }, })
