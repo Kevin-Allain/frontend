@@ -224,6 +224,8 @@ const ResultsComponent = ({
                             {/* <LazyLoadedTrack track={track} ndx={ndx} /> */}
 
                             {/* Render based on intersection of observer */}
+                            {/* size={window.innerHeight / 10} */}
+                            {(!showComponent) && <AiOutlineLoading className="spin" /> }
                             {showComponent && <TrackRes key={'Track' + ndx + '' + track} text={track} listSearchRes={listSearchRes.filter((a) => a.recording === track)}
                               formatAndPlay={formatAndPlay} getMusicInfo={getMusicInfo} infoMusicList={infoMusicList} setInfoMusicList={setInfoMusicList}
                               testPerformances={false} />}

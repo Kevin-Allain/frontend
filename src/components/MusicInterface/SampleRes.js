@@ -16,8 +16,7 @@ const SampleRes = ({
     distance, 
     idDBNotes,
     funcPlayMIDI, 
-    // getMusicInfo, 
-    // infoMusicList, 
+    // getMusicInfo, infoMusicList, 
  }) => {
     
     return (
