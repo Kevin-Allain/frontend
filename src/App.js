@@ -49,12 +49,16 @@ function App() {
   // Addition for components provided by designers
   // const [open, setOpen] = useState(false);
   // const invest = useRef < null | HTMLDivElement > (null);
+  const invest = useRef(null);
   // const about = useRef < null | HTMLDivElement > (null);
   const about = useRef(null);
   // const partners = useRef < null | HTMLDivElement > (null);
+  const partners = useRef(null);
   // const funding = useRef < null | HTMLDivElement > (null);
+  const funding = useRef(null); 
   // const landing = useRef < null | HTMLDivElement > (null);
   // const search = useRef < null | HTMLDivElement > (null);
+  // const search = useRef(null);
   // const handleOpen = () => setOpen(true);
   // const handleClose = () => setOpen(false);
   // : React.RefObject<HTMLDivElement>
@@ -190,11 +194,11 @@ function App() {
             <div className=" -mt-[40vh]  h-[550vh]  pt-[40vh] "
               style={{ background:
                   "linear-gradient(122deg, rgba(2,3,12,1) 5%, rgba(42,45,78,1) 28%, rgba(33,29,56,1) 76%, rgba(80,111,127,1) 100%)", }} >
-              {/* <div className="scroll-mt-10" ref={search}> <Search /> </div>
-              <div className="scroll-mt-10" ref={invest}> <Investigators /> </div> */}
+              {/* <div className="scroll-mt-10" ref={search}> <Search /> </div> */}
               <div className="scroll-mt-10" ref={about}> <About /> </div>
-              {/* <div className="scroll-mt-10" ref={partners}> <Partners /> </div>
-              <div className="scroll-mt-10" ref={funding}> <Funding /> </div> */}
+              <div className="scroll-mt-10" ref={invest}> <Investigators /> </div>
+              <div className="scroll-mt-10" ref={partners}> <Partners /> </div>
+              <div className="scroll-mt-10" ref={funding}> <Funding /> </div>
             </div>
           </div>
 
