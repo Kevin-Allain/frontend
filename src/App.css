@@ -1,3 +1,9 @@
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+/* You can use Tailwind classes and add your custom styles as needed */
+
+
 *{
   margin:0;
   padding:0;
@@ -217,6 +223,7 @@ input{
 .icon{
   cursor: pointer;
   font-size: 20px;
+  display: inline;
 }
 
 .icon:hover{

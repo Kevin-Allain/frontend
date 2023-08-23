@@ -207,8 +207,7 @@ const ResultsComponent = ({
                               // color: 'red'
                             }}
                           >
-                            Previous Recording{' '}
-                            <MdKeyboardDoubleArrowLeft className='icon' onClick={(e) => scrollToButtonListRecordingsFollowing(e, lln, 'prev')} />
+                            Previous Recording{' '}<MdKeyboardDoubleArrowLeft className='icon' onClick={(e) => scrollToButtonListRecordingsFollowing(e, lln, 'prev')} />
                             | Previous Track{' '}
                             <MdOutlineKeyboardArrowLeft className='icon' onClick={(e) => scrollToButtonListTracksFollowing(e, ndx, track, 'prev')} />
                             | Next Track{' '}
