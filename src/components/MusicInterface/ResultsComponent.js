@@ -174,9 +174,8 @@ const ResultsComponent = ({
                 {infoMusicList.length === 0 ? (
                   <AiOutlineLoading className='spin' size={'20px'} />
                 ) : findMatchRecording(lln) !== -1 ? (
-                  <div>
-                    {/* Content to display if the index matches
-                  <p>lognumber: {lln}</p> */}
+                  <div className='detailResultMeta'>
+                    {/* Content to display if the index matches <p>lognumber: {lln}</p> */}
                     {/* Add more properties from the matched object here */}
                     {/* From item: {infoMusicList[findMatchRecording(lln)].lognumber} */}
                     {/* TODO prettify (set different div and make it nicer) */}
@@ -196,7 +195,8 @@ const ResultsComponent = ({
                     if (track.includes(lln)) {
                       return (
                         // <div className='trackItem' id={track} key={track}>
-                        <> A MATCH with {track} and {lln}
+                        <> 
+                        {/* A MATCH with {track} and {lln} */}
                           <div
                             className='trackItem'
                             id={track}

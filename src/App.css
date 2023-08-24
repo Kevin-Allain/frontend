@@ -331,7 +331,9 @@ padding-bottom: 0.25rem;
 .buttonShowDiv{
   position: absolute;
   left: 75%;
-  width: max-content;}
+  width: max-content;
+  border: solid;
+}
 
 ::-webkit-scrollbar {
   width: 10px;

@@ -28,6 +28,7 @@ import { BiDotsHorizontalRounded } from 'react-icons/bi'
 import { BsInfoCircleFill } from 'react-icons/bs'
 import TrackRes from './TrackRes';
 import PianoRoll from '../VisComponents/PianoRoll';
+import Title from '../Presentation/Title';
 
 const PITCH_QUERY_REGEX = /^$|(^(?!.*--)(?!-)([0-9]{1,2}|1[01][0-9]|12[0-7])(-([0-9]{1,2}|1[01][0-9]|12[0-7]))*(-?)$)/;
 // Test attributes
@@ -373,7 +374,7 @@ const MusicInterface = () => {
 
   return (
     <div className="musicInterface">
-      <h1>Music Interface</h1>
+      <Title firstLine="Music" secondLine="Interface" />
       {/* ==== Test Mp3 playing ==== */}
       {/* <div className="playMusic" onClick={(c) => { playMp3(); }} > Play Test Mp3 </div>
       <div className='playMusic' onClick={(c)=>{playToneSalamander();}}> Play from tone loaded </div> */}

@@ -14,6 +14,7 @@ import {
   deleteWorkflowObject
 } from "../../utils/HandleApi";
 import WorkflowInterface from "./WorkflowInterface";
+import Title from "../Presentation/Title";
 
 // Work in progress: list of workflows with the reducer...
 import { useSelector, useDispatch } from 'react-redux';
@@ -108,7 +109,9 @@ const WorkflowManager = () => {
 
   return (
     <div className="workflowManager">
-      <h3> Workflow Manager </h3>
+      {/* That's a bit much... */}
+      {/* <Title firstLine="Workflow" secondLine="Manager" /> */}
+      <h1>Workflow Manager</h1>
       <div className="additionWorkFlow">
         Create a new workflow{" "}
         <HiOutlineViewGridAdd className="icon" onClick={() => handleShowWorkflowAddition()} />

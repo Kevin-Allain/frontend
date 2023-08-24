@@ -6,7 +6,7 @@ import "../../App.css";
 import { getWorkflowsInfo, addContentWorkflow, deleteWorkflowObject ,getDatabaseContent } from "../../utils/HandleApi";
 import { useSelector, useDispatch } from 'react-redux';
 import { setWorkflows } from '../Reducers/WorkflowReducer';
-
+import Title from "../Presentation/Title";
 
 const WorkflowInterface = ({ workflow }) => {
   const [textInputObjectNote, setTextInputObjectNote] = useState("");
@@ -98,7 +98,7 @@ const WorkflowInterface = ({ workflow }) => {
 
   return (
     <div className="workflowInterface">
-      <h1>Workflow Interface</h1>
+      <Title firstLine="Workflow" secondLine="Interface" />
       <div className="workflowHeader">
         <h3>{workflow.title}</h3>
         <div className="workFlowDescription">
