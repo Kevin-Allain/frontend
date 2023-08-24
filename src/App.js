@@ -95,8 +95,8 @@ function App() {
           </button>
           : <></>
         }
-        <div className="header">        
-            <img src={logoJazzDap} className="imageHeader" alt="some value" name="Image1" align="bottom" width="125.6" height="70" border="0" />
+        <div className="header">
+            {/* <img src={logoJazzDap} className="imageHeader" alt="some value" name="Image1" align="bottom" width="125.6" height="70" border="0" /> */}
             <span className="alpha_warning">ALPHA</span>
 
           {(showDiv || localStorage?.username !== undefined) &&
@@ -182,14 +182,14 @@ function App() {
             {/* <ModalUnstyled open={open} onClose={handleClose}>
               <Login onClose={handleClose}></Login>
             </ModalUnstyled> */}
-            {/* <Navbar
-              onLanding={() => scrollTo(landing)}
+            <Navbar
+              // onLanding={() => scrollTo(landing)}
               onInvest={() => scrollTo(invest)}
               onAbout={() => scrollTo(about)}
               onPartner={() => scrollTo(partners)}
               onFunding={() => scrollTo(funding)}
               // onLogin={handleOpen}
-            /> */}
+            />
             {/* <div ref={landing}> <Landing onClick={() => scrollTo(search)} /> </div> */}
             {/* added h-auto (might have to remove it) */}
             <div className=" -mt-[40vh]  h-[550vh]  pt-[40vh] h-auto"

@@ -406,6 +406,10 @@ padding-bottom: 0.25rem;
   }
 }
 
+.navbar{
+  z-index: 200;
+}
+
 /* @keyframes loading-fall {
   0% {
     transform: translateY(-200%);
