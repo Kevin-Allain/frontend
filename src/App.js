@@ -191,7 +191,8 @@ function App() {
               // onLogin={handleOpen}
             /> */}
             {/* <div ref={landing}> <Landing onClick={() => scrollTo(search)} /> </div> */}
-            <div className=" -mt-[40vh]  h-[550vh]  pt-[40vh] "
+            {/* added h-auto (might have to remove it) */}
+            <div className=" -mt-[40vh]  h-[550vh]  pt-[40vh] h-auto"
               style={{ background:
                   "linear-gradient(122deg, rgba(2,3,12,1) 5%, rgba(42,45,78,1) 28%, rgba(33,29,56,1) 76%, rgba(80,111,127,1) 100%)", }} >
               {/* <div className="scroll-mt-10" ref={search}> <Search /> </div> */}
