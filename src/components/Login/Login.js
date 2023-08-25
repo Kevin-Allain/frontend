@@ -3,6 +3,7 @@ import AuthContext from '../../context/AuthProvider';
 import PropTypes from 'prop-types'
 import axios from 'axios';
 import { UserContext } from '../../context/UserContext';
+import "../../App.css"
 // import './Login.css';
 // import axios from '../../api/axios'
 
@@ -103,7 +104,7 @@ export default function Login({ setToken }) {
                             <input type="password" onChange={e => setPassword(e.target.value)} />
                         </label>
                         <div>
-                            <button type="submit">Submit</button>
+                            <button className='bg-white ' type="submit">Submit</button>
                         </div>
                     </form>
                 </>

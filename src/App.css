@@ -254,6 +254,7 @@ textarea {
   padding-top: 0.10rem;
   border-radius: 0.5rem;
   max-width: 80%;
+  color: black;
 }
 
 label,
@@ -308,11 +309,14 @@ button:hover{
   display: flex;
   width: 100%;
   justify-content: space-around;
+  border: solid;
+  border-radius:1rem;
 }
 
 .auth div {
   /* width: 50% */
 }
+
 
 .logout-wrapper{
 flex-direction: column;
@@ -331,11 +335,19 @@ padding-bottom: 0.25rem;
 
 
 .buttonShowDiv{
-  position: absolute;
-  left: 75%;
+  /* position: absolute; */
+  /* left: 75%; */
   width: max-content;
-  border: solid;
+  /* border: solid; */
+  border-radius: 0.5rem;
+  margin-left: 1rem;  
 }
+
+.buttonShowDiv:hover{
+  color:orange;
+  cursor: pointer;  
+}
+
 
 ::-webkit-scrollbar {
   width: 10px;
@@ -437,4 +449,9 @@ padding-bottom: 0.25rem;
 .userAnnotation:hover{
   background-color: #acadbd;
   /* once buttons are set on them, change text color to orange */
+}
+
+/* Bit dirty, but works...? */
+.contentApp{
+  margin-top: 61px;
 }

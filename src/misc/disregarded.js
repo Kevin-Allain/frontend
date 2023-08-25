@@ -729,3 +729,49 @@ function resetMp3() {
   </div>
 </ul>
 </div>
+
+
+// from App.js
+{/* <div className="container">
+            <div className="jazzdapInput">
+              <input
+                type="text"
+                placeholder="Add Jazzdap"
+                name="AddJazzDap"
+                id="AddJazzDap"
+                value={textInputJazzDAP}
+                onChange={(e) => setTextInputJazzDAP(e.target.value)}
+              />
+              <div className="add" onClick={
+                isUpdating
+                  ? () =>
+                    updateJazzDap(
+                      jazzDapId,
+                      textInputJazzDAP,
+                      setListJazzDap,
+                      setTextInputJazzDAP,
+                      setIsUpdating,
+                      localStorage.username ? localStorage.username : null)
+                  : () =>
+                    addJazzDap(
+                      textInputJazzDAP,
+                      setTextInputJazzDAP,
+                      setListJazzDap,
+                      localStorage.username ? localStorage.username : null
+                    )
+              }
+              >
+                {isUpdating ? "Update" : "Add"}
+              </div>
+            </div>
+            <div className="list">
+              {listJazzDap.map((item) => (
+                <JazzDap
+                  key={item._id}
+                  text={item.text}
+                  updateMode={() => updateMode(item._id, item.text, localStorage?.username)}
+                  deleteJazzDap={() => deleteJazzDap(item._id, setListJazzDap)}
+                />
+              ))}
+            </div>
+          </div> */}

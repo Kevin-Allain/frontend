@@ -95,32 +95,25 @@ function App() {
           </button>
           : <></>
         }
-        <div className="header">
-            {/* <img src={logoJazzDap} className="imageHeader" alt="some value" name="Image1" align="bottom" width="125.6" height="70" border="0" /> */}
-            <span className="alpha_warning">ALPHA</span>
-
+          {/* <img src={logoJazzDap} className="imageHeader" alt="some value" name="Image1" align="bottom" width="125.6" height="70" border="0" /> */}
+        {/* <div className="header">
+          <span className="alpha_warning">ALPHA</span>
           {(showDiv || localStorage?.username !== undefined) &&
             <div className="wrapper">
-                <div
-                  className={
-                    auth !== null || localStorage.token ? "offscreen" : "auth"
-                  }
-                >
-                <Register/>
+              <div
+                className={
+                  auth !== null || localStorage.token ? "offscreen" : "auth"
+                }
+              >
+                <Register />
                 <hr />
-                <Login/>
+                <Login />
               </div>
             </div>
           }
-        </div>
+        </div> */}
         <div className="contentApp">
-
-          {/* 
-          TODO change in progress: set a global variable to keep track of the workflows loaded. 
-          We need to ensure the distinction with loading light data and heavy things like search 
-          */}
-
-          { (auth !== null || localStorage.token ? "logout" : "offscreen") ?
+          {(auth !== null || localStorage.token ? "logout" : "offscreen") ?
             (
               <>
                 <div className={auth !== null || localStorage.token ? "logout" : "offscreen"}>
@@ -132,51 +125,6 @@ function App() {
             :
             <MusicInterface />
           } 
-
-          {/* <div className="container">
-            <div className="jazzdapInput">
-              <input
-                type="text"
-                placeholder="Add Jazzdap"
-                name="AddJazzDap"
-                id="AddJazzDap"
-                value={textInputJazzDAP}
-                onChange={(e) => setTextInputJazzDAP(e.target.value)}
-              />
-              <div className="add" onClick={
-                isUpdating
-                  ? () =>
-                    updateJazzDap(
-                      jazzDapId,
-                      textInputJazzDAP,
-                      setListJazzDap,
-                      setTextInputJazzDAP,
-                      setIsUpdating,
-                      localStorage.username ? localStorage.username : null)
-                  : () =>
-                    addJazzDap(
-                      textInputJazzDAP,
-                      setTextInputJazzDAP,
-                      setListJazzDap,
-                      localStorage.username ? localStorage.username : null
-                    )
-              }
-              >
-                {isUpdating ? "Update" : "Add"}
-              </div>
-            </div>
-            <div className="list">
-              {listJazzDap.map((item) => (
-                <JazzDap
-                  key={item._id}
-                  text={item.text}
-                  updateMode={() => updateMode(item._id, item.text, localStorage?.username)}
-                  deleteJazzDap={() => deleteJazzDap(item._id, setListJazzDap)}
-                />
-              ))}
-            </div>
-          </div> */}
-
 
           <div className=" overflow-hidden">
             {/* <ModalUnstyled open={open} onClose={handleClose}>
