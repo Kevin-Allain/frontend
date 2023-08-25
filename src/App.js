@@ -67,21 +67,13 @@ function App() {
     ref.current.scrollIntoView({ behavior: "smooth", })
   };
 
-
-
   const [isLoading, setIsLoadingState] = useState(false);
   useEffect(() => {
     setIsLoading = setIsLoadingState; // Assign the function to the exported variable
   }, []);
 
-  useEffect(() => {
-    getAllJazzDap(setListJazzDap);
-  }, []);
-  const updateMode = (_id, text) => {
-    setIsUpdating(true);
-    setTextInputJazzDAP(text);
-    setJazzDapId(_id);
-  };
+  // useEffect(() => { getAllJazzDap(setListJazzDap); }, []);
+  const updateMode = (_id, text) => { setIsUpdating(true); setTextInputJazzDAP(text); setJazzDapId(_id); };
 
   return (
     <Provider store={store}>    

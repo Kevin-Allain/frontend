@@ -33,7 +33,7 @@ export default function about() {
         </p>
       </div>
       <img
-        className="absolute right-0 top-0 hidden h-screen   lg:block"
+        className="absolute right-0 top-0 hidden h-screen   lg:block opacity-50"
         src={dots}
         alt="dots"
       />

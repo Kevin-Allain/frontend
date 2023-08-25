@@ -111,7 +111,7 @@ const WorkflowManager = () => {
     <div className="workflowManager">
       {/* That's a bit much... */}
       {/* <Title firstLine="Workflow" secondLine="Manager" /> */}
-      <h1>Workflow Manager</h1>
+      <h1 className="text-left">Workflow Manager</h1>
       <div className="additionWorkFlow">
         Create a new workflow{" "}
         <HiOutlineViewGridAdd className="icon" onClick={() => handleShowWorkflowAddition()} />
