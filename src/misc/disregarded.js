@@ -775,3 +775,67 @@ function resetMp3() {
               ))}
             </div>
           </div> */}
+
+
+
+          // -------- From ResultsComponent
+    // let tracksIdsInRange = Array.from(document.getElementsByClassName('trackItem'))
+    //   .filter((a, ndx) => indexBegObserver + ndx < indexEndObserver)
+    //   .map(a => a.id);
+    // console.log("tracksIdsInRange: ",tracksIdsInRange,", indexBegObserver: ",indexBegObserver,", indexEndObserver: ",indexEndObserver,", visibleTracks: ",visibleTracks);
+    // const observer = new IntersectionObserver((entries) => {
+    //   console.log('trackElementsDocument[0]: ', trackElementsDocument[0], ", trackElementsDocument.length: ", trackElementsDocument.length,", entries: ", entries,", #: ", entries.length);
+    //   let entriesId = entries.map(a => a.target.id); console.log("entriesId: ",entriesId);
+    //   let entriesVisibility = {};
+    //   let indexesObservers = [];
+    //   let countEntriesListed = 0;
+    //   entries.forEach((entry, index) => {
+    //     const track = entry.target.getAttribute('data-track');
+    //     const isVisible = entry.isIntersecting;
+    //     // Set CSS visibility based on intersection
+    //     // TODO later: draw content, rather than just change css
+    //     if (isVisible) { entry.target.style.visibility = 'visible'; }
+    //     else { entry.target.style.visibility = 'hidden'; }
+    //     entriesVisibility[entry.target.id] = entry.isIntersecting;
+    //     indexesObservers.push(index);
+    //     console.log('Track:', track, 'Is Visible:', isVisible);
+    //     countEntriesListed++;
+    //   });
+    //   console.log('entriesVisibility: ', entriesVisibility,", indexesObservers: ", indexesObservers,", countEntriesListed: ",countEntriesListed);
+    //   // start loading from middle (direction to consider later, start loading down)
+    //   // cases to consider:
+    //   // - beginning of track items
+    //   // - end of track items
+    //   // - middle of tracks
+    //   let indexOfIndexIntersect = tracksIdsInRange.indexOf(entriesId[0]);
+    //   console.log("}}} indexOfIndexIntersect: ", indexOfIndexIntersect, ", entriesId: ", entriesId, ", tracksIdsInRange: ", tracksIdsInRange);
+    //   if (entriesId.length === 1) {
+    //     // almost certainly wrong approach...
+    //     if (indexOfIndexIntersect === 5) {
+    //       console.log("Changing attributes for selection of tracks");
+    //       setIndexBegObserver(indexBegObserver + 5); setIndexEndObserver(indexEndObserver + 5);
+    //     }
+    //   }
+    //   // Other console logs...      
+    //   const newVisibleTracks = entries.map((entry) => ({
+    //     track: entry.target.getAttribute('data-track'),
+    //     isVisible: entry.isIntersecting,
+    //   }));
+    //   setVisibleTracks(newVisibleTracks);
+    // });
+    // console.log("tracksQuerySelection: ",tracksQuerySelection,", tracksQuerySelection.length: ",tracksQuerySelection.length);
+    // let trackElementsDocument =
+    //   Array.from(document.getElementsByClassName('trackItem'))
+    //     .filter((a, ndx) => indexBegObserver+ndx < indexEndObserver); // For test. Will need to change it to another way based on... which elements are visible
+    // console.log("selection of trackElementsDocument: ", trackElementsDocument,
+    //   ", indexBegObserver: ", indexBegObserver,
+    //   ", indexEndObserver: ", indexEndObserver);
+    // trackElementsDocument.forEach((element) => {
+    //   observer.observe(element);
+    // });
+    // // Clean up the observer when the component is unmounted
+    // return () => {
+    //   trackElementsDocument.forEach((element) => {
+    //     observer.unobserve(element);
+    //   });
+    // };          
