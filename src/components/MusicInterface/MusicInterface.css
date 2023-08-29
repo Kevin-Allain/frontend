@@ -141,7 +141,8 @@ th {
     border-width: thin;
     /* margin-left: 31%; */
     text-align: left;
-
+    padding-bottom: 0.25rem;
+    padding-top: 0.25rem;
 }
 
 .trackres {

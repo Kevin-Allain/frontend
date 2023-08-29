@@ -6,10 +6,14 @@ import './PianoRoll.css'
 
 const PianoRoll = ({ notes, occurrences, durations, width, height }) => {
   const svgRef = useRef(null);
-
-  let barHeight = height/20;
+  let barHeight = height / 20;
 
   useEffect(() => {
+    if (typeof notes === 'string') { notes = notes.split('-').map(a => Number(a)) };
+    if (typeof occurrences === 'string') { occurrences = occurrences.split('-').map(a => Number(a)) };
+    if (typeof durations === 'string') { durations = durations.split('-').map(a => Number(a)) };
+    console.log("Piano Roll: ", { notes, occurrences, durations, width, height }, typeof (notes), typeof occurrences, typeof durations, typeof width, typeof height);
+
     const svg = d3.select(svgRef.current);
     // svg.selectAll("*").remove(); // Clear the SVG by removing all elements
     const margin = { top: 20, right: 40, bottom: 20, left: 50 };
@@ -21,9 +25,7 @@ const PianoRoll = ({ notes, occurrences, durations, width, height }) => {
     let maxTime = Number.MIN_VALUE;
     for (let i = 0; i < occurrences.length; i++) {
       const sum = occurrences[i] + durations[i];
-      if (sum > maxTime) {
-        maxTime = sum;
-      }
+      if (sum > maxTime) { maxTime = sum; }
     }
     const xScale = d3
       .scaleLinear()
@@ -36,17 +38,16 @@ const PianoRoll = ({ notes, occurrences, durations, width, height }) => {
       .range([height - margin.bottom, margin.top]);
 
     // Generate an array of all integer occurrences
-    const occurrenceArray = Array.from(
-      { length: maxTime - minOccurrence + 1 },
-      (_, i) => i + minOccurrence
-    );
+    const occurrenceArray = Array.from({ length: maxTime - minOccurrence + 1 }, (_, i) => i + minOccurrence);
+
+    console.log("Variables: ", { minTime, maxTime, minNote, maxNote, margin });
 
     svg
       .selectAll("rect.bar")
       .data(notes)
       .enter()
       .append("rect")
-      .attr("class", "bar") 
+      .attr("class", "bar")
       .attr("x", (d, i) => xScale(occurrences[i]))
       .attr("y", (d) => yScale(d) - barHeight / 2)
       .attr(
@@ -54,11 +55,11 @@ const PianoRoll = ({ notes, occurrences, durations, width, height }) => {
         (d, i) => xScale(durations[i] + occurrences[i]) - xScale(occurrences[i])
       )
       .attr("height", barHeight)
-      .attr( "fill", (d) =>
+      .attr("fill", (d) =>
         NoteToColor[MIDItoNote[d].replaceAll("s", "").replace(/\d+/g, "")]
       )
       .attr("stroke", "black")
-      // .attr('opacity','0.65')
+    // .attr('opacity','0.65')
 
     // Append vertical dotted lines for the x-axis values
     svg
@@ -77,7 +78,7 @@ const PianoRoll = ({ notes, occurrences, durations, width, height }) => {
 
     const xAxis = d3.axisBottom(xScale)
       .ticks(10);
-    
+
     svg
       .append("g")
       .attr("transform", `translate(0, ${height - margin.bottom})`)
@@ -91,18 +92,18 @@ const PianoRoll = ({ notes, occurrences, durations, width, height }) => {
 
     const yAxisElement = svg
       .append("g")
-      .attr("transform", `translate(${margin.left}, 0)`)      
+      .attr("transform", `translate(${margin.left}, 0)`)
       .attr("class", "y-axis") // Add class name for x-axis
       .call(yAxis);
 
     yAxisElement
       .selectAll("text")
-      .attr("dx", (d, i) => 
-        (MIDItoNote[d].indexOf('#')===-1 ? "-17px" : "3px")) // Apply negative offset to every alternate label
+      .attr("dx", (d, i) =>
+        (MIDItoNote[d].indexOf('#') === -1 ? "-17px" : "3px")) // Apply negative offset to every alternate label
       // .attr("fill", (d) => (MIDItoNote[d].replaceAll("s", "").replace(/\d+/g, "").indexOf('#') !== -1)?'#000':
       //   NoteToColor[MIDItoNote[d].replaceAll("s", "").replace(/\d+/g, "")] || "#000" )
-      .attr("fill", (d) => NoteToColor[MIDItoNote[d].replaceAll("s", "").replace(/\d+/g, "")] || "#000" )
-      .attr("font-size",`${1.5 + Math.log(height*4)}px`) // size of font is ok at 8px if height is 150px.
+      .attr("fill", (d) => NoteToColor[MIDItoNote[d].replaceAll("s", "").replace(/\d+/g, "")] || "#000")
+      .attr("font-size", `${1.5 + Math.log(height * 4)}px`) // size of font is ok at 8px if height is 150px.
       ;
 
 

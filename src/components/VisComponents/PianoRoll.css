@@ -12,6 +12,9 @@
 
 .svg_background {
   background-color: white;
+  border: solid;
+  border-width: thin;  
+  /* border-radius: 0px 5px 5px 0px;   */
 }
 
 .x-axis line,
@@ -26,4 +29,8 @@
 
 .x-axis text{
   fill: black;
+}
+
+.contentSample{
+  display: flex;
 }
