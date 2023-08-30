@@ -134,7 +134,7 @@ const ResultsComponent = ({
                     {/* Add more properties from the matched object here */}
                     {/* From item: {infoMusicList[findMatchRecording(lln)].lognumber} */}
                     {/* TODO prettify (set different div and make it nicer) */}
-                    <u>Info from item:</u>
+                    <u>Info about recording:</u>
                     {Object.entries(infoMusicList[findMatchRecording(lln)]).map(([key, value]) => (
                       <p key={key}> {key}: {value} </p>
                     ))}

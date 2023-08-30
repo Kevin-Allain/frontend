@@ -61,20 +61,21 @@ const PianoRoll = ({ notes, occurrences, durations, width, height }) => {
       .attr("stroke", "black")
     // .attr('opacity','0.65')
 
-    // Append vertical dotted lines for the x-axis values
-    svg
-      .selectAll("line.vertical")
-      .data(occurrenceArray)
-      .enter()
-      .append("line")
-      .attr("class", "vertical")
-      .attr("x1", (d) => xScale(d))
-      .attr("y1", margin.top)
-      .attr("x2", (d) => xScale(d))
-      .attr("y2", height - margin.bottom)
-      .attr("stroke", "black")
-      .attr("stroke-width", 1)
-      .attr("stroke-dasharray", "2,2"); // Dotted line style
+    
+    // // Append vertical dotted lines for the x-axis values
+    // svg
+    //   .selectAll("line.vertical")
+    //   .data(occurrenceArray)
+    //   .enter()
+    //   .append("line")
+    //   .attr("class", "vertical")
+    //   .attr("x1", (d) => xScale(d))
+    //   .attr("y1", margin.top)
+    //   .attr("x2", (d) => xScale(d))
+    //   .attr("y2", height - margin.bottom)
+    //   .attr("stroke", "black")
+    //   .attr("stroke-width", 1)
+    //   .attr("stroke-dasharray", "2,2"); // Dotted line style
 
     const xAxis = d3.axisBottom(xScale)
       .ticks(10);

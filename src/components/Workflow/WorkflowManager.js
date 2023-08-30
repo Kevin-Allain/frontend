@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { HiOutlineViewGridAdd } from "react-icons/hi";
 import { BsCardChecklist } from "react-icons/bs";
 import { BsWrenchAdjustable } from "react-icons/bs";
+import {FiPlayCircle} from 'react-icons/fi'
 import { AiFillDelete, AiOutlineEyeInvisible } from "react-icons/ai";
 import { TfiSave } from "react-icons/tfi";
 import Workflow from "./Workflow";
@@ -19,6 +20,7 @@ import Title from "../Presentation/Title";
 // Work in progress: list of workflows with the reducer...
 import { useSelector, useDispatch } from 'react-redux';
 import { setWorkflows } from '../Reducers/WorkflowReducer';
+import PianoRoll from "../VisComponents/PianoRoll";
 
 const WorkflowManager = () => {
   const [isWorkflowListVisible, setIsWorkflowListVisible] = useState(false);
@@ -259,11 +261,25 @@ const WorkflowManager = () => {
                                 )}
                               </React.Fragment>
                             ))}
-                            {item.objectType === 'sample' ? (
-                              <div className="sampleWorkflow">It's a sample (work in progress to include a player){" "}<BsWrenchAdjustable /></div>
-                            ) : (
-                              ''
-                            )}
+                              {item.objectType === 'sample' ? (
+                                <div className="sampleWorkflow">
+                                  {/* It's a sample (work in progress to include a player){" "}<BsWrenchAdjustable /> */}
+                                  <div className='pianoArea'>
+                                    <PianoRoll
+                                      notes={[...item.content.map(a => a.pitch)]}
+                                      occurrences={[...item.content.map(a => a.onset)]}
+                                      durations={[...item.content.map(a => a.duration)]}
+                                      width={600}
+                                      height={200}
+                                    />
+                                  </div>
+                                  <div className="iconsSampleRes">
+                                    <FiPlayCircle className='icon buttonPlay'
+                                      // onClick={funcPlayMIDI} 
+                                      />
+                                  </div>
+                                </div>
+                              ) : ('')}
                           </div>
                         )
                         : (<div className="contentWorkflow">No additional content in database</div>)

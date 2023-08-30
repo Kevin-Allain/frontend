@@ -67,7 +67,7 @@ const SampleRes = ({
             {/* {notes && console.log(notes.split("-").map(Number))} */}
             <div className='buttonSampleRes'>
                 <div className="iconsSampleRes">
-                    <FiPlayCircle className='icon'
+                    <FiPlayCircle className='icon buttonPlay'
                         onClick={funcPlayMIDI} />
                 </div>
                 <AnnotationSystem
