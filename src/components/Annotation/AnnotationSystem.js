@@ -78,7 +78,7 @@ const AnnotationSystem = ({ type, info, index=0 }) => {
             className='annotation'
             value={textInputAnnotation}
             onChange={(e) => setTextInputAnnotation(e.target.value)} />
-          <select value={selectedPrivacyOption} onChange={handleChangeOption}>
+          <select className='selectPrivacy' value={selectedPrivacyOption} onChange={handleChangeOption}>
             <option value="public">Public</option>
             <option value="private">Private</option>
           </select>

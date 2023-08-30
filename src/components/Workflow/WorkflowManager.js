@@ -13,7 +13,7 @@ import {
   deleteWorkflow,
   deleteWorkflowObject
 } from "../../utils/HandleApi";
-import WorkflowInterface from "./WorkflowInterface";
+// import WorkflowInterface from "./WorkflowInterface";
 import Title from "../Presentation/Title";
 
 // Work in progress: list of workflows with the reducer...
@@ -169,7 +169,8 @@ const WorkflowManager = () => {
           workflows.map((item, i) => (
             <div className="containerWorkflowSummary" key={'containerWorkflowSummary_'+i}>
               <div className="workflowDetails" onClick={() => loadDetailWorkflow(item._id)} key={item._id} >
-                Title: <u>{item.title}</u> | {item.time.replace("T",' ').replace("Z",'')}
+                Title: <u>{item.title}</u> 
+                {/* | {item.time.replace("T",' ').split(".")[0]} */}
               </div>
               <AiFillDelete className="icon" onClick={() => handleDeleteWorkflow(item._id)} />
             </div>
@@ -179,97 +180,98 @@ const WorkflowManager = () => {
         <div className="workflowInterface">
           <h1>Workflow Interface</h1>{" "}<AiOutlineEyeInvisible className="icon" onClick={handleShowWorkflowDetail} />
           <div className="workflowHeader">
-            <h3>{selectedWorkflow.title}</h3>
+            <div className="workFlowTitle">{selectedWorkflow.title}</div>
             <div className="workFlowDescription">
-              {" "}
               <u>Description:</u>
               <br />
-              {selectedWorkflow.description}{" "}
+              {selectedWorkflow.description}
             </div>
-            <em>
-              {selectedWorkflow.author} | {selectedWorkflow.time} | {selectedWorkflow._id} |{" "}
-              {selectedWorkflow.objects.length} objects
-            </em>
+            {/* <em> {selectedWorkflow.author} | {selectedWorkflow.time} | {selectedWorkflow._id} |{" "} {selectedWorkflow.objects.length} objects </em> */}
+            <em>Creation: {selectedWorkflow.time.replace('T',' ').split('.')[0]} </em>
             <div className="workflowListObjects">
               {selectedWorkflow.objects.map((item, i) => (
-                <div className="workflowObject" key={'workflowObject_'+i}>
-                  <u>Object id:</u> {item.objectId} | <u>Object type:</u>{" "}
-                  {item.objectType} | <u>Object index:</u> {item.objectIndex} <br />
+                <div className="workflowObject" key={'workflowObject_' + i}>
+                  {/* For testing */}
+                  {/* <u>Object id:</u> {item.objectId}
+                  | <u>Object type:</u>{" "} {item.objectType}
+                  | <u>Object index:</u> {item.objectIndex} <br /> */}
                   <div className="workflowContentDisplay">
-                    {/* <em>... Work in progress: display of content of object{" "}
-              <BsWrenchAdjustable />{" "} </em> <br/> */}
-{item.content ? (
-  <div className="contentItem">
-    {item.content && item.content.length > 0 && (
-      <>
-        {item.content.map((contentI, index) => (
-          <React.Fragment key={'head_contentI_' + index}>
-            {index === 0 && (
-              <table className="tableItemContentAndFirst">
-                <colgroup>
-                  {Object.keys(contentI).map((key) => (
-                    <col key={key} />
-                  ))}
-                </colgroup>
-                <thead>
-                  <tr>
-                    {Object.keys(contentI).map((key) => (
-                      <th key={key}>
-                        <b style={{ color: 'white' }}>{key}</b>
-                      </th>
-                    ))}
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    {Object.values(contentI).map((value, index) => (
-                      <td key={'value_contentI_' + index}>
-                        <div className="tableCellContent">
-                          {['duration', 'onset'].indexOf(Object.keys(contentI)[index]) === -1
-                            ? value
-                            : Number(value).toFixed(2)}
-                        </div>
-                      </td>
-                    ))}
-                  </tr>
-                </tbody>
-              </table>
-            )}
-            {index > 0 && (
-              <table className="tableItemContentBody">
-                <colgroup>
-                  {Object.keys(contentI).map((key) => (
-                    <col key={key} />
-                  ))}
-                </colgroup>
-                <tbody>
-                  <tr>
-                    {Object.values(contentI).map((value, index) => (
-                      <td key={'tableItemContentBody_' + index}>
-                        <div className="tableCellContent">
-                          {['duration', 'onset'].indexOf(Object.keys(contentI)[index]) === -1
-                            ? value
-                            : Number(value).toFixed(2)}
-                        </div>
-                      </td>
-                    ))}
-                  </tr>
-                </tbody>
-              </table>
-            )}
-          </React.Fragment>
-        ))}
-        {item.objectType === 'sample' ? (
-          <>It's a sample: work in progress to include a player{" "}<BsWrenchAdjustable/></>
-        ) : (
-          ''
-        )}
-      </>
-    )}
-  </div>
-) : (
-  <em>Loading content...</em>
-)}
+                    <b>Content: </b>
+                    {item.content ? (
+                      <div className="contentItem">
+                        {(item.content && item.content.length > 0)?  
+                        (
+                          <div className="contentWorkflow">
+                            {item.content.map((contentI, index) => (
+                              <React.Fragment key={'head_contentI_' + index}>
+                                {index === 0 && (
+                                  <table className="tableItemContentAndFirst">
+                                    <colgroup>
+                                      {Object.keys(contentI).map((key) => (
+                                        <col key={key} />
+                                      ))}
+                                    </colgroup>
+                                    <thead>
+                                      <tr>
+                                        {Object.keys(contentI).map((key) => (
+                                          <th key={key}>
+                                            <b style={{ color: 'white' }}>{key}</b>
+                                          </th>
+                                        ))}
+                                      </tr>
+                                    </thead>
+                                    <tbody>
+                                      <tr>
+                                        {Object.values(contentI).map((value, index) => (
+                                          <td key={'value_contentI_' + index}>
+                                            <div className="tableCellContent">
+                                              {['duration', 'onset'].indexOf(Object.keys(contentI)[index]) === -1
+                                                ? value
+                                                : Number(value).toFixed(2)}
+                                            </div>
+                                          </td>
+                                        ))}
+                                      </tr>
+                                    </tbody>
+                                  </table>
+                                )}
+                                {index > 0 && (
+                                  <table className="tableItemContentBody">
+                                    <colgroup>
+                                      {Object.keys(contentI).map((key) => (
+                                        <col key={key} />
+                                      ))}
+                                    </colgroup>
+                                    <tbody>
+                                      <tr>
+                                        {Object.values(contentI).map((value, index) => (
+                                          <td key={'tableItemContentBody_' + index}>
+                                            <div className="tableCellContent">
+                                              {['duration', 'onset'].indexOf(Object.keys(contentI)[index]) === -1
+                                                ? value
+                                                : Number(value).toFixed(2)}
+                                            </div>
+                                          </td>
+                                        ))}
+                                      </tr>
+                                    </tbody>
+                                  </table>
+                                )}
+                              </React.Fragment>
+                            ))}
+                            {item.objectType === 'sample' ? (
+                              <div className="sampleWorkflow">It's a sample (work in progress to include a player){" "}<BsWrenchAdjustable /></div>
+                            ) : (
+                              ''
+                            )}
+                          </div>
+                        )
+                        : (<div className="contentWorkflow">No additional content in database</div>)
+                        }
+                      </div>
+                    ) : (
+                      <em>Loading content...</em>
+                    )}
 
                     {/* {item.content}
               {arrayContent.map((o,indx)=>(

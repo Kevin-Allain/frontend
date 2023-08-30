@@ -11,7 +11,7 @@ import {
     createWorkflow,
     addContentWorkflow
 } from "../../utils/HandleApi";
-import WorkflowInterface from "./WorkflowInterface";
+// import WorkflowInterface from "./WorkflowInterface";
 
 // List of workflows with the reducer
 import { useSelector, useDispatch } from 'react-redux';

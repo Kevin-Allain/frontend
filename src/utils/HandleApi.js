@@ -757,11 +757,7 @@ const deleteWorkflowObject = (_id, objectIndex, workflow,
 const getWorkflow = (setIsWorkerVisible, setSelectedWorkflow, _id, user) => {
   axios
     .get(`${baseUrl}/getWorkflow`, {
-      params:
-      {
-        _id: _id,
-        user: user
-      }
+      params: { _id: _id, user: user }
     })
     .then(({ data }) => {
       console.log('getWorkflow successful. data: ', data);
@@ -784,14 +780,12 @@ const getDatabaseContent = async (workflow, setSelectedWorkflow, setIsWorkerVisi
     const _id = object.objectId;
     const typeCaller = object.objectType;
     const indexRange = object.objectIndexRange;
+    console.log("typeCaller: ",typeCaller);
 
+    // Probably need to make a different call for the track
     if (["annotation", "comment", "recording", "track", "sample"].includes(typeCaller)) {
       return axios.get(`${baseUrl}/get_idContent_${typeCaller}`, {
-        params: {
-          _id: _id,
-          typeCaller: typeCaller,
-          indexRange: indexRange,
-        },
+        params: { _id: _id, typeCaller: typeCaller, indexRange: indexRange, },
       });
     } else {
       console.log("Issue with typeCaller: (", typeCaller, "), it is not recognized.");

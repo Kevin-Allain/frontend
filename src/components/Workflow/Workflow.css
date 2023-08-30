@@ -64,15 +64,15 @@
 .workflowListObjects {
     padding-top: 0.2rem;
     padding-bottom: 0.2rem;
-    padding-left: 0.5rem;
+    padding-left: 0.2rem;
 }
 
 .workflowObject {
     color: silver;
     border: solid;
     border-width: thin;
-    padding-left: 0.25rem;
-    padding-right: 0.5rem;
+    padding-left: 0.15rem;
+    padding-right: 0.15rem;
     padding-top: 0.5rem;
     padding-bottom: 0.5rem;
 }
@@ -196,4 +196,13 @@
 
 .textInputWorkflowCreation{
     width:600px;
+}
+
+.workFlowTitle{
+    font-size: x-large;    
+}
+
+.contentWorkflow{
+    padding-top:0.25rem; padding-bottom: 0.25rem;
+    padding-left: 1rem; padding-right: 1rem;    
 }

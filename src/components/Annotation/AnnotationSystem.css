@@ -41,3 +41,8 @@
   width: 2px; /* Adjust the line width as needed */
   background-color: #000; /* Adjust the line color as needed */
 }
+
+.selectPrivacy{
+  background: white;
+  color: black;  
+}
