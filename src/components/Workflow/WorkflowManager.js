@@ -5,7 +5,7 @@ import { BsWrenchAdjustable } from "react-icons/bs";
 import {FiPlayCircle} from 'react-icons/fi'
 import { AiFillDelete, AiOutlineEyeInvisible } from "react-icons/ai";
 import { TfiSave } from "react-icons/tfi";
-import Workflow from "./Workflow";
+import Workflow from "../../misc/disregardedWorkflow";
 import "./Workflow.css";
 import {
   getWorkflow,
@@ -21,6 +21,7 @@ import Title from "../Presentation/Title";
 import { useSelector, useDispatch } from 'react-redux';
 import { setWorkflows } from '../Reducers/WorkflowReducer';
 import PianoRoll from "../VisComponents/PianoRoll";
+import WorkflowPlayer from "./WorkflowPlayer";
 
 const WorkflowManager = () => {
   const [isWorkflowListVisible, setIsWorkflowListVisible] = useState(false);
@@ -274,9 +275,7 @@ const WorkflowManager = () => {
                                     />
                                   </div>
                                   <div className="iconsSampleRes">
-                                    <FiPlayCircle className='icon buttonPlay'
-                                      // onClick={funcPlayMIDI} 
-                                      />
+                                    <WorkflowPlayer notes={[...item.content.map(a => a.pitch)]} occurences={[...item.content.map(a => a.onset)]} durations={[...item.content.map(a => a.duration)]} />
                                   </div>
                                 </div>
                               ) : ('')}
