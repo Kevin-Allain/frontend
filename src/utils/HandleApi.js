@@ -761,7 +761,8 @@ const getWorkflow = (setIsWorkerVisible, setSelectedWorkflow, _id, user) => {
     })
     .then(({ data }) => {
       console.log('getWorkflow successful. data: ', data);
-      console.log("All objects: ",data.objects)
+      console.log("All objects: ",data.objects);
+      console.log("getWorkflow then data: ",data);
 
       // So we will add content to the data...
       getDatabaseContent(data, setSelectedWorkflow, setIsWorkerVisible);
@@ -779,7 +780,7 @@ const getDatabaseContent = async (workflow, setSelectedWorkflow, setIsWorkerVisi
   const requests = workflowObjects.map((object) => {
     const _id = object.objectId;
     const typeCaller = object.objectType;
-    const indexRange = object.objectIndexRange;
+    const indexRange = (object.objectIndexRange!==0)?(object.objectIndexRange-1):0; // doubt about this thing...
     console.log("typeCaller: ",typeCaller);
 
     // Probably need to make a different call for the track

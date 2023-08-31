@@ -13,6 +13,7 @@ const sampler = new Tone.Sampler({
 
 const WorkflowPlayer = (props) => {
     const {notes, durations, occurences} = props;
+    console.log("WorkflowPlayer props: ",props);
     const synth2 = useRef(new Tone.Synth());
     synth2.current.oscillator.type = "sine";
     synth2.current.toDestination();

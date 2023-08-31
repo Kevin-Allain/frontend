@@ -11,7 +11,6 @@ import {
 import AnnotationSystem from '../Annotation/AnnotationSystem';
 import EmbeddedWorkflowInteraction from '../Workflow/EmbeddedWorkflowInteraction';
 
-
 const TrackRes = ({ 
     text, 
     // lognumber, // length, // notes, // durations, // times, // distance, // funcPlayMIDI,  // getMusicInfo, 
@@ -23,7 +22,6 @@ const TrackRes = ({
     setInfoMusicList,
     testPerformances=false
  }) => {
-
     return (
         <div className="trackres" key={text}>
             <div className="texttrackres">

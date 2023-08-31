@@ -98,19 +98,13 @@ const ResultsComponent = ({
     );
 
     // tracksQuerySelection.forEach(t => observer.observe(t));
-    // ----
     const trackItems = document.querySelectorAll('.trackItem');
     trackItems.forEach(item => observer.observe(item));
-
-    console.log("trackItems: ",trackItems);
 
     return () => {
       trackItems.forEach(item => observer.unobserve(item));
     };
-
   }, [listTracks,indexBegObserver]);
-   
-  
 
   return (
     testPerformances ? <></> :
