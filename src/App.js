@@ -123,7 +123,7 @@ function App() {
               <Login onClose={handleClose}></Login>
             </ModalUnstyled> */}
             <Navbar
-              // onLanding={() => scrollTo(landing)}
+              onLanding={() => window.scrollTo({ top: 0, behavior: "smooth" })}
               onInvest={() => scrollTo(invest)}
               onAbout={() => scrollTo(about)}
               onPartner={() => scrollTo(partners)}
