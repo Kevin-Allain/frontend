@@ -184,7 +184,7 @@ const WorkflowManager = () => {
                   {/* For testing */}
                   {/* <u>Object id:</u> {item.objectId} | <u>Object type:</u>{" "} {item.objectType} | <u>Object index:</u> {item.objectIndex} <br /> */}
                   <div className="workflowContentDisplay">
-                    <b>Content: </b>
+                    <b>Content of the {item.objectType}: </b>
                     {item.content ? (
                       <div className="contentItem">
                         {(item.content && item.content.length > 0)?  

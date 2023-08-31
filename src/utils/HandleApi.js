@@ -787,6 +787,11 @@ const getDatabaseContent = async (workflow, setSelectedWorkflow, setIsWorkerVisi
     if (["annotation", "comment", "recording", "track", "sample"].includes(typeCaller)) {
       return axios.get(`${baseUrl}/get_idContent_${typeCaller}`, {
         params: { _id: _id, typeCaller: typeCaller, indexRange: indexRange, },
+        // withCredentials:true,
+        // headers: {
+        //   Origin: 'http://localhost:3000', 
+        //   Referer: 'http://localhost:3000' 
+        // }      
       });
     } else {
       console.log("Issue with typeCaller: (", typeCaller, "), it is not recognized.");
