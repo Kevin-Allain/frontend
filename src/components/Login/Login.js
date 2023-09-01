@@ -7,7 +7,8 @@ import "../../App.css"
 // import './Login.css';
 // import axios from '../../api/axios'
 
-const baseUrl = "http://localhost:5000" // can be used for development
+// const baseUrl = "http://localhost:5000" // can be used for development
+const baseUrl= "https://jazzdap-backend.onrender.com"
 // const baseUrl = axios.baseUrl;
 const REGISTER_URL = 'loginUser';
 
