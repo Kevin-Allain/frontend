@@ -60,11 +60,14 @@ const AnnotationSystem = ({ type, info, index=0 }) => {
   return (
     <div className="annotationInput">
       {/* button to show or hide... could be a good place to make the query about the annotations... */}
-      <button className='buttonShowAnnotation' onClick={
-        () => handleShowAndLoadAnnotations(type, info, getAnnotations)
-      }>
-        <HiOutlineAnnotation className='icon' />
-      </button>
+      {/* Button should only be visible if user is logged in! */}
+      {typeof (localStorage.token) !== 'undefined' &&
+        <button className='buttonShowAnnotation' onClick={
+          () => handleShowAndLoadAnnotations(type, info, getAnnotations)
+        }>
+          <HiOutlineAnnotation className='icon' />
+        </button>
+      }
       {/* TODO think about whether the addition of annotations should be open without making an account... probably not? */}
       {showInputAnnotation &&
         <div className='areaAnnotation'>
