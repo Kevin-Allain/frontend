@@ -83,25 +83,27 @@
 }
 
 .threedotsEmbedded {
-    /* background-color: red; */
+    background-color: white;
     color: black;
+    padding: 0.5rem;
+    border: solid;
+    border-width: thin;
+    border-radius: 0.25rem;
 }
 
-.embeddedWorkflowInteraction {
+/* .embeddedWorkflowInteraction {
     background-color: white;
     border: solid;
     border-width: thin;
     border-color: #acadbd;
-    /* height: 25px;
-    width: 30px;     */
     border-radius: 0.25rem;
     text-align: center;
-}
+} */
 
 .listActionsWorkflowEmbedded {
     font-size: 18px;
     text-align: center;
-    /* background-color: red; */
+    background-color: white;
     color: black;
 }
 

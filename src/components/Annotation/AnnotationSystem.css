@@ -6,11 +6,20 @@
     /* padding-top: 0.2rem; */
   }
 
+.areaAnnotation{
+  background: white;
+  padding: 0.5rem;
+  border: solid;
+  border-radius: 0.5rem;
+}
+
 .annotation{
-  color: black;
   background-color: #f9f9c9;
   border: solid;
+  border-radius: 0.25rem;
   border-width: thin;
+  color: #000;
+  padding: 0.5rem;
   text-align: left;
 } 
 
@@ -43,6 +52,11 @@
 }
 
 .selectPrivacy{
-  background: white;
-  color: black;  
+  background: #fff;
+  color: #000;
+  border: solid;
+  border-width: thin;
+  margin-left: 0.25rem;
+  margin-right: 0.25rem;
+  border-radius: 0.25rem;
 }
