@@ -43,11 +43,9 @@ const Annotation = ({
       <AiFillDelete className='icon' onClick={deleteAnnotation} />
       {/* TODO set a CommentSystem according to this annotation when clicking on the icon */}
       {/* Probably a function passed such as getComments */}
-      <AiOutlineComment className='icon'   onClick={ handleToggleCommentSystem }
-      />
-
+      <AiOutlineComment className='icon'   onClick={ handleToggleCommentSystem } />
       <EmbeddedWorkflowInteraction idCaller={_id} typeCaller={"annotation"} />
-
+      {/* TODO fix the issue with the loading */}
       {isCommentSystemVisible && (
         <CommentSystem type={type} info={info} indexAnnotation={indexAnnotation} annotationId={_id} />
       )}

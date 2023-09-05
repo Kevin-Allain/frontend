@@ -581,6 +581,21 @@ const getComments = (
     .catch(err => console.log(err))
 }
 
+const getCommentsOfAnnotation = ( setListComments, user = null, annotationId=null) => {
+  console.log("HandeAPI getCommentsOfAnnotation, annotationId: ", annotationId, ", user: ", user);
+
+  axios
+    .get(`${baseUrl}/getCommentsOfAnnotation`,{
+      params: { annotationId: annotationId }
+    })
+    .then(({ data }) => {
+      console.log('data: ', data);
+      setListComments(data);
+    })
+    .catch(err => console.log(err))
+}
+
+
 const deleteComment = (
   commentId,
   setListComments,
@@ -826,7 +841,7 @@ export {
   getMusicMIDI, getSampleMIDI, getMatchLevenshteinDistance,
   getTrackMetadata, getTracksMetadata,
   addAnnotation, getAnnotations, deleteAnnotation, updateAnnotation,
-  addComment, getComments, deleteComment, updateComment,
+  addComment, getComments, getCommentsOfAnnotation, deleteComment, updateComment,
   getUserAnnotations,
   getWorkflow, getWorkflowsInfo, createWorkflow, deleteWorkflow,
   addContentWorkflow, deleteWorkflowObject,

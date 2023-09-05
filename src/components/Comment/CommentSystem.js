@@ -6,7 +6,8 @@ import {
     addComment,
     updateComment,
     getComments,
-    deleteComment
+    deleteComment,
+    getCommentsOfAnnotation
 } from "../../utils/HandleApi";
 
 const CommentSystem = ({
@@ -25,12 +26,9 @@ const CommentSystem = ({
     const [listComments, setListComments] = useState([]);
 
     useEffect(() => {
-        console.log('useEffect CommentSystem. ', {type, info, indexAnnotation, annotationId })
-        getComments(
-            setListComments, 
-            localStorage.username ? localStorage.username : null, 
-            annotationId
-        );
+        console.log('useEffect CommentSystem. type: ', type,', info: ', info,', indexAnnotation: ', indexAnnotation,', annotationId', annotationId)
+        // getComments( setListComments, localStorage.username ? localStorage.username : null, annotationId );
+        getCommentsOfAnnotation( setListComments, localStorage.username ? localStorage.username : null, annotationId );
     }, []);
 
 
@@ -56,6 +54,7 @@ const CommentSystem = ({
     return (
         <div className="commentInput">
             <div className='areaComment'>
+                {/* TODO Change display according to who is connected!!! beforePrivateBeta */}
                 <div className='areaInputComment'>
                     <input
                         type="text"
