@@ -1,3 +1,4 @@
+
 .workflowManager {
     border: solid;
     border-width: thin;
@@ -83,12 +84,14 @@
 }
 
 .threedotsEmbedded {
-    background-color: white;
+    /* background-color: white;
     color: black;
     padding: 0.5rem;
     border: solid;
     border-width: thin;
-    border-radius: 0.25rem;
+    border-radius: 0.25rem; */
+    width: 3rem;
+    height: 3rem;  
 }
 
 /* .embeddedWorkflowInteraction {

@@ -168,21 +168,15 @@ const MusicInterface = () => {
   // ---- Functions handle
   // const handleChangeQueryPitch = (event) => {
   //   const value = event.target.value;
-  //   if (PITCH_QUERY_REGEX.test(value) || value[value.length - 1] === '-') {
-  //     setTextSearch(value)
-  //   }
+  //   if (PITCH_QUERY_REGEX.test(value) || value[value.length - 1] === '-') { setTextSearch(value) }
   // }
   const handleChangeQueryPitch = useCallback((event) => {
     const value = event.target.value;
-    if (PITCH_QUERY_REGEX.test(value) || value[value.length - 1] === '-') {
-      setTextSearch(value);
-    }
+    if (PITCH_QUERY_REGEX.test(value) || value[value.length - 1] === '-') { setTextSearch(value); }
   }, [setTextSearch]);
-
 
   // const handleClickTextSearch = async (e) => {
   //   e.preventDefault();
-  //   console.log("", textSearch, ", (typeof textSearch): ", (typeof textSearch));
   //   // make a call to the database, then set string back to ''
   //   if (textSearch !== '') { findMatchLevenshteinDistance(textSearch); }
   // };
@@ -409,11 +403,21 @@ const MusicInterface = () => {
             List of results for your search: <h4>{oldSearch}</h4>
             <AnnotationSystem type={"search"} info={oldSearch} />
             {/* TODO set it to left as the user scrolls down  */}
+            {/* ListGroup? */}
             <div id='buttonListLogsNumbers' ref={buttonListLogsNumbersRef}>
-              The list of recordings is:
+              <p className='titleRecMatched'>Recordings:</p>
+              {/* {listLogNumbers.map((a,index)=>(
+                <>{a}, {index}</>
+              ))}
+              {listTracks.map((a, index) => (
+                <>{a}</>
+              ))} */}
               <nav>
                 {listLogNumbers.map((a, index) =>(
-                  <button key={index + 'lognumberButton'} onClick={() => handleScrollToRecording(index)}> {a} </button>
+                  <>
+                  <div className='buttonRefLogNumber' key={index + 'lognumberButton'} onClick={() => handleScrollToRecording(index)}> {a} </div>
+                  {/* <button className='buttonRefLogNumber' key={index + 'lognumberButton'} onClick={() => handleScrollToRecording(index)}> {a} </button> */}
+                  </>                  
                 ))}
               </nav>
             </div>
@@ -437,117 +441,13 @@ const MusicInterface = () => {
                 testPerformances={false}
               />
 
-              {/* ---- works, but no impact on performance */}
-              {/* {listLogNumbers.length > 0 &&
-                listLogNumbers.map((lln, index) => (          
-                  <div
-                    className='recordingItem' key={'recordingItem' + index}
-                    alt={lln}
-                    ref={ref => (lognumbersRefs.current[index] = ref)}
-                  >
-                    <h2>Recording: {lln}</h2>
-                    <em>List of recordings 
-                      <MdKeyboardDoubleArrowUp 
-                        className='icon' 
-                        onClick={scrollToButtonListLogsNumbers}
-                      />
-                    </em>
-                    <div className='metadataRecording'>
-                      {(infoMusicList.length === 0) ? (<AiOutlineLoading className="spin" size={"20px"} />) :
-                        (findMatchRecording(lln) !== -1) ? (
-                          <div>
-                            <p>lognumber: {lln}</p>
-                            From item: {infoMusicList[findMatchRecording(lln)].lognumber}
-                          </div>
-                        ) : (
-                          <>No match for metadata</>
-                        )}
-                    </div>
-                    <div className='matchedTracksOfRecording'>
-                      {listTracks.length > 0 &&
-                        listTracks.map((track, ndx) => {
-                          if (track.includes(lln)) {
-                            return (
-                              <div
-                                className='trackItem' id={track}
-                              >
-                                Previous Recording{" "}
-                                <MdKeyboardDoubleArrowLeft className='icon' onClick={(e) => scrollToButtonListRecordingsFollowing(e, lln,'prev')}/>
-                                |{" "}Previous Track{" "}
-                                <MdOutlineKeyboardArrowLeft className='icon' onClick={(e) => scrollToButtonListTracksFollowing(e, ndx, track,'prev')}/> 
-                                |{" "}Next Track{" "}
-                                <MdOutlineKeyboardArrowRight className='icon' onClick={(e) => scrollToButtonListTracksFollowing(e, ndx, track,'next')}/>
-                                |{" "}Next Recording
-                                <MdKeyboardDoubleArrowRight className='icon' onClick={(e) => scrollToButtonListRecordingsFollowing(e, lln,'next')}/>
-                                <TrackRes
-                                  key={"Track" + ndx + '' + track}
-                                  text={track}
-                                  listSearchRes={listSearchRes.filter(a => a.recording === track)}
-                                  formatAndPlay={formatAndPlay}
-                                  getMusicInfo={getMusicInfo}
-                                  infoMusicList={infoMusicList}
-                                  setInfoMusicList={setInfoMusicList}
-                                />
-
-                              </div>
-                            );
-                          } else {
-                            return null; // or any fallback if track doesn't match
-                          }
-                        })}
-                    </div>
-                  </div>
-                ))} */}
 
             </div>
           </div>
         }
       </div>
 
-      {/* ==== BUTTONS FOR TESTS ====  */}
-      {/* <div className="buttonsMusicInterface">
-        <div className='playMusic' >
-          Test Search
-          <hr />
-          69-76-76-74-76
-          <hr />
-          <div className='iconPlayPause'
-            onClick={(c) => {
-              console.log("about to play search");
-              findMatchLevenshteinDistance();
-              console.log("done with play search");
-            }}
-          >
-            {iconSearchTest}
-          </div>
-        </div>
-        <div className='playMusic' >
-          Play Test Link Mp3
-          <hr />
-          <div className='iconPlayPause'
-            onClick={(c) => {
-              console.log("about to play mp3");
-              playMp3();
-              console.log("done with mp3");
-            }}
-          >
-            {iconPlayMp3}
-          </div>
-          <div className='iconResetSong'
-            onClick={(c) => { console.log("resetMp3"); resetMp3(); console.log("done with resetMp3"); }} >
-            <ImLoop2 className='icon' />
-          </div>
-        </div>
-        <div
-          className="reloadPage"
-          onClick={(c) => {
-            console.log("reload the page");
-            window.location.reload();
-          }}
-        >
-          Reload Page
-        </div>
-      </div> */}
+      
     </div>
   );
 }

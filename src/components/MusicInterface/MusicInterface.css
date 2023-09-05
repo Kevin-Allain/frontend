@@ -1,5 +1,6 @@
 @import url('https://fonts.googleapis.com/css?family=Roboto:400,700&display=swap');
 
+
 body {
     font-family: 'Roboto', sans-serif;
     display: flex;
@@ -204,6 +205,7 @@ th {
 
 #buttonListLogsNumbers{
     width: 100%;
+    text-align: left;
 }
 
 .recordingItem{
@@ -245,4 +247,23 @@ opacity: 1;
 .buttonPlay{
     height:3rem;
     width: 3rem;
+}
+
+.buttonRefLogNumber{
+    text-align: left;
+    font: 1em sans-serif;
+    margin-left: 1rem;
+    padding-left: 1rem;
+    cursor: pointer;
+    color: black;
+}
+
+.buttonRefLogNumber:hover{
+    color: orange;
+    background-color: #666;
+}
+
+.titleRecMatched{
+    color:black;
+    margin-left: 1rem;
 }

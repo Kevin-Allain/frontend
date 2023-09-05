@@ -37,10 +37,21 @@
   margin-left: 0.5rem;
 }
 
-.buttonShowAnnotation{
+/* .buttonShowAnnotation{
   border-width: thin;
-  /* position:relative;   */
+} */
+
+.annotationIcon {
+  /* background-color: white;
+  color: black;
+  padding: 0.5rem;
+  border: solid;
+  border-width: thin;
+  border-radius: 0.25rem; */
+  width: 3rem;
+  height: 3rem;
 }
+
 
 .line {
   position: absolute;

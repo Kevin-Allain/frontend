@@ -147,7 +147,7 @@ function App() {
         {isLoading && (
           <div className="loading-container">
             <div className="loading-icon">
-              <h2>Loading... This can take a few minutes.</h2>{" "}
+              <h2>Loading... This may take a few moments.</h2>{" "}
               <AiOutlineLoading className="spin" size={window.innerHeight / 10} />
             </div>
           </div>

@@ -455,3 +455,7 @@ padding-bottom: 0.25rem;
 .contentApp{
   margin-top: 61px;
 }
+
+.iconTracksInteractions{
+  display: flex;
+}

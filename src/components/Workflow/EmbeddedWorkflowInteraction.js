@@ -109,9 +109,10 @@ const EmbeddedWorkflowInteraction = ({idCaller, typeCaller, indexRange=0}) => {
     return (
       <div className="embeddedWorkflowInteraction">
         {typeof (localStorage.token) !== 'undefined' &&
-          <div className="threedotsEmbedded">
+        // className="threedotsEmbedded"
+          <div>
             <BsThreeDotsVertical
-              className="icon"
+              className="icon threedotsEmbedded"
               onClick={() => handleShowActionsWorkflow()}
             />
           </div>
