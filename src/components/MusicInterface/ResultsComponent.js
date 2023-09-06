@@ -143,7 +143,6 @@ const ResultsComponent = ({
                   listTracks.map((track, ndx) => {
                     if (track.includes(lln)) {
                       return (
-                        // <div className='trackItem' id={track} key={track}>
                         <> 
                         {/* A MATCH with {track} and {lln} */}
                           <div
@@ -152,8 +151,7 @@ const ResultsComponent = ({
                             key={track}
                             data-track={track}
                             style={{
-                              // visibility: visibleTracks.includes(track) ? 'visible' : 'hidden',
-                              // color: 'red'
+                              // visibility: visibleTracks.includes(track) ? 'visible' : 'hidden', color: 'red'
                             }}
                           >
                             Previous Recording{' '}<MdKeyboardDoubleArrowLeft className='icon' onClick={(e) => scrollToButtonListRecordingsFollowing(e, lln, 'prev')} />
@@ -178,13 +176,13 @@ const ResultsComponent = ({
                               <TrackRes key={'Track' + ndx + '' + track} text={track} listSearchRes={listSearchRes.filter((a) => a.recording === track)}
                               formatAndPlay={formatAndPlay} getMusicInfo={getMusicInfo} infoMusicList={infoMusicList} setInfoMusicList={setInfoMusicList}
                               testPerformances={false} />} */}
+                          </div>
                             {(!visibleTracks[track]) &&  <AiOutlineLoading className="spin"/> }
                             {visibleTracks[track] && (
                               <TrackRes key={'Track' + ndx + '' + track} text={track} listSearchRes={listSearchRes.filter((a) => a.recording === track)}
                               formatAndPlay={formatAndPlay} getMusicInfo={getMusicInfo} infoMusicList={infoMusicList} setInfoMusicList={setInfoMusicList}
                               testPerformances={false} />
                             )}
-                          </div>
                         </>
                       );
                     } else {

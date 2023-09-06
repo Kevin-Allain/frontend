@@ -401,7 +401,10 @@ const MusicInterface = () => {
           <div className='outputMusicSearch'>
             {/* TODO fix imperfect implementation, makes more sense for oldSearch to be updated with handleAPi output. */}
             List of results for your search: <h4>{oldSearch}</h4>
-            <AnnotationSystem type={"search"} info={oldSearch} />
+            <div className='annotationIndication'>
+              Annotations <AnnotationSystem type={"search"} info={oldSearch} />
+              {/* beforePrivateBeta adapt the text and its style */}
+            </div>
             {/* TODO set it to left as the user scrolls down  */}
             {/* ListGroup? */}
             <div id='buttonListLogsNumbers' ref={buttonListLogsNumbersRef}>

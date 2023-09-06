@@ -43,11 +43,8 @@ const CommentSystem = ({
         setShowInputComment(!showInputComment)
         console.log("handleShowAndLoad ± indexAnnotation: ", indexAnnotation, ", getComments: ", getComments, ", showInputComment: ", showInputComment, ", annotationId: ",annotationId, ", (typeof annotationId): ",(typeof annotationId))
         if (!showInputComment) {
-            getComments(
-                setListComments, 
-                localStorage.username ? localStorage.username : null, 
-                annotationId
-            );
+            // getComments( setListComments,  localStorage.username ? localStorage.username : null,  annotationId );
+            getCommentsOfAnnotation(setListComments,  localStorage.username ? localStorage.username : null,annotationId)
         }
     }
 

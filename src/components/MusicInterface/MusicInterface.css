@@ -264,6 +264,8 @@ opacity: 1;
 }
 
 .titleRecMatched{
-    color:black;
+    color: black;
     margin-left: 1rem;
+    font-size: 20px;
+    font-family: monospace;
 }

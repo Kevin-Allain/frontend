@@ -2,9 +2,9 @@ import axios from 'axios'
 import { setIsLoading } from '../App';
 
 
-// const baseUrl = "http://localhost:5000" // can be used for development
+const baseUrl = "http://localhost:5000" // can be used for development
 // const baseUrl = "https://fullstack-proto-jazzdap-backend.onrender.com"
-const baseUrl= "https://jazzdap-backend.onrender.com"
+// const baseUrl= "https://jazzdap-backend.onrender.com"
 
 const getAllJazzDap = (setJazzDap) => {
   console.log("---- HandleApi / getAllJazzDap", new Date());
@@ -15,7 +15,6 @@ const getAllJazzDap = (setJazzDap) => {
     .then(({ data }) => {
       console.log('data: ', data);
       setJazzDap(data);
-
       setIsLoading(false);
     })
     .catch(err => console.log(err))
@@ -511,11 +510,8 @@ const addComment = (
     .then((data) => {
       console.log(data);
       setCommentInput("");
-      getComments(
-        setListComments,
-        author,
-        annotationId
-      )
+      // getComments( setListComments, author, annotationId  )
+      getCommentsOfAnnotation(setListComments,author,annotationId);
     })
     .catch(err => console.log(err))
 }
@@ -541,12 +537,8 @@ const updateComment = (
       setIsUpdating(false);
       // getAllJazzDap(setJazzDap);
       // getComments(type, info, setListComments, indexAnnotation);
-      getComments(
-        setListComments,
-        userId,
-        annotationId
-      )
-
+      // getComments( setListComments, userId, annotationId )
+      getCommentsOfAnnotation(setListComments,userId,annotationId);
       // setIsLoading(false);
     })
     .catch(err => console.log(err))
@@ -608,11 +600,8 @@ const deleteComment = (
     .post(`${baseUrl}/deleteComment`, { _id: commentId })
     .then((data) => {
       console.log(data);
-      getComments(
-        setListComments,
-        user,
-        annotationId
-      );
+      // getComments( setListComments, user, annotationId );
+      getCommentsOfAnnotation(setListComments,user,annotationId)
     })
     .catch(err => console.log(err))
 }

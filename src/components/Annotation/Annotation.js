@@ -35,7 +35,7 @@ const Annotation = ({
 
   return (
     <div className='annotation'>
-      Annotation for <em>{type}</em> written by <em>{(author === null)? '?' : author } - IndexAnnotation: {indexAnnotation}</em> - Privacy: <b>{privacy}</b> <em>{time}</em>
+      Annotation for <em>{type}</em> written by <em>{(author === null)? '?' : author } - IndexAnnotation: {indexAnnotation}</em> - Privacy: <b>{privacy}</b> <em>{time}</em> Unique Id: {_id}
       {/* {(info === '') ? <></> : <><p>About info: {info}</p></>} */}
       <h4><div className='annotationText'>{annotationInput}</div></h4>
       {/* <AiOutlineStar className='icon' onClick={ () => console.log("star pressed") } /> */}
@@ -49,8 +49,6 @@ const Annotation = ({
       {isCommentSystemVisible && (
         <CommentSystem type={type} info={info} indexAnnotation={indexAnnotation} annotationId={_id} />
       )}
-      <br/>
-      Unique Id: {_id}
     </div>
   );
 };
