@@ -349,26 +349,25 @@ padding-bottom: 0.25rem;
 }
 
 
-::-webkit-scrollbar {
+/* ::-webkit-scrollbar {
   width: 10px;
   z-index: 2;
 }
-/* Track */
 ::-webkit-scrollbar-track {
   background: #343650;
-}
+} */
 
 /* Handle */
 /* Change of color from designers... we want something visible over pretty */
-::-webkit-scrollbar-thumb {
-  /* background: #4c4f6a; */
-  background: #acadbd;
-}
+/* ::-webkit-scrollbar-thumb {
+  background: #4c4f6a;
+} */
+/*   background: #acadbd; */
 
 /* Handle on hover */
-::-webkit-scrollbar-thumb:hover {
+/* ::-webkit-scrollbar-thumb:hover {
   background: #1e202f;
-}
+} */
 
 .loading-container {
   position: absolute;

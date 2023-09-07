@@ -30,13 +30,17 @@ import TrackRes from './TrackRes';
 import PianoRoll from '../VisComponents/PianoRoll';
 import Title from '../Presentation/Title';
 
-// React Bootstrap imports
-import 'bootstrap/dist/css/bootstrap.min.css';
-import Col from 'react-bootstrap/Col';
-import ListGroup from 'react-bootstrap/ListGroup';
-import Row from 'react-bootstrap/Row';
-import Tab from 'react-bootstrap/Tab';
-
+// beforePrivateBeta
+/** Potentially useful, but messes up the bits of code provided by the designers. 
+ * Need to see if it is possible to use this and limit the scope of the... influence of the import. 
+ * Otherwise, we can consider how to get a similar display without using React Bootstrap... It is not a design that complex.*/
+// ---- React Bootstrap imports
+// import 'bootstrap/dist/css/bootstrap.min.css';
+// import Col from 'react-bootstrap/Col';
+// import ListGroup from 'react-bootstrap/ListGroup';
+// import Row from 'react-bootstrap/Row';
+// import Tab from 'react-bootstrap/Tab';
+import MyTabbedInterface from './MyTabbedInterface'
 
 const PITCH_QUERY_REGEX = /^$|(^(?!.*--)(?!-)([0-9]{1,2}|1[01][0-9]|12[0-7])(-([0-9]{1,2}|1[01][0-9]|12[0-7]))*(-?)$)/;
 // Test attributes
@@ -395,40 +399,40 @@ const MusicInterface = () => {
           </div>
         </div>
     </div> */}
-    <Tab.Container id="list-group-tabs-example" defaultActiveKey="#link1">
+    {/* <Tab.Container id="list-group-tabs-example" defaultActiveKey="#link1">
       <Row>
         <Col sm={1}>
           <ListGroup>
             <ListGroup.Item action href="#link1">
-              Link 1
+              Recoding 1
             </ListGroup.Item>
             <ListGroup.Item action href="#link2">
-              Link 2
+              Recording 2
             </ListGroup.Item>
           </ListGroup>
         </Col>
         <Col sm={2}>
           <ListGroup>
             <ListGroup.Item action href="#link1">
-              Link alpha
+              Track alpha
             </ListGroup.Item>
             <ListGroup.Item action href="#link2">
-              Link beta
+            Track beta
             </ListGroup.Item>
             <ListGroup.Item action href="#link2">
-              Link beta
+            Track gamma
             </ListGroup.Item>
             <ListGroup.Item action href="#link2">
-              Link beta
+            Track delta
             </ListGroup.Item>
             <ListGroup.Item action href="#link2">
-              Link beta
+            Track I don't know greek alphabet
             </ListGroup.Item>
             <ListGroup.Item action href="#link2">
-              Link beta
+            Track Dragon Ball
             </ListGroup.Item>
             <ListGroup.Item action href="#link2">
-              Link beta
+            Track Zion
             </ListGroup.Item>                                                            
           </ListGroup>
         </Col>
@@ -439,7 +443,9 @@ const MusicInterface = () => {
           </Tab.Content>
         </Col>
       </Row>
-    </Tab.Container>
+    </Tab.Container> */}
+
+    <MyTabbedInterface/>
 
       
       

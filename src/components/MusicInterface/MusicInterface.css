@@ -175,23 +175,23 @@ th {
     margin-bottom: 1rem;
 }
 
-::-webkit-scrollbar {
+/* ::-webkit-scrollbar {
     width: 10px;
     border-radius: 10px;
-}
-
+} */
+/* 
 ::-webkit-scrollbar-thumb {
     background: rgb(150, 150, 150);
     border-bottom-left-radius: 7.5px;
     border-top-left-radius: 7.5px;
     border-bottom-right-radius: 7.5px;
     border-top-right-radius: 7.5px;
-}
+} */
 
-.outputMusicSearch ::-webkit-scrollbar-track {
+/* .outputMusicSearch ::-webkit-scrollbar-track {
     background: #343650;
     border-radius: 5px;
-}
+} */
 
 .buttonDots{
     border:solid;
