@@ -30,6 +30,14 @@ import TrackRes from './TrackRes';
 import PianoRoll from '../VisComponents/PianoRoll';
 import Title from '../Presentation/Title';
 
+// React Bootstrap imports
+import 'bootstrap/dist/css/bootstrap.min.css';
+import Col from 'react-bootstrap/Col';
+import ListGroup from 'react-bootstrap/ListGroup';
+import Row from 'react-bootstrap/Row';
+import Tab from 'react-bootstrap/Tab';
+
+
 const PITCH_QUERY_REGEX = /^$|(^(?!.*--)(?!-)([0-9]{1,2}|1[01][0-9]|12[0-7])(-([0-9]{1,2}|1[01][0-9]|12[0-7]))*(-?)$)/;
 // Test attributes
 const notes = [60, 61, 62, 63, 64, 65, 66, 59, 67, 68, 69, 55, 77, 89, 90, 82];
@@ -368,6 +376,73 @@ const MusicInterface = () => {
   return (
     <div className="musicInterface">
       <Title firstLine="Music" secondLine="Interface" />
+      {/* ==== Test diffeent presentation of results ==== */}
+      {/* <div className="row">
+        <div className="col-4">
+          <div className="list-group" id="list-tab" role="tablist">
+            <a className="list-group-item list-group-item-action active" id="list-home-list" data-toggle="list" href="#list-home" role="tab" aria-controls="home">Home</a>
+            <a className="list-group-item list-group-item-action" id="list-profile-list" data-toggle="list" href="#list-profile" role="tab" aria-controls="profile">Profile</a>
+            <a className="list-group-item list-group-item-action" id="list-messages-list" data-toggle="list" href="#list-messages" role="tab" aria-controls="messages">Messages</a>
+            <a className="list-group-item list-group-item-action" id="list-settings-list" data-toggle="list" href="#list-settings" role="tab" aria-controls="settings">Settings</a>
+          </div>
+        </div>
+        <div className="col-8">
+          <div className="tab-content" id="nav-tabContent">
+            <div className="tab-pane fade show active" id="list-home" role="tabpanel" aria-labelledby="list-home-list"> Home text</div>
+            <div className="tab-pane fade" id="list-profile" role="tabpanel" aria-labelledby="list-profile-list">Profile text</div>
+            <div className="tab-pane fade" id="list-messages" role="tabpanel" aria-labelledby="list-messages-list">Messages text</div>
+            <div className="tab-pane fade" id="list-settings" role="tabpanel" aria-labelledby="list-settings-list">Settings text</div>
+          </div>
+        </div>
+    </div> */}
+    <Tab.Container id="list-group-tabs-example" defaultActiveKey="#link1">
+      <Row>
+        <Col sm={1}>
+          <ListGroup>
+            <ListGroup.Item action href="#link1">
+              Link 1
+            </ListGroup.Item>
+            <ListGroup.Item action href="#link2">
+              Link 2
+            </ListGroup.Item>
+          </ListGroup>
+        </Col>
+        <Col sm={2}>
+          <ListGroup>
+            <ListGroup.Item action href="#link1">
+              Link alpha
+            </ListGroup.Item>
+            <ListGroup.Item action href="#link2">
+              Link beta
+            </ListGroup.Item>
+            <ListGroup.Item action href="#link2">
+              Link beta
+            </ListGroup.Item>
+            <ListGroup.Item action href="#link2">
+              Link beta
+            </ListGroup.Item>
+            <ListGroup.Item action href="#link2">
+              Link beta
+            </ListGroup.Item>
+            <ListGroup.Item action href="#link2">
+              Link beta
+            </ListGroup.Item>
+            <ListGroup.Item action href="#link2">
+              Link beta
+            </ListGroup.Item>                                                            
+          </ListGroup>
+        </Col>
+        <Col sm={8}>
+          <Tab.Content>
+            <Tab.Pane className='icon bg-white h-96' eventKey="#link1">Tab pane content 1</Tab.Pane>
+            <Tab.Pane className='icon bg-white h-[32rem]' eventKey="#link2">Tab pane content 2</Tab.Pane>
+          </Tab.Content>
+        </Col>
+      </Row>
+    </Tab.Container>
+
+      
+      
       {/* ==== Test Mp3 playing ==== */}
       {/* <div className="playMusic" onClick={(c) => { playMp3(); }} > Play Test Mp3 </div>
       <div className='playMusic' onClick={(c)=>{playToneSalamander();}}> Play from tone loaded </div> */}

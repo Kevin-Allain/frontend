@@ -30,6 +30,7 @@ import Landing from "./components/Presentation/Landing";
 import Partners from "./components/Presentation/Partners";
 import Search from "./components/Presentation/Search";
 
+
 export let setIsLoading; // Export the function
 
 function App() {
