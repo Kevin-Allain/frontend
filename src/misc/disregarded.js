@@ -839,3 +839,68 @@ function resetMp3() {
     //     observer.unobserve(element);
     //   });
     // };          
+
+    // -------- From MusicInterface testing tabbed interface
+      {/* <div className="row">
+        <div className="col-4">
+          <div className="list-group" id="list-tab" role="tablist">
+            <a className="list-group-item list-group-item-action active" id="list-home-list" data-toggle="list" href="#list-home" role="tab" aria-controls="home">Home</a>
+            <a className="list-group-item list-group-item-action" id="list-profile-list" data-toggle="list" href="#list-profile" role="tab" aria-controls="profile">Profile</a>
+            <a className="list-group-item list-group-item-action" id="list-messages-list" data-toggle="list" href="#list-messages" role="tab" aria-controls="messages">Messages</a>
+            <a className="list-group-item list-group-item-action" id="list-settings-list" data-toggle="list" href="#list-settings" role="tab" aria-controls="settings">Settings</a>
+          </div>
+        </div>
+        <div className="col-8">
+          <div className="tab-content" id="nav-tabContent">
+            <div className="tab-pane fade show active" id="list-home" role="tabpanel" aria-labelledby="list-home-list"> Home text</div>
+            <div className="tab-pane fade" id="list-profile" role="tabpanel" aria-labelledby="list-profile-list">Profile text</div>
+            <div className="tab-pane fade" id="list-messages" role="tabpanel" aria-labelledby="list-messages-list">Messages text</div>
+            <div className="tab-pane fade" id="list-settings" role="tabpanel" aria-labelledby="list-settings-list">Settings text</div>
+          </div>
+        </div>
+    </div> */}
+    {/* <Tab.Container id="list-group-tabs-example" defaultActiveKey="#link1">
+      <Row>
+        <Col sm={1}>
+          <ListGroup>
+            <ListGroup.Item action href="#link1">
+              Recoding 1
+            </ListGroup.Item>
+            <ListGroup.Item action href="#link2">
+              Recording 2
+            </ListGroup.Item>
+          </ListGroup>
+        </Col>
+        <Col sm={2}>
+          <ListGroup>
+            <ListGroup.Item action href="#link1">
+              Track alpha
+            </ListGroup.Item>
+            <ListGroup.Item action href="#link2">
+            Track beta
+            </ListGroup.Item>
+            <ListGroup.Item action href="#link2">
+            Track gamma
+            </ListGroup.Item>
+            <ListGroup.Item action href="#link2">
+            Track delta
+            </ListGroup.Item>
+            <ListGroup.Item action href="#link2">
+            Track I don't know greek alphabet
+            </ListGroup.Item>
+            <ListGroup.Item action href="#link2">
+            Track Dragon Ball
+            </ListGroup.Item>
+            <ListGroup.Item action href="#link2">
+            Track Zion
+            </ListGroup.Item>                                                            
+          </ListGroup>
+        </Col>
+        <Col sm={8}>
+          <Tab.Content>
+            <Tab.Pane className='icon bg-white h-96' eventKey="#link1">Tab pane content 1</Tab.Pane>
+            <Tab.Pane className='icon bg-white h-[32rem]' eventKey="#link2">Tab pane content 2</Tab.Pane>
+          </Tab.Content>
+        </Col>
+      </Row>
+    </Tab.Container> */}

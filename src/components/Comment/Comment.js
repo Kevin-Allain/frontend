@@ -17,13 +17,12 @@ const Comment = ({
 
     return (
         <div className='comment'>
-            <em>{author}</em> <br/>
+            <em>{author}</em> at <em>{time.replaceAll('T',' ').split('.')[0]}</em> <br/>
             {commentInput}
             <BiEdit className='icon' onClick={updateMode}/>
             <AiFillDelete className='icon' onClick={deleteComment} />
-            <br/> {time}
-            <br/> <em>The annotationId is {annotationId}</em>
-            <br/> <em>The commentId is {commentId}</em>
+            
+            {/* <br/> <em>The annotationId is {annotationId}</em> <br/> <em>The commentId is {commentId}</em> */}
             <EmbeddedWorkflowInteraction idCaller={commentId} typeCaller={"comment"}/>
         </div>
     );

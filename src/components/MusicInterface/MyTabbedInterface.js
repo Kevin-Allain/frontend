@@ -1,10 +1,24 @@
 import React, { useState } from 'react';
-import SimpleBar from 'simplebar-react';
-import 'simplebar-react/dist/simplebar.min.css';
+// import SimpleBar from 'simplebar-react';
+// import 'simplebar-react/dist/simplebar.min.css';
 import './MyTabbedInterface.css'
 
 
-const MyTabbedInterface = () => {
+const MyTabbedInterface = ({
+  listLogNumbers,
+  lognumbersRefs,
+  scrollToButtonListLogsNumbers,
+  findMatchRecording,
+  infoMusicList,
+  listTracks,
+  scrollToButtonListRecordingsFollowing,
+  scrollToButtonListTracksFollowing,
+  listSearchRes,
+  formatAndPlay,
+  getMusicInfo,
+  setInfoMusicList,
+  testPerformances=false
+}) => {
   const [activeRecording, setActiveRecording] = useState(null);
   const [activeTrack, setActiveTrack] = useState(null);
 
@@ -59,11 +73,11 @@ const MyTabbedInterface = () => {
       <div className="w-1/5 p-4 overflow-y-auto custom-scrollbar">
           <h2 className="text-lg font-semibold mb-4">Recordings</h2>
           <ul>
-            {recordings.map((recording) => (
+            {listLogNumbers && listLogNumbers.map((recording) => (
               <li
                 key={recording}
                 className={`cursor-pointer mb-2 ${
-                  activeRecording === recording ? "text-blue-500" : ""
+                  activeRecording === recording ? "text-orange-500" : ""
                 }`}
                 onClick={() => handleRecordingClick(recording)}
               >
@@ -77,19 +91,20 @@ const MyTabbedInterface = () => {
       {/* Sidebar with track tabs */}
       <div className="w-1/5 p-4 overflow-y-auto custom-scrollbar">
         <h2 className="text-lg font-semibold mb-4">Tracks</h2>
+        {/* <> {"listTracks.length: "+listTracks.length+", listTracks[0]: "+listTracks[0]} </> */}
         <ul>
-          {activeRecording &&
-            recordingData[activeRecording].map((track) => (
+          {/* {activeRecording && recordingData[activeRecording].map((track) => ( <li key={track} className={`cursor-pointer mb-2 ${ activeTrack === track ? "text-orange-500" : "" }`} onClick={() => handleTrackClick(track)} > {track} </li> ))} */}
+          {listLogNumbers.length > 0 && listTracks && listTracks.length > 0 && listTracks.map((track, ndx) => {
+            return (track.includes(activeRecording)) ?
               <li
                 key={track}
-                className={`cursor-pointer mb-2 ${
-                  activeTrack === track ? "text-blue-500" : ""
-                }`}
-                onClick={() => handleTrackClick(track)}
-              >
-                {track}
+                className={`cursor-pointer mb-2 ${activeTrack === track ? "text-orange-500" : ""}`}
+                onClick={() => handleTrackClick(track)}>
+                {track.split('-')[1]}
               </li>
-            ))}
+              : <></>
+          })
+          }
         </ul>
       </div>
 
@@ -100,13 +115,13 @@ const MyTabbedInterface = () => {
             <h2 className="text-lg font-semibold mb-4">
               {activeRecording} - {activeTrack}
             </h2>
-            <ul>
+            {/* <ul>
               {trackData[activeTrack].map((sample) => (
                 <li key={sample} className="mb-2">
                   {sample}
                 </li>
               ))}
-            </ul>
+            </ul> */}
           </div>
         )}
       </div>
