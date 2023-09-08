@@ -4,6 +4,8 @@ import React, { useState, useRef } from 'react';
 import './MyTabbedInterface.css'
 import {AiOutlineLoading} from 'react-icons/ai'
 import TrackRes from './TrackRes'; // You should adjust the import path
+import AnnotationSystem from '../Annotation/AnnotationSystem';
+import EmbeddedWorkflowInteraction from '../Workflow/EmbeddedWorkflowInteraction';
 
 const MyTabbedInterface = ({
   listLogNumbers,
@@ -26,41 +28,10 @@ const MyTabbedInterface = ({
   const [visibleTracks, setVisibleTracks] = useState({});
   const tracksContainerRef = useRef(null);
 
-
   // Mock data for recordings, tracks, and samples
-  const recordings = 
-    [
-        "Recording 1", "Recording 2",
-        "Recording 3", "Recording 21",
-        "Recording 4", "Recording 22",
-        "Recording 5", "Recording 23",
-        "Recording 6", "Recording 24",
-        "Recording 7", "Recording 25",
-        "Recording 8", "Recording 26",
-        "Recording 9", "Recording 27",
-        "Recording 10", "Recording 28",
-        "Recording 11", "Recording 32",
-        "Recording 12", "Recording 312",
-        "Recording 13", "Recording 332",
-        "Recording 14", "Recording 342",
-    ];
-  const recordingData = {
-    "Recording 1": ["Track 1", "Track 2"],
-    "Recording 2": ["Track A", "Track B"],
-    "Recording 3": [
-        "Track A", "Track B", "Track 1", "Track 2",
-        "Track C","Track D", "Track E",
-    ],
-  };
-  const trackData = {
-    "Track 1": ["Sample A", "Sample B"],
-    "Track 2": ["Sample X", "Sample Y"],
-    "Track A": ["Sample Alpha", "Sample Beta"],
-    "Track B": ["Sample Gamma", "Sample Delta"],
-    "Track C": ["Sample Gamma", "Sample Delta"],
-    "Track D": ["Sample Gamma", "Sample Delta"],
-    "Track E": ["Sample Gamma", "Sample Delta"],
-  };
+  const recordings = [ "Recording 1", "Recording 2", "Recording 3", "Recording 21", "Recording 4", "Recording 22", "Recording 5", "Recording 23", "Recording 6", "Recording 24", "Recording 7", "Recording 25", "Recording 8", "Recording 26", "Recording 9", "Recording 27", "Recording 10", "Recording 28", "Recording 11", "Recording 32", "Recording 12", "Recording 312", "Recording 13", "Recording 332",];
+  const recordingData = { "Recording 1": ["Track 1", "Track 2"], "Recording 2": ["Track A", "Track B"], "Recording 3": [ "Track A", "Track B", "Track 1", "Track 2", "Track C","Track D", "Track E", ], };
+  const trackData = { "Track 1": ["Sample A", "Sample B"], "Track 2": ["Sample X", "Sample Y"], "Track A": ["Sample Alpha", "Sample Beta"], "Track B": ["Sample Gamma", "Sample Delta"], "Track C": ["Sample Gamma", "Sample Delta"], "Track D": ["Sample Gamma", "Sample Delta"], "Track E": ["Sample Gamma", "Sample Delta"], };
 
   const handleRecordingClick = (recording) => {
     setActiveRecording(recording);
@@ -74,7 +45,6 @@ const MyTabbedInterface = ({
   return (
     <div className="flex h-[40rem] bg-gray-100">
       {/* Sidebar with recording tabs */}
-      {/* <SimpleBar > */}
       <div className="w-1/8 p-4 overflow-y-auto custom-scrollbar">
           <h2 className="text-lg font-semibold mb-4">Recordings</h2>
           <ul>
@@ -91,7 +61,6 @@ const MyTabbedInterface = ({
             ))}
           </ul>
         </div>
-      {/* </SimpleBar> */}
       
       {/* Sidebar with track tabs */}
       <div className="w-1/8 p-4 overflow-y-auto custom-scrollbar">
@@ -126,7 +95,22 @@ const MyTabbedInterface = ({
             {/* TODO beforePrivateBeta Adapt content of TrackRes...  */}
             {/* {visibleTracks[activeTrack] && ( */}{/* )} */}
 
-            {/* Zone for tracks. */}
+            {/* Zone for recordings. */}
+            <div className='metadataRecording border p-[0.25rem]'>
+              {infoMusicList.length === 0 ? (<AiOutlineLoading className='spin' size={'20px'} />) :
+                findMatchRecording(activeRecording) !== -1 ? (
+                  <div className='detailResultMeta'>
+                    <u>Info about recording:</u>
+                    {Object.entries(infoMusicList[findMatchRecording(activeRecording)]).map(([key, value]) => (
+                      <p key={key}> {key}: {value} </p>
+                    ))}
+                  </div>
+                )
+                  : (<><div className='text-left'>No metadata about the recording</div><br /></>)
+              }
+                <AnnotationSystem type={"recording"} info={activeRecording} />
+                <EmbeddedWorkflowInteraction idCaller={listSearchRes[0].arrIdNotes[0]} typeCaller={"recording"} />
+            </div>
 
             {/* Zone for tracks... or directly samples? */}
             <TrackRes key={'Track_' + activeTrack} text={activeTrack} listSearchRes={listSearchRes.filter((a) => a.recording === activeTrack)}
