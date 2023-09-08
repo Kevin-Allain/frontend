@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 // import SimpleBar from 'simplebar-react';
 // import 'simplebar-react/dist/simplebar.min.css';
 import './MyTabbedInterface.css'
-
+import {AiOutlineLoading} from 'react-icons/ai'
+import TrackRes from './TrackRes'; // You should adjust the import path
 
 const MyTabbedInterface = ({
   listLogNumbers,
@@ -21,6 +22,10 @@ const MyTabbedInterface = ({
 }) => {
   const [activeRecording, setActiveRecording] = useState(null);
   const [activeTrack, setActiveTrack] = useState(null);
+
+  const [visibleTracks, setVisibleTracks] = useState({});
+  const tracksContainerRef = useRef(null);
+
 
   // Mock data for recordings, tracks, and samples
   const recordings = 
@@ -67,10 +72,10 @@ const MyTabbedInterface = ({
   };
 
   return (
-    <div className="flex h-[50rem] bg-gray-100">
+    <div className="flex h-[40rem] bg-gray-100">
       {/* Sidebar with recording tabs */}
       {/* <SimpleBar > */}
-      <div className="w-1/5 p-4 overflow-y-auto custom-scrollbar">
+      <div className="w-1/8 p-4 overflow-y-auto custom-scrollbar">
           <h2 className="text-lg font-semibold mb-4">Recordings</h2>
           <ul>
             {listLogNumbers && listLogNumbers.map((recording) => (
@@ -81,7 +86,7 @@ const MyTabbedInterface = ({
                 }`}
                 onClick={() => handleRecordingClick(recording)}
               >
-                {recording}
+                {(recording.length>30)? recording.substring(0,30)+'...':recording}
               </li>
             ))}
           </ul>
@@ -89,7 +94,7 @@ const MyTabbedInterface = ({
       {/* </SimpleBar> */}
       
       {/* Sidebar with track tabs */}
-      <div className="w-1/5 p-4 overflow-y-auto custom-scrollbar">
+      <div className="w-1/8 p-4 overflow-y-auto custom-scrollbar">
         <h2 className="text-lg font-semibold mb-4">Tracks</h2>
         {/* <> {"listTracks.length: "+listTracks.length+", listTracks[0]: "+listTracks[0]} </> */}
         <ul>
@@ -109,19 +114,23 @@ const MyTabbedInterface = ({
       </div>
 
       {/* Content based on active recording and track */}
-      <div className="w-3/5 p-4 overflow-y-auto custom-scrollbar">
+      <div className="w-3/4 p-4 overflow-y-auto custom-scrollbar">
         {activeRecording && activeTrack && (
           <div>
             <h2 className="text-lg font-semibold mb-4">
-              {activeRecording} - {activeTrack}
+              {activeRecording} - {activeTrack.split('-')[1]}
             </h2>
-            {/* <ul>
-              {trackData[activeTrack].map((sample) => (
-                <li key={sample} className="mb-2">
-                  {sample}
-                </li>
-              ))}
-            </ul> */}
+            {/* <ul> {trackData[activeTrack].map((sample) => (
+                <li key={sample} className="mb-2"> {sample} </li> ))} </ul> */}
+
+            {/* {(!visibleTracks[activeTrack]) &&  <AiOutlineLoading className="spin"/> } */}
+            {/* TODO beforePrivateBeta Adapt content of TrackRes...  */}
+            {/* {visibleTracks[activeTrack] && ( */}
+              <TrackRes key={'Track_' + activeTrack} text={activeTrack} listSearchRes={listSearchRes.filter((a) => a.recording === activeTrack)}
+                formatAndPlay={formatAndPlay} getMusicInfo={getMusicInfo} infoMusicList={infoMusicList} setInfoMusicList={setInfoMusicList}
+                testPerformances={false} />
+            {/* )} */}
+
           </div>
         )}
       </div>
