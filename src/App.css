@@ -224,7 +224,7 @@ input{
 }
 .icon{
   cursor: pointer;
-  font-size: 20px;
+  /* font-size: 20px; */
   display: inline;
 }
 

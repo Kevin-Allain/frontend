@@ -29,16 +29,19 @@ body {
 } */
 
 .outputMusicSearch {
-    height: 700px;
+    /* height: 700px;
     overflow-y: scroll;
-    width: 98%;
+    width: 98%; */
     /* border: solid;
     border-color: #dfdfdf; */
     text-align: center;
     position: relative;
-    border-radius: 0 10px 10px 0;
+    border-radius: 10px;
     background: #dfdfdf;
     opacity: 0.9;
+    padding: 0.5rem;
+    margin-left: 2rem;
+    margin-right: 2rem;
 }
 
 .white{
@@ -127,6 +130,7 @@ th {
     display:flex;
     gap: 2rem;
     justify-content: left;
+    padding: 0.5rem;
 }
 
 .sampleres {
@@ -138,19 +142,17 @@ th {
     color: white;
     border-radius: 0 5px 5px 0;
     border: solid;
-    /* width: 90%; */
     border-width: thin;
-    /* margin-left: 31%; */
+    border-color: black;
     text-align: left;
     padding-bottom: 0.25rem;
     padding-top: 0.25rem;
 }
 
 .trackres {
-    border: solid;
     margin-left: 1.5%;
     position: relative;
-    width: 97%;
+    width: 100%;
 }
 
 .infoLogNumber {
@@ -268,4 +270,13 @@ opacity: 1;
     margin-left: 1rem;
     font-size: 20px;
     font-family: monospace;
+}
+
+.annotationIndication{
+    border: solid;
+    border-radius: 0.5rem;
+    width: fit-content;
+    border-width: thin;
+    margin: 0.25rem;
+    padding: 0.25rem;    
 }

@@ -81,7 +81,7 @@ const MyTabbedInterface = ({
             {listLogNumbers && listLogNumbers.map((recording) => (
               <li
                 key={recording}
-                className={`cursor-pointer mb-2 ${
+                className={`text-sm cursor-pointer mb-2 ${
                   activeRecording === recording ? "text-orange-500" : ""
                 }`}
                 onClick={() => handleRecordingClick(recording)}
@@ -103,7 +103,7 @@ const MyTabbedInterface = ({
             return (track.includes(activeRecording)) ?
               <li
                 key={track}
-                className={`cursor-pointer mb-2 ${activeTrack === track ? "text-orange-500" : ""}`}
+                className={`text-sm cursor-pointer mb-2 ${activeTrack === track ? "text-orange-500" : ""}`}
                 onClick={() => handleTrackClick(track)}>
                 {track.split('-')[1]}
               </li>
@@ -120,16 +120,19 @@ const MyTabbedInterface = ({
             <h2 className="text-lg font-semibold mb-4">
               {activeRecording} - {activeTrack.split('-')[1]}
             </h2>
-            {/* <ul> {trackData[activeTrack].map((sample) => (
-                <li key={sample} className="mb-2"> {sample} </li> ))} </ul> */}
+            {/* <ul> {trackData[activeTrack].map((sample) => ( <li key={sample} className="mb-2"> {sample} </li> ))} </ul> */}
 
             {/* {(!visibleTracks[activeTrack]) &&  <AiOutlineLoading className="spin"/> } */}
             {/* TODO beforePrivateBeta Adapt content of TrackRes...  */}
-            {/* {visibleTracks[activeTrack] && ( */}
-              <TrackRes key={'Track_' + activeTrack} text={activeTrack} listSearchRes={listSearchRes.filter((a) => a.recording === activeTrack)}
-                formatAndPlay={formatAndPlay} getMusicInfo={getMusicInfo} infoMusicList={infoMusicList} setInfoMusicList={setInfoMusicList}
-                testPerformances={false} />
-            {/* )} */}
+            {/* {visibleTracks[activeTrack] && ( */}{/* )} */}
+
+            {/* Zone for tracks. */}
+
+            {/* Zone for tracks... or directly samples? */}
+            <TrackRes key={'Track_' + activeTrack} text={activeTrack} listSearchRes={listSearchRes.filter((a) => a.recording === activeTrack)}
+              formatAndPlay={formatAndPlay} getMusicInfo={getMusicInfo} infoMusicList={infoMusicList} setInfoMusicList={setInfoMusicList}
+              testPerformances={false} />
+            
 
           </div>
         )}

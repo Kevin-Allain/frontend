@@ -8,9 +8,9 @@
 
 .areaAnnotation{
   background: white;
-  padding: 0.5rem;
-  border: solid;
+  padding: 1rem;
   border-radius: 0.5rem;
+  /* border: solid; */
 }
 
 .annotation{
