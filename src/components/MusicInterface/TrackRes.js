@@ -25,10 +25,10 @@ const TrackRes = ({
     return (
         <div className="trackres" key={text}>
             {/* <div className="texttrackres"> <h3>Track: {text} </h3> </div> */}
-            <div className='iconTracksInteractions'>
+            {/* <div className='iconTracksInteractions'>
                 <AnnotationSystem type={"track"} info={text} />
                 <EmbeddedWorkflowInteraction idCaller={listSearchRes[0].arrIdNotes[0]} typeCaller={"track"} />
-            </div>
+            </div> */}
             {(testPerformances) ? (<></>) :
                 <>
                     {listSearchRes.map((item, i) => (

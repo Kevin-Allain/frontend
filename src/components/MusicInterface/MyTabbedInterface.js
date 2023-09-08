@@ -6,6 +6,7 @@ import {AiOutlineLoading} from 'react-icons/ai'
 import TrackRes from './TrackRes'; // You should adjust the import path
 import AnnotationSystem from '../Annotation/AnnotationSystem';
 import EmbeddedWorkflowInteraction from '../Workflow/EmbeddedWorkflowInteraction';
+import MetadataAccordion from './MetadataAccordion';
 
 const MyTabbedInterface = ({
   listLogNumbers,
@@ -96,7 +97,8 @@ const MyTabbedInterface = ({
             {/* {visibleTracks[activeTrack] && ( */}{/* )} */}
 
             {/* Zone for recordings. */}
-            <div className='metadataRecording border p-[0.25rem]'>
+            {/* <div className='metadataRecording border p-[0.25rem]'>
+              <div>Recording content and interaction</div>
               {infoMusicList.length === 0 ? (<AiOutlineLoading className='spin' size={'20px'} />) :
                 findMatchRecording(activeRecording) !== -1 ? (
                   <div className='detailResultMeta'>
@@ -108,15 +110,33 @@ const MyTabbedInterface = ({
                 )
                   : (<><div className='text-left'>No metadata about the recording</div><br /></>)
               }
-                <AnnotationSystem type={"recording"} info={activeRecording} />
-                <EmbeddedWorkflowInteraction idCaller={listSearchRes[0].arrIdNotes[0]} typeCaller={"recording"} />
-            </div>
+              <AnnotationSystem type={"recording"} info={activeRecording} />
+              <EmbeddedWorkflowInteraction idCaller={listSearchRes[0].arrIdNotes[0]} typeCaller={"recording"} />
+            </div> */}
 
             {/* Zone for tracks... or directly samples? */}
+            {/* <div className='border p-[0.25rem]'>
+              <div>Track content and interaction</div>
+              <div className='iconTracksInteractions'>
+                <AnnotationSystem type={"track"} info={activeTrack} />
+                <EmbeddedWorkflowInteraction idCaller={listSearchRes[0].arrIdNotes[0]} typeCaller={"track"} />
+              </div>
+            </div> */}
+
+            {/* Accordion for Recording and Track */}
+            <div className="border rounded border-2 mb-[0.5rem]">
+              <MetadataAccordion title="Recording Metadata" type={"recording"} content={listSearchRes[0].arrIdNotes[0]} info={activeRecording} findMatchRecording={findMatchRecording} infoMusicList={infoMusicList} />
+            </div>
+            <div className="border rounded border-2 mb-[0.5rem]">
+              <MetadataAccordion title="Track Metadata" type={"track"} content={listSearchRes[0].arrIdNotes[0]} info={activeTrack} findMatchRecording={findMatchRecording} />
+            </div>
+
+
+            {/* We should change TrackRes I think... */}
             <TrackRes key={'Track_' + activeTrack} text={activeTrack} listSearchRes={listSearchRes.filter((a) => a.recording === activeTrack)}
               formatAndPlay={formatAndPlay} getMusicInfo={getMusicInfo} infoMusicList={infoMusicList} setInfoMusicList={setInfoMusicList}
               testPerformances={false} />
-            
+
 
           </div>
         )}

@@ -29,6 +29,7 @@ import { BsInfoCircleFill } from 'react-icons/bs'
 import TrackRes from './TrackRes';
 import PianoRoll from '../VisComponents/PianoRoll';
 import Title from '../Presentation/Title';
+import EmbeddedWorkflowInteraction from '../Workflow/EmbeddedWorkflowInteraction'
 
 // beforePrivateBeta
 /** Potentially useful, but messes up the bits of code provided by the designers. 
@@ -417,6 +418,8 @@ const MusicInterface = () => {
         {/* beforePrivateBeta adapt the text and its style */}
         <div className='text-left'>
           <AnnotationSystem type={"search"} info={oldSearch} />
+          {/* TODO beforePrivateBeta update the workflow system so that it can save searches!!! */}
+          {/* <EmbeddedWorkflowInteraction idCaller={null} typeCaller={"search"} /> */}
         </div>
         <MyTabbedInterface
           listLogNumbers={listLogNumbers}

@@ -107,7 +107,7 @@ const EmbeddedWorkflowInteraction = ({idCaller, typeCaller, indexRange=0}) => {
     // - Addition of object content to existing workflow
 
     return (
-      <div className="embeddedWorkflowInteraction border border-2 border-inherit rounded p-[0.2rem] h-fit">
+      <div className="embeddedWorkflowInteraction border border-2 border-inherit rounded p-[0.2rem] h-fit w-fit">
         {typeof (localStorage.token) !== 'undefined' &&
         // className="threedotsEmbedded"
           <div className="icon text-[15px]" onClick={() => handleShowActionsWorkflow()}>
