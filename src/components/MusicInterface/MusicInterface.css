@@ -295,30 +295,30 @@ opacity: 1;
     width: fit-content;
     display: flex;
 }
-
 .explanation {
-
+    /* Add a linear gradient background */
+    background: linear-gradient(to bottom, rgba(0,0,0,0.9), rgba(95, 95, 95, 0.9));
     position: absolute;
     top: 200px;
     left: 300px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
     padding: 10px;
     border: 1px solid #ccc;
+    border-radius: 0.25rem;
     z-index: 999;
     width: 800px;
     height: -moz-fit-content;
     height: 500px;
     /* display: flex; */
-    background: rgba(0,0,0,0.85);
+    /* background: rgba(0,0,0,0.85); */
     color: white;
     text-align: left;
     padding-left: 2rem;
     padding-right: 2rem;
-}  
-
+}
 .detailsExplanation {
     line-height: 1.6; /* Improved line spacing for readability */
-    color: #bbb; /* Slightly darker text color */
+    color: #ddd; /* Slightly darker text color */
   }
   
   .functionality-list {
