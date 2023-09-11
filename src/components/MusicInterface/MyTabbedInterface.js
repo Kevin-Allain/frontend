@@ -125,10 +125,10 @@ const MyTabbedInterface = ({
 
             {/* Accordion for Recording and Track */}
             <div className="border rounded border-2 mb-[0.5rem]">
-              <MetadataAccordion title="Recording Metadata" type={"recording"} content={listSearchRes[0].arrIdNotes[0]} info={activeRecording} findMatchRecording={findMatchRecording} infoMusicList={infoMusicList} />
+              <MetadataAccordion title="Recording Interaction and Metadata" type={"recording"} content={listSearchRes[0].arrIdNotes[0]} info={activeRecording} findMatchRecording={findMatchRecording} infoMusicList={infoMusicList} />
             </div>
             <div className="border rounded border-2 mb-[0.5rem]">
-              <MetadataAccordion title="Track Metadata" type={"track"} content={listSearchRes[0].arrIdNotes[0]} info={activeTrack} findMatchRecording={findMatchRecording} />
+              <MetadataAccordion title="Track Interaction" type={"track"} content={listSearchRes[0].arrIdNotes[0]} info={activeTrack} findMatchRecording={findMatchRecording} />
             </div>
 
 

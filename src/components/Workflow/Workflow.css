@@ -20,6 +20,9 @@
     padding-top: 0.25rem;
     padding-bottom: 0.25rem;
     text-align: left;
+    width: 90%;
+    margin-left: 5%;
+    margin-bottom: 0.5rem;
 }
 
 .workflowDetails {

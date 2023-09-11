@@ -73,6 +73,7 @@ ul .key {
     align-items: flex-end;
     padding-bottom: 10px;
     font-weight: bold;
+    font-size: 12px;
 }
 
 ul .key:last-child {

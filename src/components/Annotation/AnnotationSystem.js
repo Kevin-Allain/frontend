@@ -58,7 +58,8 @@ const AnnotationSystem = ({ type, info, index=0 }) => {
   }
 
   return (
-    <div className="annotationInput border border-2 border-inherit rounded p-[0.2rem] h-fit w-fit">
+    <div className="annotationInput border border-2 border-inherit rounded p-[0.2rem] h-fit ">
+      {/* w-fit -> small doubt about the  */}
       {/* button to show or hide... could be a good place to make the query about the annotations... */}
       {/* Button should only be visible if user is logged in? beforePrivateBeta -> Actions only, but reading should be fine... */}
       {typeof (localStorage.token) !== 'undefined' &&

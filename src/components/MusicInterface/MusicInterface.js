@@ -68,6 +68,8 @@ const MusicInterface = () => {
   const [audioMp3, setAudioMp3] = useState(new Audio("https://www.learningcontainer.com/wp-content/uploads/2020/02/Kalimba.mp3"))
 
 
+  const [notesTranslate, setNotesTranslate] = useState('');
+  const [showNotesTranslate, setShowNotesTranslate] = useState(false);
   const [textSearch, setTextSearch] = useState('');
   const textSearchRef = useRef('');
   const [validPitchQuery, setValidPitchQuery] = useState(false);
@@ -149,7 +151,15 @@ const MusicInterface = () => {
   // ---- React functions
   useEffect(() => {
     setValidPitchQuery(PITCH_QUERY_REGEX.test(textSearch))
-    console.log("useEffect textSearch, validPitchQuery: ", validPitchQuery)
+    console.log("useEffect textSearch, validPitchQuery: ", validPitchQuery,", textSearch: ",textSearch,", typeof textSearch", typeof textSearch,", length>0: ",(''+textSearch).length>0,", -?: ",(''+textSearch).indexOf('-')===-1);
+    console.log("showNotesTranslate: ",showNotesTranslate,", notesTranslate: ",notesTranslate);
+    setNotesTranslate(  ((''+textSearch).indexOf('-')===-1)
+      ? (''+MIDItoNote[''+textSearch]).replaceAll('s','')
+      : (''+textSearch).split('-').map((a,i) => (i===(''+textSearch).split('-').length-1)? 
+        MIDItoNote[a].replaceAll('s','')
+        : (MIDItoNote[a]+'-').replaceAll('s','')
+      ));
+    setShowNotesTranslate((''+textSearch).length>0);
   }, [textSearch, validPitchQuery])
 
   useEffect(() => {
@@ -185,7 +195,9 @@ const MusicInterface = () => {
   // }
   const handleChangeQueryPitch = useCallback((event) => {
     const value = event.target.value;
-    if (PITCH_QUERY_REGEX.test(value) || value[value.length - 1] === '-') { setTextSearch(value); }
+    if (PITCH_QUERY_REGEX.test(value) || value[value.length - 1] === '-') { 
+      setTextSearch(value); 
+    }
   }, [setTextSearch]);
 
   // const handleClickTextSearch = async (e) => {
@@ -406,21 +418,28 @@ const MusicInterface = () => {
           value={textSearch}
           onChange={handleChangeQueryPitch}
         />
-        <button onClick={handleClickTextSearch}>Submit search</button>
+        <button className='mx-[0.5rem] my-[0.25rem]' onClick={handleClickTextSearch}>Submit search</button>
         {/* <button onClick={handleClickTextSearchTEST}>Submit search</button> */}
+        { (''+textSearch).length>0 &&  <div className="bg-slate-200 text-center mx-64 opacity-75 max-w-80%">Notes: ({notesTranslate})</div> }
       </div>
 
       {/* ==== OUTPUT SEARCH ==== */}
       {/* Approach with MyTabbedInterface */}
       {(listSearchRes.length <= 0) ? (<></>) :
-      <div className='outputMusicSearch'>
-        <p className='text-xl'>List of results for your search:</p><h4>{oldSearch}</h4>
-        {/* beforePrivateBeta adapt the text and its style */}
-        <div className='text-left'>
-          <AnnotationSystem type={"search"} info={oldSearch} />
-          {/* TODO beforePrivateBeta update the workflow system so that it can save searches!!! */}
-          {/* <EmbeddedWorkflowInteraction idCaller={null} typeCaller={"search"} /> */}
-        </div>
+        <div className='outputMusicSearch'>
+          {/* beforePrivateBeta -> Display BOTH pitches and notes */}
+          <p className='text-xl'>List of results for your search:</p><h4>{oldSearch} ({(('' + oldSearch).indexOf('-') === -1)
+            ? ('' + MIDItoNote['' + oldSearch]).replaceAll('s', '')
+            : ('' + oldSearch).split('-').map((a, i) => (i === ('' + oldSearch).split('-').length - 1) ?
+              MIDItoNote[a].replaceAll('s', '')
+              : (MIDItoNote[a] + '-').replaceAll('s', '')
+            )})</h4>
+          {/* beforePrivateBeta adapt the text and its style */}
+          <div className='text-left'>
+            <AnnotationSystem type={"search"} info={oldSearch} />
+            {/* TODO beforePrivateBeta update the workflow system so that it can save searches!!! */}
+            {/* <EmbeddedWorkflowInteraction idCaller={null} typeCaller={"search"} /> */}
+          </div>
         <MyTabbedInterface
           listLogNumbers={listLogNumbers}
           lognumbersRefs={lognumbersRefs}
