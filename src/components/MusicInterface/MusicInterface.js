@@ -395,6 +395,7 @@ const MusicInterface = () => {
 
   return (
     <div className="musicInterface">
+      {/* relative flex h-screen   flex-1  flex-col  overflow-hidden      text-accent */}
       <BsFillInfoCircleFill className='icon infoMusicInterface w-[2rem] h-[2rem]' onClick={() => setShowExplanation(!showExplanation)} />
       {showExplanation && (
         <div className='explanation'>

@@ -159,11 +159,6 @@ input{
   font-size: larger;
 }
 
-.musicInterface{
-  justify-content: space-around;
-
-}
-
 .buttonsMusicInterface{
   display: flex;
   width: 100%;
@@ -317,6 +312,11 @@ button:hover{
   /* width: 50% */
 }
 
+
+/* afterPrivateBeta find a cleaner solution */
+.logout{
+  margin-top: 61px;
+}
 
 .logout-wrapper{
 flex-direction: column;
@@ -477,9 +477,9 @@ padding-bottom: 0.25rem;
 }
 
 /* Bit dirty, but works...? */
-.contentApp{
+/* .contentApp{
   margin-top: 61px;
-}
+} */
 
 .iconTracksInteractions{
   display: flex;
