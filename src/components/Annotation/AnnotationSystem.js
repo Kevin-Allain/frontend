@@ -62,44 +62,45 @@ const AnnotationSystem = ({ type, info, index=0 }) => {
       {/* w-fit -> small doubt about the  */}
       {/* button to show or hide... could be a good place to make the query about the annotations... */}
       {/* Button should only be visible if user is logged in? beforePrivateBeta -> Actions only, but reading should be fine... */}
-      {typeof (localStorage.token) !== 'undefined' &&
+      
         <div className='buttonShowAnnotation icon' onClick={
           () => handleShowAndLoadAnnotations(type, info, getAnnotations)
         }>
           <div className='icon text-[15px]'>Annotation about the {type}{" "}<HiOutlineAnnotation className='icon annotationIcon' /> </div>
         </div>
-      }
+      
       {showInputAnnotation &&
         <div className='areaAnnotation'>
-          
-          <div className='areaInputAnnotation'>
-          <input
-            type="text"
-            placeholder={"Add annotation about " + type}
-            name="AddAnnotation"
-            id="AddAnnotation"
-            className='annotation'
-            value={textInputAnnotation}
-            onChange={(e) => setTextInputAnnotation(e.target.value)} />
-          <select className='selectPrivacy' value={selectedPrivacyOption} onChange={handleChangeOption}>
-            <option value="public">Public</option>
-            <option value="private">Private</option>
-          </select>
-          <div className="add" onClick={(textInputAnnotation!=='')?
-            (isUpdating
-              ? () => updateAnnotation( annotationId, textInputAnnotation , setTextInputAnnotation, index, type, info,
-                setListAnnotations, setIsUpdating,
-                localStorage?.username)
-              : () => addAnnotation( type, info, index, textInputAnnotation, 
-                setTextInputAnnotation,
-                setListAnnotations,
-                localStorage?.username, selectedPrivacyOption))
-              : () => console.log('empty')
+          {typeof (localStorage.token) !== 'undefined' &&
+            <div className='areaInputAnnotation'>
+              <input
+                type="text"
+                placeholder={"Add annotation about " + type}
+                name="AddAnnotation"
+                id="AddAnnotation"
+                className='annotation'
+                value={textInputAnnotation}
+                onChange={(e) => setTextInputAnnotation(e.target.value)} />
+              <select className='selectPrivacy' value={selectedPrivacyOption} onChange={handleChangeOption}>
+                <option value="public">Public</option>
+                <option value="private">Private</option>
+              </select>
+              <div className="add" onClick={(textInputAnnotation !== '') ?
+                (isUpdating
+                  ? () => updateAnnotation(annotationId, textInputAnnotation, setTextInputAnnotation, index, type, info,
+                    setListAnnotations, setIsUpdating,
+                    localStorage?.username)
+                  : () => addAnnotation(type, info, index, textInputAnnotation,
+                    setTextInputAnnotation,
+                    setListAnnotations,
+                    localStorage?.username, selectedPrivacyOption))
+                : () => console.log('empty')
+              }
+              >
+                {isUpdating ? "Update" : "Add"}
+              </div>
+            </div>
           }
-          >
-            {isUpdating ? "Update" : "Add"}
-          </div>
-          </div>
           <div className='outerAreaDisplayAnnotation'>
             <div className='areaDisplayAnnotation'>
               {listAnnotations.map((item, i) => (

@@ -76,11 +76,13 @@ const SampleRes = ({
                     index={Number(text.split('-')[0])}
                 />
                 {/* The indexRange is a way to know how many objects after the notes should be first one of the sample */}
-                <EmbeddedWorkflowInteraction
-                    typeCaller={"sample"}
-                    idCaller={idDBNotes[0]}
-                    indexRange={idDBNotes.length}
-                />
+                {typeof (localStorage.token) !== 'undefined' &&
+                    <EmbeddedWorkflowInteraction
+                        typeCaller={"sample"}
+                        idCaller={idDBNotes[0]}
+                        indexRange={idDBNotes.length}
+                    />
+                }
             </div>
         </div>
     );

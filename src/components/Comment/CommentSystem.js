@@ -52,38 +52,40 @@ const CommentSystem = ({
         <div className="commentInput">
             <div className='areaComment'>
                 {/* TODO Change display according to who is connected!!! beforePrivateBeta */}
-                <div className='areaInputComment'>
-                    <input
-                        type="text"
-                        placeholder={"Add comment"}
-                        name="AddComment"
-                        id="AddComment"
-                        className='comment'
-                        value={textInputComment}
-                        onChange={(e) => setTextInputComment(e.target.value)} />
-                    <div className="add" onClick={isUpdating
-                        ? () => updateComment(
-                            commentId,
-                            textInputComment,
-                            setTextInputComment,
-                            setListComments,
-                            setIsUpdating,
-                            localStorage?.username,
-                            annotationId)
-                        : () => addComment(
-                            type,
-                            info,
-                            indexAnnotation,
-                            textInputComment,
-                            setTextInputComment,
-                            setListComments,
-                            localStorage?.username,
-                            annotationId)
-                    }
-                    >
-                        {isUpdating ? "Update" : "Add"}
+                {typeof (localStorage.token) !== 'undefined' &&
+                    <div className='areaInputComment'>
+                        <input
+                            type="text"
+                            placeholder={"Add comment"}
+                            name="AddComment"
+                            id="AddComment"
+                            className='comment'
+                            value={textInputComment}
+                            onChange={(e) => setTextInputComment(e.target.value)} />
+                        <div className="add" onClick={isUpdating
+                            ? () => updateComment(
+                                commentId,
+                                textInputComment,
+                                setTextInputComment,
+                                setListComments,
+                                setIsUpdating,
+                                localStorage?.username,
+                                annotationId)
+                            : () => addComment(
+                                type,
+                                info,
+                                indexAnnotation,
+                                textInputComment,
+                                setTextInputComment,
+                                setListComments,
+                                localStorage?.username,
+                                annotationId)
+                        }
+                        >
+                            {isUpdating ? "Update" : "Add"}
+                        </div>
                     </div>
-                </div>
+                }
                 <div className='areaDisplayComment'>
                     {listComments.map((item, i) => (
                         <div key={i} className='comment-wrapper'>

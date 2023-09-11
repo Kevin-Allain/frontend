@@ -904,3 +904,23 @@ function resetMp3() {
         </Col>
       </Row>
     </Tab.Container> */}
+
+    {/* Approach with ResultsComponent */}
+      {/* <div className='wrapperMusicSearch'>
+        {(listSearchRes.length <= 0) ? (<></>) :
+          <div className='outputMusicSearch'>
+            <p className='text-lg'>List of results for your search: <h4>{oldSearch}</h4></p>
+            <div className='annotationIndication'> Annotations <AnnotationSystem type={"search"} info={oldSearch} /> </div>
+            <div id='buttonListLogsNumbers' ref={buttonListLogsNumbersRef}>
+              <p className='titleRecMatched'>Recordings:</p>
+              <nav> {listLogNumbers.map((a, index) =>( <div className='buttonRefLogNumber' key={index + 'lognumberButton'} onClick={() => handleScrollToRecording(index)}> {a} </div> ))} </nav>
+            </div>
+            <div className='musicInterfaceContent'>
+              <ResultsComponent
+                listLogNumbers={listLogNumbers} lognumbersRefs={lognumbersRefs} scrollToButtonListLogsNumbers={scrollToButtonListLogsNumbers} findMatchRecording={findMatchRecording} infoMusicList={infoMusicList} listTracks={listTracks}
+                scrollToButtonListRecordingsFollowing={scrollToButtonListRecordingsFollowing} scrollToButtonListTracksFollowing={scrollToButtonListTracksFollowing} listSearchRes={listSearchRes}
+                formatAndPlay={formatAndPlay} getMusicInfo={getMusicInfo} setInfoMusicList={setInfoMusicList} testPerformances={false} />
+            </div>
+          </div>
+        }
+      </div> */}     
