@@ -18,7 +18,7 @@ const Comment = ({
     return (
         <div className='comment'>
             <em>{author}</em> at <em>{time.replaceAll('T', ' ').split('.')[0]}</em> <br />
-            {commentInput}
+            <div className='mx-[1rem]'>{commentInput}</div>
             {/* afterPrivateBeta NOT SECURED APPROACH: Needs to be based on the token of the user who made the content! */}
             {typeof (localStorage.token) !== 'undefined' && localStorage.username === author &&
                 <>

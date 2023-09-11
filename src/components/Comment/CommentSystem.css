@@ -9,12 +9,14 @@
 
 .comment{
   color: black;
-  background-color: white;
+  background-color: #ffffffb5;
   border: solid;
   border-width: thin;
   text-align: left;
   z-index: 1;
   position: relative;
+  padding-left: 2rem;
+  border-radius: 0.15rem;  
 }
   
 .areaDisplayComment{

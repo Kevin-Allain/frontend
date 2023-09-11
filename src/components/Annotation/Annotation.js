@@ -35,7 +35,8 @@ const Annotation = ({
 
   return (
     <div className='annotation'>
-      Annotation for <em>{type}</em> written by <em>{(author === null) ? '?' : author} - IndexAnnotation: {indexAnnotation}</em> - Privacy: <b>{privacy}</b> <em>{time}</em> Unique Id: {_id}
+      Annotation for <em>{type}</em> written by <em>{(author === null) ? '?' : author} </em> - Privacy: {privacy} <em>- {time.replaceAll('T', ' ').split('.')[0]}</em> 
+      {/* Unique Id: {_id} - IndexAnnotation: {indexAnnotation} */}
       {/* {(info === '') ? <></> : <><p>About info: {info}</p></>} */}
       <h4><div className='annotationText'>{annotationInput}</div></h4>
       {/* <AiOutlineStar className='icon' onClick={ () => console.log("star pressed") } /> */}
