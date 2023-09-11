@@ -87,6 +87,9 @@ const CommentSystem = ({
                     </div>
                 }
                 <div className='areaDisplayComment'>
+                    {listComments.length === 0 &&
+                        <p>No comment made for this annotation.</p>
+                    }
                     {listComments.map((item, i) => (
                         <div key={i} className='comment-wrapper'>
                             <div className="vertical-line" />

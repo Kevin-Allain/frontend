@@ -34,8 +34,8 @@ const MetadataAccordion = ({ title, type, info, content, findMatchRecording = nu
                                 : (<><div className='text-left'>No metadata about the recording</div><br /></>)
                     ) : <></>
                     }
-                    <AnnotationSystem type={"track"} info={info} />
-                    <EmbeddedWorkflowInteraction idCaller={content} typeCaller={"track"} />
+                    <AnnotationSystem type={type} info={info} />
+                    <EmbeddedWorkflowInteraction idCaller={content} typeCaller={type} />
                 </div>
             }
         </div>

@@ -20,11 +20,13 @@ import MIDItoNote from "./MIDItoNote.json"
 import Annotation from '../Annotation/Annotation';
 import AnnotationSystem from '../Annotation/AnnotationSystem';
 import { AiFillPlayCircle, AiFillPauseCircle, AiOutlineArrowRight, AiOutlineLoading } from 'react-icons/ai'
+import {BsFillInfoCircleFill} from 'react-icons/bs'
+import {ImCross} from 'react-icons/im'
 import {
   MdKeyboardDoubleArrowUp, MdOutlineKeyboardArrowRight, MdOutlineKeyboardArrowLeft, MdKeyboardDoubleArrowLeft, MdKeyboardDoubleArrowRight
 } from 'react-icons/md'
 import { ImLoop2 } from 'react-icons/im'
-import { BiDotsHorizontalRounded } from 'react-icons/bi'
+import { BiDotsHorizontalRounded, BiWrench } from 'react-icons/bi'
 import { BsInfoCircleFill } from 'react-icons/bs'
 import TrackRes from './TrackRes';
 import PianoRoll from '../VisComponents/PianoRoll';
@@ -73,13 +75,14 @@ const MusicInterface = () => {
   const [textSearch, setTextSearch] = useState('');
   const textSearchRef = useRef('');
   const [validPitchQuery, setValidPitchQuery] = useState(false);
-
   const [oldSearch, setOldSearch] = useState('');
 
   const [infoMusicList, setInfoMusicList] = useState([]);
   const [listTracks, setListTracks] = useState([]);
   const [listSearchRes, setListSearchRes] = useState([]);
   const [listLogNumbers, setListLogNumbers] = useState([]);
+
+  const [showExplanation, setShowExplanation] = useState(false);
 
   // References for scrolling
   const lognumbersRefs = useRef([]);
@@ -392,6 +395,39 @@ const MusicInterface = () => {
 
   return (
     <div className="musicInterface">
+      <BsFillInfoCircleFill className='icon infoMusicInterface w-[2rem] h-[2rem]' onClick={() => setShowExplanation(!showExplanation)} />
+      {showExplanation && (
+        <div className='explanation'>
+          <ImCross className='icon' onClick={() => setShowExplanation(!showExplanation)} />
+          <h1 className='title'>How to Use the Music Interface</h1>
+          <div className='detailsExplanation'>
+            <p>
+              The Music Interface is designed to search for samples that match the melodies you enter in our system.
+              To do so, simply click on the piano keys for the notes you wish and submit your search.
+            </p>
+            <p>
+              The results will be displayed in a structured format indicating where the matching samples were found.
+              The system will provide information about the sample and allow you to play it.
+            </p>
+            <p>
+              You can also read the annotations made by other users and their associated comments.
+            </p>
+            <p>
+              More functionalities are available if you register an account and log in. These functionalities include:
+            </p>
+            <ul className='functionality-list'>
+              <li>Writing annotations and comments.</li>
+              <li>
+                Creating workflows, which are structures similar to notebooks where you can save elements of interest
+                and note your thoughts. Workflows can be found in the workflow manager.
+              </li>
+            </ul>
+            <p className='development-info'>
+              More functionalities are in development. <BiWrench />
+            </p>
+          </div>
+        </div>
+      )}
       <Title firstLine="Music" secondLine="Interface" />
       {/* ==== Test diffeent presentation of results ==== */}
       {/* <MyTabbedInterface/> */}

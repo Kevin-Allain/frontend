@@ -75,7 +75,7 @@
 .workflowObject {
     color: silver;
     border: solid;
-    border-width: thin;
+    border-width: medium;
     padding-left: 0.15rem;
     padding-right: 0.15rem;
     padding-top: 0.5rem;
@@ -152,11 +152,7 @@
     grid-template-columns: 1fr auto;
 }
 
-.contentItem{
-    border: solid;
-    border-color: orange;
-    border-width: thin;    
-}
+/* .contentItem{ border: solid; border-color: orange; border-width: thin; } */
 
 .tableItemContentAndFirst,
 .tableItemContentBody {

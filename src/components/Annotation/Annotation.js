@@ -43,20 +43,21 @@ const Annotation = ({
       {/* afterPrivateBeta NOT SECURED APPROACH: Needs to be based on the token of the user who made the content! */}
       {typeof (localStorage.token) !== 'undefined' && localStorage.username === author &&
         <>
-          <BiEdit className='icon' onClick={updateMode} />
-          <AiFillDelete className='icon' onClick={deleteAnnotation} />
+          <BiEdit className='icon w-[2em] h-[2em]' onClick={updateMode} />
+          <AiFillDelete className='icon w-[2em] h-[2em]' onClick={deleteAnnotation} />
         </>
       }
       {/* TODO set a CommentSystem according to this annotation when clicking on the icon */}
-      {/* Probably a function passed such as getComments */}
-      <AiOutlineComment className='icon' onClick={handleToggleCommentSystem} />
-      {typeof (localStorage.token) !== 'undefined' &&
-        <EmbeddedWorkflowInteraction idCaller={_id} typeCaller={"annotation"} />
-      }
       {/* TODO fix the issue with the loading */}
+      <AiOutlineComment className='icon w-[2em] h-[2em]' onClick={handleToggleCommentSystem} />
       {isCommentSystemVisible && (
         <CommentSystem type={type} info={info} indexAnnotation={indexAnnotation} annotationId={_id} />
       )}
+      {/* Probably a function passed such as getComments */}
+      {typeof (localStorage.token) !== 'undefined' &&
+        <EmbeddedWorkflowInteraction idCaller={_id} typeCaller={"annotation"} />
+      }
+
     </div>
   );
 };

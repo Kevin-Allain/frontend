@@ -286,3 +286,49 @@ opacity: 1;
     color: orange;
     cursor: pointer;
 }
+
+.infoMusicInterface{
+    position: absolute;
+    margin-top: 2.5rem;
+    margin-left: 15rem;
+    color: white;
+    width: fit-content;
+    display: flex;
+}
+
+.explanation {
+
+    position: absolute;
+    top: 200px;
+    left: 300px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    padding: 10px;
+    border: 1px solid #ccc;
+    z-index: 999;
+    width: 800px;
+    height: -moz-fit-content;
+    height: 500px;
+    /* display: flex; */
+    background: rgba(0,0,0,0.85);
+    color: white;
+    text-align: left;
+    padding-left: 2rem;
+    padding-right: 2rem;
+}  
+
+.detailsExplanation {
+    line-height: 1.6; /* Improved line spacing for readability */
+    color: #bbb; /* Slightly darker text color */
+  }
+  
+  .functionality-list {
+    list-style-type: disc; /* Bulleted list style */
+    margin-left: 20px; /* Add left margin to the list items */
+  }
+  
+  .development-info {
+    font-style: italic; /* Italics for the development info */
+    margin-top: 20px; /* Add some space below the list */
+    text-align: center; /* Center the development info */
+  }
+  
