@@ -156,13 +156,19 @@ const MusicInterface = () => {
     setValidPitchQuery(PITCH_QUERY_REGEX.test(textSearch))
     console.log("useEffect textSearch, validPitchQuery: ", validPitchQuery,", textSearch: ",textSearch,", typeof textSearch", typeof textSearch,", length>0: ",(''+textSearch).length>0,", -?: ",(''+textSearch).indexOf('-')===-1);
     console.log("showNotesTranslate: ",showNotesTranslate,", notesTranslate: ",notesTranslate);
-    setNotesTranslate(  ((''+textSearch).indexOf('-')===-1)
-      ? (''+MIDItoNote[''+textSearch]).replaceAll('s','')
-      : (''+textSearch).split('-').map((a,i) => (i===(''+textSearch).split('-').length-1)? 
-        MIDItoNote[a].replaceAll('s','')
-        : (MIDItoNote[a]+'-').replaceAll('s','')
+    let strTextSearch = ''+textSearch;
+    console.log("strTextSearch: ",strTextSearch);
+    let curTxtSearch = (strTextSearch[strTextSearch.length-1]==='-')?strTextSearch.substring(0,strTextSearch.length-1):strTextSearch;
+    if ( curTxtSearch.indexOf('-')===-1){
+      setNotesTranslate(curTxtSearch);  
+    } else {
+      setNotesTranslate(('' + curTxtSearch).split('-').map((a, i) => (i === ('' + curTxtSearch).split('-').length - 1) ?
+        (Number(a) < 21) ? '' :
+          MIDItoNote[a].replaceAll('s', '')
+        : (MIDItoNote[a] + '-').replaceAll('s', '')
       ));
-    setShowNotesTranslate((''+textSearch).length>0);
+    }
+    setShowNotesTranslate(strTextSearch.length>0);
   }, [textSearch, validPitchQuery])
 
   useEffect(() => {
