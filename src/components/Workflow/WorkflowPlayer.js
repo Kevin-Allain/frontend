@@ -11,6 +11,22 @@ const sampler = new Tone.Sampler({
     baseUrl: "https://tonejs.github.io/audio/salamander/",
 }).toDestination();
 
+const handlePlayNotes = (notes,durations,times) => {
+  console.log("handlePlayNotes");
+  const now = Tone.now();
+  console.log("handlePlayNotes notes: ", notes,", (typeof notes): ",(typeof notes) , ", durations: ", durations,", times: ",times);
+  if (typeof notes === 'undefined') { return; }
+  let arrNotes =  (typeof notes)==='object'? notes : notes.split('-');
+  let arrDur = (typeof durations)==='object'? durations : durations.split('-');
+  let arrTimes = (typeof times)==='object'? times : times.split('-').map(a => Number(a));
+  const firstTime = arrTimes[0];
+  const adjustedTimes = arrTimes.map(a => now+a-firstTime);
+  for (let i=0; i < arrNotes.length; i++) {
+      sampler.triggerAttackRelease([MIDItoNote[arrNotes[i]]], arrDur[i], adjustedTimes[i]); //   synth.current.triggerAttackRelease(note, "8n", now + 0.25);
+  }
+};
+
+
 const WorkflowPlayer = (props) => {
     const {notes, durations, occurences} = props;
     console.log("WorkflowPlayer props: ",props);
@@ -52,9 +68,8 @@ const WorkflowPlayer = (props) => {
 
     return (
         <FiPlayCircle className='icon buttonPlay'
-            onClick={() => formatAndPlay(
-                {arrNotes:notes, arrDurations:durations, arrTime:occurences})
-            } 
+            // onClick={() => formatAndPlay( {arrNotes:notes, arrDurations:durations, arrTime:occurences}) }
+            onClick={()=> handlePlayNotes(notes,durations,occurences)} 
         />
     )
 }

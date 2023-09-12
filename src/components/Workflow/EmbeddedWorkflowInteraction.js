@@ -115,7 +115,6 @@ const EmbeddedWorkflowInteraction = ({idCaller, typeCaller, indexRange=0}) => {
             Workflow Interface
             <BsThreeDotsVertical
               className="icon threedotsEmbedded"
-              
             />
           </div>
         }
