@@ -37,6 +37,7 @@ export default function Login({ setToken }) {
 
     const handleSubmit = async e => {
         e.preventDefault();
+        console.log("---- handleSubmit. username: ",username,", password: ",password);
         try {
             const response = await
                 axios.post(`${baseUrl}/${REGISTER_URL}`,

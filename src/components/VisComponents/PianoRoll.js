@@ -12,7 +12,7 @@ const PianoRoll = ({ notes, occurrences, durations, width, height }) => {
     if (typeof notes === 'string') { notes = notes.split('-').map(a => Number(a)) };
     if (typeof occurrences === 'string') { occurrences = occurrences.split('-').map(a => Number(a)) };
     if (typeof durations === 'string') { durations = durations.split('-').map(a => Number(a)) };
-    console.log("Piano Roll: ", { notes, occurrences, durations, width, height }, typeof (notes), typeof occurrences, typeof durations, typeof width, typeof height);
+    // console.log("Piano Roll: ", { notes, occurrences, durations, width, height }, typeof (notes), typeof occurrences, typeof durations, typeof width, typeof height);
 
     const svg = d3.select(svgRef.current);
     // svg.selectAll("*").remove(); // Clear the SVG by removing all elements
@@ -38,9 +38,8 @@ const PianoRoll = ({ notes, occurrences, durations, width, height }) => {
       .range([height - margin.bottom, margin.top]);
 
     // Generate an array of all integer occurrences
-    const occurrenceArray = Array.from({ length: maxTime - minOccurrence + 1 }, (_, i) => i + minOccurrence);
-
-    console.log("Variables: ", { minTime, maxTime, minNote, maxNote, margin });
+    // const occurrenceArray = Array.from({ length: maxTime - minOccurrence + 1 }, (_, i) => i + minOccurrence);
+    // console.log("Variables: ", { minTime, maxTime, minNote, maxNote, margin });
 
     svg
       .selectAll("rect.bar")
@@ -107,8 +106,6 @@ const PianoRoll = ({ notes, occurrences, durations, width, height }) => {
       .attr("font-size", `${1.5 + Math.log(height * 4)}px`) // size of font is ok at 8px if height is 150px.
       ;
 
-
-
     // Append text for the horizontal axis label "time" after the end of the horizontal axis
     svg
       .append("text")
@@ -126,9 +123,6 @@ const PianoRoll = ({ notes, occurrences, durations, width, height }) => {
       .attr("text-anchor", "start") // Set text-anchor to "start" to align the text to the left
       .attr("font-size", "12px") // Set a smaller font size
       .text("Notes");
-
-
-
 
   }, [notes, occurrences, durations, width, height, barHeight]);
 

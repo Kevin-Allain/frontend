@@ -3,6 +3,7 @@ import AuthContext from "../../context/AuthProvider";
 import Register from "../Register/Register";
 import Login from "../Login/Login";
 
+import {ImCross} from 'react-icons/im'
 import logo from "../../assets/logo.png";
 // type Props = {
 //   onLogin: () => void;
@@ -49,6 +50,13 @@ function Navbar(props
         >
           Investigators
         </a>
+        <a
+          className=" cursor-pointer hover:text-accentLight"
+          onClick={props.onPartner}
+        >
+          Partners
+        </a>
+
       </div>
       {/* Hidden as login is set somewhere else... */}
       {/* <a
@@ -63,7 +71,8 @@ function Navbar(props
             className='buttonShowDiv'
             onClick={() => setShowDiv(!showDiv)}
           >
-            {showDiv ? 'Hide Login / Register' : 'Login / Register'}
+            {showDiv ? (<></>) : 'Login / Register'}
+            {/* <ImCross className='icon'/> */}
         </div>
         : <></>
       }
@@ -74,6 +83,10 @@ function Navbar(props
               auth !== null || localStorage.token ? "offscreen" : "auth"
             }
           >
+            <><ImCross 
+              className='icon left-2 top-4 relative w-6 h-6' 
+              onClick={() => setShowDiv(!showDiv)}
+              /></>
             <Register />
             <hr />
             <Login />

@@ -103,6 +103,7 @@ const AnnotationSystem = ({ type, info, index=0 }) => {
           }
           <div className='outerAreaDisplayAnnotation'>
             <div className='areaDisplayAnnotation'>
+              {listAnnotations.length===0 && <p>No annotation made for this {type}.</p>}
               {listAnnotations.map((item, i) => (
                   <Annotation
                     key={item._id}
