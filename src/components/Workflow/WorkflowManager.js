@@ -273,7 +273,7 @@ const WorkflowManager = () => {
                               ) : ('')}
                           </div>
                         )
-                        : (<div className="contentWorkflow">No additional content in database</div>)
+                        : (<div className="contentWorkflow">No additional content in database for the {item.objectType} </div>)
                         }
                       </div>
                     ) : (
