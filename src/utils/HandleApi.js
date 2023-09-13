@@ -2,9 +2,9 @@ import axios from 'axios'
 import { setIsLoading } from '../App';
 
 
-// const baseUrl = "http://localhost:5000" // can be used for development
+const baseUrl = "http://localhost:5000" // can be used for development
 // const baseUrl = "https://fullstack-proto-jazzdap-backend.onrender.com"
-const baseUrl= "https://jazzdap-backend.onrender.com"
+// const baseUrl= "https://jazzdap-backend.onrender.com"
 
 const getAllJazzDap = (setJazzDap) => {
   console.log("---- HandleApi / getAllJazzDap", new Date());
@@ -158,26 +158,30 @@ const getTracksMetadata = (lognumbers, infoMusicList, setInfoMusicList) => {
   axios
     .get(`${baseUrl}/getTracksMetadata`, {
       params: {
-        lognumbers: lognumbers,
+        // lognumbers: lognumbers.map(prefix => `${prefix}*`), /** Probably the wrong place to make the regexp query... */
+        lognumbers:lognumbers,
       }
     })
     .then((d) => {
       console.log("#### Then of getTracksMetadata #### d: ", d);
 
       // TODO low-priority change names of columns in the files, then updated in databased (automate with Python)
-      let transf_info_metadata = [];
-      for (let i in d.data) {
-        transf_info_metadata.push({
-          lognumber: d.data[i].lognumber,
-          contents: d.data[i].Contents,
-          configuration: d.data[i].Configuration,
-          tape_stock: d.data[i]["Tape stock"],
-          recording_location: d.data[i]["Recording location"],
-          idDatabase: d.data[i]["_id"] // new addition. Get the _id stored in the database
-        })
-      }
-      console.log("transf_info_metadata: ", transf_info_metadata);
-      setInfoMusicList(transf_info_metadata);
+      /** Do we want to keep this approach of changing transf_info_metadata? */
+      // let transf_info_metadata = [];
+      // for (let i in d.data) {
+      //   transf_info_metadata.push({
+      //     lognumber: d.data[i].lognumber,
+      //     contents: d.data[i].Contents,
+      //     configuration: d.data[i].Configuration,
+      //     tape_stock: d.data[i]["Tape stock"],
+      //     recording_location: d.data[i]["Recording location"],
+      //     idDatabase: d.data[i]["_id"] // new addition. Get the _id stored in the database
+      //   })
+      // }
+      // console.log("transf_info_metadata: ", transf_info_metadata);
+      // setInfoMusicList(transf_info_metadata);
+      /** Attempt with direct pass */
+      setInfoMusicList(d.data);
       // setIsLoading(false);
     })
 }

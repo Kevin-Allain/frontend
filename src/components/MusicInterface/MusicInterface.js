@@ -193,8 +193,16 @@ const MusicInterface = () => {
   }, [listTracks]);
 
   const findMatchRecording = (lln) => {
-    const matchIndex = infoMusicList.findIndex(item => item.lognumber === lln);
-    return matchIndex;
+    // Not a great approach... but should work okay.
+    if ( lln.includes("SJA") ){
+      const matchIndex = infoMusicList.findIndex(
+        item => item.lognumber.substring(0,item.lognumber.lastIndexOf('_')) === lln
+      );
+      return matchIndex;
+    } else {
+      const matchIndex = infoMusicList.findIndex(item => item.lognumber === lln);
+      return matchIndex;
+    }
   }
   
   // ---- Functions handle
