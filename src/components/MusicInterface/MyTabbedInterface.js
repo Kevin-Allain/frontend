@@ -43,13 +43,17 @@ const MyTabbedInterface = ({
     setActiveTrack(track);
   };
 
+  console.log("MyTabbedInterface - listLogNumbers: ",listLogNumbers,", infoMusicList: ",infoMusicList," - infoMusicList[2]: ",infoMusicList[2],", infoMusicList['2']: ",infoMusicList['2']);
+
+
+
   return (
     <div className="flex h-[40rem] bg-gray-100">
       {/* Sidebar with recording tabs */}
       <div className="w-1/8 p-4 overflow-y-auto custom-scrollbar">
           <h2 className="text-lg font-semibold mb-4">Recordings</h2>
           <ul>
-            {listLogNumbers && listLogNumbers.map((recording) => (
+            {listLogNumbers && listLogNumbers.sort((a,b)=> a-b ).map((recording) => (
               <li
                 key={recording}
                 className={`text-sm cursor-pointer mb-2 ${
@@ -57,7 +61,15 @@ const MyTabbedInterface = ({
                 }`}
                 onClick={() => handleRecordingClick(recording)}
               >
-                {(recording.length>30)? recording.substring(0,30)+'...':recording}
+                {/* {(recording.length>30)? recording.substring(0,30)+'...':recording} {findMatchRecording(recording)}  */}
+                {recording.includes("SJA_") ?
+                  infoMusicList[findMatchRecording(recording)] ?
+                    (infoMusicList[findMatchRecording(recording)]['(E) Event Name'] 
+                      + ((infoMusicList[findMatchRecording(recording)]['Event Month'])?(' M'+infoMusicList[findMatchRecording(recording)]['Event Month']):'')
+                      + ' ' + infoMusicList[findMatchRecording(recording)]['Event Year'])
+                    : ('No match somehow for number: ' + findMatchRecording(recording))
+                : recording
+                }
               </li>
             ))}
           </ul>
@@ -75,7 +87,10 @@ const MyTabbedInterface = ({
                 key={track}
                 className={`text-sm cursor-pointer mb-2 ${activeTrack === track ? "text-orange-500" : ""}`}
                 onClick={() => handleTrackClick(track)}>
-                {track.split('-')[1]}
+                {activeRecording.includes("SJA_") ?
+                  infoMusicList[findMatchRecording(activeRecording)] ?
+                    (infoMusicList[findMatchRecording(activeRecording)]['Track Title']+' '+ infoMusicList[findMatchRecording(activeRecording)]['Track #']) : track.split('-')[1]
+                  : track.split('-')[1]}
               </li>
               : <></>
           })
