@@ -43,7 +43,9 @@ const MyTabbedInterface = ({
     setActiveTrack(track);
   };
 
-  console.log("MyTabbedInterface - listLogNumbers: ",listLogNumbers,", infoMusicList: ",infoMusicList," - infoMusicList[2]: ",infoMusicList[2],", infoMusicList['2']: ",infoMusicList['2']);
+  console.log("MyTabbedInterface - listLogNumbers: ",listLogNumbers,", infoMusicList: ",infoMusicList
+  ," - infoMusicList[2]: ",infoMusicList[2],", infoMusicList['2']: ",infoMusicList['2']
+  ,", listSearchRes: ",listSearchRes);
 
 
 
@@ -105,24 +107,6 @@ const MyTabbedInterface = ({
             <h2 className="text-lg font-semibold mb-4">
               {activeRecording} - {activeTrack.split('-')[1]}
             </h2>
-            {/* <ul> {trackData[activeTrack].map((sample) => ( <li key={sample} className="mb-2"> {sample} </li> ))} </ul> */}
-
-            {/* {(!visibleTracks[activeTrack]) &&  <AiOutlineLoading className="spin"/> } */}
-            {/* TODO beforePrivateBeta Adapt content of TrackRes...  */}
-            {/* {visibleTracks[activeTrack] && ( */}{/* )} */}
-
-            {/* Zone for recordings. */}
-            {/* <div className='metadataRecording border p-[0.25rem]'>
-              <div>Recording content and interaction</div> {infoMusicList.length === 0 ? (<AiOutlineLoading className='spin' size={'20px'} />) :
-                findMatchRecording(activeRecording) !== -1 ? ( <div className='detailResultMeta'> <u>Info about recording:</u> {Object.entries(infoMusicList[findMatchRecording(activeRecording)]).map(([key, value]) => ( <p key={key}> {key}: {value} </p> ))} </div> )
-                  : (<><div className='text-left'>No metadata about the recording</div><br /></>) }
-              <AnnotationSystem type={"recording"} info={activeRecording} /> <EmbeddedWorkflowInteraction idCaller={listSearchRes[0].arrIdNotes[0]} typeCaller={"recording"} />
-            </div> */}
-
-            {/* Zone for tracks... or directly samples? */}
-            {/* <div className='border p-[0.25rem]'>
-              <div>Track content and interaction</div> <div className='iconTracksInteractions'> <AnnotationSystem type={"track"} info={activeTrack} /> <EmbeddedWorkflowInteraction idCaller={listSearchRes[0].arrIdNotes[0]} typeCaller={"track"} /> </div>
-            </div> */}
 
             {/* Accordion for Recording and Track */}
             <div className="border rounded border-2 mb-[0.5rem]">
@@ -136,7 +120,13 @@ const MyTabbedInterface = ({
               />
             </div>
             <div className="border rounded border-2 mb-[0.5rem]">
-              <MetadataAccordion title="Track Interaction" type={"track"} content={listSearchRes[0].arrIdNotes[0]} info={activeTrack} findMatchRecording={findMatchRecording} />
+              <MetadataAccordion 
+                title="Track Interaction" 
+                type={"track"} 
+                content={listSearchRes[0].arrIdNotes[0]} 
+                info={activeTrack} 
+                findMatchRecording={findMatchRecording} 
+              />
             </div>
 
 
