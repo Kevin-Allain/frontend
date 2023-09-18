@@ -140,10 +140,11 @@ useEffect(() => {
             newStruct[newStruct.findIndex(a => a.recordingName === activeRecording)].content.map((c, i) =>
               typeof c["(E) Event Name"] === "undefined" ? (
                 <li
+                // TODO CRITICAL: WRONG SELECTION OF TRACK!!!
                   key={c + "" + i}
-                  className={`text-sm cursor-pointer mb-2 ${activeTrack === c.lognumber + "" + i ? "text-orange-500" : ""
+                  className={`text-sm cursor-pointer mb-2 ${activeTrack === c.lognumber + "-T" + i ? "text-orange-500" : ""
                     }`}
-                  onClick={() => handleTrackClick(c.lognumber + "" + i)}
+                  onClick={() => handleTrackClick(c.lognumber + "-T" + i)}
                 >
                   Unnamed Track, for {activeRecording}
                 </li>
