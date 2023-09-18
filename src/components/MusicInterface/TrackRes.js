@@ -22,6 +22,15 @@ const TrackRes = ({
     setInfoMusicList,
     testPerformances = false
 }) => {
+    console.log("TrackRes - ",{
+        text,
+        infoMusicList,
+        listSearchRes,
+        formatAndPlay,
+        getMusicInfo,
+        setInfoMusicList,
+        testPerformances    
+    })
     return (
         <div className="trackres" key={text}>
             {/* <div className="texttrackres"> <h3>Track: {text} </h3> </div> */}
