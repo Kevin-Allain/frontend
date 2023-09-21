@@ -257,27 +257,29 @@ const getMatchLevenshteinDistance = (
         const arrayStrNotes = stringNotes.split('-');
         const arrayNotesInput = arrayStrNotes.map(a => parseInt(a));
         const numNotesInput = arrayNotesInput.length;
+        // const allRecording = [...new Set(d.data.map(a => (a.recording.includes("SJA_"))?a.lognumber :a.recording))];
         const allRecording = [...new Set(d.data.map(a => a.recording))];
+        const allLogNumber = [...new Set(d.data.map(a => a.lognumber))];
         console.log("numNotesInput: ", numNotesInput, ", allRecording: ", allRecording);
+        console.log("allLogNumber: ",allLogNumber);
 
-        console.log("TIME BEFORE METADATA QUERY: ", new Date());
         // TODO we need to get the _id of the tracks (called logNumber)... this is garbage... it wil take even longer...!
-        axios.get(`${baseUrl}/getTracksMetadata`, {
-          params: { lognumbers: allRecording, }
-        })
-          .then((d) => {
-            console.log("#Levenshtein getTracksMetadata #### d: ", d);
-          });
+        // axios.get(`${baseUrl}/getTracksMetadata`, {
+        //   params: { lognumbers: allRecording, }
+        // })
+        //   .then((d) => {
+        //     console.log("#Levenshtein getTracksMetadata #### d: ", d);
+        //   });
 
         console.log("TIME AFTER METADATA QUERY: ", new Date());
 
 
-        let notesPerRecording = {};
+        let notesPerTrack = {};
         for (let i in allRecording) {
-          notesPerRecording[allRecording[i]] =
+          notesPerTrack[allRecording[i]] =
             d.data.filter(a => a.recording === allRecording[i])
         }
-        console.log("notesPerRecording :", notesPerRecording);
+        console.log("notesPerTrack :", notesPerTrack);
         // Tricky to split the data into sections... might have to do it from previous step actually!
 
         // split according to recording
@@ -342,9 +344,10 @@ const getMatchLevenshteinDistance = (
         // console.log("resArray: ", resArray);
         console.log("resAggreg: ", resAggreg);
 
-        const allLogNumber = [...new Set(resAggreg.map(a => a.recording.split('-')[0]))]
-        console.log("allLogNumber: ", allLogNumber);
+        // const allLogNumber = [...new Set(resAggreg.map(a => a.recording.split('-')[0]))]
+        // console.log("allLogNumber: ", allLogNumber);
         const sortedLogNumbers = allLogNumber.sort();
+        console.log("sortedLogNumbers: ",sortedLogNumbers);
         const sortedTracks = [...new Set(resAggreg.map(obj => obj.recording))].sort()
         setListLogNumbers(sortedLogNumbers);
         setListSearchRes(resAggreg);
