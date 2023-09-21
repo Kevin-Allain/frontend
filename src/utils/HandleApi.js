@@ -261,7 +261,7 @@ const getMatchLevenshteinDistance = (
         const allRecording = [...new Set(d.data.map(a => a.recording))];
         const allLogNumber = [...new Set(d.data.map(a => a.lognumber))];
         console.log("numNotesInput: ", numNotesInput, ", allRecording: ", allRecording);
-        console.log("allLogNumber: ",allLogNumber);
+        console.log("~~#~~ allLogNumber: ",allLogNumber);
 
         // TODO we need to get the _id of the tracks (called logNumber)... this is garbage... it wil take even longer...!
         // axios.get(`${baseUrl}/getTracksMetadata`, {
