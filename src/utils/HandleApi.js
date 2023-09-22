@@ -66,14 +66,14 @@ const deleteJazzDap = (jazzDapId, setJazzDap) => {
 }
 
 
-const getMusicMIDI = (recording = "BGR0082-T1", user = null, transformFunc = null, playMusicFunc = null) => {
-  console.log("-- handleAPI. getMusicMIDI. recording: ", recording, ", user: ", user, ", transformFunc: ", transformFunc, ", playMusicFunc: ", playMusicFunc);
+const getMusicMIDI = (track = "BGR0082-T1", user = null, transformFunc = null, playMusicFunc = null) => {
+  console.log("-- handleAPI. getMusicMIDI. track: ", track, ", user: ", user, ", transformFunc: ", transformFunc, ", playMusicFunc: ", playMusicFunc);
   // setIsLoading(true);
 
   axios
     .get(`${baseUrl}/getMusicMIDI`, {
       params: {
-        recording: recording,
+        track: track,
         user: user,
       },
     })
@@ -108,14 +108,14 @@ const getMusicMIDI = (recording = "BGR0082-T1", user = null, transformFunc = nul
 };
 
 
-const getSampleMIDI = (recording = "BGR0082-T1", firstNoteIndex = 0, lastNodeIndex = null, user = null, transformFunc = null, playMusicFunc = null) => {
-  console.log("-- handleAPI. getMusicMIDI. recording: ", recording, ", user: ", user, ", transformFunc: ", transformFunc, ", playMusicFunc: ", playMusicFunc);
+const getSampleMIDI = (track = "BGR0082-T1", firstNoteIndex = 0, lastNodeIndex = null, user = null, transformFunc = null, playMusicFunc = null) => {
+  console.log("-- handleAPI. getMusicMIDI. track: ", track, ", user: ", user, ", transformFunc: ", transformFunc, ", playMusicFunc: ", playMusicFunc);
   // setIsLoading(true);
 
   axios
     .get(`${baseUrl}/getSampleMIDI`, {
       params: {
-        recording: recording,
+        track: track,
         firstNoteIndex: firstNoteIndex,
         lastNodeIndex: lastNodeIndex,
         user: user,
@@ -164,25 +164,7 @@ const getTracksMetadata = (lognumbers, infoMusicList, setInfoMusicList) => {
     })
     .then((d) => {
       console.log("#### Then of getTracksMetadata #### d: ", d);
-
-      // TODO low-priority change names of columns in the files, then updated in databased (automate with Python)
-      /** Do we want to keep this approach of changing transf_info_metadata? */
-      // let transf_info_metadata = [];
-      // for (let i in d.data) {
-      //   transf_info_metadata.push({
-      //     lognumber: d.data[i].lognumber,
-      //     contents: d.data[i].Contents,
-      //     configuration: d.data[i].Configuration,
-      //     tape_stock: d.data[i]["Tape stock"],
-      //     recording_location: d.data[i]["Recording location"],
-      //     idDatabase: d.data[i]["_id"] // new addition. Get the _id stored in the database
-      //   })
-      // }
-      // console.log("transf_info_metadata: ", transf_info_metadata);
-      // setInfoMusicList(transf_info_metadata);
-      /** Attempt with direct pass */
       setInfoMusicList(d.data);
-      // setIsLoading(false);
     })
 }
 
@@ -209,7 +191,7 @@ const getTrackMetadata = (lognumber, infoMusicList, setInfoMusicList) => {
           lognumber: d.data[0].lognumber,
           contents: d.data[0].Contents,
           tape_stock: d.data[0]["Tape stock"],
-          recording_location: d.data[0]["Recording location"],
+          recording_location: d.data[0]["Recording location"], // don't remember about this attribute
           idDatabase: d.data[0]["_id"] // new addition. Get the _id stored in the database
         }
         ])
@@ -222,14 +204,11 @@ const getMatchLevenshteinDistance = (
   stringNotes = "",
   percMatch = 1,
   user = null,
-  transformFunc = null,
-  playMusicFunc = null,
   levenshteinDistanceFunc = null,
   setListSearchRes = null,
   setListLogNumbers = null,
   setListTracks = null,
   // Additions for loading of metadata after the loading of tracks
-  getTracksMetadata=null,
   infoMusicList=null, 
   setInfoMusicList=null
 ) => {
@@ -238,7 +217,9 @@ const getMatchLevenshteinDistance = (
   stringNotes += '';
 
   axios
-    .get(`${baseUrl}/getMatchLevenshteinDistance2`, { params: { stringNotes: stringNotes, percMatch: percMatch, user: user, }, })
+    .get(`${baseUrl}/getMatchLevenshteinDistance2`, { 
+      params: 
+      { stringNotes: stringNotes, percMatch: percMatch, user: user, }, })
     .then((d) => {
       console.log("#### Then of getMatchLevenshteinDistance ####");
       console.log("d", d);
@@ -257,102 +238,90 @@ const getMatchLevenshteinDistance = (
         const arrayStrNotes = stringNotes.split('-');
         const arrayNotesInput = arrayStrNotes.map(a => parseInt(a));
         const numNotesInput = arrayNotesInput.length;
-        // const allRecording = [...new Set(d.data.map(a => (a.recording.includes("SJA_"))?a.lognumber :a.recording))];
-        const allRecording = [...new Set(d.data.map(a => a.recording))];
-        const allLogNumber = [...new Set(d.data.map(a => a.lognumber))];
-        console.log("numNotesInput: ", numNotesInput, ", allRecording: ", allRecording);
-        console.log("~~#~~ allLogNumber: ",allLogNumber);
 
-        // TODO we need to get the _id of the tracks (called logNumber)... this is garbage... it wil take even longer...!
-        // axios.get(`${baseUrl}/getTracksMetadata`, {
-        //   params: { lognumbers: allRecording, }
-        // })
-        //   .then((d) => {
-        //     console.log("#Levenshtein getTracksMetadata #### d: ", d);
-        //   });
+        const allTrack = [...new Set(d.data.map(a => a.track))];
+        const allLogNumber = [...new Set(d.data.map(a => a.lognumber))];
+        console.log("numNotesInput: ", numNotesInput, ", allTrack: ", allTrack);
+        console.log("~~#~~ allLogNumber: ",allLogNumber);
 
         console.log("TIME AFTER METADATA QUERY: ", new Date());
 
 
         let notesPerTrack = {};
-        for (let i in allRecording) {
-          notesPerTrack[allRecording[i]] =
-            d.data.filter(a => a.recording === allRecording[i])
+        for (let i in allTrack) {
+          notesPerTrack[allTrack[i]] =
+            d.data.filter(a => a.track === allTrack[i])
         }
         console.log("notesPerTrack :", notesPerTrack);
         // Tricky to split the data into sections... might have to do it from previous step actually!
 
-        // split according to recording
-        let dataSplitByRecording = {};
-        for (let i in allRecording) {
-          let filteredByRecording = d.data.filter(a => a.recording === allRecording[i])
-          dataSplitByRecording[allRecording[i]] = {}
-          dataSplitByRecording[allRecording[i]].data = filteredByRecording;
+        // split according to track
+        let dataSplitByTrack = {};
+        for (let i in allTrack) {
+          let filteredByTrack = d.data.filter(a => a.track === allTrack[i])
+          dataSplitByTrack[allTrack[i]] = {}
+          dataSplitByTrack[allTrack[i]].data = filteredByTrack;
         }
 
-        console.log("dataSplitByRecording: ", dataSplitByRecording);
+        console.log("dataSplitByTrack: ", dataSplitByTrack);
 
-        for (let i in dataSplitByRecording) {
+        for (let i in dataSplitByTrack) {
           // sort notes
-          dataSplitByRecording[i].data =
-            dataSplitByRecording[i].data.sort((a, b) => a.recording - b.recording || a.m_id - b.m_id);
-          dataSplitByRecording[i].sequences = [];
-          // let startSeQuences = dataSplitByRecording[i].data.filter(a => a.startSequence);
-          for (let ds in dataSplitByRecording[i].data) {
-            if (dataSplitByRecording[i].data[ds].startSequence) {
+          dataSplitByTrack[i].data =
+            dataSplitByTrack[i].data.sort((a, b) => a.track - b.track || a.m_id - b.m_id);
+          dataSplitByTrack[i].sequences = [];
+          // let startSeQuences = dataSplitByTrack[i].data.filter(a => a.startSequence);
+          for (let ds in dataSplitByTrack[i].data) {
+            if (dataSplitByTrack[i].data[ds].startSequence) {
               let slice =
-                dataSplitByRecording[i].data.slice(
+                dataSplitByTrack[i].data.slice(
                   parseInt(ds), (parseInt(ds) + parseInt(numNotesInput))
                 );
-              dataSplitByRecording[i].sequences.push(slice);
+              dataSplitByTrack[i].sequences.push(slice);
             }
           }
         }
 
-        // ugly... but we messed up structure here...
-        // let resArray = []; 
-        let resAggreg = [];
-        for (let i in dataSplitByRecording) {
-          dataSplitByRecording[i].distances = []
-          dataSplitByRecording[i].slicesDist = [];
-          for (let j in dataSplitByRecording[i].sequences) {
-            let curArrNotes = dataSplitByRecording[i].sequences[j].map(a => a.pitch)
-            let curArrTime = dataSplitByRecording[i].sequences[j].map(a => a.onset)
-            let curArrDurations = dataSplitByRecording[i].sequences[j].map(a => a.duration)
+        let notesAggregByTrack = [];
+        for (let i in dataSplitByTrack) {
+          dataSplitByTrack[i].distances = []
+          dataSplitByTrack[i].slicesDist = [];
+          for (let j in dataSplitByTrack[i].sequences) {
+            let curArrNotes = dataSplitByTrack[i].sequences[j].map(a => a.pitch)
+            let curArrTime = dataSplitByTrack[i].sequences[j].map(a => a.onset)
+            let curArrDurations = dataSplitByTrack[i].sequences[j].map(a => a.duration)
 
-            let currArrIdNotes = dataSplitByRecording[i].sequences[j].map(a => a._id)
+            let currArrIdNotes = dataSplitByTrack[i].sequences[j].map(a => a._id)
 
             let distCalc = levenshteinDistanceFunc(arrayNotesInput, curArrNotes);
-            dataSplitByRecording[i].distances.push(distCalc);
-            dataSplitByRecording[i].slicesDist.push({
+            dataSplitByTrack[i].distances.push(distCalc);
+            dataSplitByTrack[i].slicesDist.push({
               arrNotes: curArrNotes,
               arrIdNotes: currArrIdNotes,
               arrTime: curArrTime.map((num) => Number(num.toFixed(2))),
               arrDurations: curArrDurations.map((num) => Number(num.toFixed(2))),
               distCalc: distCalc,
-              recording: i
+              track: i
             });
           }
-          resAggreg = resAggreg.concat(dataSplitByRecording[i].slicesDist);
+          notesAggregByTrack = notesAggregByTrack.concat(dataSplitByTrack[i].slicesDist);
         }
 
-        resAggreg.sort((a, b) => a.distCalc - b.distCalc);
-        console.log("TIME AFTER ORGANIZING RES, CALCULATING DISTANCE, AND SORTING: ", new Date());
+        notesAggregByTrack.sort((a, b) => a.distCalc - b.distCalc);
 
-        console.log("dataSplitByRecording: ", dataSplitByRecording);
+        console.log("dataSplitByTrack: ", dataSplitByTrack);
         // Will be better to later allow filter
-        // console.log("resArray: ", resArray);
-        console.log("resAggreg: ", resAggreg);
+        console.log("notesAggregByTrack: ", notesAggregByTrack);
 
-        // const allLogNumber = [...new Set(resAggreg.map(a => a.recording.split('-')[0]))]
         // console.log("allLogNumber: ", allLogNumber);
         const sortedLogNumbers = allLogNumber.sort();
         console.log("sortedLogNumbers: ",sortedLogNumbers);
-        const sortedTracks = [...new Set(resAggreg.map(obj => obj.recording))].sort()
+        const sortedTracks = [...new Set(notesAggregByTrack.map(obj => obj.track))].sort();
+        console.log("sortedTracks: ",sortedTracks);
         setListLogNumbers(sortedLogNumbers);
-        setListSearchRes(resAggreg);
+        setListSearchRes(notesAggregByTrack);
         setListTracks(sortedTracks);
-
+        console.log("Setvariables sortedLogNumbers, notesAggregByTrack and sortedTracks");
         // Calls for loading of metadata
         getTracksMetadata(
           sortedLogNumbers, 
@@ -364,7 +333,10 @@ const getMatchLevenshteinDistance = (
       setIsLoading(false);
       return d;
     })
-    .catch((err) => console.log(err));
+    .catch((err) => {
+      alert("An error occured. Reload the page. Please contact us if the error occurs often.")
+      console.log(err);
+    });
 };
 
 /** Annotations */

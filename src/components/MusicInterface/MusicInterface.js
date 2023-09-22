@@ -5,7 +5,6 @@ import {
   getSampleMIDI,
   getMatchLevenshteinDistance,
   getTrackMetadata,
-  getTracksMetadata,
   addAnnotation,
   getAnnotations,
   deleteAnnotation,
@@ -77,7 +76,7 @@ const MusicInterface = () => {
   const [validPitchQuery, setValidPitchQuery] = useState(false);
   const [oldSearch, setOldSearch] = useState('');
 
-  const [infoMusicList, setInfoMusicList] = useState([]);
+  const [infoRecordingList, setInfoMusicList] = useState([]);
   const [listTracks, setListTracks] = useState([]);
   const [listSearchRes, setListSearchRes] = useState([]);
   const [listLogNumbers, setListLogNumbers] = useState([]);
@@ -192,36 +191,26 @@ const MusicInterface = () => {
       );
   }, [listTracks]);
 
-  const findMatchRecording = (lln) => {
+  const findMatchRecording = (recording) => {
+    console.log("~~~~ findMatchRecording | recording: ",recording,", infoRecordingList: ",infoRecordingList);
     // Not a great approach... but should work okay.
-    if ( lln.includes("SJA") ){
-      const matchIndex = infoMusicList.findIndex(
-        item => item.lognumber.substring(0,item.lognumber.lastIndexOf('_')) === lln
+    if ( recording.includes("SJA") ){
+      const matchIndex = infoRecordingList.findIndex(
+        item => item.lognumber.substring(0,item.lognumber.lastIndexOf('_')) === recording
       );
       return matchIndex;
     } else {
-      const matchIndex = infoMusicList.findIndex(item => item.lognumber === lln);
+      const matchIndex = infoRecordingList.findIndex(item => item.lognumber === recording);
       return matchIndex;
     }
   }
   
   // ---- Functions handle
-  // const handleChangeQueryPitch = (event) => {
-  //   const value = event.target.value;
-  //   if (PITCH_QUERY_REGEX.test(value) || value[value.length - 1] === '-') { setTextSearch(value) }
-  // }
   const handleChangeQueryPitch = useCallback((event) => {
     const value = event.target.value;
-    if (PITCH_QUERY_REGEX.test(value) || value[value.length - 1] === '-') { 
-      setTextSearch(value); 
-    }
+    if (PITCH_QUERY_REGEX.test(value) || value[value.length - 1] === '-') { setTextSearch(value);  }
   }, [setTextSearch]);
 
-  // const handleClickTextSearch = async (e) => {
-  //   e.preventDefault();
-  //   // make a call to the database, then set string back to ''
-  //   if (textSearch !== '') { findMatchLevenshteinDistance(textSearch); }
-  // };
   const handleClickTextSearch = useCallback(async (e) => {
     e.preventDefault();
     console.log("", textSearch, ", (typeof textSearch): ", (typeof textSearch));
@@ -248,25 +237,12 @@ const MusicInterface = () => {
 
   function playToneSalamander() {
     const now = Tone.now();
-    // Tone.loaded().then(() => {
-    //   // sampler.triggerAttackRelease(["Eb4", "G4", "Bb4"], 4);
-    //   sampler.triggerAttackRelease(["Eb4"], 1,now);
-    //   // sampler.triggerAttackRelease(["Bb4"], 4);
-    //   // sampler.triggerAttackRelease(["Eb4", "G4", "Bb4"], 4);
-    //   sampler.triggerAttackRelease(["F6"], 1, now+1);
-    // })
-    Tone.loaded().then(() => {
-      for(var i = 0; i < 3; i++){
-          sampler.triggerAttackRelease([`E${i+4}`,`F${i+4}`, `C${i+4}`,`G${i+4}`, `B${i+4}`,`A${i+4}`, `A#${i+4}`], 1,now+i);
-        }
-    })
+    Tone.loaded().then(() => { for(var i = 0; i < 3; i++){ sampler.triggerAttackRelease([`E${i+4}`,`F${i+4}`, `C${i+4}`,`G${i+4}`, `B${i+4}`,`A${i+4}`, `A#${i+4}`], 1,now+i); } })
   }
   
   function resetMp3() {
     if (playingMp3) {
-      audioMp3.pause();
-      setIconPlayMp3(<AiFillPlayCircle></AiFillPlayCircle>)
-      setPlayingMp3(!playingMp3);
+      audioMp3.pause(); setIconPlayMp3(<AiFillPlayCircle></AiFillPlayCircle>);setPlayingMp3(!playingMp3);
     }
     setAudioMp3(new Audio("https://www.learningcontainer.com/wp-content/uploads/2020/02/Kalimba.mp3"));
   }
@@ -277,17 +253,11 @@ const MusicInterface = () => {
     textSearchRef.current.value += NotetoMIDI[keyName];
   }
 
-  // // Memoize the value of textSearch
-  // const memoizedTextSearch = useMemo(() => textSearch, [textSearch]);
-
-
   // ---- Functions
   // Function for distance: arrays of int
   function calcLevenshteinDistance_int(arr1, arr2) {
-    const m = arr1.length;
-    const n = arr2.length;
+    const m = arr1.length; const n = arr2.length;
     const dp = Array.from({ length: m + 1 }, () => Array.from({ length: n + 1 }, () => 0));
-
     for (let i = 0; i <= m; i++) {
       for (let j = 0; j <= n; j++) {
         if (i === 0) {
@@ -317,51 +287,23 @@ const MusicInterface = () => {
   }
 
   function playFormattedMusic(music) {
-    // TODO fix the issue with sound getting a lot of distortion and then stopping!
-    // ---- Logics for potential fixes:
-    // - Track times of input, manually set timers before next song can be played and then played one by one
-    // - Modify the notes times to ensure they have enough time to be played (avoid several notes at the same time with a single synth player?)
-
     synth2.current.dispose(); // this may be something good, but really unsure!
     synth2.current = new Tone.Synth();
     synth2.current.toDestination();
 
-    console.log("-1- Tone.Transport.state |", Tone.Transport.state, '|, Tone.Transport.state !== "started" ', (Tone.Transport.state !== "started"), ", typeof (Tone.Transport.state): ", (typeof Tone.Transport.state));
-    // const now = Tone.now(); // const synth3 = new Tone.MembraneSynth().toDestination();
-    // for (var i in Tone.Transport.state) { console.log(i, ": ", Tone.Transport.state[i]); }
     Tone.Transport.stop();
     if (Tone.Transport.state !== "started") {
       Tone.Transport.start();
-      console.log("Tone.Transport.start / How is the test now: ", Tone.Transport.state !== "started");
     } else {
       Tone.Transport.stop();
-      console.log("Tone.Transport.stop / How is the test now: ", Tone.Transport.state !== "started");
     }
-    // else { Tone.Transport.stop(); console.log("Tone.Transport.stop");  }
-    // if (Tone.context.state !== "running") {  Tone.start();  console.log("audio is ready");  }
-    console.log("-2- Tone.Transport.state ", Tone.Transport.state, ', Tone.Transport.state !== "started" ', (Tone.Transport.state !== "started"));  // Tone.Transport.bpm.value = 180; // Not necessary, but good to have... // normal bpm is slower
-
     const offsetTest = 0.1;
 
     const now = Tone.now() + offsetTest;
     music.forEach(tune => {
-      // console.log("now: ", now, ", tune.time: ", tune.time, ", sum: ", (now + tune.time),", tune.note: ", tune.note,", MIDItoNote[tune.note]: ",MIDItoNote[tune.note]);
-      // synth3.triggerAttackRelease(tune.note, tune.duration, now + tune.time)
-      // synthPoly.triggerAttackRelease(tune.note, tune.duration, now + tune.time)
-      // synth2.triggerAttackRelease(tune.note, tune.duration, now + tune.time)
       synth2.current.triggerAttackRelease(MIDItoNote[tune.note], tune.duration, now + tune.time)
     })
-
-    // Tone.Transport.dispose();
-    // Tone.Transport.cancel();
-    // Tone.Transport.clear();
-
     Tone.Transport.stop();
-    // synth2.current.dispose(now + music[music.length-1].time +  music[music.length-1].duration)
-
-    // console.log("Asking to stop after time: ", (music[music.length-1].duration + music[music.length-1].time))
-    // Tone.Transport.stop(music[music.length-1].duration + music[music.length-1].time);
-    console.log("-3- Tone.Transport.state ", Tone.Transport.state, ', Tone.Transport.state !== "started" ', (Tone.Transport.state !== "started"));
   }
 
   function formatAndPlay(item) {
@@ -375,14 +317,13 @@ const MusicInterface = () => {
       time: arrTime[index] - firstTime,
       duration: arrDurations[index]
     }));
-    // Play formatted music
     playFormattedMusic(combinedArray);
   }
 
-  function getMusicInfo(track, infoMusicList, setInfoMusicList = null) {
-    console.log("getMusicInfo -- infoMusicList: ",infoMusicList);
+  function getMusicInfo(track, infoRecordingList, setInfoMusicList = null) {
+    console.log("getMusicInfo -- infoRecordingList: ",infoRecordingList);
     const lognumber = track.split("-")[0];
-    getTrackMetadata(lognumber, infoMusicList, setInfoMusicList);
+    getTrackMetadata(lognumber, infoRecordingList, setInfoMusicList);
   }
 
   function findMatchLevenshteinDistance(strNotes = "69-76-76-74-76") {
@@ -394,15 +335,12 @@ const MusicInterface = () => {
       strNotes,
       1,
       localStorage?.username,
-      transformToPlayfulFormat,
-      playFormattedMusic,
       calcLevenshteinDistance_int,
       setListSearchRes,
       setListLogNumbers,
       setListTracks,
       // Additions for loading of metadata after the loading of tracks
-      getTracksMetadata,
-      infoMusicList, 
+      infoRecordingList, 
       setInfoMusicList
     )
   }
@@ -444,30 +382,18 @@ const MusicInterface = () => {
         </div>
       )}
       <Title firstLine="Music" secondLine="Interface" />
-      {/* ==== Test diffeent presentation of results ==== */}
-      {/* <MyTabbedInterface/> */}
       {/* ==== Test Mp3 playing ==== */}
       {/* <div className="playMusic" onClick={(c) => { playMp3(); }} > Play Test Mp3 </div>
       <div className='playMusic' onClick={(c)=>{playToneSalamander();}}> Play from tone loaded </div> */}
       {/* ==== Test Piano Roll === */}
-        {/* <div className='pianoArea'>
-          <h1>Piano Roll</h1>
-          <PianoRoll notes={notes} occurrences={occurrences} durations={durations} width={600} height={200} />
-        </div> */}
+      {/* <div className='pianoArea'> <h1>Piano Roll</h1> <PianoRoll notes={notes} occurrences={occurrences} durations={durations} width={600} height={200} /> </div> */}
       {/* ==== PIANO INPUT ==== */}
       <Piano onKeyPress={handleKeyPress} />
       {/* ==== SEARCH INPUT ==== */}
       <div className="topTextSearch">
         <div className='disclaimerSearchPitch'>Play the piano keys or enter a query based on pitch notes (from 0 to 127) separated with - characters.</div>
         <input
-          type="text"
-          className='inputMusicSearch'
-          placeholder="Enter melody here"
-          ref={textSearchRef}
-          autoComplete="off"
-          required
-          value={textSearch}
-          onChange={handleChangeQueryPitch}
+          type="text" className='inputMusicSearch' placeholder="Enter melody here" ref={textSearchRef} autoComplete="off" required value={textSearch} onChange={handleChangeQueryPitch}
         />
         <button className='mx-[0.5rem] my-[0.25rem]' onClick={handleClickTextSearch}>Submit search</button>
         {/* <button onClick={handleClickTextSearchTEST}>Submit search</button> */}
@@ -478,33 +404,28 @@ const MusicInterface = () => {
       {/* Approach with MyTabbedInterface */}
       {(listSearchRes.length <= 0) ? (<></>) :
         <div className='outputMusicSearch'>
-          {/* beforePrivateBeta -> Display BOTH pitches and notes */}
+          {/* Display both pitches and notes */}
           <p className='text-xl'>List of results for your search:</p><h4>{oldSearch} ({(('' + oldSearch).indexOf('-') === -1)
             ? ('' + MIDItoNote['' + oldSearch]).replaceAll('s', '')
             : ('' + oldSearch).split('-').map((a, i) => (i === ('' + oldSearch).split('-').length - 1) ?
               MIDItoNote[a].replaceAll('s', '')
               : (MIDItoNote[a] + '-').replaceAll('s', '')
             )})</h4>
-          {/* beforePrivateBeta adapt the text and its style */}
+
           <div className='text-left'>
             <AnnotationSystem type={"search"} info={oldSearch} />
-            {/* TODO beforePrivateBeta update the workflow system so that it can save searches!!! */}
-            {/* <EmbeddedWorkflowInteraction idCaller={null} typeCaller={"search"} /> */}
+            {/* TODO update the workflow system so that it can save searches!!! */} {/* <EmbeddedWorkflowInteraction idCaller={null} typeCaller={"search"} /> */}
           </div>
+          
         <MyTabbedInterface
           listLogNumbers={listLogNumbers}
-          lognumbersRefs={lognumbersRefs}
-          scrollToButtonListLogsNumbers={scrollToButtonListLogsNumbers}
           findMatchRecording={findMatchRecording}
-          infoMusicList={infoMusicList}
+          infoRecordingList={infoRecordingList}
           listTracks={listTracks}
-          scrollToButtonListRecordingsFollowing={scrollToButtonListRecordingsFollowing}
-          scrollToButtonListTracksFollowing={scrollToButtonListTracksFollowing}
           listSearchRes={listSearchRes}
           formatAndPlay={formatAndPlay}
           getMusicInfo={getMusicInfo}
           setInfoMusicList={setInfoMusicList}
-          testPerformances={false}
         />
         </div>
         }

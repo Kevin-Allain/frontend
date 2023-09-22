@@ -10,42 +10,25 @@ import MetadataAccordion from './MetadataAccordion';
 
 const MyTabbedInterface = ({
   listLogNumbers,
-  lognumbersRefs,
-  scrollToButtonListLogsNumbers,
   findMatchRecording,
-  infoMusicList,
+  infoRecordingList,
   listTracks,
-  scrollToButtonListRecordingsFollowing,
-  scrollToButtonListTracksFollowing,
   listSearchRes,
   formatAndPlay,
   getMusicInfo,
   setInfoMusicList,
-  testPerformances=false
 }) => {
   const [activeRecording, setActiveRecording] = useState(null);
   const [activeTrack, setActiveTrack] = useState(null);
-
   const [visibleTracks, setVisibleTracks] = useState({});
   const tracksContainerRef = useRef(null);
 
-  // Mock data for recordings, tracks, and samples
-  const recordings = [ "Recording 1", "Recording 2", "Recording 3", "Recording 21", "Recording 4", "Recording 22", "Recording 5", "Recording 23", "Recording 6", "Recording 24", "Recording 7", "Recording 25", "Recording 8", "Recording 26", "Recording 9", "Recording 27", "Recording 10", "Recording 28", "Recording 11", "Recording 32", "Recording 12", "Recording 312", "Recording 13", "Recording 332",];
-  const recordingData = { "Recording 1": ["Track 1", "Track 2"], "Recording 2": ["Track A", "Track B"], "Recording 3": [ "Track A", "Track B", "Track 1", "Track 2", "Track C","Track D", "Track E", ], };
-  const trackData = { "Track 1": ["Sample A", "Sample B"], "Track 2": ["Sample X", "Sample Y"], "Track A": ["Sample Alpha", "Sample Beta"], "Track B": ["Sample Gamma", "Sample Delta"], "Track C": ["Sample Gamma", "Sample Delta"], "Track D": ["Sample Gamma", "Sample Delta"], "Track E": ["Sample Gamma", "Sample Delta"], };
-
-// Use useEffect to log the updated value of activeRecording
-useEffect(() => {
-  console.log("useEffect activeRecording: ", activeRecording);
-}, [activeRecording]);
-
-useEffect(() => {
-  console.log("useEffect activeTrack: ", activeTrack);
-}, [activeTrack]);
-
+  // Use useEffect to log the updated value of activeRecording
+  useEffect(() => { console.log("useEffect activeRecording: ", activeRecording); }, [activeRecording]);
+  useEffect(() => { console.log("useEffect activeTrack: ", activeTrack); }, [activeTrack]);
 
   const handleRecordingClick = (recording) => {
-    console.log("~~ handleRecordingClick, recording: ",recording," ---- listSearchRes: ",listSearchRes);
+    console.log("~~ handleRecordingClick, recording: ",recording," ---- listSearchRes: ",listSearchRes,", listLogNumbers: ",listLogNumbers);
     setActiveRecording(recording);
     console.log("activeRecording: ",activeRecording);
     setActiveTrack(null); // Reset the active track when a new recording is selected
@@ -57,13 +40,13 @@ useEffect(() => {
     console.log("activeTrack: ",activeTrack);
   };
 
-  // console.log("MyTabbedInterface - listLogNumbers: ",listLogNumbers,", infoMusicList: ",infoMusicList ," - infoMusicList[2]: ",infoMusicList[2],", infoMusicList['2']: ",infoMusicList['2'] ,", listSearchRes: ",listSearchRes);
+  console.log("||| >>> MyTabbedInterface - listLogNumbers: ",listLogNumbers,", infoRecordingList: ",infoRecordingList,", listSearchRes: ",listSearchRes);
 
   // We will need a new structure!
   // -> Merge by event name if the lognumber has SJA?
   const mergedData = {};
 
-  infoMusicList.forEach((item) => {
+  infoRecordingList.forEach((item) => {
     const eventName = item["(E) Event Name"];
     const trackNumber = item["Track #"];
     const lognumber = item["lognumber"];
@@ -95,6 +78,9 @@ useEffect(() => {
   // tracksForEvent = tracksForEvent.sort();
   let newStruct = [];
   keysEvents.map( (a,i) => newStruct.push ({"recordingName":a, "content":tracksForEvent[i]} ) );
+  // Sort newStruct (here according to recording)
+  newStruct = newStruct.sort((a,b) => (a.recording > b.recording) ? 1 : ((b.recording > a.recording) ? -1 : 0))
+  console.log("newStruct: ",newStruct,", listTracks: ",listTracks);
 
 
   return (
@@ -105,6 +91,7 @@ useEffect(() => {
         <ul>
           {newStruct &&
             newStruct
+              .sort((a,b) => (a.recording > b.recording) ? 1 : ((b.recording > a.recording) ? -1 : 0))
               .map((recording) => (
                 <li
                   key={recording.recordingName}
@@ -113,14 +100,6 @@ useEffect(() => {
                   }`}
                   onClick={() => handleRecordingClick(recording.recordingName)}
                 >
-                  {/* {(recording.length>30)? recording.substring(0,30)+'...':recording} {findMatchRecording(recording)}  */}
-                  {/* {recording.includes("SJA_")
-                    ? infoMusicList[findMatchRecording(recording)]
-                      ? infoMusicList[findMatchRecording(recording)][
-                          "(E) Event Name" ] + (infoMusicList[findMatchRecording(recording)][ "Event Month" ]
-                          ? " M" + infoMusicList[findMatchRecording(recording)][ "Event Month" ] : "") +
-                        " " + infoMusicList[findMatchRecording(recording)][ "Event Year" ]
-                      : "No match for number: " + findMatchRecording(recording) : recording} */}
                   {recording.recordingName}<hr/>
                 </li>
               ))}
@@ -172,27 +151,16 @@ useEffect(() => {
               {activeRecording} - {activeTrack}
             </h2>
 
-            {/* Accordion for Recording and Track */}
+            {/* Accordion for Recording AND Track */}
             <div className="border rounded border-2 mb-[0.5rem]">
               <MetadataAccordion
                 content={listSearchRes[0].arrIdNotes[0]}
                 info={activeRecording}
                 findMatchRecording={findMatchRecording}
-                infoMusicList={infoMusicList}
+                infoRecordingList={infoRecordingList}
                 structData={newStruct[newStruct.findIndex(a => a.recordingName === activeRecording)]}
               />
             </div>
-            {/* <div className="border rounded border-2 mb-[0.5rem]">
-              <MetadataAccordion
-                title="Track Interaction"
-                type={"track"}
-                content={listSearchRes[0].arrIdNotes[0]}
-                info={activeTrack}
-                findMatchRecording={findMatchRecording}
-                structData={newStruct[newStruct.findIndex(a => a.recordingName === activeRecording)]}
-              />
-            </div> */}
-
             {/* We should change TrackRes I think... */}
             <TrackRes
               key={"Track_" + activeTrack}
@@ -203,7 +171,7 @@ useEffect(() => {
               )}
               formatAndPlay={formatAndPlay}
               getMusicInfo={getMusicInfo}
-              infoMusicList={infoMusicList}
+              infoRecordingList={infoRecordingList}
               setInfoMusicList={setInfoMusicList}
               testPerformances={false}
             />
