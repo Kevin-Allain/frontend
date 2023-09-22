@@ -5,7 +5,7 @@ import EmbeddedWorkflowInteraction from '../Workflow/EmbeddedWorkflowInteraction
 import { AiOutlineLoading } from 'react-icons/ai'
 
 const MetadataAccordion = ({
- info, content, findMatchRecording = null, infoRecordingList = null, structData
+ info, content, findMatchRecording = null, infoRecordingTrackList = null, structData
 }) => {
 
     /** About the presentation of metadata: we do not know what elements are unique between tracks sharing (E) Event Name 
@@ -18,7 +18,7 @@ const MetadataAccordion = ({
     const toggleAccordionTrack = () => { setExpandedTrack(!expandedTrack); };
 
     useEffect(() => {
-        console.log("--+-- MetadataAccordion: ", {  info, content, findMatchRecording, infoRecordingList, structData });
+        console.log("--+-- MetadataAccordion: ", {  info, content, findMatchRecording, infoRecordingTrackList, structData });
 
         // We want to loop through the content of structData, and if an attribute has the same value over all the indexes of structData, it should be in sharedRecordingInfo, both attribute name and value, otherwise it should be in uniqueTrackInfo, with index matching according to its position in structData.content
         // The array of uniqueTrackInfo will have the same indexes as content
@@ -65,12 +65,12 @@ const MetadataAccordion = ({
             </div>
             {expandedRecording &&
                 (<div className="metadata-content">
-                    {infoRecordingList !== null ? (
-                        infoRecordingList.length === 0 ? (<AiOutlineLoading className='spin' size={'20px'} />) :
+                    {infoRecordingTrackList !== null ? (
+                        infoRecordingTrackList.length === 0 ? (<AiOutlineLoading className='spin' size={'20px'} />) :
                             findMatchRecording(info) !== -1 ? (
                                 <div className='detailResultMeta'>
                                     <u>Info about recording:</u>
-                                    {Object.entries(infoRecordingList[findMatchRecording(info)]).map(([key, value]) => (
+                                    {Object.entries(infoRecordingTrackList[findMatchRecording(info)]).map(([key, value]) => (
                                         (value.length === 0) ? <></> : <p key={key}> {key}: {value}</p>
                                     ))}
                                 </div>
@@ -93,12 +93,12 @@ const MetadataAccordion = ({
             </div>
             {expandedTrack &&
                 (<div className="metadata-content">
-                    {infoRecordingList !== null ? (
-                        infoRecordingList.length === 0 ? (<AiOutlineLoading className='spin' size={'20px'} />) : "Incoming"
+                    {infoRecordingTrackList !== null ? (
+                        infoRecordingTrackList.length === 0 ? (<AiOutlineLoading className='spin' size={'20px'} />) : "Incoming"
                         // findMatchTrack(info) !== -1 ? (
                         //     <div className='detailResultMeta'>
                         //         <u>Info about track:</u>
-                        //         {Object.entries(infoRecordingList[findMatchTrack(info)]).map(([key, value]) => (
+                        //         {Object.entries(infoRecordingTrackList[findMatchTrack(info)]).map(([key, value]) => (
                         //             (value.length === 0) ? <></> : <p key={key}> {key}: {value}</p>
                         //         ))}
                         //     </div>

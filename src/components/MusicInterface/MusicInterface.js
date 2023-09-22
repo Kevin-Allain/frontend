@@ -76,7 +76,7 @@ const MusicInterface = () => {
   const [validPitchQuery, setValidPitchQuery] = useState(false);
   const [oldSearch, setOldSearch] = useState('');
 
-  const [infoRecordingList, setInfoMusicList] = useState([]);
+  const [infoRecordingTrackList, setInfoMusicList] = useState([]);
   const [listTracks, setListTracks] = useState([]);
   const [listSearchRes, setListSearchRes] = useState([]);
   const [listLogNumbers, setListLogNumbers] = useState([]);
@@ -192,15 +192,15 @@ const MusicInterface = () => {
   }, [listTracks]);
 
   const findMatchRecording = (recording) => {
-    console.log("~~~~ findMatchRecording | recording: ",recording,", infoRecordingList: ",infoRecordingList);
+    console.log("~~~~ findMatchRecording | recording: ",recording,", infoRecordingTrackList: ",infoRecordingTrackList);
     // Not a great approach... but should work okay.
     if ( recording.includes("SJA") ){
-      const matchIndex = infoRecordingList.findIndex(
+      const matchIndex = infoRecordingTrackList.findIndex(
         item => item.lognumber.substring(0,item.lognumber.lastIndexOf('_')) === recording
       );
       return matchIndex;
     } else {
-      const matchIndex = infoRecordingList.findIndex(item => item.lognumber === recording);
+      const matchIndex = infoRecordingTrackList.findIndex(item => item.lognumber === recording);
       return matchIndex;
     }
   }
@@ -320,10 +320,10 @@ const MusicInterface = () => {
     playFormattedMusic(combinedArray);
   }
 
-  function getMusicInfo(track, infoRecordingList, setInfoMusicList = null) {
-    console.log("getMusicInfo -- infoRecordingList: ",infoRecordingList);
+  function getMusicInfo(track, infoRecordingTrackList, setInfoMusicList = null) {
+    console.log("getMusicInfo -- infoRecordingTrackList: ",infoRecordingTrackList);
     const lognumber = track.split("-")[0];
-    getTrackMetadata(lognumber, infoRecordingList, setInfoMusicList);
+    getTrackMetadata(lognumber, infoRecordingTrackList, setInfoMusicList);
   }
 
   function findMatchLevenshteinDistance(strNotes = "69-76-76-74-76") {
@@ -340,7 +340,7 @@ const MusicInterface = () => {
       setListLogNumbers,
       setListTracks,
       // Additions for loading of metadata after the loading of tracks
-      infoRecordingList, 
+      infoRecordingTrackList, 
       setInfoMusicList
     )
   }
@@ -416,11 +416,11 @@ const MusicInterface = () => {
             <AnnotationSystem type={"search"} info={oldSearch} />
             {/* TODO update the workflow system so that it can save searches!!! */} {/* <EmbeddedWorkflowInteraction idCaller={null} typeCaller={"search"} /> */}
           </div>
-          
+
         <MyTabbedInterface
           listLogNumbers={listLogNumbers}
           findMatchRecording={findMatchRecording}
-          infoRecordingList={infoRecordingList}
+          infoRecordingTrackList={infoRecordingTrackList}
           listTracks={listTracks}
           listSearchRes={listSearchRes}
           formatAndPlay={formatAndPlay}
