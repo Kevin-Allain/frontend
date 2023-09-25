@@ -76,7 +76,7 @@ const MusicInterface = () => {
   const [validPitchQuery, setValidPitchQuery] = useState(false);
   const [oldSearch, setOldSearch] = useState('');
 
-  const [infoRecordingTrackList, setInfoMusicList] = useState([]);
+  const [infoMusicList, setInfoMusicList] = useState([]);
   const [listTracks, setListTracks] = useState([]);
   const [listSearchRes, setListSearchRes] = useState([]);
   const [listLogNumbers, setListLogNumbers] = useState([]);
@@ -192,15 +192,15 @@ const MusicInterface = () => {
   }, [listTracks]);
 
   const findMatchRecording = (recording) => {
-    console.log("~~~~ findMatchRecording | recording: ",recording,", infoRecordingTrackList: ",infoRecordingTrackList);
+    console.log("~~~~ findMatchRecording | recording: ",recording,", infoRecordingTrackList: ",infoMusicList);
     // Not a great approach... but should work okay.
     if ( recording.includes("SJA") ){
-      const matchIndex = infoRecordingTrackList.findIndex(
+      const matchIndex = infoMusicList.findIndex(
         item => item.lognumber.substring(0,item.lognumber.lastIndexOf('_')) === recording
       );
       return matchIndex;
     } else {
-      const matchIndex = infoRecordingTrackList.findIndex(item => item.lognumber === recording);
+      const matchIndex = infoMusicList.findIndex(item => item.lognumber === recording);
       return matchIndex;
     }
   }
@@ -320,10 +320,10 @@ const MusicInterface = () => {
     playFormattedMusic(combinedArray);
   }
 
-  function getMusicInfo(track, infoRecordingTrackList, setInfoMusicList = null) {
-    console.log("getMusicInfo -- infoRecordingTrackList: ",infoRecordingTrackList);
+  function getMusicInfo(track, infoMusicList, setInfoMusicList = null) {
+    console.log("getMusicInfo -- infoMusicList: ",infoMusicList);
     const lognumber = track.split("-")[0];
-    getTrackMetadata(lognumber, infoRecordingTrackList, setInfoMusicList);
+    getTrackMetadata(lognumber, infoMusicList, setInfoMusicList);
   }
 
   function findMatchLevenshteinDistance(strNotes = "69-76-76-74-76") {
@@ -331,6 +331,7 @@ const MusicInterface = () => {
     setInfoMusicList([]);
     setOldSearch(strNotes);
     setTextSearch('');    
+
     getMatchLevenshteinDistance(
       strNotes,
       1,
@@ -340,7 +341,7 @@ const MusicInterface = () => {
       setListLogNumbers,
       setListTracks,
       // Additions for loading of metadata after the loading of tracks
-      infoRecordingTrackList, 
+      infoMusicList, 
       setInfoMusicList
     )
   }
@@ -417,16 +418,19 @@ const MusicInterface = () => {
             {/* TODO update the workflow system so that it can save searches!!! */} {/* <EmbeddedWorkflowInteraction idCaller={null} typeCaller={"search"} /> */}
           </div>
 
-        <MyTabbedInterface
-          listLogNumbers={listLogNumbers}
-          findMatchRecording={findMatchRecording}
-          infoRecordingTrackList={infoRecordingTrackList}
-          listTracks={listTracks}
-          listSearchRes={listSearchRes}
-          formatAndPlay={formatAndPlay}
-          getMusicInfo={getMusicInfo}
-          setInfoMusicList={setInfoMusicList}
-        />
+          {infoMusicList.length > 0 ?
+            <MyTabbedInterface
+              listLogNumbers={listLogNumbers}
+              findMatchRecording={findMatchRecording}
+              infoMusicList={infoMusicList}
+              listTracks={listTracks}
+              listSearchRes={listSearchRes}
+              formatAndPlay={formatAndPlay}
+              getMusicInfo={getMusicInfo}
+              setInfoMusicList={setInfoMusicList}
+            />
+            : <></>
+          }
         </div>
         }
 

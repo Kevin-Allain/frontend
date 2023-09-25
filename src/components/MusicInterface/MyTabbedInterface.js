@@ -11,7 +11,7 @@ import MetadataAccordion from "./MetadataAccordion";
 const MyTabbedInterface = ({
   listLogNumbers,
   findMatchRecording,
-  infoRecordingTrackList,
+  infoMusicList,
   listTracks,
   listSearchRes,
   formatAndPlay,
@@ -23,9 +23,89 @@ const MyTabbedInterface = ({
   const [visibleTracks, setVisibleTracks] = useState({});
   const tracksContainerRef = useRef(null);
 
+  console.log("-- MyTabbedInterface. listLogNumbers: ", listLogNumbers,
+    ", infoMusicList: ", infoMusicList,
+    ", listSearchRes: ", listSearchRes);
+
   let tracksForEvent = [];
   let newStruct = [];
-  let prettyNamesLogNumber = [];
+  let prettyNamesLogNumber = {};
+  let trackToTitles = {};
+  for (let i in listSearchRes) {
+    let curSR = listSearchRes[i];
+    let curTrack = curSR.track;
+    let curLognumber = curSR.lognumber;
+    let trackInfoCode = curTrack.replace('-T', '_')
+
+    if (curTrack.includes('SJA')) {
+      let selecInfo = infoMusicList.filter(a => a['SJA ID'] === trackInfoCode)
+      trackToTitles[curTrack] = selecInfo[0]['Track Title']
+    }
+  }
+  console.log("trackToTitles: ",trackToTitles);
+
+  const mergedData = {};
+  infoMusicList.forEach((item) => {
+    const eventName = item["(E) Event Name"];
+    const trackNumber = item["Track #"];
+    const lognumber = item["lognumber"];
+    if (eventName) {
+      if (!mergedData[eventName]) { mergedData[eventName] = { tracks: [] }; }
+      if (!mergedData[eventName].tracks[trackNumber]) { mergedData[eventName].tracks[trackNumber] = []; }
+      mergedData[eventName].tracks[trackNumber].push(item);
+    } else if (lognumber) {
+      if (!mergedData[lognumber]) { mergedData[lognumber] = { tracks: [] }; }
+      // Calculate the trackNumber based on the number of existing tracks
+      const nextTrackNumber = mergedData[lognumber].tracks.length;
+      if (!mergedData[lognumber].tracks[nextTrackNumber]) { mergedData[lognumber].tracks[nextTrackNumber] = []; }
+      mergedData[lognumber].tracks[nextTrackNumber].push(item);
+    }
+  });
+  const result = Object.values(mergedData);
+  console.log("result: ", result);
+
+  let keysEvents = Object.keys(mergedData);
+  for (var d in mergedData) {
+    const tracks = mergedData[d].tracks.filter(
+      (a) => typeof a !== "undefined"
+    );
+    // Use concat to flatten the second level arrays
+    const flattenedTracks = [].concat(...tracks);
+    tracksForEvent.push(flattenedTracks);
+  }
+  keysEvents.map((a, i) =>
+    newStruct.push({ recordingName: a, content: tracksForEvent[i] })
+  );
+  // Sort newStruct (here according to recording)
+  newStruct = newStruct.sort((a, b) =>
+    a.recording > b.recording ? 1 : b.recording > a.recording ? -1 : 0
+  );
+  console.log("newStruct: ", newStruct, ", listTracks: ", listTracks);
+
+  for (var i = 0; i < listLogNumbers.length; i++) {
+    let lognumber = listLogNumbers[i];
+    // console.log("lognumber: ", lognumber);
+    let a = infoMusicList.filter(a => a.lognumber === lognumber);
+    if (a.length > 0) {
+      a = a[0];
+      if (a.lognumber === lognumber && !lognumber.includes("BGR")) {
+        let eventYear = a["Event Year"]==='', eventMonth = a["Event Month"]==='',eventDay = a["Event Day"]==='';
+        console.log(lognumber,eventYear,eventMonth,eventDay);
+
+        prettyNamesLogNumber[lognumber] = (
+          a["(E) Event Name"] +
+          (eventYear ? '' : (' ' + a["Event Year"])) +
+          (eventMonth ? '' : ('/' + a["Event Month"])) +
+          (eventDay ? '' : ('/' + a["Event Day"]))
+        );
+
+      } else { prettyNamesLogNumber[lognumber] = lognumber }
+    } else { prettyNamesLogNumber[lognumber] = lognumber }
+  }
+  let uniqueListLogNumbers = [...new Set(listLogNumbers)];
+  console.log("|| uniqueListLogNumbers: ", uniqueListLogNumbers,
+    ", prettyNamesLogNumber: ", prettyNamesLogNumber);
+
 
   // Use useEffect to log the updated value of activeRecording
   useEffect(() => {
@@ -36,101 +116,79 @@ const MyTabbedInterface = ({
   }, [activeTrack]);
 
   const handleRecordingClick = (recording) => {
-    console.log(
-      "~~ handleRecordingClick, recording: ",
-      recording,
-      " ---- listSearchRes: ",
-      listSearchRes,
-      ", listLogNumbers: ",
-      listLogNumbers
-    );
+    console.log("~~ handleRecordingClick, recording: ",recording," ---- listSearchRes: ",listSearchRes,", listLogNumbers: ",listLogNumbers);
     setActiveRecording(recording);
     console.log("activeRecording: ", activeRecording);
     setActiveTrack(null); // Reset the active track when a new recording is selected
   };
 
   const handleTrackClick = (track) => {
-    console.log(
-      "~~ handleTrackClick, track: ",
-      track,
-      ", typeof track: ",
-      typeof track,
-      ", activeRecording: ",
-      activeRecording
-    );
+    console.log("~~ handleTrackClick, track: ",track,", typeof track: ",typeof track,", activeRecording: ",activeRecording);
     setActiveTrack(track);
     console.log("activeTrack: ", activeTrack);
   };
 
-  useEffect(() => {
-    console.log(
-      "||| >>> MyTabbedInterface. useEffect - listLogNumbers: ",
-      listLogNumbers,
-      ", infoRecordingTrackList: ",
-      infoRecordingTrackList,
-      ", listSearchRes: ",
-      listSearchRes
-    );
-    // We will need a new structure!
-    // -> Merge by event name if the lognumber has SJA?
-    // -> Problem: lognumber is unique for same event if different time. We should not fix this. It is how the data is set... and that's it.
-    // Or: the display of the recording displays the event and year, as based per lognumber. Still sounds confusing for the workflow.
+  // useEffect(() => {
+  //   console.log(
+  //     "||| useEffect >>> MyTabbedInterface. useEffect - listLogNumbers: ",listLogNumbers,
+  //     ", infoMusicList: ",infoMusicList, // empty?!
+  //     ", listSearchRes: ",listSearchRes
+  //   );
+  //   // We will need a new structure!
+  //   // -> Merge by event name if the lognumber has SJA?
+  //   // -> Problem: lognumber is unique for same event if different time. We should not fix this. It is how the data is set... and that's it.
+  //   // Or: the display of the recording displays the event and year, as based per lognumber. Still sounds confusing for the workflow.
 
-    const mergedData = {};
-    infoRecordingTrackList.forEach((item) => {
-      const eventName = item["(E) Event Name"];
-      const trackNumber = item["Track #"];
-      const lognumber = item["lognumber"];
-      if (eventName) {
-        if (!mergedData[eventName]) {
-          mergedData[eventName] = { tracks: [] };
-        }
-        if (!mergedData[eventName].tracks[trackNumber]) {
-          mergedData[eventName].tracks[trackNumber] = [];
-        }
-        mergedData[eventName].tracks[trackNumber].push(item);
-      } else if (lognumber) {
-        if (!mergedData[lognumber]) {
-          mergedData[lognumber] = { tracks: [] };
-        }
-        // Calculate the trackNumber based on the number of existing tracks
-        const nextTrackNumber = mergedData[lognumber].tracks.length;
-        if (!mergedData[lognumber].tracks[nextTrackNumber]) {
-          mergedData[lognumber].tracks[nextTrackNumber] = [];
-        }
-        mergedData[lognumber].tracks[nextTrackNumber].push(item);
-      }
-    });
-    const result = Object.values(mergedData);
-    console.log("result: ", result);
+  //   const mergedData = {};
+  //   infoMusicList.forEach((item) => {
+  //     const eventName = item["(E) Event Name"];
+  //     const trackNumber = item["Track #"];
+  //     const lognumber = item["lognumber"];
+  //     if (eventName) {
+  //       if (!mergedData[eventName]) { mergedData[eventName] = { tracks: [] }; }
+  //       if (!mergedData[eventName].tracks[trackNumber]) { mergedData[eventName].tracks[trackNumber] = []; }
+  //       mergedData[eventName].tracks[trackNumber].push(item);
+  //     } else if (lognumber) {
+  //       if (!mergedData[lognumber]) { mergedData[lognumber] = { tracks: [] }; }
+  //       // Calculate the trackNumber based on the number of existing tracks
+  //       const nextTrackNumber = mergedData[lognumber].tracks.length;
+  //       if (!mergedData[lognumber].tracks[nextTrackNumber]) { mergedData[lognumber].tracks[nextTrackNumber] = []; }
+  //       mergedData[lognumber].tracks[nextTrackNumber].push(item);
+  //     }
+  //   });
+  //   const result = Object.values(mergedData);
+  //   console.log("result: ", result);
 
-    let keysEvents = Object.keys(mergedData);
-    for (var d in mergedData) {
-      const tracks = mergedData[d].tracks.filter(
-        (a) => typeof a !== "undefined"
-      );
-      // Use concat to flatten the second level arrays
-      const flattenedTracks = [].concat(...tracks);
-      tracksForEvent.push(flattenedTracks);
-    }
-    keysEvents.map((a, i) =>
-      newStruct.push({ recordingName: a, content: tracksForEvent[i] })
-    );
-    // Sort newStruct (here according to recording)
-    newStruct = newStruct.sort((a, b) =>
-      a.recording > b.recording ? 1 : b.recording > a.recording ? -1 : 0
-    );
-    console.log("newStruct: ", newStruct, ", listTracks: ", listTracks);
+  //   let keysEvents = Object.keys(mergedData);
+  //   for (var d in mergedData) {
+  //     const tracks = mergedData[d].tracks.filter(
+  //       (a) => typeof a !== "undefined"
+  //     );
+  //     // Use concat to flatten the second level arrays
+  //     const flattenedTracks = [].concat(...tracks);
+  //     tracksForEvent.push(flattenedTracks);
+  //   }
+  //   keysEvents.map((a, i) =>
+  //     newStruct.push({ recordingName: a, content: tracksForEvent[i] })
+  //   );
+  //   // Sort newStruct (here according to recording)
+  //   newStruct = newStruct.sort((a, b) =>
+  //     a.recording > b.recording ? 1 : b.recording > a.recording ? -1 : 0
+  //   );
+  //   console.log("newStruct: ", newStruct, ", listTracks: ", listTracks);
 
-    console.log("unique lognumber from infoRecordingTrackList: ", new Set(infoRecordingTrackList.map(a => a.lognumber)));
+  //   // infoMusicList = new Set(infoMusicList.map(a => a.lognumber))
+  //   console.log("unique lognumber from infoMusicList: ", new Set(infoMusicList.map(a => a.lognumber)));
 
-    listLogNumbers.forEach(lognumber => {
-      infoRecordingTrackList.map( a=> (a.lognumber === lognumber) && (a["SJA ID"])?prettyNamesLogNumber.push(a["(E) Event Name"]+' '+a["Event Year"]+'/'+a["Event Month"]+'/'+a["Event Day"]):a.lognumber);
-    })
-    let uniqueListLogNumbers = [...new Set(listLogNumbers)];
-    let uniquePrettyNamesLogNumber = [...new Set(prettyNamesLogNumber)];
-    console.log("|| uniqueListLogNumbers: ",uniqueListLogNumbers,", uniquePrettyNamesLogNumber: ",uniquePrettyNamesLogNumber);
-  });
+  //   listLogNumbers.forEach(lognumber => {
+  //     infoMusicList.map( a=> 
+  //       (a.lognumber === lognumber &&  !lognumber.includes("BGR") )?
+  //       prettyNamesLogNumber[lognumber]=(a["(E) Event Name"]+' '+a["Event Year"]+'/'+a["Event Month"]+'/'+a["Event Day"])
+  //       :prettyNamesLogNumber[lognumber]=lognumber);
+  //   })
+  //   let uniqueListLogNumbers = [...new Set(listLogNumbers)];
+  //   console.log("|| uniqueListLogNumbers: ",uniqueListLogNumbers,", prettyNamesLogNumber: ",prettyNamesLogNumber);
+  // });
 
   return (
     <div className="flex h-[40rem] bg-gray-100">
@@ -149,7 +207,7 @@ const MyTabbedInterface = ({
                   }`}
                   onClick={() => handleRecordingClick(recording)}
                 >
-                  {recording}
+                  {prettyNamesLogNumber[recording]}
                   <hr />
                 </li>
               ))}
@@ -161,8 +219,24 @@ const MyTabbedInterface = ({
         <h2 className="text-lg font-semibold mb-4">Tracks</h2>
         {/* <> {"listTracks.length: "+listTracks.length+", listTracks[0]: "+listTracks[0]} </> */}
         <ul>
-          {/* {activeRecording && recordingData[activeRecording].map((track) => ( <li key={track} className={`cursor-pointer mb-2 ${ activeTrack === track ? "text-orange-500" : "" }`} onClick={() => handleTrackClick(track)} > {track} </li> ))} */}
-          {tracksForEvent && activeRecording &&
+          {/* TODO update properly! The track should only be shown if the results have that track*/}
+          {activeRecording &&
+            // infoMusicList.filter(a => a.lognumber === activeRecording).map(infoRecording => (
+              listSearchRes.filter( a => a.lognumber === activeRecording).map( a => 
+              a.track.includes('SJA') ?
+                <li
+                  key={a.track}
+                  className={`cursor-pointer mb-2 ${activeTrack === a.track ? "text-orange-500" : ""}`}
+                  onClick={() => handleTrackClick(a.track)} > {trackToTitles[a.track]}
+                </li>
+                : <li
+                  key={a.track}
+                  className={`cursor-pointer mb-2 ${activeTrack === a.track ? "text-orange-500" : ""}`}
+                  onClick={() => handleTrackClick(a.track)} > {a.track}
+                </li>
+            )
+          }
+          {/* {tracksForEvent && activeRecording &&
             newStruct.findIndex((a) => a.recordingName === activeRecording) !== -1 && newStruct[ newStruct.findIndex((a) => a.recordingName === activeRecording) ].content &&
             newStruct[ newStruct.findIndex((a) => a.recordingName === activeRecording) ].content.length > 0 &&
             newStruct[ newStruct.findIndex((a) => a.recordingName === activeRecording) ].content.map((c, i) =>
@@ -191,7 +265,7 @@ const MyTabbedInterface = ({
                   <hr />
                 </li>
               )
-            )}
+            )} */}
         </ul>
       </div>
 
@@ -209,7 +283,7 @@ const MyTabbedInterface = ({
                 content={listSearchRes[0].arrIdNotes[0]}
                 info={activeRecording}
                 findMatchRecording={findMatchRecording}
-                infoRecordingTrackList={infoRecordingTrackList}
+                infoMusicList={infoMusicList}
                 structData={
                   newStruct[
                     newStruct.findIndex(
@@ -229,7 +303,7 @@ const MyTabbedInterface = ({
               )}
               formatAndPlay={formatAndPlay}
               getMusicInfo={getMusicInfo}
-              infoRecordingTrackList={infoRecordingTrackList}
+              infoMusicList={infoMusicList}
               setInfoMusicList={setInfoMusicList}
               testPerformances={false}
             />

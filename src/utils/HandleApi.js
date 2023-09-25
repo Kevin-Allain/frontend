@@ -290,8 +290,8 @@ const getMatchLevenshteinDistance = (
             let curArrNotes = dataSplitByTrack[i].sequences[j].map(a => a.pitch)
             let curArrTime = dataSplitByTrack[i].sequences[j].map(a => a.onset)
             let curArrDurations = dataSplitByTrack[i].sequences[j].map(a => a.duration)
-
             let currArrIdNotes = dataSplitByTrack[i].sequences[j].map(a => a._id)
+            let curLogNumber = dataSplitByTrack[i].data[0].lognumber;
 
             let distCalc = levenshteinDistanceFunc(arrayNotesInput, curArrNotes);
             dataSplitByTrack[i].distances.push(distCalc);
@@ -301,7 +301,8 @@ const getMatchLevenshteinDistance = (
               arrTime: curArrTime.map((num) => Number(num.toFixed(2))),
               arrDurations: curArrDurations.map((num) => Number(num.toFixed(2))),
               distCalc: distCalc,
-              track: i
+              track: i,
+              lognumber: curLogNumber
             });
           }
           notesAggregByTrack = notesAggregByTrack.concat(dataSplitByTrack[i].slicesDist);
@@ -309,7 +310,7 @@ const getMatchLevenshteinDistance = (
 
         notesAggregByTrack.sort((a, b) => a.distCalc - b.distCalc);
 
-        console.log("dataSplitByTrack: ", dataSplitByTrack);
+        console.log("// dataSplitByTrack: ", dataSplitByTrack);
         // Will be better to later allow filter
         console.log("notesAggregByTrack: ", notesAggregByTrack);
 
