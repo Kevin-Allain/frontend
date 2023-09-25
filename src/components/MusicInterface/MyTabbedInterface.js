@@ -43,6 +43,8 @@ const MyTabbedInterface = ({
     }
   }
   console.log("trackToTitles: ",trackToTitles);
+  let filteredUniqueSearchResTracks = [];
+
 
   const mergedData = {};
   infoMusicList.forEach((item) => {
@@ -90,7 +92,6 @@ const MyTabbedInterface = ({
       a = a[0];
       if (a.lognumber === lognumber && !lognumber.includes("BGR")) {
         let eventYear = a["Event Year"]==='', eventMonth = a["Event Month"]==='',eventDay = a["Event Day"]==='';
-        console.log(lognumber,eventYear,eventMonth,eventDay);
 
         prettyNamesLogNumber[lognumber] = (
           a["(E) Event Name"] +
@@ -116,9 +117,13 @@ const MyTabbedInterface = ({
   }, [activeTrack]);
 
   const handleRecordingClick = (recording) => {
-    console.log("~~ handleRecordingClick, recording: ",recording," ---- listSearchRes: ",listSearchRes,", listLogNumbers: ",listLogNumbers);
+    console.log("~~ handleRecordingClick, recording: ", recording, " ---- listSearchRes: ", listSearchRes, ", listLogNumbers: ", listLogNumbers);
     setActiveRecording(recording);
     console.log("activeRecording: ", activeRecording);
+
+    filteredUniqueSearchResTracks =
+      [...new Set(listSearchRes.filter(a => a.lognumber === recording).map(a => a.track))];
+    console.log("filteredUniqueSearchResTracks: ",filteredUniqueSearchResTracks);
     setActiveTrack(null); // Reset the active track when a new recording is selected
   };
 
@@ -222,17 +227,17 @@ const MyTabbedInterface = ({
           {/* TODO update properly! The track should only be shown if the results have that track*/}
           {activeRecording &&
             // infoMusicList.filter(a => a.lognumber === activeRecording).map(infoRecording => (
-              listSearchRes.filter( a => a.lognumber === activeRecording).map( a => 
-              a.track.includes('SJA') ?
+            filteredUniqueSearchResTracks.map(a =>
+              a.includes('SJA') ?
                 <li
-                  key={a.track}
-                  className={`cursor-pointer mb-2 ${activeTrack === a.track ? "text-orange-500" : ""}`}
-                  onClick={() => handleTrackClick(a.track)} > {trackToTitles[a.track]}
+                  key={a}
+                  className={`cursor-pointer mb-2 ${activeTrack === a ? "text-orange-500" : ""}`}
+                  onClick={() => handleTrackClick(a)} > {trackToTitles[a]}
                 </li>
                 : <li
-                  key={a.track}
-                  className={`cursor-pointer mb-2 ${activeTrack === a.track ? "text-orange-500" : ""}`}
-                  onClick={() => handleTrackClick(a.track)} > {a.track}
+                  key={a}
+                  className={`cursor-pointer mb-2 ${activeTrack === a ? "text-orange-500" : ""}`}
+                  onClick={() => handleTrackClick(a)} > {a}
                 </li>
             )
           }
