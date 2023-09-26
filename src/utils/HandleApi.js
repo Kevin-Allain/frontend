@@ -222,11 +222,8 @@ const getMatchLevenshteinDistance = (
       { stringNotes: stringNotes, percMatch: percMatch, user: user, }, })
     .then((d) => {
       console.log("#### Then of getMatchLevenshteinDistance ####");
-      console.log("d", d);
       console.log("d.data: ", d.data);
-
       console.log("TIME AFTER QUERY: ", new Date());
-
       /** TODO * This is a lot of code and most likely should be passed as a function */
       /** TODO 2 * What to do when the data returned is the result from a query without matches? */
 
@@ -241,11 +238,8 @@ const getMatchLevenshteinDistance = (
 
         const allTrack = [...new Set(d.data.map(a => a.track))];
         const allLogNumber = [...new Set(d.data.map(a => a.lognumber))];
-        console.log("numNotesInput: ", numNotesInput, ", allTrack: ", allTrack);
-        console.log("~~#~~ allLogNumber: ",allLogNumber);
-
+        console.log("~~#~~ numNotesInput: ", numNotesInput, ", allTrack: ", allTrack,", allLogNumber: ",allLogNumber);
         console.log("TIME AFTER METADATA QUERY: ", new Date());
-
 
         let notesPerTrack = {};
         for (let i in allTrack) {
@@ -310,25 +304,31 @@ const getMatchLevenshteinDistance = (
 
         notesAggregByTrack.sort((a, b) => a.distCalc - b.distCalc);
 
-        console.log("// dataSplitByTrack: ", dataSplitByTrack);
         // Will be better to later allow filter
-        console.log("notesAggregByTrack: ", notesAggregByTrack);
-
+        console.log("// dataSplitByTrack: ", dataSplitByTrack,", notesAggregByTrack: ", notesAggregByTrack);
         // console.log("allLogNumber: ", allLogNumber);
+        let otherLogsNumbers = [];
+        let otherTracks = [];
+        for (let [key, value] of Object.entries(dataSplitByTrack)) {
+            otherLogsNumbers.push(dataSplitByTrack[key].data[0].lognumber)
+            otherTracks.push(dataSplitByTrack[key].data[0].track)
+        }
+        otherLogsNumbers = [...new Set(otherLogsNumbers)]
+        console.log("lognumbers present in res: ",otherLogsNumbers);
+        console.log("tracks present in res: ",otherTracks);
         const sortedLogNumbers = allLogNumber.sort();
         console.log("sortedLogNumbers: ",sortedLogNumbers);
         const sortedTracks = [...new Set(notesAggregByTrack.map(obj => obj.track))].sort();
         console.log("sortedTracks: ",sortedTracks);
         setListLogNumbers(sortedLogNumbers);
-        setListSearchRes(notesAggregByTrack);
         setListTracks(sortedTracks);
-        console.log("Setvariables sortedLogNumbers, notesAggregByTrack and sortedTracks");
+        setListSearchRes(notesAggregByTrack);
         // Calls for loading of metadata
         getTracksMetadata(
           sortedLogNumbers, 
           infoMusicList, 
           setInfoMusicList
-        );        
+        );      
       }
 
       setIsLoading(false);

@@ -78,8 +78,8 @@ const MusicInterface = () => {
 
   const [infoMusicList, setInfoMusicList] = useState([]);
   const [listTracks, setListTracks] = useState([]);
-  const [listSearchRes, setListSearchRes] = useState([]);
   const [listLogNumbers, setListLogNumbers] = useState([]);
+  const [listSearchRes, setListSearchRes] = useState([]);
 
   const [showExplanation, setShowExplanation] = useState(false);
 
@@ -330,7 +330,7 @@ const MusicInterface = () => {
     console.log("---- findMatchLevenshteinDistance.")
     setInfoMusicList([]);
     setOldSearch(strNotes);
-    setTextSearch('');    
+    setTextSearch('');
 
     getMatchLevenshteinDistance(
       strNotes,
@@ -420,11 +420,11 @@ const MusicInterface = () => {
 
           {infoMusicList.length > 0 ?
             <MyTabbedInterface
-              listLogNumbers={listLogNumbers}
-              findMatchRecording={findMatchRecording}
-              infoMusicList={infoMusicList}
-              listTracks={listTracks}
               listSearchRes={listSearchRes}
+              listLogNumbers={listLogNumbers}
+              listTracks={listTracks}
+              infoMusicList={infoMusicList}
+              findMatchRecording={findMatchRecording}
               formatAndPlay={formatAndPlay}
               getMusicInfo={getMusicInfo}
               setInfoMusicList={setInfoMusicList}
