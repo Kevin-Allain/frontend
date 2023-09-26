@@ -160,7 +160,7 @@ const MyTabbedInterface = ({
         <h2 className="text-lg font-semibold mb-4">Tracks</h2>
         {/* <> {"listTracks.length: "+listTracks.length+", listTracks[0]: "+listTracks[0]} </> */}
         <ul>
-          {activeRecording ? <> {
+          {activeRecording ? <>{activeRecording} {
             [...new Set(listSearchRes.filter(a => a.lognumber === activeRecording).map(a =>
               a.track))].map(a =>
                 a.includes('SJA') ?
