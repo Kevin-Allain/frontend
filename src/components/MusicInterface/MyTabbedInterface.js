@@ -140,16 +140,24 @@ const MyTabbedInterface = ({
           {listLogNumbers &&
             listLogNumbers
               .sort((a, b) => {
-                // Extract the string part (before the date)
-                const stringA = a.substring(0, a.lastIndexOf('_'));
-                const stringB = b.substring(0, b.lastIndexOf('_'));
-                // Compare the string part
-                if (stringA < stringB) return -1;
-                if (stringA > stringB) return 1;
-                // If the string part is the same, extract and compare the dates
-                const dateA = new Date(a.substring(a.lastIndexOf('_') + 1));
-                const dateB = new Date(b.substring(b.lastIndexOf('_') + 1));
-                return dateA - dateB;
+                // Split the strings into parts: artist, event, and date
+                const partsA = a.split('_');
+                const partsB = b.split('_');
+                // Check if there are at least two parts (event and date) in both strings
+                if (partsA.length >= 2 && partsB.length >= 2) {
+                  // Compare the event parts
+                  const eventComparison = partsA[1].localeCompare(partsB[1]);
+                  // If the events are the same, compare the date parts
+                  if (eventComparison === 0) {
+                    const dateA = new Date(partsA[2]);
+                    const dateB = new Date(partsB[2]);
+                    return dateA - dateB;
+                  }
+                  return eventComparison;
+                } else {
+                  // If one of the strings doesn't have an underscore, compare the full strings
+                  return a.localeCompare(b);
+                }
               })
               .map((recording) => (
                 <li
