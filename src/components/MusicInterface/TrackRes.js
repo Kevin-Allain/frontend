@@ -43,10 +43,11 @@ const TrackRes = ({
                     {listSearchRes.map((item, i) => (
                         <div className='border-4 border-solid rounded'>
                             <div className='text-left mx-[1rem] my-[0.25rem] '>Sample {i} </div>
+                            {item.track} 
                             <SampleRes
                                 // key={i + '' + item.recording + '_' + item.arrNotes.toString().replaceAll(',', '-')}
-                                text={i + '-' + item.recording}
-                                lognumber={item.recording.split('-')[0]}
+                                text={i + '-' + item.track}
+                                lognumber={item.track.split('-')[0]}
                                 length={item.arrTime[item.arrTime.length - 1] + item.arrDurations[item.arrDurations.length - 1] - item.arrTime[0]}
                                 notes={item.arrNotes.toString().replaceAll(',', '-')}
                                 durations={item.arrDurations.toString().replaceAll(',', '-')}

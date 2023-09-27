@@ -160,7 +160,9 @@ const MyTabbedInterface = ({
         <h2 className="text-lg font-semibold mb-4">Tracks</h2>
         {/* <> {"listTracks.length: "+listTracks.length+", listTracks[0]: "+listTracks[0]} </> */}
         <ul>
-          {activeRecording ? <>{activeRecording} {
+          {activeRecording ? <>
+          {/* {listSearchRes.filter(a=> a.lognumber === activeRecording).map(a => a.track)}  */}
+          {
             [...new Set(listSearchRes.filter(a => a.lognumber === activeRecording).map(a =>
               a.track))].map(a =>
                 a.includes('SJA') ?
@@ -198,12 +200,14 @@ const MyTabbedInterface = ({
               />
             </div>
             {/* We should change TrackRes I think... */}
+            {activeTrack} and its TrackRes:<br/>
             <TrackRes
               key={"Track_" + activeTrack}
               text={activeTrack}
               // TODO CRITICAL UPDATE THIS...!
               listSearchRes={listSearchRes.filter(
-                (a) => a.recording === activeTrack
+                // (a) => a.recording === activeTrack
+                (a) => a.track === activeTrack
               )}
               formatAndPlay={formatAndPlay}
               getMusicInfo={getMusicInfo}
