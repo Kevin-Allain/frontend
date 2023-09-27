@@ -182,11 +182,11 @@ const MyTabbedInterface = ({
               a.track))].map(a =>
                 a.includes('SJA') ?
                   <><li key={a}
-                    className={`cursor-pointer mb-2 ${activeTrack === a ? "text-orange-500" : ""}`}
+                    className={`cursor-pointer mb-2 ${a} ${activeTrack === a ? "text-orange-500" : ""}`}
                     onClick={() => handleTrackClick(a)} > {trackToTitles[a]}
                   </li><hr /></>
                   : <><li key={a}
-                    className={`cursor-pointer mb-2 ${activeTrack === a ? "text-orange-500" : ""}`}
+                    className={`cursor-pointer mb-2 ${a} ${activeTrack === a ? "text-orange-500" : ""}`}
                     onClick={() => handleTrackClick(a)} > {a}
                   </li><hr /></>
               )}
