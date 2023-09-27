@@ -139,11 +139,22 @@ const MyTabbedInterface = ({
         <ul>
           {listLogNumbers &&
             listLogNumbers
-              .sort()
+              .sort((a, b) => {
+                // Extract the string part (before the date)
+                const stringA = a.substring(0, a.lastIndexOf('_'));
+                const stringB = b.substring(0, b.lastIndexOf('_'));
+                // Compare the string part
+                if (stringA < stringB) return -1;
+                if (stringA > stringB) return 1;
+                // If the string part is the same, extract and compare the dates
+                const dateA = new Date(a.substring(a.lastIndexOf('_') + 1));
+                const dateB = new Date(b.substring(b.lastIndexOf('_') + 1));
+                return dateA - dateB;
+              })
               .map((recording) => (
                 <li
                   key={recording}
-                  className={`text-sm cursor-pointer mb-2 ${
+                  className={`text-sm cursor-pointer mb-2 ${recording} ${
                     activeRecording === recording ? "text-orange-500" : ""
                   }`}
                   onClick={() => handleRecordingClick(recording)}
