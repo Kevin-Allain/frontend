@@ -148,7 +148,11 @@ const MyTabbedInterface = ({
                   }`}
                   onClick={() => handleRecordingClick(recording)}
                 >
-                  {prettyNamesLogNumber[recording]}
+                  {prettyNamesLogNumber[recording]
+                    .substring(0, prettyNamesLogNumber[recording].lastIndexOf(' '))}
+                  <br/>
+                  {prettyNamesLogNumber[recording]
+                    .substring(prettyNamesLogNumber[recording].lastIndexOf(' '),prettyNamesLogNumber[recording].length)}
                   <hr />
                 </li>
               ))}
