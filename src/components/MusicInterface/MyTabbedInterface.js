@@ -141,8 +141,8 @@ const MyTabbedInterface = ({
             listLogNumbers
               .sort((a, b) => {
                 // Split the strings into parts: artist, event, and date
-                const partsA = a.split('_');
-                const partsB = b.split('_');
+                const partsA = a.split("_");
+                const partsB = b.split("_");
                 // Check if there are at least two parts (event and date) in both strings
                 if (partsA.length >= 2 && partsB.length >= 2) {
                   // Compare the event parts
@@ -167,11 +167,14 @@ const MyTabbedInterface = ({
                   }`}
                   onClick={() => handleRecordingClick(recording)}
                 >
-                  {prettyNamesLogNumber[recording]
-                    .substring(0, prettyNamesLogNumber[recording].lastIndexOf(' '))}
-                  <br/>
-                  {prettyNamesLogNumber[recording]
-                    .substring(prettyNamesLogNumber[recording].lastIndexOf(' '),prettyNamesLogNumber[recording].length)}
+                  {prettyNamesLogNumber[recording].includes("03 N") || prettyNamesLogNumber[recording].includes("BGR")
+                    ? prettyNamesLogNumber[recording] 
+                    : (<>
+                      {prettyNamesLogNumber[recording].substring(0,prettyNamesLogNumber[recording].lastIndexOf(" "))}
+                      <br/>
+                      {prettyNamesLogNumber[recording].substring(prettyNamesLogNumber[recording].lastIndexOf(" "),prettyNamesLogNumber[recording].length)}
+                      </>)
+                  }
                   <hr />
                 </li>
               ))}
@@ -183,23 +186,50 @@ const MyTabbedInterface = ({
         <h2 className="text-lg font-semibold mb-4">Tracks</h2>
         {/* <> {"listTracks.length: "+listTracks.length+", listTracks[0]: "+listTracks[0]} </> */}
         <ul>
-          {activeRecording ? <>
-          {/* {listSearchRes.filter(a=> a.lognumber === activeRecording).map(a => a.track)}  */}
-          {
-            [...new Set(listSearchRes.filter(a => a.lognumber === activeRecording).map(a =>
-              a.track))].map(a =>
-                a.includes('SJA') ?
-                  <><li key={a}
-                    className={`cursor-pointer mb-2 ${a} ${activeTrack === a ? "text-orange-500" : ""}`}
-                    onClick={() => handleTrackClick(a)} > {trackToTitles[a]}
-                  </li><hr /></>
-                  : <><li key={a}
-                    className={`cursor-pointer mb-2 ${a} ${activeTrack === a ? "text-orange-500" : ""}`}
-                    onClick={() => handleTrackClick(a)} > {a}
-                  </li><hr /></>
+          {activeRecording ? (
+            <>
+              {/* {listSearchRes.filter(a=> a.lognumber === activeRecording).map(a => a.track)}  */}
+              {[
+                ...new Set(
+                  listSearchRes
+                    .filter((a) => a.lognumber === activeRecording)
+                    .map((a) => a.track)
+                ),
+              ].map((a) =>
+                a.includes("SJA") ? (
+                  <>
+                    <li
+                      key={a}
+                      className={`cursor-pointer mb-2 ${a} ${
+                        activeTrack === a ? "text-orange-500" : ""
+                      }`}
+                      onClick={() => handleTrackClick(a)}
+                    >
+                      {" "}
+                      {trackToTitles[a]}
+                    </li>
+                    <hr />
+                  </>
+                ) : (
+                  <>
+                    <li
+                      key={a}
+                      className={`cursor-pointer mb-2 ${a} ${
+                        activeTrack === a ? "text-orange-500" : ""
+                      }`}
+                      onClick={() => handleTrackClick(a)}
+                    >
+                      {" "}
+                      {a}
+                    </li>
+                    <hr />
+                  </>
+                )
               )}
-          </> : <></>
-          }
+            </>
+          ) : (
+            <></>
+          )}
         </ul>
       </div>
 
@@ -208,9 +238,11 @@ const MyTabbedInterface = ({
         {activeRecording && activeTrack && (
           <div>
             <h2 className="text-lg font-semibold mb-4">
-              {prettyNamesLogNumber[activeRecording]} - {activeTrack.includes('SJA')?trackToTitles[activeTrack]:activeTrack}
+              {prettyNamesLogNumber[activeRecording]} -{" "}
+              {activeTrack.includes("SJA")
+                ? trackToTitles[activeTrack]
+                : activeTrack}
             </h2>
-
             {/* Accordion for Recording AND Track */}
             <div className="border rounded border-2 mb-[0.5rem]">
               <MetadataAccordion
@@ -219,11 +251,18 @@ const MyTabbedInterface = ({
                 track={activeTrack}
                 findMatchRecording={findMatchRecording}
                 infoMusicList={infoMusicList}
-                structData={ newStruct[ newStruct.findIndex( (a) => a.recordingName === activeRecording ) ] }
+                structData={
+                  newStruct[
+                    newStruct.findIndex(
+                      (a) => a.recordingName === activeRecording
+                    )
+                  ]
+                }
               />
             </div>
             {/* We should change TrackRes I think... */}
-            {activeTrack} and its TrackRes:<br/>
+            {activeTrack} and its TrackRes:
+            <br />
             <TrackRes
               key={"Track_" + activeTrack}
               text={activeTrack}
