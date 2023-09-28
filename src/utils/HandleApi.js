@@ -2,9 +2,9 @@ import axios from 'axios'
 import { setIsLoading } from '../App';
 
 
-const baseUrl = "http://localhost:5000" // can be used for development
+// const baseUrl = "http://localhost:5000" // can be used for development
 // const baseUrl = "https://fullstack-proto-jazzdap-backend.onrender.com"
-// const baseUrl= "https://jazzdap-backend.onrender.com"
+const baseUrl= "https://jazzdap-backend.onrender.com"
 
 const getAllJazzDap = (setJazzDap) => {
   console.log("---- HandleApi / getAllJazzDap", new Date());
@@ -213,6 +213,7 @@ const getMatchLevenshteinDistance = (
   setInfoMusicList=null
 ) => {
   console.log("-- handleAPI / getMatchLevenshteinDistance. stringNotes: ", stringNotes, ", percMatch: ", percMatch, " user: ", user);
+  console.log("~~~~ baseUrl: ",baseUrl," ~~~~")
   setIsLoading(true);
   stringNotes += '';
 
