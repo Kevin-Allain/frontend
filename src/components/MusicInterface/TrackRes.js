@@ -43,7 +43,7 @@ const TrackRes = ({
                     {listSearchRes.map((item, i) => (
                         <div className='border-4 border-solid rounded'>
                             <div className='text-left mx-[1rem] my-[0.25rem] '>Sample {i} </div>
-                            {item.track} 
+                            {/* {item.track}  */}
                             <SampleRes
                                 // key={i + '' + item.recording + '_' + item.arrNotes.toString().replaceAll(',', '-')}
                                 text={i + '-' + item.track}

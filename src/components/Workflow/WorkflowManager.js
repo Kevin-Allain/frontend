@@ -1,6 +1,7 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { HiOutlineViewGridAdd } from "react-icons/hi";
 import { BsCardChecklist } from "react-icons/bs";
+import {BiSearchAlt} from 'react-icons/bi';
 // import { BsWrenchAdjustable } from "react-icons/bs";
 // import {FiPlayCircle} from 'react-icons/fi'
 import { AiFillDelete, AiOutlineEyeInvisible } from "react-icons/ai";
@@ -12,7 +13,8 @@ import {
   getWorkflowsInfo,
   createWorkflow,
   deleteWorkflow,
-  deleteWorkflowObject
+  deleteWorkflowObject,
+  getExactMatchWorkflowParameter
 } from "../../utils/HandleApi";
 // import WorkflowInterface from "./WorkflowInterface";
 // import Title from "../Presentation/Title";
@@ -26,6 +28,8 @@ import WorkflowPlayer from "./WorkflowPlayer";
 const WorkflowManager = () => {
   const [isWorkflowListVisible, setIsWorkflowListVisible] = useState(false);
   const [selectedPrivacyOption, setSelectedPrivacyOption] = useState('public');
+  const [textSearch, setTextSearch] = useState('');
+  const textSearchRef = useRef('');
 
   // Global variable for workflows
   const workflows = useSelector(state => state.workflows);
@@ -53,6 +57,10 @@ const WorkflowManager = () => {
   const handleChangeOption = (event) => {
     setSelectedPrivacyOption(event.target.value);
   };
+  const handleChangeQueryWorkflow = useCallback((event) => {
+    const value = event.target.value;
+    setTextSearch(value);
+  }, [setTextSearch]);
 
   const [isWorkflowVisible, setIsWorkerVisible] = useState(false);
   const [selectedWorkflow, setSelectedWorkflow] = useState(null);
@@ -62,6 +70,25 @@ const WorkflowManager = () => {
   const [descriptionInput, setDescriptionInput] = useState("");
   const descriptionInputRef = useRef("");
   const [showWorkflowAddition, setShowWorkflowAddition] = useState(false);
+  const [showSearchWorkflow, setShowSearchWorkflow] = useState(false);
+  const [selectionParameter, setSelectionParameter] = useState('author');
+
+  const [searchWorkflowOutput, setSearchWorkflowOutput] = useState([]);
+
+
+  function findExactMatchWorkflowParam(textSearch, selectionParameter) {
+    console.log("---- findExactMatchWorkflowParam")
+    setTextSearch('');
+
+    getExactMatchWorkflowParameter(
+      localStorage?.username,
+      textSearch, 
+      selectionParameter,
+      searchWorkflowOutput, 
+      setSearchWorkflowOutput
+    )
+  }
+
 
   const handleShowWorkflowAddition = () => { setShowWorkflowAddition(!showWorkflowAddition); };
   const handleShowWorkflowDetail = () => { setSelectedWorkflow(null); }
@@ -72,6 +99,11 @@ const WorkflowManager = () => {
     );
     setIsWorkflowListVisible((prevState) => !prevState);
   };
+
+  const handleToggleSearch = () => {
+    setShowSearchWorkflow(!showSearchWorkflow);
+  }
+
   const handleChangeTitleInput = (event) => {
     const value = event.target.value;
     // Let's not allow a title too long
@@ -82,6 +114,16 @@ const WorkflowManager = () => {
     // Let's not allow the description to be extremely long
     if (value.length <= 300) { setDescriptionInput(value); }
   };
+
+  const handleClickWorkflowSearch = useCallback (async (e) => {
+    e.preventDefault();
+    console.log("", textSearch, ", (typeof textSearch): ", (typeof textSearch));
+    if (textSearch !== '') { 
+      // findMatchLevenshteinDistance(textSearch); 
+      findExactMatchWorkflowParam(textSearch,selectionParameter);
+    }
+  }, [textSearch, findExactMatchWorkflowParam]);
+
 
   useEffect(() => {
     if (localStorage?.username) {
@@ -199,7 +241,7 @@ const WorkflowManager = () => {
                     <b>Content of the {item.objectType}: </b>
                     {item.content ? (
                       <div className="contentItem">
-                        {(item.content && item.content.length > 0)?  
+                        {(item.content && item.content.length > 0 )?  
                         (
                           <div className="contentWorkflow">
                               {item.content
@@ -304,6 +346,31 @@ const WorkflowManager = () => {
 
           </div>
         </div>
+      }
+      <div className="workflowSearch">
+        Search for workflows <BiSearchAlt className="icon" onClick={handleToggleSearch}/>
+      </div>
+      {showSearchWorkflow &&
+        (
+          <div className="topTextSearchWorkflow mx-[0.5rem] my-[0.25rem]">
+            <div className='disclaimerSearchWorkflow'>Enter the text for workflow search based on {selectionParameter}.</div>
+            <input
+              type="text"
+              className='inputWorkflowSearch'
+              placeholder="Enter search here"
+              ref={textSearchRef}
+              autoComplete="off"
+              required 
+              value={textSearch}
+              onChange={handleChangeQueryWorkflow}
+            />
+            <button
+              className='mx-[0.5rem] my-[0.25rem]'
+              onClick={handleClickWorkflowSearch}>
+              Submit search
+            </button>
+          </div>
+        )
       }
     </div>
   );

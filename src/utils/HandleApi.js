@@ -717,11 +717,23 @@ const deleteWorkflow = (_id, dispatch, setWorkflows, userId) => {
     .catch(err => console.log(err));
 }
   
+const getExactMatchWorkflowParameter = (_id, textSearch, selectionParameter, searchWorkflowOutput, setSearchWorkflowOutput) => {
+  console.log("handleApi deleteWorkflow. ", {_id, textSearch, selectionParameter, searchWorkflowOutput, setSearchWorkflowOutput});
+  // TODO
+  axios.post(`${baseUrl}/getExactMatchWorkflowParameter`, {
+    _id, textSearch, selectionParameter
+  })
+    .then((data) => {
+      console.log("Then handleApi getExactMatchWorkflowParameter. data: ", data);
 
+    })
+    .catch(err => console.log(err));
+}
 
 const changeWorkflowPrivacy = (_id,newPrivacy) => {
+  console.log("changeWorkflowPrivacy, ",{_id,newPrivacy});
   // TODO 
-  
+
 }
 
 
@@ -822,5 +834,6 @@ export {
   getUserAnnotations,
   getWorkflow, getWorkflowsInfo, createWorkflow, deleteWorkflow,
   addContentWorkflow, deleteWorkflowObject,
+  getExactMatchWorkflowParameter, changeWorkflowPrivacy,
   getDatabaseContent
 }
