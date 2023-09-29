@@ -25,6 +25,7 @@ import WorkflowPlayer from "./WorkflowPlayer";
 
 const WorkflowManager = () => {
   const [isWorkflowListVisible, setIsWorkflowListVisible] = useState(false);
+  const [selectedPrivacyOption, setSelectedPrivacyOption] = useState('public');
 
   // Global variable for workflows
   const workflows = useSelector(state => state.workflows);
@@ -48,6 +49,10 @@ const WorkflowManager = () => {
     // This is unique, so deletion of the workflow object should be simple
     deleteWorkflowObject(workflow_id, objectIndex, selectedWorkflow, dispatch, setWorkflows, localStorage?.username);
   }
+
+  const handleChangeOption = (event) => {
+    setSelectedPrivacyOption(event.target.value);
+  };
 
   const [isWorkflowVisible, setIsWorkerVisible] = useState(false);
   const [selectedWorkflow, setSelectedWorkflow] = useState(null);
@@ -127,6 +132,11 @@ const WorkflowManager = () => {
           <br />
           <em>Once created, you will be able to save objects of interest in your workflow.</em>
           <br />
+          <select className='selectPrivacy' value={selectedPrivacyOption} onChange={handleChangeOption}>
+            <option value="public">Public</option>
+            <option value="private">Private</option>
+          </select>
+          <br/>
           Save this workflow{" "}
           {/* Note the call to this function is set with empty parameters as we set first the creation without objects to populate the workflow */}
           <TfiSave
@@ -144,7 +154,9 @@ const WorkflowManager = () => {
                   setTitleInput,
                   setDescriptionInput,
                   dispatch,
-                  setWorkflows
+                  setWorkflows,
+                  [],
+                  selectedPrivacyOption
                 )
                 : console.log("empty title or description. titleInput: ", titleInput, "typeof titleInput: ", typeof titleInput, ", descriptionInput: ", descriptionInput, "typeof descriptionInput: ", typeof descriptionInput);
             }}
@@ -170,7 +182,7 @@ const WorkflowManager = () => {
         <div className="workflowInterface">
           <h1>Workflow Interface</h1>{" "}<AiOutlineEyeInvisible className="icon" onClick={handleShowWorkflowDetail} />
           <div className="workflowHeader">
-            <div className="workFlowTitle">{selectedWorkflow.title}</div>
+            <div className="workFlowTitle">{selectedWorkflow.title}</div> <div className="privacyWorkflowInfo">({selectedWorkflow.privacy})</div>
             <div className="workFlowDescription">
               <u>Description:</u>
               <br />

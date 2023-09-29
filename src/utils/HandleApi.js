@@ -634,10 +634,11 @@ const createWorkflow = (
   setTitleInput, setDescriptionInput,
   dispatch,
   setWorkflows,
-  objectIndexRange = [] // For samples we need to know how far the search goes beyond the first note identified
+  objectIndexRange = [], // For samples we need to know how far the search goes beyond the first note identified
+  privacy='public'
 ) => {
   console.log("handleApi createWorkflow. ", {
-    title, description, time, author, objectsId, objectsTimes, objectsNote, objectsType
+    title, description, time, author, objectsId, objectsTimes, objectsNote, objectsType,privacy
   });
 
   const objects = [];
@@ -649,14 +650,15 @@ const createWorkflow = (
       objectIndex: i,
       objectNote: objectsNote[i],
       objectType: objectsType[i],
-      objectIndexRange: objectIndexRange[i]
+      objectIndexRange: objectIndexRange[i],
     })
   }
 
   axios
     .post(`${baseUrl}/createWorkflow`, {
       title, description, time, author,
-      objects
+      objects,
+      privacy
     })
     .then((data) => {
       console.log("Then handleApi createWorkflow");
@@ -715,6 +717,12 @@ const deleteWorkflow = (_id, dispatch, setWorkflows, userId) => {
     .catch(err => console.log(err));
 }
   
+
+
+const changeWorkflowPrivacy = (_id,newPrivacy) => {
+  // TODO 
+  
+}
 
 
 // Note: the parameter passed is the _id of the workflow

@@ -39,6 +39,8 @@ const EmbeddedWorkflowInteraction = ({idCaller, typeCaller, indexRange=0}) => {
     const [showWorkflowActions, setShowWorkflowActions] = useState(false);
     const [showWorkflowAddition, setShowWorkflowAddition] = useState(false);
 
+    const [selectedPrivacyOption, setSelectedPrivacyOption] = useState('public');
+
 
     // ## Functions display
     const handleShowActionsWorkflow = () => {
@@ -66,6 +68,11 @@ const EmbeddedWorkflowInteraction = ({idCaller, typeCaller, indexRange=0}) => {
         // Let's not allow the description to be extremely long
         if (value.length <= 300) { setNoteInput(value); }
     };
+
+    const handleChangeOption = (event) => {
+      setSelectedPrivacyOption(event.target.value);
+    };
+  
 
     // ## Functions actions
     const handleWorkflowEnrich = (indexWorkflow) => {
@@ -163,6 +170,11 @@ const EmbeddedWorkflowInteraction = ({idCaller, typeCaller, indexRange=0}) => {
                     />{" "}
                   </div>
                   <br />
+                  <select className='selectPrivacy' value={selectedPrivacyOption} onChange={handleChangeOption}>
+                    <option value="public">Public</option>
+                    <option value="private">Private</option>
+                  </select>
+                  <br />
                   Save this workflow{" "}
                   <TfiSave
                     className="icon"
@@ -181,7 +193,8 @@ const EmbeddedWorkflowInteraction = ({idCaller, typeCaller, indexRange=0}) => {
                           setDescriptionInput,
                           dispatch,
                           setWorkflows,
-                          [indexRange] // // For samples we need to know how far the search goes beyond the first note identified
+                          [indexRange], // // For samples we need to know how far the search goes beyond the first note identified
+                          selectedPrivacyOption
                         )
                         : console.log("empty title or description. titleInput: ", titleInput, "typeof titleInput: ", typeof titleInput, ", descriptionInput: ", descriptionInput, "typeof descriptionInput: ", typeof descriptionInput);
 
