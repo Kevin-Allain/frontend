@@ -292,6 +292,10 @@ opacity: 1;
     padding: 0.25rem;    
 }
 
+.metadata-header{
+    padding-left: 0.5rem;
+}
+
 .metadata-header:hover{
     color: orange;
     cursor: pointer;

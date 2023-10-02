@@ -164,10 +164,15 @@ const WorkflowManager = () => {
       {/* That's a bit much... */}
       {/* <Title firstLine="Workflow" secondLine="Manager" /> */}
       <h1 className="text-left">Workflow Manager</h1>
-      <div className="blockWorkFlow">
-      <div className="additionWorkFlow icon flex rounded-t-lg" onClick={() => handleShowWorkflowAddition()}>
+      <div className="blockWorkFlow rounded-t-lg">
+      <div className="additionWorkFlow icon flex " onClick={() => handleShowWorkflowAddition()}>
+        <HiOutlineViewGridAdd className="mr-[0.25rem]"/>
         Create a new workflow{" "}
-        <HiOutlineViewGridAdd/>
+        {showWorkflowAddition ? (
+            <FaAngleUp className="metadata-icon" />
+          ) : (
+            <FaAngleDown className="metadata-icon" />
+          )}
       </div>
       {showWorkflowAddition && (
         <div className="creationWorkflow">
@@ -224,7 +229,13 @@ const WorkflowManager = () => {
       </div>
       <div className="blockWorkFlow">
       <div className="listWorkflows icon flex" onClick={handleToggleUserWorkflows}>
-        Your workflows <BsCardChecklist />
+        <BsCardChecklist className="mr-[0.25rem]"/>
+        Your workflows 
+        {isWorkflowListVisible ? (
+            <FaAngleUp className="metadata-icon" />
+          ) : (
+            <FaAngleDown className="metadata-icon" />
+          )}
       </div>
       {isWorkflowListVisible &&
         workflows.map((item, i) => (
@@ -366,7 +377,14 @@ const WorkflowManager = () => {
       </div>
       <div className="blockWorkFlow rounded-b-lg">
       <div className="workflowSearch icon flex " onClick={handleToggleSearch}>
-        Search for workflows <BiSearchAlt />
+        <BiSearchAlt className="mr-[0.25rem]"/>
+        Search for workflows 
+        {showSearchWorkflow ? (
+            <FaAngleUp className="metadata-icon" />
+          ) : (
+            <FaAngleDown className="metadata-icon" />
+          )}
+
       </div>
       {showSearchWorkflow &&
         (
