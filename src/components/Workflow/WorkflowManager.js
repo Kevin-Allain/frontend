@@ -110,6 +110,7 @@ const WorkflowManager = () => {
     setIsWorkflowListVisible((prevState) => !prevState);
   };
 
+  const handleShowSearchWorkflowDetail = () => { setSelectedSearchWorkflow(null); }
   const handleToggleSearch = () => {
     setShowSearchWorkflow(!showSearchWorkflow);
     setOldTextSearch(''); 
@@ -433,7 +434,7 @@ const loadDetailsSearchWorkflow = (_id) => {
           {/* The display of the content of the searched workflow */}
           {isSearchWorkflowVisible && selectedSearchWorkflow &&
         <div className="workflowInterface">
-          <h1>Workflow Interface</h1>{" "}<AiOutlineEyeInvisible className="icon" onClick={handleShowWorkflowDetail} />
+          <h1>Workflow Interface from Search</h1>{" "}<AiOutlineEyeInvisible className="icon" onClick={handleShowSearchWorkflowDetail} />
           <div className="workflowHeader">
             <div className="workFlowTitle">{selectedSearchWorkflow.title}</div> <div className="privacyWorkflowInfo">({selectedSearchWorkflow.privacy})</div>
             <div className="workFlowDescription">
