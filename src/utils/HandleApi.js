@@ -725,7 +725,7 @@ const getExactMatchWorkflowParameter = (_id, textSearch, selectionParameter, sea
   })
     .then((data) => {
       console.log("Then handleApi getExactMatchWorkflowParameter. data: ", data);
-
+      setSearchWorkflowOutput(data.data);
     })
     .catch(err => console.log(err));
 }

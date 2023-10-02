@@ -83,7 +83,14 @@
 }
 
 .infoAdditionWorkflow {
-    padding-left: 0.25rem;
+    padding-left: 0.5rem;
+}
+
+.blockWorkFlow{
+    border: solid;
+    border-width: thin;
+    border-color: gray;
+    padding-left: 0.5rem;
 }
 
 .threedotsEmbedded {
@@ -210,4 +217,20 @@
 .contentWorkflow{
     padding-top:0.25rem; padding-bottom: 0.25rem;
     padding-left: 1rem; padding-right: 1rem;    
+}
+
+.searchWorkflowOutput{
+    padding-left: 1rem;
+    padding-top: 0.1rem;
+    padding-bottom: 0.1rem;
+}
+
+.searchWorkflowOutput:hover {
+    background-color: #acadbd;
+    color: black;
+    font-size: large;
+    cursor: pointer;
+    border: solid;
+    border-width: thin;
+    border-color: orange;
 }

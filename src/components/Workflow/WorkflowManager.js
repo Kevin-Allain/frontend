@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef, useCallback } from "react";
 import { HiOutlineViewGridAdd } from "react-icons/hi";
 import { BsCardChecklist } from "react-icons/bs";
 import {BiSearchAlt} from 'react-icons/bi';
+import { FaAngleDown, FaAngleUp } from 'react-icons/fa';
 // import { BsWrenchAdjustable } from "react-icons/bs";
 // import {FiPlayCircle} from 'react-icons/fi'
 import { AiFillDelete, AiOutlineEyeInvisible } from "react-icons/ai";
@@ -30,6 +31,13 @@ const WorkflowManager = () => {
   const [selectedPrivacyOption, setSelectedPrivacyOption] = useState('public');
   const [textSearch, setTextSearch] = useState('');
   const textSearchRef = useRef('');
+
+  const [oldTextSearch, setOldTextSearch] = useState(''); 
+  const [oldSelectionParameter, setOldSelectionParameter]= useState('');
+
+  const [expandedSearch, setExpandedSearch] = useState(false);
+  const [expandedCreation, setExpandedCreation] = useState(false);
+  const [expandedListWorkflows, setExpandedListWorkflows] = useState(false);
 
   // Global variable for workflows
   const workflows = useSelector(state => state.workflows);
@@ -93,6 +101,7 @@ const WorkflowManager = () => {
   const handleShowWorkflowAddition = () => { setShowWorkflowAddition(!showWorkflowAddition); };
   const handleShowWorkflowDetail = () => { setSelectedWorkflow(null); }
   const handleToggleUserWorkflows = () => {
+    setSelectedWorkflow(null);
     getWorkflowsInfo(
       dispatch, setWorkflows,
       { user: localStorage?.username }
@@ -102,6 +111,10 @@ const WorkflowManager = () => {
 
   const handleToggleSearch = () => {
     setShowSearchWorkflow(!showSearchWorkflow);
+    setOldTextSearch(''); 
+    setOldSelectionParameter('');
+    // Decided that we should hide previous results if we hide.
+    setSearchWorkflowOutput([]);
   }
 
   const handleChangeTitleInput = (event) => {
@@ -120,6 +133,8 @@ const WorkflowManager = () => {
     console.log("", textSearch, ", (typeof textSearch): ", (typeof textSearch));
     if (textSearch !== '') { 
       // findMatchLevenshteinDistance(textSearch); 
+      setOldTextSearch(textSearch); 
+      setOldSelectionParameter(selectionParameter);
       findExactMatchWorkflowParam(textSearch,selectionParameter);
     }
   }, [textSearch, findExactMatchWorkflowParam]);
@@ -149,9 +164,10 @@ const WorkflowManager = () => {
       {/* That's a bit much... */}
       {/* <Title firstLine="Workflow" secondLine="Manager" /> */}
       <h1 className="text-left">Workflow Manager</h1>
-      <div className="additionWorkFlow">
+      <div className="blockWorkFlow">
+      <div className="additionWorkFlow icon flex rounded-t-lg" onClick={() => handleShowWorkflowAddition()}>
         Create a new workflow{" "}
-        <HiOutlineViewGridAdd className="icon" onClick={() => handleShowWorkflowAddition()} />
+        <HiOutlineViewGridAdd/>
       </div>
       {showWorkflowAddition && (
         <div className="creationWorkflow">
@@ -205,21 +221,21 @@ const WorkflowManager = () => {
           />
         </div>
       )}
-      <div className="listWorkflows">
-        Your workflows{" "}
-        <BsCardChecklist className="icon" onClick={handleToggleUserWorkflows} />{" "}
-        <br />
-        {isWorkflowListVisible &&
-          workflows.map((item, i) => (
-            <div className="containerWorkflowSummary" key={'containerWorkflowSummary_'+i}>
-              <div className="workflowDetails" onClick={() => loadDetailWorkflow(item._id)} key={item._id} >
-                Title: <u>{item.title}</u> 
-                {/* | {item.time.replace("T",' ').split(".")[0]} */}
-              </div>
-              <AiFillDelete className="icon" onClick={() => handleDeleteWorkflow(item._id)} />
-            </div>
-          ))}
       </div>
+      <div className="blockWorkFlow">
+      <div className="listWorkflows icon flex" onClick={handleToggleUserWorkflows}>
+        Your workflows <BsCardChecklist />
+      </div>
+      {isWorkflowListVisible &&
+        workflows.map((item, i) => (
+          <div className="containerWorkflowSummary" key={'containerWorkflowSummary_' + i}>
+            <div className="workflowDetails" onClick={() => loadDetailWorkflow(item._id)} key={item._id} >
+              Title: <u>{item.title}</u>
+              {/* | {item.time.replace("T",' ').split(".")[0]} */}
+            </div>
+            <AiFillDelete className="icon" onClick={() => handleDeleteWorkflow(item._id)} />
+          </div>
+        ))}
       {isWorkflowVisible && selectedWorkflow &&
         <div className="workflowInterface">
           <h1>Workflow Interface</h1>{" "}<AiOutlineEyeInvisible className="icon" onClick={handleShowWorkflowDetail} />
@@ -347,8 +363,10 @@ const WorkflowManager = () => {
           </div>
         </div>
       }
-      <div className="workflowSearch">
-        Search for workflows <BiSearchAlt className="icon" onClick={handleToggleSearch}/>
+      </div>
+      <div className="blockWorkFlow rounded-b-lg">
+      <div className="workflowSearch icon flex " onClick={handleToggleSearch}>
+        Search for workflows <BiSearchAlt />
       </div>
       {showSearchWorkflow &&
         (
@@ -372,6 +390,18 @@ const WorkflowManager = () => {
           </div>
         )
       }
+      <div className="areaSearchWorkflowOutput mx-[1rem] my-[0.25rem] ">
+        {showSearchWorkflow && oldTextSearch !== '' &&
+          <u className='my-[0.5rem]'>Your search for: {oldTextSearch} with the parameter: {oldSelectionParameter}</u>
+        }
+        {showSearchWorkflow && searchWorkflowOutput.length > 0 &&
+          searchWorkflowOutput.map(a => (
+            <div className="searchWorkflowOutput">Title: {a.title}, with {a.objects.length} objects.</div>
+          )
+          )
+        }
+      </div>
+      </div>
     </div>
   );
 };
