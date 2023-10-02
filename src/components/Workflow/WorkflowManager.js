@@ -447,8 +447,8 @@ const loadDetailsSearchWorkflow = (_id) => {
               {selectedSearchWorkflow.objects.map((item, i) => (
                 <div className="workflowObject" key={'workflowObject_' + i}>
                   {/* For testing */}
-                  <u>Object id:</u> {item.objectId} | <u>Object type:</u>{" "} {item.objectType} | <u>Object index:</u> {item.objectIndex} <br />
-                  {/* <div className="workflowContentDisplay">
+                  {/* <u>Object id:</u> {item.objectId} | <u>Object type:</u>{" "} {item.objectType} | <u>Object index:</u> {item.objectIndex} <br /> */}
+                  <div className="workflowContentDisplay">
                     <b>Content of the {item.objectType}: </b>
                     {item.content ? (
                       <div className="contentItem">
@@ -463,16 +463,12 @@ const loadDetailsSearchWorkflow = (_id) => {
                                     {index === 0 && (
                                       <table className="tableItemContentAndFirst">
                                         <colgroup>
-                                          {Object.keys(contentI).map((key) => (
-                                            <col key={key} />
-                                          ))}
+                                          {Object.keys(contentI).map((key) => ( <col key={key} /> ))}
                                         </colgroup>
                                         <thead>
                                           <tr>
                                             {Object.keys(contentI).map((key) => (
-                                              <th key={key}>
-                                                <b style={{ color: 'white' }}>{key}</b>
-                                              </th>
+                                              <th key={key}> <b style={{ color: 'white' }}>{key}</b> </th>
                                             ))}
                                           </tr>
                                         </thead>
@@ -493,11 +489,7 @@ const loadDetailsSearchWorkflow = (_id) => {
                                     )}
                                     {index > 0 && (
                                       <table className="tableItemContentBody">
-                                        <colgroup>
-                                          {Object.keys(contentI).map((key) => (
-                                            <col key={key} />
-                                          ))}
-                                        </colgroup>
+                                        <colgroup> {Object.keys(contentI).map((key) => ( <col key={key} /> ))} </colgroup>
                                         <tbody>
                                           <tr>
                                             {Object.values(contentI).map((value, index) => (
@@ -518,41 +510,27 @@ const loadDetailsSearchWorkflow = (_id) => {
                               {item.objectType === 'sample' ? (
                                 <div className="sampleWorkflow">
                                   <div className='pianoArea'>
-                                    <PianoRoll
-                                      notes={[...item.content.slice().sort((a, b) => a.m_id - b.m_id).map(a => a.pitch)]}
-                                      occurrences={[...item.content.slice().sort((a, b) => a.m_id - b.m_id).map(a => a.onset)]}
-                                      durations={[...item.content.slice().sort((a, b) => a.m_id - b.m_id).map(a => a.duration)]}
-                                      width={600}
-                                      height={200}
-                                    />
+                                    <PianoRoll notes={[...item.content.slice().sort((a, b) => a.m_id - b.m_id).map(a => a.pitch)]} occurrences={[...item.content.slice().sort((a, b) => a.m_id - b.m_id).map(a => a.onset)]} durations={[...item.content.slice().sort((a, b) => a.m_id - b.m_id).map(a => a.duration)]} width={600} height={200} />
                                   </div>
                                   <div className="iconsSampleRes">
-                                    <WorkflowPlayer
-                                      notes={[...item.content.slice().sort((a, b) => a.m_id - b.m_id).map(a => a.pitch)]}
-                                      occurences={[...item.content.slice().sort((a, b) => a.m_id - b.m_id).map(a => a.onset)]}
-                                      durations={[...item.content.slice().sort((a, b) => a.m_id - b.m_id).map(a => a.duration)]}
-                                    />
+                                    <WorkflowPlayer notes={[...item.content.slice().sort((a, b) => a.m_id - b.m_id).map(a => a.pitch)]} occurences={[...item.content.slice().sort((a, b) => a.m_id - b.m_id).map(a => a.onset)]} durations={[...item.content.slice().sort((a, b) => a.m_id - b.m_id).map(a => a.duration)]} />
                                   </div>
                                 </div>
                               ) : ('')}
-                          </div>
-                        )
-                        : (<div className="contentWorkflow">No additional content in database for the {item.objectType} </div>)
+                            </div>
+                          )
+                          : (<div className="contentWorkflow">No additional content in database for the {item.objectType} </div>)
                         }
                       </div>
-                    ) : (
-                      <em>Loading content...</em>
-                    )}
-                  </div> */}
+                    ) : (<em>Loading content...</em>)}
+                  </div>
                   <u>Object note:</u><br /> {item.objectNote} <br />
                 </div>
               ))}
+                </div>
+              </div>
             </div>
-
-          </div>
-        </div>
-      }
-
+          }
         </div>
       </div>
     </div>
