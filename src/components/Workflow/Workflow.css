@@ -121,9 +121,12 @@
 }
 
 .creationWorkFlowEmbedded {
-    border: solid;
+    /* border: solid;
     border-width: thin;
-    border-color: orange;
+    border-color: orange; */
+    display: flex;
+    padding-left: 1rem;
+    padding-top: 0.25rem;
 }
 
 .additionWorkFlowEmbedded {
@@ -140,11 +143,14 @@
     margin-bottom: 0.2rem;
     margin-left: 0.5rem;
     margin-right: 0.5rem;
+    display: -webkit-box;
+    text-align: center;
+    padding-left: 2rem;    
 }
 
 .listWorkflowEmbedded:hover {
-    background-color: gray;
-    color: white;
+    background-color: rgb(179, 177, 177);
+    color: orange;
 }
 
 .objectNoteInput {

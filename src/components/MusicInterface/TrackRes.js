@@ -32,40 +32,48 @@ const TrackRes = ({
         testPerformances    
     })
     return (
-        <div className="trackres" key={text}>
-            {/* <div className="texttrackres"> <h3>Track: {text} </h3> </div> */}
-            {/* <div className='iconTracksInteractions'>
+      <div className="trackres" key={text}>
+        {/* <div className="texttrackres"> <h3>Track: {text} </h3> </div> */}
+        {/* <div className='iconTracksInteractions'>
                 <AnnotationSystem type={"track"} info={text} />
                 <EmbeddedWorkflowInteraction idCaller={listSearchRes[0].arrIdNotes[0]} typeCaller={"track"} />
             </div> */}
-            {(testPerformances) ? (<></>) :
-                <>
-                    {listSearchRes.map((item, i) => (
-                        <div className='border-4 border-solid rounded'>
-                            <div className='text-left mx-[1rem] my-[0.25rem] '>Sample {i} </div>
-                            {/* {item.track}  */}
-                            <SampleRes
-                                // key={i + '' + item.recording + '_' + item.arrNotes.toString().replaceAll(',', '-')}
-                                text={i + '-' + item.track}
-                                lognumber={item.track.split('-')[0]}
-                                length={item.arrTime[item.arrTime.length - 1] + item.arrDurations[item.arrDurations.length - 1] - item.arrTime[0]}
-                                notes={item.arrNotes.toString().replaceAll(',', '-')}
-                                durations={item.arrDurations.toString().replaceAll(',', '-')}
-                                times={item.arrTime.toString().replaceAll(',', '-')}
-                                distance={item.distCalc}
-                                // addition
-                                idDBNotes={item.arrIdNotes}
-                                // Need to format the structure 
-                                funcPlayMIDI={() => formatAndPlay(item)}
-                            // getMusicInfo={() => getMusicInfo(item.recording, infoMusicList, setInfoMusicList)}
-                            // infoMusicList={infoMusicList}
-                            />
-                        </div>
-                    ))
-                    }
-                </>
-            }
-        </div>
+        {testPerformances ? (
+          <></>
+        ) : (
+          <>
+            {listSearchRes.length} samples. <br />
+            {listSearchRes.map((item, i) => (
+              <div className="border-4 border-solid rounded">
+                <div className="text-left mx-[1rem] my-[0.25rem] ">
+                  Sample {i}{" "}
+                </div>
+                {/* {item.track}  */}
+                <SampleRes
+                  // key={i + '' + item.recording + '_' + item.arrNotes.toString().replaceAll(',', '-')}
+                  text={i + "-" + item.track}
+                  lognumber={item.track.split("-")[0]}
+                  length={
+                    item.arrTime[item.arrTime.length - 1] +
+                    item.arrDurations[item.arrDurations.length - 1] -
+                    item.arrTime[0]
+                  }
+                  notes={item.arrNotes.toString().replaceAll(",", "-")}
+                  durations={item.arrDurations.toString().replaceAll(",", "-")}
+                  times={item.arrTime.toString().replaceAll(",", "-")}
+                  distance={item.distCalc}
+                  // addition
+                  idDBNotes={item.arrIdNotes}
+                  // Need to format the structure
+                  funcPlayMIDI={() => formatAndPlay(item)}
+                  // getMusicInfo={() => getMusicInfo(item.recording, infoMusicList, setInfoMusicList)}
+                  // infoMusicList={infoMusicList}
+                />
+              </div>
+            ))}
+          </>
+        )}
+      </div>
     );
 }
 

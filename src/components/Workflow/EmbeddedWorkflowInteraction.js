@@ -118,7 +118,7 @@ const EmbeddedWorkflowInteraction = ({idCaller, typeCaller, indexRange=0}) => {
         {/* w-fit -> doubt about this, but maybe not necessary */}
         {typeof (localStorage.token) !== 'undefined' &&
         // className="threedotsEmbedded"
-          <div className="icon text-[15px]" onClick={() => handleShowActionsWorkflow()}>
+          <div className="icon flex text-[15px]" onClick={() => handleShowActionsWorkflow()}>
             Workflow Interface
             <BsThreeDotsVertical
               className="icon threedotsEmbedded"
@@ -127,12 +127,9 @@ const EmbeddedWorkflowInteraction = ({idCaller, typeCaller, indexRange=0}) => {
         }
         {showWorkflowActions && (
           <div className="listActionsWorkflowEmbedded">
-            <div className="creationWorkFlowEmbedded">
-              Add to new workflow{" "}
-              <HiOutlineViewGridAdd
-                className="icon"
-                onClick={() => handleShowWorkflowAddition()}
-              />
+            <div className="creationWorkFlowEmbedded icon" onClick={() => handleShowWorkflowAddition()}>
+              Add to new workflow{" "}<HiOutlineViewGridAdd/>
+            </div>
               {showWorkflowAddition && (
                 <div className="creationWorkflow">
                   Title (50 characters max): <br />
@@ -203,7 +200,6 @@ const EmbeddedWorkflowInteraction = ({idCaller, typeCaller, indexRange=0}) => {
                   />
                 </div>
               )}{" "}
-            </div>
 
             <div className="additionWorkFlowEmbedded">
               Add to existing workflow <br />
@@ -215,10 +211,10 @@ const EmbeddedWorkflowInteraction = ({idCaller, typeCaller, indexRange=0}) => {
                 onChange={(e) => setTextInputObjectNote(e.target.value)}
               />{" "}
               {workflows.map((item, i) => (
-                <div className="listWorkflowEmbedded" key={item._id} index={i}>
+                <div className="listWorkflowEmbedded icon" key={item._id} index={i} onClick={() => handleWorkflowEnrich(i)}>
                   {item.title}
                   <br />
-                  <HiOutlineSaveAs className="icon" onClick={() => handleWorkflowEnrich(i)} />{" "}
+                  <HiOutlineSaveAs />
                 </div>
               ))}
             </div>
