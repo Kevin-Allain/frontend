@@ -5,9 +5,9 @@ import {BiSearchAlt} from 'react-icons/bi';
 import { FaAngleDown, FaAngleUp } from 'react-icons/fa';
 // import { BsWrenchAdjustable } from "react-icons/bs";
 // import {FiPlayCircle} from 'react-icons/fi'
-import { AiFillDelete, AiOutlineEyeInvisible } from "react-icons/ai";
+import { AiFillDelete, AiOutlineEyeInvisible, AiOutlineLoading } from "react-icons/ai";
 import { TfiSave } from "react-icons/tfi";
-import {BsUnlock,BsLock} from 'react-icons/bs'
+import {BsUnlock,BsLock} from 'react-icons/bs';
 // import Workflow from "../../misc/disregardedWorkflow";
 import "./Workflow.css";
 import {
@@ -40,6 +40,8 @@ const WorkflowManager = () => {
   const [expandedSearch, setExpandedSearch] = useState(false);
   const [expandedCreation, setExpandedCreation] = useState(false);
   const [expandedListWorkflows, setExpandedListWorkflows] = useState(false);
+
+  const [loadingSearchWorkflow, setLoadingSearchWorkflow] = useState(false);
 
   // Global variable for workflows
   const workflows = useSelector(state => state.workflows);
@@ -96,7 +98,8 @@ const WorkflowManager = () => {
       textSearch, 
       selectionParameter,
       searchWorkflowOutput, 
-      setSearchWorkflowOutput
+      setSearchWorkflowOutput,
+      setLoadingSearchWorkflow
     )
   }
 
@@ -138,6 +141,7 @@ const WorkflowManager = () => {
     console.log("", textSearch, ", (typeof textSearch): ", (typeof textSearch));
     if (textSearch !== '') { 
       // findMatchLevenshteinDistance(textSearch); 
+      setLoadingSearchWorkflow(true);
       setOldTextSearch(textSearch); 
       setOldSelectionParameter(selectionParameter);
       findExactMatchWorkflowParam(textSearch,selectionParameter);
@@ -436,6 +440,7 @@ const loadDetailsSearchWorkflow = (_id) => {
               onClick={handleClickWorkflowSearch}>
               Submit search
             </button>
+            {loadingSearchWorkflow && <AiOutlineLoading className="spin"/>}
           </div>
         )
       }

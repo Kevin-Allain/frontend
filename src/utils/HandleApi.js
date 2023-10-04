@@ -718,14 +718,15 @@ const deleteWorkflow = (_id, dispatch, setWorkflows, userId) => {
     .catch(err => console.log(err));
 }
   
-const getExactMatchWorkflowParameter = (_id, textSearch, selectionParameter, searchWorkflowOutput, setSearchWorkflowOutput) => {
-  console.log("handleApi deleteWorkflow. ", {_id, textSearch, selectionParameter, searchWorkflowOutput, setSearchWorkflowOutput});
+const getExactMatchWorkflowParameter = (_id, textSearch, selectionParameter, searchWorkflowOutput, setSearchWorkflowOutput, setLoadingSearchWorkflow) => {
+  console.log("handleApi deleteWorkflow. ", {_id, textSearch, selectionParameter, searchWorkflowOutput, setSearchWorkflowOutput, setLoadingSearchWorkflow});
   // TODO ... why is this a post?
   axios.post(`${baseUrl}/getExactMatchWorkflowParameter`, {
     _id, textSearch, selectionParameter
   })
     .then((data) => {
       console.log("Then handleApi getExactMatchWorkflowParameter. data: ", data);
+      setLoadingSearchWorkflow(false);
       setSearchWorkflowOutput(data.data);
     })
     .catch(err => console.log(err));
