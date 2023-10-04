@@ -69,6 +69,10 @@ const WorkflowManager = () => {
   const handleChangeOption = (event) => {
     setSelectedPrivacyOption(event.target.value);
   };
+  const handleChangeSearchAttribute = (event) => {
+    console.log("handleChangeSearchAttribute. event.target.value: ",event.target.value);
+    setSearchAttribute(event.target.value);
+  }
   const handleChangeQueryWorkflow = useCallback((event) => {
     const value = event.target.value;
     setTextSearch(value);
@@ -83,20 +87,20 @@ const WorkflowManager = () => {
   const descriptionInputRef = useRef("");
   const [showWorkflowAddition, setShowWorkflowAddition] = useState(false);
   const [showSearchWorkflow, setShowSearchWorkflow] = useState(false);
-  const [selectionParameter, setSelectionParameter] = useState('author');
+  const [searchAttribute, setSearchAttribute] = useState('author');
 
   const [searchWorkflowOutput, setSearchWorkflowOutput] = useState([]);
   const [isSearchWorkflowVisible, setIsSearchWorkflowVisible] = useState(false);
   const [selectedSearchWorkflow, setSelectedSearchWorkflow] = useState(null);
 
-  function findExactMatchWorkflowParam(textSearch, selectionParameter) {
+  function findExactMatchWorkflowParam(textSearch, setSearchAttribute) {
     console.log("---- findExactMatchWorkflowParam")
     setTextSearch('');
 
     getExactMatchWorkflowParameter(
       localStorage?.username,
       textSearch, 
-      selectionParameter,
+      setSearchAttribute,
       searchWorkflowOutput, 
       setSearchWorkflowOutput,
       setLoadingSearchWorkflow
@@ -143,8 +147,8 @@ const WorkflowManager = () => {
       // findMatchLevenshteinDistance(textSearch); 
       setLoadingSearchWorkflow(true);
       setOldTextSearch(textSearch); 
-      setOldSelectionParameter(selectionParameter);
-      findExactMatchWorkflowParam(textSearch,selectionParameter);
+      setOldSelectionParameter(searchAttribute);
+      findExactMatchWorkflowParam(textSearch,searchAttribute);
     }
   }, [textSearch, findExactMatchWorkflowParam]);
 
@@ -405,7 +409,6 @@ const loadDetailsSearchWorkflow = (_id) => {
                 </div>
               ))}
             </div>
-
           </div>
         </div>
       }
@@ -424,7 +427,12 @@ const loadDetailsSearchWorkflow = (_id) => {
       {showSearchWorkflow &&
         (
           <div className="topTextSearchWorkflow mx-[0.5rem] my-[0.25rem]">
-            <div className='disclaimerSearchWorkflow'>Workflow search based on {selectionParameter}.</div>
+            <div className='disclaimerSearchWorkflow'>Workflow search based on
+              <select className='selectPrivacy' value={searchAttribute} onChange={handleChangeSearchAttribute}>
+                <option value="author">User name</option>
+                <option value="track">Track name</option>
+              </select>
+            </div>
             <input
               type="text"
               className='inputWorkflowSearch'
