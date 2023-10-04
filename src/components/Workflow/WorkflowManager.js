@@ -7,6 +7,7 @@ import { FaAngleDown, FaAngleUp } from 'react-icons/fa';
 // import {FiPlayCircle} from 'react-icons/fi'
 import { AiFillDelete, AiOutlineEyeInvisible } from "react-icons/ai";
 import { TfiSave } from "react-icons/tfi";
+import {BsUnlock,BsLock} from 'react-icons/bs'
 // import Workflow from "../../misc/disregardedWorkflow";
 import "./Workflow.css";
 import {
@@ -15,7 +16,8 @@ import {
   createWorkflow,
   deleteWorkflow,
   deleteWorkflowObject,
-  getExactMatchWorkflowParameter
+  getExactMatchWorkflowParameter,
+  changeWorkflowPrivacy
 } from "../../utils/HandleApi";
 // import WorkflowInterface from "./WorkflowInterface";
 import Title from "../Presentation/Title";
@@ -109,7 +111,8 @@ const WorkflowManager = () => {
     );
     setIsWorkflowListVisible((prevState) => !prevState);
   };
-
+  const handleChangeWorkflowPrivacy = (_id,newPrivacy, selectedWorkflow, setIsWorkerVisible, setSelectedWorkflow, user) => 
+    { changeWorkflowPrivacy(_id,newPrivacy, selectedWorkflow, setIsWorkerVisible, setSelectedWorkflow, user); }
   const handleShowSearchWorkflowDetail = () => { setSelectedSearchWorkflow(null); }
   const handleToggleSearch = () => {
     setShowSearchWorkflow(!showSearchWorkflow);
@@ -265,7 +268,21 @@ const loadDetailsSearchWorkflow = (_id) => {
         <div className="workflowInterface">
           <h1>Workflow Interface</h1>{" "}<AiOutlineEyeInvisible className="icon" onClick={handleShowWorkflowDetail} />
           <div className="workflowHeader">
-            <div className="workFlowTitle">{selectedWorkflow.title}</div> <div className="privacyWorkflowInfo">({selectedWorkflow.privacy})</div>
+            <div className="workFlowTitle">{selectedWorkflow.title}</div> 
+            <div className="privacyWorkflowInfo my-[0.5rem]">
+                <div className="flex">[{selectedWorkflow.privacy}]
+                  <div className='icon flex mx-[0.5rem]' onClick={() => 
+                    handleChangeWorkflowPrivacy(selectedWorkflow._id,
+                      selectedWorkflow.privacy === 'public' ? 'private' : 'public',
+                      selectedWorkflow,
+                      setIsWorkflowVisible,
+                      setSelectedWorkflow,
+                      localStorage?.username
+                    )}>
+                    {selectedWorkflow.privacy === 'public' ? <BsUnlock /> : <BsLock />} Change to {selectedWorkflow.privacy === 'public' ? 'private' : 'public'}
+                  </div>
+                </div>
+            </div>
             <div className="workFlowDescription">
               <u>Description:</u>
               <br />

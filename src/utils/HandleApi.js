@@ -719,7 +719,7 @@ const deleteWorkflow = (_id, dispatch, setWorkflows, userId) => {
   
 const getExactMatchWorkflowParameter = (_id, textSearch, selectionParameter, searchWorkflowOutput, setSearchWorkflowOutput) => {
   console.log("handleApi deleteWorkflow. ", {_id, textSearch, selectionParameter, searchWorkflowOutput, setSearchWorkflowOutput});
-  // TODO
+  // TODO ... why is this a post?
   axios.post(`${baseUrl}/getExactMatchWorkflowParameter`, {
     _id, textSearch, selectionParameter
   })
@@ -730,11 +730,19 @@ const getExactMatchWorkflowParameter = (_id, textSearch, selectionParameter, sea
     .catch(err => console.log(err));
 }
 
-const changeWorkflowPrivacy = (_id,newPrivacy) => {
-  console.log("changeWorkflowPrivacy, ",{_id,newPrivacy});
-  // TODO 
-
+const changeWorkflowPrivacy = (_id, newPrivacy, selectedWorkflow) => {
+  console.log("changeWorkflowPrivacy, ", { _id, newPrivacy, selectedWorkflow });
+  axios.post(`${baseUrl}/changeWorkflowPrivacy`, {
+    _id, newPrivacy
+  })
+    .then((data) => {
+      console.log("Then changeWorkflowPrivacy. data: ", data);
+      // TODO what to change here?
+      selectedWorkflow.privacy = selectedWorkflow.privacy === 'public' ? 'private' : 'public';
+    })
+    .catch(err => console.log(err));
 }
+
 
 
 // Note: the parameter passed is the _id of the workflow
