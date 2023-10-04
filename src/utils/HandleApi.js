@@ -730,15 +730,14 @@ const getExactMatchWorkflowParameter = (_id, textSearch, selectionParameter, sea
     .catch(err => console.log(err));
 }
 
-const changeWorkflowPrivacy = (_id, newPrivacy, selectedWorkflow) => {
-  console.log("changeWorkflowPrivacy, ", { _id, newPrivacy, selectedWorkflow });
+const changeWorkflowPrivacy = (_id, newPrivacy, selectedWorkflow, setIsWorkerVisible, setSelectedWorkflow, user) => {
+  console.log("changeWorkflowPrivacy, ", { _id, newPrivacy, selectedWorkflow, setIsWorkerVisible, setSelectedWorkflow, user });
   axios.post(`${baseUrl}/changeWorkflowPrivacy`, {
     _id, newPrivacy
   })
     .then((data) => {
       console.log("Then changeWorkflowPrivacy. data: ", data);
-      // TODO what to change here?
-      selectedWorkflow.privacy = selectedWorkflow.privacy === 'public' ? 'private' : 'public';
+      getWorkflow(setIsWorkerVisible, setSelectedWorkflow, _id, user);
     })
     .catch(err => console.log(err));
 }
