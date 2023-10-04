@@ -424,7 +424,7 @@ const loadDetailsSearchWorkflow = (_id) => {
       {showSearchWorkflow &&
         (
           <div className="topTextSearchWorkflow mx-[0.5rem] my-[0.25rem]">
-            <div className='disclaimerSearchWorkflow'>Enter the text for workflow search based on {selectionParameter}.</div>
+            <div className='disclaimerSearchWorkflow'>Workflow search based on {selectionParameter}.</div>
             <input
               type="text"
               className='inputWorkflowSearch'
