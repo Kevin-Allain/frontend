@@ -63,10 +63,10 @@ const AnnotationSystem = ({ type, info, index=0 }) => {
       {/* button to show or hide... could be a good place to make the query about the annotations... */}
       {/* Button should only be visible if user is logged in? beforePrivateBeta -> Actions only, but reading should be fine... */}
       
-        <div className='buttonShowAnnotation icon' onClick={
+        <div className='buttonShowAnnotation icon flex' onClick={
           () => handleShowAndLoadAnnotations(type, info, getAnnotations)
         }>
-          <div className='icon text-[15px]'>Annotation about the {type}{" "}<HiOutlineAnnotation className='icon annotationIcon' /> </div>
+          <div className='icon flex text-[15px]'>Annotation about the {type}{" "}<HiOutlineAnnotation className='icon annotationIcon' /> </div>
         </div>
       
       {showInputAnnotation &&
@@ -103,7 +103,7 @@ const AnnotationSystem = ({ type, info, index=0 }) => {
           }
           <div className='outerAreaDisplayAnnotation'>
             <div className='areaDisplayAnnotation'>
-              {listAnnotations.length===0 && <p>No annotation made for this {type}.</p>}
+              {listAnnotations.length===0 && <p className='text-black'>No annotation made for this {type}.</p>}
               {listAnnotations.map((item, i) => (
                   <Annotation
                     key={item._id}

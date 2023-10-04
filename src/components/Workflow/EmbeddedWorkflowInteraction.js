@@ -39,6 +39,8 @@ const EmbeddedWorkflowInteraction = ({idCaller, typeCaller, indexRange=0}) => {
     const [showWorkflowActions, setShowWorkflowActions] = useState(false);
     const [showWorkflowAddition, setShowWorkflowAddition] = useState(false);
 
+    const [selectedPrivacyOption, setSelectedPrivacyOption] = useState('public');
+
 
     // ## Functions display
     const handleShowActionsWorkflow = () => {
@@ -66,6 +68,11 @@ const EmbeddedWorkflowInteraction = ({idCaller, typeCaller, indexRange=0}) => {
         // Let's not allow the description to be extremely long
         if (value.length <= 300) { setNoteInput(value); }
     };
+
+    const handleChangeOption = (event) => {
+      setSelectedPrivacyOption(event.target.value);
+    };
+  
 
     // ## Functions actions
     const handleWorkflowEnrich = (indexWorkflow) => {
@@ -111,7 +118,7 @@ const EmbeddedWorkflowInteraction = ({idCaller, typeCaller, indexRange=0}) => {
         {/* w-fit -> doubt about this, but maybe not necessary */}
         {typeof (localStorage.token) !== 'undefined' &&
         // className="threedotsEmbedded"
-          <div className="icon text-[15px]" onClick={() => handleShowActionsWorkflow()}>
+          <div className="icon flex text-[15px]" onClick={() => handleShowActionsWorkflow()}>
             Workflow Interface
             <BsThreeDotsVertical
               className="icon threedotsEmbedded"
@@ -120,12 +127,9 @@ const EmbeddedWorkflowInteraction = ({idCaller, typeCaller, indexRange=0}) => {
         }
         {showWorkflowActions && (
           <div className="listActionsWorkflowEmbedded">
-            <div className="creationWorkFlowEmbedded">
-              Add to new workflow{" "}
-              <HiOutlineViewGridAdd
-                className="icon"
-                onClick={() => handleShowWorkflowAddition()}
-              />
+            <div className="creationWorkFlowEmbedded icon" onClick={() => handleShowWorkflowAddition()}>
+              Add to new workflow{" "}<HiOutlineViewGridAdd/>
+            </div>
               {showWorkflowAddition && (
                 <div className="creationWorkflow">
                   Title (50 characters max): <br />
@@ -163,6 +167,11 @@ const EmbeddedWorkflowInteraction = ({idCaller, typeCaller, indexRange=0}) => {
                     />{" "}
                   </div>
                   <br />
+                  <select className='selectPrivacy' value={selectedPrivacyOption} onChange={handleChangeOption}>
+                    <option value="public">Public</option>
+                    <option value="private">Private</option>
+                  </select>
+                  <br />
                   Save this workflow{" "}
                   <TfiSave
                     className="icon"
@@ -181,7 +190,8 @@ const EmbeddedWorkflowInteraction = ({idCaller, typeCaller, indexRange=0}) => {
                           setDescriptionInput,
                           dispatch,
                           setWorkflows,
-                          [indexRange] // // For samples we need to know how far the search goes beyond the first note identified
+                          [indexRange], // // For samples we need to know how far the search goes beyond the first note identified
+                          selectedPrivacyOption
                         )
                         : console.log("empty title or description. titleInput: ", titleInput, "typeof titleInput: ", typeof titleInput, ", descriptionInput: ", descriptionInput, "typeof descriptionInput: ", typeof descriptionInput);
 
@@ -190,7 +200,6 @@ const EmbeddedWorkflowInteraction = ({idCaller, typeCaller, indexRange=0}) => {
                   />
                 </div>
               )}{" "}
-            </div>
 
             <div className="additionWorkFlowEmbedded">
               Add to existing workflow <br />
@@ -202,10 +211,10 @@ const EmbeddedWorkflowInteraction = ({idCaller, typeCaller, indexRange=0}) => {
                 onChange={(e) => setTextInputObjectNote(e.target.value)}
               />{" "}
               {workflows.map((item, i) => (
-                <div className="listWorkflowEmbedded" key={item._id} index={i}>
+                <div className="listWorkflowEmbedded icon" key={item._id} index={i} onClick={() => handleWorkflowEnrich(i)}>
                   {item.title}
                   <br />
-                  <HiOutlineSaveAs className="icon" onClick={() => handleWorkflowEnrich(i)} />{" "}
+                  <HiOutlineSaveAs />
                 </div>
               ))}
             </div>

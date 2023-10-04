@@ -261,8 +261,7 @@ const MyTabbedInterface = ({
               />
             </div>
             {/* We should change TrackRes I think... */}
-            {activeTrack} and its TrackRes:
-            <br />
+            {/* {activeTrack} and its TrackRes: */}
             <TrackRes
               key={"Track_" + activeTrack}
               text={activeTrack}

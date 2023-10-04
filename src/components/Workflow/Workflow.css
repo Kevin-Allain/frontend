@@ -83,7 +83,14 @@
 }
 
 .infoAdditionWorkflow {
-    padding-left: 0.25rem;
+    padding-left: 0.5rem;
+}
+
+.blockWorkFlow{
+    border: solid;
+    border-width: thin;
+    border-color: gray;
+    padding-left: 0.5rem;
 }
 
 .threedotsEmbedded {
@@ -114,9 +121,12 @@
 }
 
 .creationWorkFlowEmbedded {
-    border: solid;
+    /* border: solid;
     border-width: thin;
-    border-color: orange;
+    border-color: orange; */
+    display: flex;
+    padding-left: 1rem;
+    padding-top: 0.25rem;
 }
 
 .additionWorkFlowEmbedded {
@@ -133,11 +143,14 @@
     margin-bottom: 0.2rem;
     margin-left: 0.5rem;
     margin-right: 0.5rem;
+    display: -webkit-box;
+    text-align: center;
+    padding-left: 2rem;    
 }
 
 .listWorkflowEmbedded:hover {
-    background-color: gray;
-    color: white;
+    background-color: rgb(179, 177, 177);
+    color: orange;
 }
 
 .objectNoteInput {
@@ -210,4 +223,20 @@
 .contentWorkflow{
     padding-top:0.25rem; padding-bottom: 0.25rem;
     padding-left: 1rem; padding-right: 1rem;    
+}
+
+.searchWorkflowOutput{
+    padding-left: 1rem;
+    padding-top: 0.1rem;
+    padding-bottom: 0.1rem;
+}
+
+.searchWorkflowOutput:hover {
+    background-color: #acadbd;
+    color: black;
+    font-size: large;
+    cursor: pointer;
+    border: solid;
+    border-width: thin;
+    border-color: orange;
 }

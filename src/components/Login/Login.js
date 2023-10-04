@@ -1,5 +1,6 @@
 import { useRef, useState, useEffect, useContext } from 'react';
 import AuthContext from '../../context/AuthProvider';
+import {AiOutlineLoading} from 'react-icons/ai'
 import PropTypes from 'prop-types'
 import axios from 'axios';
 import { UserContext } from '../../context/UserContext';
@@ -23,6 +24,7 @@ export default function Login({ setToken }) {
     const [success, setSuccess] = useState(false);
     const [errMsg, setErrMsg] = useState('');
 
+    const [showLoadingIcon, setShowLoadingIcon] = useState(false);
 
     const msgContext = useContext(UserContext);
 
@@ -38,6 +40,7 @@ export default function Login({ setToken }) {
     const handleSubmit = async e => {
         e.preventDefault();
         console.log("---- handleSubmit. username: ",username,", password: ",password);
+        setShowLoadingIcon(true);
         try {
             const response = await
                 axios.post(`${baseUrl}/${REGISTER_URL}`,
@@ -62,8 +65,7 @@ export default function Login({ setToken }) {
 
                         console.log(`token in then login handleSubmit: ${accessToken}`)
                         axios.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`;
-                        
-
+                        setShowLoadingIcon(false);
                     })
                     .catch(err => {
                         console.log(`catch err: ${err}`);
@@ -86,31 +88,44 @@ export default function Login({ setToken }) {
     }
 
     return (
-        <div className="login-wrapper">
-            {auth ? (
-                <h1>You are logged in!</h1>
-            ) : (
-                <>
-                    <p ref={errRef} className={errMsg ? 'errmsg' : 'offscreen'} aria-live='assertive'> {errMsg} </p>
-                    <h1>Log In</h1>
-                    <form onSubmit={handleSubmit}>
-                        <label>
-                            <p>Username</p>
-                            <input 
-                                type="text" 
-                                onChange={e => setUserName(e.target.value)} 
-                            />
-                        </label>
-                        <label>
-                            <p>Password</p>
-                            <input type="password" onChange={e => setPassword(e.target.value)} />
-                        </label>
-                        <div>
-                            <button className='bg-white ' type="submit">Submit</button>
-                        </div>
-                    </form>
-                </>
-            )}
-        </div>
-    )
+      <div className="login-wrapper">
+        {auth ? (
+          <h1>You are logged in!</h1>
+        ) : (
+          <>
+            <p
+              ref={errRef}
+              className={errMsg ? "errmsg" : "offscreen"}
+              aria-live="assertive"
+            >
+              {" "}
+              {errMsg}{" "}
+            </p>
+            <h1>Log In</h1>
+            <form onSubmit={handleSubmit}>
+              <label>
+                <p>Username</p>
+                <input
+                  type="text"
+                  onChange={(e) => setUserName(e.target.value)}
+                />
+              </label>
+              <label>
+                <p>Password</p>
+                <input
+                  type="password"
+                  onChange={(e) => setPassword(e.target.value)}
+                />
+              </label>
+              <div>
+                <button className="bg-white " type="submit">
+                  Submit
+                </button>
+              </div>
+            </form>
+            {showLoadingIcon && <AiOutlineLoading className="spin" />}
+          </>
+        )}
+      </div>
+    );
 }

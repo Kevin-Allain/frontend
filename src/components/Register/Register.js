@@ -1,7 +1,10 @@
 import { useRef, useState, useEffect } from "react";
 import { faCheck, faTimes, faInfoCircle, faTriangleExclamation } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import {AiOutlineLoading} from 'react-icons/ai'
 import axios from 'axios';
+import '../../App.css'
+
 // TODO Seems like we will need to modify this to use the mongoose controller
 // import axios from 'axios';
 // const baseUrl = "http://localhost:5000" // can be used for development
@@ -39,6 +42,9 @@ const Register = () => {
     const [errMsg, setErrMsg] = useState('');
     const [success, setSuccess] = useState(false);
 
+    const [showLoadingIcon, setShowLoadingIcon] = useState(false);
+
+
     useEffect(() => {
         userRef.current.focus();
     }, [])
@@ -75,6 +81,7 @@ const Register = () => {
         }
 
         try {
+            setShowLoadingIcon(true);
             console.log(`${baseUrl}/${REGISTER_URL}`);
             console.log(JSON.stringify({ user, pwd, email }));
             const response = await
@@ -94,6 +101,7 @@ const Register = () => {
                         setEmail('');
                         setPwd('');
                         setMatchPwd('');
+                        setShowLoadingIcon(false);
                     })
                     .catch(err => {
                         console.log(`catch err: ${err}`);
@@ -127,14 +135,14 @@ const Register = () => {
     return (
         <>
             {success ? (
-                <section>
+                <section className="sectionRegisterSuccess">
                     <h1>You've successfully created an account!</h1> <h2>You can now log in to use all our functionalities.</h2>
                     {/* <p> <a href="https://www.thesignmaker.co.nz/wp-content/uploads/2019/04/C16_Work-In-Progress.png">Sign In</a> </p> */}
                 </section>
             )
                 :
                 (
-                    <section>
+                    <section >
                         <p ref={errRef} className={errMsg ? 'errmsg' : 'offscreen'} aria-live='assertive'> {errMsg} </p>
                         <h1>Register</h1>
                         <form onSubmit={handleSubmit}>
@@ -235,7 +243,8 @@ const Register = () => {
                             </p>
                             <button disabled={!validName || !validPwd || !validMatch ? true : false}>Sign Up</button>
                         </form>
-                    </section >
+                        {showLoadingIcon && <AiOutlineLoading className="spin" />}
+                    </section>
                 )}
         </>
     )

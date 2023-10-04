@@ -635,10 +635,11 @@ const createWorkflow = (
   setTitleInput, setDescriptionInput,
   dispatch,
   setWorkflows,
-  objectIndexRange = [] // For samples we need to know how far the search goes beyond the first note identified
+  objectIndexRange = [], // For samples we need to know how far the search goes beyond the first note identified
+  privacy='public'
 ) => {
   console.log("handleApi createWorkflow. ", {
-    title, description, time, author, objectsId, objectsTimes, objectsNote, objectsType
+    title, description, time, author, objectsId, objectsTimes, objectsNote, objectsType,privacy
   });
 
   const objects = [];
@@ -650,14 +651,15 @@ const createWorkflow = (
       objectIndex: i,
       objectNote: objectsNote[i],
       objectType: objectsType[i],
-      objectIndexRange: objectIndexRange[i]
+      objectIndexRange: objectIndexRange[i],
     })
   }
 
   axios
     .post(`${baseUrl}/createWorkflow`, {
       title, description, time, author,
-      objects
+      objects,
+      privacy
     })
     .then((data) => {
       console.log("Then handleApi createWorkflow");
@@ -716,6 +718,31 @@ const deleteWorkflow = (_id, dispatch, setWorkflows, userId) => {
     .catch(err => console.log(err));
 }
   
+const getExactMatchWorkflowParameter = (_id, textSearch, selectionParameter, searchWorkflowOutput, setSearchWorkflowOutput) => {
+  console.log("handleApi deleteWorkflow. ", {_id, textSearch, selectionParameter, searchWorkflowOutput, setSearchWorkflowOutput});
+  // TODO ... why is this a post?
+  axios.post(`${baseUrl}/getExactMatchWorkflowParameter`, {
+    _id, textSearch, selectionParameter
+  })
+    .then((data) => {
+      console.log("Then handleApi getExactMatchWorkflowParameter. data: ", data);
+      setSearchWorkflowOutput(data.data);
+    })
+    .catch(err => console.log(err));
+}
+
+const changeWorkflowPrivacy = (_id, newPrivacy, selectedWorkflow, setIsWorkerVisible, setSelectedWorkflow, user) => {
+  console.log("changeWorkflowPrivacy, ", { _id, newPrivacy, selectedWorkflow, setIsWorkerVisible, setSelectedWorkflow, user });
+  axios.post(`${baseUrl}/changeWorkflowPrivacy`, {
+    _id, newPrivacy
+  })
+    .then((data) => {
+      console.log("Then changeWorkflowPrivacy. data: ", data);
+      getWorkflow(setIsWorkerVisible, setSelectedWorkflow, _id, user);
+    })
+    .catch(err => console.log(err));
+}
+
 
 
 // Note: the parameter passed is the _id of the workflow
@@ -815,5 +842,6 @@ export {
   getUserAnnotations,
   getWorkflow, getWorkflowsInfo, createWorkflow, deleteWorkflow,
   addContentWorkflow, deleteWorkflowObject,
+  getExactMatchWorkflowParameter, changeWorkflowPrivacy,
   getDatabaseContent
 }

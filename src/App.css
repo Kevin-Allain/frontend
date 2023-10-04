@@ -220,7 +220,8 @@ input{
 .icon{
   cursor: pointer;
   /* font-size: 20px; */
-  display: inline;
+  /* display: inline; */
+  white-space: break-spaces;
 }
 
 .icon:hover{
@@ -485,3 +486,6 @@ padding-bottom: 0.25rem;
   display: flex;
 }
 
+.sectionRegisterSuccess{
+  margin: 1rem;
+}
