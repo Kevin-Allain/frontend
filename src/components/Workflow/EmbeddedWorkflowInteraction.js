@@ -128,7 +128,7 @@ const EmbeddedWorkflowInteraction = ({idCaller, typeCaller, indexRange=0}) => {
         {showWorkflowActions && (
           <div className="listActionsWorkflowEmbedded">
             <div className="creationWorkFlowEmbedded icon" onClick={() => handleShowWorkflowAddition()}>
-              Add to new workflow{" "}<HiOutlineViewGridAdd/>
+              Create new workflow{" "}<HiOutlineViewGridAdd/>
             </div>
               {showWorkflowAddition && (
                 <div className="creationWorkflow">

@@ -26,8 +26,10 @@ const Comment = ({
             {/* afterPrivateBeta NOT SECURED APPROACH: Needs to be based on the token of the user who made the content! */}
             {typeof (localStorage.token) !== 'undefined' && localStorage.username === author &&
                 <>
-                    <BiEdit className='icon' onClick={updateMode} />
-                    <AiFillDelete className='icon' onClick={deleteComment} />
+                    <div className='flex'>
+                        <BiEdit className='icon' onClick={updateMode} />
+                        <AiFillDelete className='icon' onClick={deleteComment} />
+                    </div>
                 </>
             }
             {/* <br/> <em>The annotationId is {annotationId}</em> <br/> <em>The commentId is {commentId}</em> */}

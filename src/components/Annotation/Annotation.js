@@ -41,15 +41,17 @@ const Annotation = ({
       <h4><div className='annotationText'>{annotationInput}</div></h4>
       {/* <AiOutlineStar className='icon' onClick={ () => console.log("star pressed") } /> */}
       {/* afterPrivateBeta NOT SECURED APPROACH: Needs to be based on the token of the user who made the content! */}
-      {typeof (localStorage.token) !== 'undefined' && localStorage.username === author &&
-        <>
-          <BiEdit className='icon w-[2em] h-[2em]' onClick={updateMode} />
-          <AiFillDelete className='icon w-[2em] h-[2em]' onClick={deleteAnnotation} />
-        </>
-      }
-      {/* TODO set a CommentSystem according to this annotation when clicking on the icon */}
-      {/* TODO fix the issue with the loading */}
-      <AiOutlineComment className='icon w-[2em] h-[2em]' onClick={handleToggleCommentSystem} />
+      <div className='flex'>
+        {typeof (localStorage.token) !== 'undefined' && localStorage.username === author &&
+          <>
+            <BiEdit className='icon w-[2em] h-[2em]' onClick={updateMode} />
+            <AiFillDelete className='icon w-[2em] h-[2em]' onClick={deleteAnnotation} />
+          </>
+        }
+        {/* TODO set a CommentSystem according to this annotation when clicking on the icon */}
+        {/* TODO fix the issue with the loading */}
+        <AiOutlineComment className='icon w-[2em] h-[2em]' onClick={handleToggleCommentSystem} />
+      </div>
       {isCommentSystemVisible && (
         <CommentSystem type={type} info={info} indexAnnotation={indexAnnotation} annotationId={_id} />
       )}
