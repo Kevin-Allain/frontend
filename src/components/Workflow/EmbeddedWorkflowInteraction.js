@@ -49,7 +49,7 @@ const EmbeddedWorkflowInteraction = ({idCaller, typeCaller, indexRange=0}) => {
     const handleShowWorkflowAddition = () => {
         setShowWorkflowAddition(!showWorkflowAddition);
         // For test
-        console.log("idCaller: ",idCaller, ", typeCaller: ",typeCaller,", indexRange: ",indexRange);
+        console.log("handleShowWorkflowAddition - idCaller: ",idCaller, ", typeCaller: ",typeCaller,", indexRange: ",indexRange);
     };
 
     // ## Functions input
@@ -96,8 +96,12 @@ const EmbeddedWorkflowInteraction = ({idCaller, typeCaller, indexRange=0}) => {
         // setListWorkflows,
         dispatch,
         setWorkflows,
-        workflow._id, textNote, time, localStorage?.username,
-        idCaller, typeCaller, 
+        workflow._id, 
+        textNote, 
+        time, 
+        localStorage?.username,
+        idCaller, 
+        typeCaller, 
         objectsIndexes,
         workflow,
         indexRange
@@ -133,38 +137,14 @@ const EmbeddedWorkflowInteraction = ({idCaller, typeCaller, indexRange=0}) => {
               {showWorkflowAddition && (
                 <div className="creationWorkflow">
                   Title (50 characters max): <br />
-                  <input
-                    type="text"
-                    placeholder="Write a short title"
-                    ref={titleInputRef}
-                    autoComplete="off"
-                    required
-                    value={titleInput}
-                    onChange={handleChangeTitleInput}
-                  />{" "}
+                  <input type="text" placeholder="Write a short title" ref={titleInputRef} autoComplete="off" required value={titleInput} onChange={handleChangeTitleInput} />{" "}
                   <br />
                   Description (300 characters max): <br />
-                  <input
-                    type="text"
-                    placeholder="Describe shortly the objective of this workflow"
-                    ref={descriptionInputRef}
-                    autoComplete="off"
-                    required
-                    value={descriptionInput}
-                    onChange={handleChangeDescriptionInput}
-                  />{" "}
+                  <input type="text" placeholder="Describe shortly the objective of this workflow" ref={descriptionInputRef} autoComplete="off" required value={descriptionInput} onChange={handleChangeDescriptionInput} />{" "}
                   <br />
                   <div className="infoAdditionWorkflow">
                     Note about this object (500 characters max):{" "}<br/>
-                    <input
-                      type="text"
-                      placeholder="Write a note about this object"
-                      name="AddObjectNote"
-                      id="AddObjectNote"
-                      className="objectNoteInput"
-                      value={noteInput}
-                      onChange={(e) => setNoteInput(e.target.value)}
-                    />{" "}
+                    <input type="text" placeholder="Write a note about this object" name="AddObjectNote" id="AddObjectNote" className="objectNoteInput" value={noteInput} onChange={(e) => setNoteInput(e.target.value)} />{" "}
                   </div>
                   <br />
                   <select className='selectPrivacy' value={selectedPrivacyOption} onChange={handleChangeOption}>

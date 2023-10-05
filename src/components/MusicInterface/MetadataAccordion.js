@@ -18,31 +18,6 @@ const MetadataAccordion = ({
     const [expandedTrack, setExpandedTrack] = useState(false);
     const toggleAccordionTrack = () => { setExpandedTrack(!expandedTrack); };
 
-    // useEffect(() => {
-    //     console.log("--+-- MetadataAccordion: ", {  recording, content, findMatchRecording, infoMusicList, structData });
-    //     // We want to loop through the content of structData, and if an attribute has the same value over all the indexes of structData, it should be in sharedRecordingInfo, both attribute name and value, otherwise it should be in uniqueTrackInfo, with index matching according to its position in structData.content
-    //     // The array of uniqueTrackInfo will have the same indexes as content
-    //     // let allAttributes = [];
-    //     // let sharedRecordingInfo = {};
-    //     // let uniqueTrackInfo = [];
-    //     let sharedRecordingInfo = {};
-    //     let uniqueTrackInfo = [];
-    //     for (const attr in structData.content[0]) {
-    //       if (structData.content[0].hasOwnProperty(attr)) {
-    //         const isShared = structData.content.every(track => track[attr] === structData.content[0][attr]);
-    //         if (isShared) { sharedRecordingInfo[attr] = structData.content[0][attr]; }
-    //       }
-    //     }
-    //     uniqueTrackInfo = structData.content.map(track => {
-    //       const uniqueInfo = {};
-    //       for (const attr in track) {
-    //         if (track.hasOwnProperty(attr) && !sharedRecordingInfo[attr]) { uniqueInfo[attr] = track[attr]; }
-    //       }
-    //       return uniqueInfo;
-    //     });
-    //     console.log("Shared Recording Info:", sharedRecordingInfo); console.log("Unique Track Info:", uniqueTrackInfo);
-    // });
-
     return (
       <div className="metadata-accordion ">
         <div
@@ -72,18 +47,6 @@ const MetadataAccordion = ({
                                         (value.length !== 0 ) ? <p key={key}> {key}: {value}</p> : <></>
                                     ))}
                                 <br/><hr /><br/> */}
-                  {/* We want to display attributes (if they exist)
-                                - (A/R/D) Event Type
-                                - (N) Named Artist(s)
-                                - (E) Event Name
-                                - (Y) Date
-                                - Label
-                                - AudioSource
-                                - Musicians (instruments)
-                                - Composition
-                                - Composer(s)
-                                - Observations
-                                */}
                   {Object.entries(
                     infoMusicList.filter((a) => a.lognumber === recording)[0]
                   ).map(([key, value]) =>

@@ -430,7 +430,7 @@ const loadDetailsSearchWorkflow = (_id) => {
             <div className='disclaimerSearchWorkflow'>Workflow search based on
               <select className='selectPrivacy' value={searchAttribute} onChange={handleChangeSearchAttribute}>
                 <option value="author">User name</option>
-                <option value="track">Track name</option>
+                <option value="trackTitle">Track name</option>
               </select>
             </div>
             <input
