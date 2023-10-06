@@ -41,7 +41,9 @@ const TrackRes = ({
 
 
     return (
-      <div className="trackres" key={text}>
+      <div className="trackres" 
+      // key={text+'_'+listSearchRes.length}
+      >
         {/* <div className="texttrackres"> <h3>Track: {text} </h3> </div> */}
         {/* <div className='iconTracksInteractions'> <AnnotationSystem type={"track"} info={text} /> <EmbeddedWorkflowInteraction idCaller={listSearchRes[0].arrIdNotes[0]} typeCaller={"track"} /> </div> */}
         {testPerformances ? (
@@ -52,9 +54,7 @@ const TrackRes = ({
             { listSearchRes.length > itemsPerPage &&
             <div className="pagination-buttons flex">
                 <IoIosArrowBack className='icon' onClick={handlePrevRange} disabled={startIndex === 0}/> | {startIndex}-{Math.min(listSearchRes.length,startIndex + itemsPerPage)} |
-                {/* Previous</button> */}
                 <IoIosArrowForward className='icon' onClick={handleNextRange} disabled={(startIndex + itemsPerPage) >= listSearchRes.length}/>
-                {/* Next</button> */}
             </div>
             }
             {currentItems.map((item, i) => (
@@ -62,9 +62,7 @@ const TrackRes = ({
                 <div className="text-left mx-[1rem] my-[0.25rem] ">
                   Sample {startIndex+i}{" "}
                 </div>
-                {/* {item.track}  */}
                 <SampleRes
-                  // key={i + '' + item.recording + '_' + item.arrNotes.toString().replaceAll(',', '-')}
                   text={i + "-" + item.track}
                   lognumber={item.track.split("-")[0]}
                   length={
@@ -80,8 +78,6 @@ const TrackRes = ({
                   idDBNotes={item.arrIdNotes}
                   // Need to format the structure
                   funcPlayMIDI={() => formatAndPlay(item)}
-                  // getMusicInfo={() => getMusicInfo(item.recording, infoMusicList, setInfoMusicList)}
-                  // infoMusicList={infoMusicList}
                 />
               </div>
             ))}

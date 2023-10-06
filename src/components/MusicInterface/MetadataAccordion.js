@@ -136,24 +136,8 @@ const MetadataAccordion = ({
                     )
                   )
                 )
-              ) : (
-                // .map(a =>
-                //     <div className='detailResultMeta'>
-                //         <u>Info about track:</u>
-                //         {Object.entries(a
-                //             .filter(a => a.lognumber === recording)
-                //             .filter(a => a['SJA ID'] === track.replace('-T','_')))[0]
-                //             .map(([key, value]) => (
-                //                 (value.length !== 0) ?
-                //                     <p key={key}> {key}: {value}</p>
-                //                     : <></>
-                //             ))}
-                //     </div>
-                // )
-                <></>
-              )}
+              ) : (<></>)}
             </div>
-            {/* TODO this seems wrong...?! */}
             <AnnotationSystem type={"track"} track={track} />
             <EmbeddedWorkflowInteraction
               idCaller={content}
