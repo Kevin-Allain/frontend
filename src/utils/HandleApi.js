@@ -2,9 +2,9 @@ import axios from 'axios'
 import { setIsLoading } from '../App';
 
 
-// const baseUrl = "http://localhost:5000" // can be used for development
+const baseUrl = "http://localhost:5000" // can be used for development
 // const baseUrl = "https://fullstack-proto-jazzdap-backend.onrender.com"
-const baseUrl= "https://jazzdap-backend.onrender.com"
+// const baseUrl= "https://jazzdap-backend.onrender.com"
 
 const getAllJazzDap = (setJazzDap) => {
   console.log("---- HandleApi / getAllJazzDap", new Date());
@@ -199,6 +199,22 @@ const getTrackMetadata = (lognumber, infoMusicList, setInfoMusicList) => {
       // setIsLoading(false);
     })
 }
+
+const getTracksFromAttribute = (attributeName, attributeValue) => {
+  axios
+    .get(`${baseUrl}/getTracksFromAttribute`, {
+      params: {
+        attributeName: attributeName,
+        attributeValue: attributeValue
+      }
+    })
+    .then((d) => {
+      console.log("#### Then of getTracksFromAttribute ####");
+      console.log("d: ", d, ", d.data[0]: ", d.data[0]);
+      // And then stuff...
+    })
+}
+
 
 const getMatchLevenshteinDistance = (
   stringNotes = "",
@@ -838,6 +854,7 @@ export {
   getAllJazzDap, addJazzDap, updateJazzDap, deleteJazzDap,
   getMusicMIDI, getSampleMIDI, getMatchLevenshteinDistance,
   getTrackMetadata, getTracksMetadata,
+  getTracksFromAttribute, 
   addAnnotation, getAnnotations, deleteAnnotation, updateAnnotation,
   addComment, getComments, getCommentsOfAnnotation, deleteComment, updateComment,
   getUserAnnotations,
