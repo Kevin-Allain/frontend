@@ -22,7 +22,8 @@ import { setWorkflows } from '../Reducers/WorkflowReducer';
 // -the type of caller... 
 // - the idCaller, an item to identify it (either existing to an item, or loaded _id in the MongoDB database) ...
 const EmbeddedWorkflowInteraction = ({idCaller, typeCaller, indexRange=0}) => {
-    // ## Attributes
+  console.log("EmbeddedWorkflowInteraction ___ ",{idCaller, typeCaller, indexRange})  
+  // ## Attributes
     // Global variable for workflows
     const workflows = useSelector(state => state.workflows);
     const dispatch = useDispatch();

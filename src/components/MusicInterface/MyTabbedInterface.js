@@ -159,9 +159,9 @@ const MyTabbedInterface = ({
                   return a.localeCompare(b);
                 }
               })
-              .map((recording) => (
+              .map((recording,ndx) => (
                 <li
-                  key={recording}
+                  key={recording+'_'+ndx}
                   className={`text-sm cursor-pointer mb-2 ${recording} ${
                     activeRecording === recording ? "text-orange-500" : ""
                   }`}
@@ -195,11 +195,11 @@ const MyTabbedInterface = ({
                     .filter((a) => a.lognumber === activeRecording)
                     .map((a) => a.track)
                 ),
-              ].map((a) =>
+              ].map((a,ndx) =>
                 a.includes("SJA") ? (
                   <>
                     <li
-                      key={a}
+                      key={a+'_'+ndx}
                       className={`cursor-pointer mb-2 ${a} ${
                         activeTrack === a ? "text-orange-500" : ""
                       }`}
@@ -213,7 +213,7 @@ const MyTabbedInterface = ({
                 ) : (
                   <>
                     <li
-                      key={a}
+                      key={a+'_'+ndx}
                       className={`cursor-pointer mb-2 ${a} ${
                         activeTrack === a ? "text-orange-500" : ""
                       }`}
@@ -246,7 +246,9 @@ const MyTabbedInterface = ({
             {/* Accordion for Recording AND Track */}
             <div className="border rounded border-2 mb-[0.5rem]">
               <MetadataAccordion
-                content={listSearchRes[0].arrIdNotes[0]}
+                content={listSearchRes.filter(
+                  (a) => a.track === activeTrack
+                )[0].arrIdNotes[0]} // WRONG?! Needs to be adapted to the sorted list!!! // update 2023/06/10
                 recording={activeRecording}
                 track={activeTrack}
                 findMatchRecording={findMatchRecording}
@@ -265,9 +267,7 @@ const MyTabbedInterface = ({
             <TrackRes
               key={"Track_" + activeTrack}
               text={activeTrack}
-              // TODO CRITICAL UPDATE THIS...!
               listSearchRes={listSearchRes.filter(
-                // (a) => a.recording === activeTrack
                 (a) => a.track === activeTrack
               )}
               formatAndPlay={formatAndPlay}

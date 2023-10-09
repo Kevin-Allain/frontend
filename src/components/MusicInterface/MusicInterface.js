@@ -370,8 +370,8 @@ const MusicInterface = () => {
               More functionalities are available if you register an account and log in. These functionalities include:
             </p>
             <ul className='functionality-list'>
-              <li>Writing annotations and comments.</li>
-              <li>
+              <li key='list1Explanation'>Writing annotations and comments.</li>
+              <li key='list2Explanation'>
                 Creating workflows, which are structures similar to notebooks where you can save elements of interest
                 and note your thoughts. Workflows can be found in the workflow manager.
               </li>
