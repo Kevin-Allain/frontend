@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { HiOutlineViewGridAdd, HiOutlineSaveAs } from "react-icons/hi";
 import { BsThreeDotsVertical } from 'react-icons/bs'
 import { BsCardChecklist } from "react-icons/bs";
+import {AiOutlineLoading} from "react-icons/ai"
 import { TfiSave } from "react-icons/tfi";
 // import Workflow from "../../misc/disregardedWorkflow";
 import "./Workflow.css";
@@ -41,7 +42,7 @@ const EmbeddedWorkflowInteraction = ({idCaller, typeCaller, indexRange=0}) => {
     const [showWorkflowAddition, setShowWorkflowAddition] = useState(false);
 
     const [selectedPrivacyOption, setSelectedPrivacyOption] = useState('public');
-
+    const [showLoadingIcon, setShowLoadingIcon] = useState(false); 
 
     // ## Functions display
     const handleShowActionsWorkflow = () => {
@@ -111,6 +112,44 @@ const EmbeddedWorkflowInteraction = ({idCaller, typeCaller, indexRange=0}) => {
       setShowWorkflowActions(!showWorkflowActions);
     };
     
+    const handleWorkflowCreation = (
+      titleInput,
+      descriptionInput,
+      [idCaller],
+      [noteInput],
+      [typeCaller],
+      setTitleInput,
+      setDescriptionInput,
+      dispatch,
+      setWorkflows,
+      [indexRange], // // For samples we need to know how far the search goes beyond the first note identified
+      selectedPrivacyOption ) => {
+        console.log("-- handleWorkflowCreation");
+
+      // set icon to show loading about to happen
+      setShowLoadingIcon(true);
+      // load metadata if possible
+      
+
+      createWorkflow(
+        titleInput,
+        descriptionInput,
+        new Date(),
+        localStorage.username,
+        [idCaller],
+        [new Date()],
+        [noteInput],
+        [typeCaller],
+        setTitleInput,
+        setDescriptionInput,
+        dispatch,
+        setWorkflows,
+        [indexRange], // // For samples we need to know how far the search goes beyond the first note identified
+        selectedPrivacyOption,
+        setShowLoadingIcon
+      )
+
+    }
 
     // TODO Button for the display of actions related with workflows.
 
@@ -158,13 +197,10 @@ const EmbeddedWorkflowInteraction = ({idCaller, typeCaller, indexRange=0}) => {
                     className="icon"
                     onClick={() => {
                       titleInput.length > 0 && descriptionInput.length > 0
-                        ? createWorkflow(
+                        ? handleWorkflowCreation(
                           titleInput,
                           descriptionInput,
-                          new Date(),
-                          localStorage.username,
                           [idCaller],
-                          [new Date()],
                           [noteInput],
                           [typeCaller],
                           setTitleInput,
@@ -178,9 +214,13 @@ const EmbeddedWorkflowInteraction = ({idCaller, typeCaller, indexRange=0}) => {
 
                       if (titleInput.length > 0 && descriptionInput.length > 0) { setShowWorkflowActions(!showWorkflowActions); }
                     }}
-                  />
-                </div>
-              )}{" "}
+                />
+                {showLoadingIcon ?
+                  <AiOutlineLoading className="spin" size={window.innerHeight / 10} />
+                  : <></>
+                }
+              </div>
+            )}{" "}
 
             <div className="additionWorkFlowEmbedded">
               Add to existing workflow <br />

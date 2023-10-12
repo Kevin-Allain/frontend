@@ -244,11 +244,13 @@ const loadDetailsSearchWorkflow = (_id) => {
                   dispatch,
                   setWorkflows,
                   [],
-                  selectedPrivacyOption
+                  selectedPrivacyOption,
+                  setLoadingSearchWorkflow
                 )
                 : console.log("empty title or description. titleInput: ", titleInput, "typeof titleInput: ", typeof titleInput, ", descriptionInput: ", descriptionInput, "typeof descriptionInput: ", typeof descriptionInput);
             }}
           />
+            {loadingSearchWorkflow && <AiOutlineLoading className="spin"/>}
         </div>
       )}
       </div>

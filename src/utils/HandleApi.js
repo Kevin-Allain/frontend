@@ -645,18 +645,18 @@ const getWorkflowsInfo = (dispatch, setWorkflows, { title = null, time = null, u
 const createWorkflow = (
   title, description, time, author,
   objectsId = [], // the id of the object being listed
-  objectsTimes = [],
-  objectsNote = [],
-  objectsType = [],
+  objectsTimes = [], // time of writing
+  objectsNote = [], // note at creation
+  objectsType = [], // type of object set for EmbeddedWorkflowInteraction call 
   setTitleInput, setDescriptionInput,
   dispatch,
   setWorkflows,
   objectIndexRange = [], // For samples we need to know how far the search goes beyond the first note identified
-  privacy='public'
+  privacy='public',
+  setShowLoadingIcon,
+  arrMeta = [] // array of metadata loaded for the object set for EmbeddedWorkflowInteraction call
 ) => {
-  console.log("handleApi createWorkflow. ", {
-    title, description, time, author, objectsId, objectsTimes, objectsNote, objectsType,privacy
-  });
+  console.log("handleApi createWorkflow. ", {title, description, time, author, objectsId, objectsTimes, objectsNote, objectsType,privacy,arrMeta});
 
   const objects = [];
   for (var i = 0; i < objectsId.length; i++) {
@@ -671,6 +671,10 @@ const createWorkflow = (
     })
   }
 
+
+  // New idea: we first load the metadata, after which we set the creation of the workflow
+  // Metadata attributes passed can be empty if the workflow is created out of the blue.
+
   axios
     .post(`${baseUrl}/createWorkflow`, {
       title, description, time, author,
@@ -681,6 +685,7 @@ const createWorkflow = (
       console.log("Then handleApi createWorkflow");
       setTitleInput("");
       setDescriptionInput("");
+      setShowLoadingIcon(false);
       getWorkflowsInfo(
         dispatch, setWorkflows, { user: author }
       )
