@@ -681,7 +681,7 @@ const createWorkflow = (
       // and get the lognumber I get...
 
       axios.get(`${baseUrl}/get_idContent_sample`, {
-        params: { id: objectsId[0] }
+        params: { _id: objectsId[0] }
       })
       .then( (res) => {
         console.log("ran get_idContent_sample. res: ",res);
@@ -880,11 +880,6 @@ const getDatabaseContent = async (workflow, setSelectedWorkflow, setIsWorkerVisi
     if (["annotation", "comment", "recording", "track", "sample"].includes(typeCaller)) {
       return axios.get(`${baseUrl}/get_idContent_${typeCaller}`, {
         params: { _id: _id, typeCaller: typeCaller, indexRange: indexRange, },
-        // withCredentials:true,
-        // headers: {
-        //   Origin: 'http://localhost:3000', 
-        //   Referer: 'http://localhost:3000' 
-        // }      
       });
     } else {
       console.log("Issue with typeCaller: (", typeCaller, "), it is not recognized.");
