@@ -644,7 +644,7 @@ const getWorkflowsInfo = (dispatch, setWorkflows, { title = null, time = null, u
 // In the case where we create one workflow with one object, there can be one note passed with it
 const createWorkflow = (
   title, description, time, author,
-  objectsId = [], // the id of the object being listed
+  objectsId = [], // the id of the object being listed on MongoDB
   objectsTimes = [], // time of writing
   objectsNote = [], // note at creation
   objectsType = [], // type of object set for EmbeddedWorkflowInteraction call 
@@ -654,9 +654,8 @@ const createWorkflow = (
   objectIndexRange = [], // For samples we need to know how far the search goes beyond the first note identified
   privacy='public',
   setShowLoadingIcon,
-  arrMeta = [] // array of metadata loaded for the object set for EmbeddedWorkflowInteraction call
 ) => {
-  console.log("handleApi createWorkflow. ", {title, description, time, author, objectsId, objectsTimes, objectsNote, objectsType,privacy,arrMeta});
+  console.log("handleApi createWorkflow. ", {title, description, time, author, objectsId, objectsTimes, objectsNote, objectsType,privacy});
 
   const objects = [];
   for (var i = 0; i < objectsId.length; i++) {
@@ -674,23 +673,59 @@ const createWorkflow = (
 
   // New idea: we first load the metadata, after which we set the creation of the workflow
   // Metadata attributes passed can be empty if the workflow is created out of the blue.
+  // Kind of dirty... but at least we trust the call to follow an order with the .then section
+  if (objectsId.length > 0) {
 
-  axios
-    .post(`${baseUrl}/createWorkflow`, {
-      title, description, time, author,
-      objects,
-      privacy
-    })
-    .then((data) => {
-      console.log("Then handleApi createWorkflow");
-      setTitleInput("");
-      setDescriptionInput("");
-      setShowLoadingIcon(false);
-      getWorkflowsInfo(
-        dispatch, setWorkflows, { user: author }
-      )
-    })
-    .catch(err => console.log(err))
+    // first call to get the track id
+    // and get the lognumber I get...
+    let lognumbers = []; 
+
+    axios
+      .get(`${baseUrl}/getTracksMetadata`, {
+        params: {
+          // lognumbers: lognumbers.map(prefix => `${prefix}*`), /** Probably the wrong place to make the regexp query... */
+          lognumbers: lognumbers,
+        }
+      })
+      .then((d) => {
+        console.log("#### Loaded Metadata for workflow. d: ", d);
+        // TODO update so that createWorkflow uses loaded metadata
+        axios
+        .post(`${baseUrl}/createWorkflow`, {
+          title, description, time, author,
+          objects,
+          privacy
+        })
+        .then((data) => {
+          console.log("Then handleApi createWorkflow");
+          setTitleInput("");
+          setDescriptionInput("");
+          setShowLoadingIcon(false);
+          getWorkflowsInfo(
+            dispatch, setWorkflows, { user: author }
+          )
+        })
+        .catch(err => console.log(err))
+  
+      })
+  } else {
+    axios
+      .post(`${baseUrl}/createWorkflow`, {
+        title, description, time, author,
+        objects,
+        privacy
+      })
+      .then((data) => {
+        console.log("Then handleApi createWorkflow");
+        setTitleInput("");
+        setDescriptionInput("");
+        setShowLoadingIcon(false);
+        getWorkflowsInfo(
+          dispatch, setWorkflows, { user: author }
+        )
+      })
+      .catch(err => console.log(err))
+  }
 }
 
 const addContentWorkflow = (
