@@ -70,7 +70,6 @@ const WorkflowManager = () => {
     setSelectedPrivacyOption(event.target.value);
   };
   const handleChangeSearchAttribute = (event) => {
-    console.log("handleChangeSearchAttribute. event.target.value: ",event.target.value);
     setSearchAttribute(event.target.value);
   }
   const handleChangeQueryWorkflow = useCallback((event) => {
