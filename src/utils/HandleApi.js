@@ -676,38 +676,62 @@ const createWorkflow = (
   // Kind of dirty... but at least we trust the call to follow an order with the .then section
   if (objectsId.length > 0) {
 
-    // first call to get the track id
-    // and get the lognumber I get...
-    let lognumbers = []; 
+    if (objectsType[0] === 'sample') {
+      // first call to get the track id
+      // and get the lognumber I get...
 
-    axios
-      .get(`${baseUrl}/getTracksMetadata`, {
-        params: {
-          // lognumbers: lognumbers.map(prefix => `${prefix}*`), /** Probably the wrong place to make the regexp query... */
-          lognumbers: lognumbers,
-        }
+      axios.get(`${baseUrl}/get_idContent_sample`, {
+        params: { id: objectsId[0] }
       })
-      .then((d) => {
-        console.log("#### Loaded Metadata for workflow. d: ", d);
-        // TODO update so that createWorkflow uses loaded metadata
+      .then( (res) => {
+        console.log("ran get_idContent_sample. res: ",res);
+        let trackObj = res.data[0];
+        let lognumbers = [trackObj.lognumber];
+
+        console.log("trackObj info. lognumber",trackObj.lognumber,", SJA ID",trackObj['SJA ID']);
+
         axios
-        .post(`${baseUrl}/createWorkflow`, {
-          title, description, time, author,
-          objects,
-          privacy
-        })
-        .then((data) => {
-          console.log("Then handleApi createWorkflow");
-          setTitleInput("");
-          setDescriptionInput("");
-          setShowLoadingIcon(false);
-          getWorkflowsInfo(
-            dispatch, setWorkflows, { user: author }
-          )
-        })
-        .catch(err => console.log(err))
-  
+          .get(`${baseUrl}/getTracksMetadata`, {
+            params: {
+              // lognumbers: lognumbers.map(prefix => `${prefix}*`), /** Probably the wrong place to make the regexp query... */
+              lognumbers: lognumbers,
+            }
+          })
+          .then((d) => {
+            console.log("#### Loaded Metadata for workflow. d: ", d);
+            // TODO update so that createWorkflow uses loaded metadata
+
+            // should it be an array or object...? E.g. hashmap...
+            let arrMetadataToWorkflow = [];
+            trackObj['SJA ID']
+              ? arrMetadataToWorkflow.push(d.data.filter(a => a['SJA ID'] === trackObj['SJA ID'])[0])
+              : arrMetadataToWorkflow.push(d.data[0]); // I think this is the right approach for BGR
+            console.log('arrMetadataToWorkflow: ',arrMetadataToWorkflow);
+
+            axios
+              .post(`${baseUrl}/createWorkflow`, {
+                title, description, time, author,
+                objects,
+                privacy,
+                arrMetadataToWorkflow
+              })
+              .then((data) => {
+                console.log("Then handleApi createWorkflow");
+                setTitleInput("");
+                setDescriptionInput("");
+                setShowLoadingIcon(false);
+                getWorkflowsInfo(
+                  dispatch, setWorkflows, { user: author }
+                )
+              })
+              .catch(err => console.log(err))
+        })        
       })
+
+
+    } else {
+      // TODO what if we create from something that is not a sample?
+    }
   } else {
     axios
       .post(`${baseUrl}/createWorkflow`, {
