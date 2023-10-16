@@ -676,26 +676,21 @@ const createWorkflow = (
   // Kind of dirty... but at least we trust the call to follow an order with the .then section
   if (objectsId.length > 0) {
 
-    if (objectsType[0] === 'sample') {
-      // first call to get the track id
-      // and get the lognumber I get...
-
-      axios.get(`${baseUrl}/get_idContent_sample`, {
-        params: { _id: objectsId[0] }
-      })
+    if (
+      objectsType[0] === 'sample' || 
+      objectsType[0] === 'track' || 
+      objectsType[0] === 'recording') {
+      // first call to get the track id and get the lognumber I get...
+      axios.get(`${baseUrl}/get_idContent_sample`, { params: { _id: objectsId[0] } })
       .then( (res) => {
         console.log("ran get_idContent_sample. res: ",res);
         let trackObj = res.data[0];
         let lognumbers = [trackObj.lognumber];
-
         console.log("trackObj info. lognumber",trackObj.lognumber,", SJA ID",trackObj['SJA ID']);
 
         axios
           .get(`${baseUrl}/getTracksMetadata`, {
-            params: {
-              // lognumbers: lognumbers.map(prefix => `${prefix}*`), /** Probably the wrong place to make the regexp query... */
-              lognumbers: lognumbers,
-            }
+            params: { lognumbers: lognumbers, }
           })
           .then((d) => {
             console.log("#### Loaded Metadata for workflow. d: ", d);
@@ -731,6 +726,9 @@ const createWorkflow = (
 
     } else {
       // TODO what if we create from something that is not a sample?
+      console.log("objectType is not a sample. It is a ",objectsType[0]);
+      // If it's recording or track... it should be exactly the same, right?!
+
     }
   } else {
     axios
@@ -762,28 +760,64 @@ const addContentWorkflow = (
   typeContent, // type of the content: recording / track / sample / annotation / comment / search (TODO) / ...
   objectsIndex, // make the assumption that this is calculated with the call as the workflow is passed as a parameter... (OR make another call if that isn't passed?! V1 assume it is passed)
   workflow, // TODO doubt about this!
-  indexRange = 0 // For samples we need to know how far the search goes beyond the first note identified
+  indexRange = 0, // For samples we need to know how far the search goes beyond the first note identified
 ) => {
-  console.log("handleApi createWorkflow. ", {
+  console.log("handleApi addContentWorkflow. ", {
     _id, textNote, time, userId, idContent, typeContent, objectsIndex
   });
 
-  // axios call
-  axios.post(`${baseUrl}/addContentWorkflow`, {
-    _id, textNote, time, userId, idContent, typeContent, objectsIndex, indexRange
-  })
-    .then((data) => {
-      console.log("Then handleApi addContentWorkflow. data: ", data);
-      // TODO ... do more? Maybe do another call to get the list of workflows?
-      getWorkflowsInfo(
-        dispatch,
-        setWorkflows,
-        { user: userId }
-      );
-      // change with dispatch and setWorkflows? (Probably not, it is done in getWorkflowsInfo)
-      // workflow.objects.push(data.data.objects[data.data.objects.length-1]);
+  if (typeContent === 'sample' || typeContent === 'track' || typeContent === 'recording') {
+    // first call to get the track id and get the lognumber I get...
+    axios.get(`${baseUrl}/get_idContent_sample`, { params: { _id: idContent } })
+      .then((res) => {
+        console.log("ran get_idContent_sample. res: ", res);
+        let trackObj = res.data[0];
+        let lognumbers = [trackObj.lognumber];
+        console.log("trackObj info. lognumber", trackObj.lognumber, ", SJA ID", trackObj['SJA ID']);
+        axios
+          .get(`${baseUrl}/getTracksMetadata`, {
+            params: { lognumbers: lognumbers, }
+          })
+          .then((d) => {
+            console.log("#### Loaded Metadata for workflow. d: ", d);
+            // should it be an array or object...? E.g. hashmap...
+            let arrMetadataToWorkflow = [];
+            trackObj['SJA ID']
+              ? arrMetadataToWorkflow.push(d.data.filter(a => a['SJA ID'] === trackObj['SJA ID'])[0])
+              : arrMetadataToWorkflow.push(d.data[0]); // I think this is the right approach for BGR
+            console.log('arrMetadataToWorkflow: ', arrMetadataToWorkflow);
+            // axios call
+            axios.post(`${baseUrl}/addContentWorkflow`, {
+              _id, textNote, time, userId, idContent, typeContent, objectsIndex, indexRange, arrMetadataToWorkflow
+            })
+              .then((data) => {
+                console.log("Then handleApi addContentWorkflow. data: ", data);
+                getWorkflowsInfo(
+                  dispatch,
+                  setWorkflows,
+                  { user: userId }
+                );
+                // change with dispatch and setWorkflows? (Probably not, it is done in getWorkflowsInfo)
+                // workflow.objects.push(data.data.objects[data.data.objects.length-1]);
+              })
+              .catch(err => console.log(err))
+          })
+      })
+  } else {
+    // axios call
+    axios.post(`${baseUrl}/addContentWorkflow`, {
+      _id, textNote, time, userId, idContent, typeContent, objectsIndex, indexRange
     })
-    .catch(err => console.log(err))
+      .then((data) => {
+        console.log("Then handleApi addContentWorkflow. data: ", data);
+        getWorkflowsInfo(
+          dispatch,
+          setWorkflows,
+          { user: userId }
+        );
+      })
+      .catch(err => console.log(err))
+  }
 }
 
 const deleteWorkflow = (_id, dispatch, setWorkflows, userId) => {
@@ -800,7 +834,7 @@ const deleteWorkflow = (_id, dispatch, setWorkflows, userId) => {
   
 const getExactMatchWorkflowParameter = (_id, textSearch, selectionParameter, searchWorkflowOutput, setSearchWorkflowOutput, setLoadingSearchWorkflow) => {
   console.log("handleApi deleteWorkflow. ", {_id, textSearch, selectionParameter, searchWorkflowOutput, setSearchWorkflowOutput, setLoadingSearchWorkflow});
-  // TODO ... why is this a post?
+  // TODO ... why is this a post? Do we worry about security here?
   axios.post(`${baseUrl}/getExactMatchWorkflowParameter`, {
     _id, textSearch, selectionParameter
   })

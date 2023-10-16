@@ -124,7 +124,7 @@ const EmbeddedWorkflowInteraction = ({idCaller, typeCaller, indexRange=0}) => {
       setWorkflows,
       [indexRange], // // For samples we need to know how far the search goes beyond the first note identified
       selectedPrivacyOption ) => {
-      console.log("-- handleWorkflowCreation");
+      console.log("-- handleWorkflowCreation. idCaller: ",idCaller,", typeCaller: ",typeCaller);
 
       // set icon to show loading about to happen
       setShowLoadingIcon(true);

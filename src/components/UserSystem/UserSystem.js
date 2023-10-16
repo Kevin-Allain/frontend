@@ -22,9 +22,6 @@ const UserSystem = () => {
             getUserAnnotations(setListAnnotations, localStorage.username);
         }
     }, []);
-    useEffect(() => {
-        console.log("listAnnotations: ", listAnnotations);
-    }, [listAnnotations]);
 
 
     return (

@@ -47,11 +47,6 @@ export default function Logout() {
         }
     }, [localStorage?.username]);
 
-    useEffect(() => {
-        console.log("listAnnotations: ", listAnnotations);
-    }, [listAnnotations]);
-    // ||
-
     const handleSubmitLogout = async e => {
         console.log("handleSubmitLogout")
         e.preventDefault();
