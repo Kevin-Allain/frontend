@@ -141,9 +141,7 @@ const WorkflowManager = () => {
 
   const handleClickWorkflowSearch = useCallback (async (e) => {
     e.preventDefault();
-    console.log("", textSearch, ", (typeof textSearch): ", (typeof textSearch));
-    if (textSearch !== '') { 
-      // findMatchLevenshteinDistance(textSearch); 
+    if (textSearch !== '') {
       setLoadingSearchWorkflow(true);
       setOldTextSearch(textSearch); 
       setOldSelectionParameter(searchAttribute);
@@ -432,6 +430,8 @@ const loadDetailsSearchWorkflow = (_id) => {
               <select className='selectPrivacy' value={searchAttribute} onChange={handleChangeSearchAttribute}>
                 <option value="author">User name</option>
                 <option value="trackTitle">Track name</option>
+                <option value="artistName">Artist name</option>
+                <option value="eventName">Event name</option>
               </select>
             </div>
             <input

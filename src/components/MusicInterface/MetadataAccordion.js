@@ -100,9 +100,7 @@ const MetadataAccordion = ({
           )}
         </div>
         {/* We want to display attributes (if they exist)
-            - Track Title
-            - Track #
-            - Duration
+            - Track Title - Track # - Duration
              */}
         {expandedTrack && (
           <div className="metadata-content">
