@@ -335,6 +335,8 @@ const getMatchLevenshteinDistance = (
         console.log("tracks present in res: ",otherTracks);
         const sortedLogNumbers = allLogNumber.sort();
         console.log("sortedLogNumbers: ",sortedLogNumbers);
+        
+        // This is a bit we can try to keep
         const sortedTracks = [...new Set(notesAggregByTrack.map(obj => obj.track))].sort();
         console.log("sortedTracks: ",sortedTracks);
         setListLogNumbers(sortedLogNumbers);

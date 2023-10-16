@@ -375,6 +375,9 @@ const MusicInterface = () => {
                 Creating workflows, which are structures similar to notebooks where you can save elements of interest
                 and note your thoughts. Workflows can be found in the workflow manager.
               </li>
+              <li key='list3Explanation'>
+                Search for workflows based on attributes of the content used to populate the workflow.
+              </li>              
             </ul>
             <p className='development-info'>
               More functionalities are in development. <BiWrench />
