@@ -1,6 +1,10 @@
 import axios from 'axios'
 import { setIsLoading } from '../App';
 
+/**
+ * The file is structured by using comments to navigate between groups of functions.
+ * Functions name match those done in Controllers.
+ */
 
 const baseUrl = "http://localhost:5000" // can be used for development
 // const baseUrl = "https://fullstack-proto-jazzdap-backend.onrender.com"
@@ -326,7 +330,7 @@ const getMatchLevenshteinDistance = (
         // console.log("allLogNumber: ", allLogNumber);
         let otherLogsNumbers = [];
         let otherTracks = [];
-        for (let [key, value] of Object.entries(dataSplitByTrack)) {
+        for (let [key, ] of Object.entries(dataSplitByTrack)) {
             otherLogsNumbers.push(dataSplitByTrack[key].data[0].lognumber)
             otherTracks.push(dataSplitByTrack[key].data[0].track)
         }
@@ -902,6 +906,7 @@ const getWorkflow = (setIsWorkerVisible, setSelectedWorkflow, _id, user) => {
     .catch(err => console.log(err))
 }
 
+// TODO awful name. Needs to be rewritten for something like 'getLoadWorkflowContent'
 const getDatabaseContent = async (workflow, setSelectedWorkflow, setIsWorkerVisible) => {
   const workflowObjects = workflow.objects;
   console.log("getDatabaseContent. workflowObjects: ", workflowObjects);
@@ -945,6 +950,44 @@ const getDatabaseContent = async (workflow, setSelectedWorkflow, setIsWorkerVisi
   }
 };
 
+/** Fuzzy Scores */
+const getListFuzzyScores = async (first_id, notes) => {
+  console.log("getListFuzzyScores. first_id: ", first_id,", notes: ",notes);
+  // setIsLoading(true);
+  axios
+    .get(`${baseUrl}/getListFuzzyScores`, {
+      params: { first_id: first_id },
+    })
+    .then((d) => {
+      console.log("Loaded getListFuzzyScores. d: ", d);
+      setIsLoading(false);
+    });
+}
+const getAllFuzzyScores = async (score, notes) => {
+  console.log("getAllFuzzyScores. score: ", score,", notes: ",notes);
+  setIsLoading(true);
+  axios
+    .get(`${baseUrl}/getAllFuzzyScores`, {
+      params: { score: score },
+    })
+    .then((d) => {
+      console.log("Loaded getAllFuzzyScores. d: ", d);
+      setIsLoading(false);
+    });
+}
+const getListFuzzyDist = async (score, distance, notes) => {
+  console.log("getListFuzzyDist. score: ", score,", distance: ",distance,", notes: ",notes);
+  setIsLoading(true);
+  axios
+    .get(`${baseUrl}/getListFuzzyDist`, {
+      params: { score:score, distance:distance },
+    })
+    .then((d) => {
+      console.log("Loaded getListFuzzyDist. d: ", d);
+      setIsLoading(false);
+    });
+}
+
 export {
   getAllJazzDap, addJazzDap, updateJazzDap, deleteJazzDap,
   getMusicMIDI, getSampleMIDI, getMatchLevenshteinDistance,
@@ -956,5 +999,6 @@ export {
   getWorkflow, getWorkflowsInfo, createWorkflow, deleteWorkflow,
   addContentWorkflow, deleteWorkflowObject,
   getExactMatchWorkflowParameter, changeWorkflowPrivacy,
-  getDatabaseContent
+  getDatabaseContent,
+  getListFuzzyScores, getAllFuzzyScores, getListFuzzyDist
 }

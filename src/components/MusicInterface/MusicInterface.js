@@ -8,7 +8,10 @@ import {
   addAnnotation,
   getAnnotations,
   deleteAnnotation,
-  updateAnnotation
+  updateAnnotation,
+  getListFuzzyScores,
+  getAllFuzzyScores,
+  getListFuzzyDist
 } from "../../utils/HandleApi";
 import SampleRes from "./SampleRes"
 import MusicInfo from "./MusicInfo"
@@ -57,7 +60,6 @@ const durations = [0.5, 1, 1, 1, 2, 3, 1, 1, 4, 5, 2, 1, 1, 1, 0.5, 1.82];
   }).toDestination();
 
 const MusicInterface = () => {
-
   // TODO consider whether useref would make more sense? We don't intend to change it according to render... // const [synth2, setSynth2] =  useState(new Tone.Synth());
   // TODO we might create a component for the synth...
   const synth2 = useRef(new Tone.Synth());
@@ -65,16 +67,21 @@ const MusicInterface = () => {
   synth2.current.toDestination();
 
   const [playingMp3, setPlayingMp3] = useState(false);
-  const [iconPlayMp3, setIconPlayMp3] = useState(<AiFillPlayCircle className='icon'></AiFillPlayCircle>)
-  const [audioMp3, setAudioMp3] = useState(new Audio("https://www.learningcontainer.com/wp-content/uploads/2020/02/Kalimba.mp3"))
+  const [iconPlayMp3, setIconPlayMp3] = useState(
+    <AiFillPlayCircle className="icon"></AiFillPlayCircle>
+  );
+  const [audioMp3, setAudioMp3] = useState(
+    new Audio(
+      "https://www.learningcontainer.com/wp-content/uploads/2020/02/Kalimba.mp3"
+    )
+  );
 
-
-  const [notesTranslate, setNotesTranslate] = useState('');
+  const [notesTranslate, setNotesTranslate] = useState("");
   const [showNotesTranslate, setShowNotesTranslate] = useState(false);
-  const [textSearch, setTextSearch] = useState('');
-  const textSearchRef = useRef('');
+  const [textSearch, setTextSearch] = useState("");
+  const textSearchRef = useRef("");
   const [validPitchQuery, setValidPitchQuery] = useState(false);
-  const [oldSearch, setOldSearch] = useState('');
+  const [oldSearch, setOldSearch] = useState("");
 
   const [infoMusicList, setInfoMusicList] = useState([]);
   const [listTracks, setListTracks] = useState([]);
@@ -89,19 +96,35 @@ const MusicInterface = () => {
   const tracksRefs = useRef([]);
 
   const scrollToButtonListLogsNumbers = () => {
-    const buttonListLogsNumbers = document.getElementById('buttonListLogsNumbers');
-    if (buttonListLogsNumbers) { buttonListLogsNumbers.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'start', }); }
+    const buttonListLogsNumbers = document.getElementById(
+      "buttonListLogsNumbers"
+    );
+    if (buttonListLogsNumbers) {
+      buttonListLogsNumbers.scrollIntoView({
+        behavior: "smooth",
+        block: "nearest",
+        inline: "start",
+      });
+    }
   };
 
-  const scrollToButtonListTracksFollowing = (e, indexButton, track, direction='next') => {
-    const prevTrack = listTracks[Math.max( 0, indexButton-1)];
-    const nextTrack = listTracks[Math.min( listTracks.length, indexButton+1)];
-    const buttonTrack = (direction==='next')?document.getElementById(nextTrack) : document.getElementById(prevTrack);
-    if (buttonTrack) { 
+  const scrollToButtonListTracksFollowing = (
+    e,
+    indexButton,
+    track,
+    direction = "next"
+  ) => {
+    const prevTrack = listTracks[Math.max(0, indexButton - 1)];
+    const nextTrack = listTracks[Math.min(listTracks.length, indexButton + 1)];
+    const buttonTrack =
+      direction === "next"
+        ? document.getElementById(nextTrack)
+        : document.getElementById(prevTrack);
+    if (buttonTrack) {
       // Temporarily set 'overflow' to 'visible' on .musicInterface to allow the scrolling
-      const outputMusicSearch = document.querySelector('.outputMusicSearch');
+      const outputMusicSearch = document.querySelector(".outputMusicSearch");
       const originalOverflow = outputMusicSearch.style.overflow;
-      outputMusicSearch.style.overflow = 'visible';
+      outputMusicSearch.style.overflow = "visible";
 
       // Calculate the offset of the buttonTrack relative to the .musicInterface div
       const outputMusicSearchRect = outputMusicSearch.getBoundingClientRect();
@@ -112,152 +135,276 @@ const MusicInterface = () => {
       const scrollTop = outputMusicSearch.scrollTop + relativeOffset;
 
       // Perform the scroll on .outputMusicSearch
-      outputMusicSearch.scrollTo({ top: scrollTop, behavior: 'smooth', });
+      outputMusicSearch.scrollTo({ top: scrollTop, behavior: "smooth" });
 
       // Reset 'overflow' back to its original value after the scrolling
       outputMusicSearch.style.overflow = originalOverflow;
-      buttonTrack.scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'start', });       
+      buttonTrack.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+        inline: "start",
+      });
     }
-  }
-  const scrollToButtonListRecordingsFollowing = (e, recording, direction='next') => {
+  };
+  const scrollToButtonListRecordingsFollowing = (
+    e,
+    recording,
+    direction = "next"
+  ) => {
     // console.log("scrollToButtonListRecordingsFollowing | e: ",e,", recording: ", recording,", direction: ",direction);
     const curIndex = listLogNumbers.indexOf(recording);
-    const prevSelecIndex = Math.max( 0, curIndex-1);
-    const nextSelecIndex = Math.min( listLogNumbers.length, curIndex+1);
-    const selecIndex = (direction==='next')?nextSelecIndex:prevSelecIndex;
+    const prevSelecIndex = Math.max(0, curIndex - 1);
+    const nextSelecIndex = Math.min(listLogNumbers.length, curIndex + 1);
+    const selecIndex = direction === "next" ? nextSelecIndex : prevSelecIndex;
     // console.log("selecIndex: ",selecIndex," | lognumbersRefs: ",lognumbersRefs);
-    
-      // Temporarily set 'overflow' to 'visible' on .musicInterface to allow the scrolling
-      const outputMusicSearch = document.querySelector('.outputMusicSearch');
-      const originalOverflow = outputMusicSearch.style.overflow;
-      outputMusicSearch.style.overflow = 'visible';
 
-      // Calculate the offset of the buttonTrack relative to the .musicInterface div
-      const outputMusicSearchRect = outputMusicSearch.getBoundingClientRect();
-      const buttonTrackRect = lognumbersRefs.current[curIndex].getBoundingClientRect();
-      const relativeOffset = buttonTrackRect.top - outputMusicSearchRect.top;
+    // Temporarily set 'overflow' to 'visible' on .musicInterface to allow the scrolling
+    const outputMusicSearch = document.querySelector(".outputMusicSearch");
+    const originalOverflow = outputMusicSearch.style.overflow;
+    outputMusicSearch.style.overflow = "visible";
 
-      // Calculate the desired scrollTop to ensure the element is visible in the .musicInterface div
-      const scrollTop = outputMusicSearch.scrollTop + relativeOffset;
+    // Calculate the offset of the buttonTrack relative to the .musicInterface div
+    const outputMusicSearchRect = outputMusicSearch.getBoundingClientRect();
+    const buttonTrackRect =
+      lognumbersRefs.current[curIndex].getBoundingClientRect();
+    const relativeOffset = buttonTrackRect.top - outputMusicSearchRect.top;
 
-      // Perform the scroll on .outputMusicSearch
-      outputMusicSearch.scrollTo({ top: scrollTop, behavior: 'smooth', });
+    // Calculate the desired scrollTop to ensure the element is visible in the .musicInterface div
+    const scrollTop = outputMusicSearch.scrollTop + relativeOffset;
 
-      // Reset 'overflow' back to its original value after the scrolling
-      outputMusicSearch.style.overflow = originalOverflow;
-    lognumbersRefs.current[selecIndex].scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'start' });
-  }
-  const handleScrollToRecording = (index) => { lognumbersRefs.current[index].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' }); }
-  const handleScrollToTrack = (index) => { tracksRefs.current[index].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' }); }
+    // Perform the scroll on .outputMusicSearch
+    outputMusicSearch.scrollTo({ top: scrollTop, behavior: "smooth" });
 
-  // ---- React functions
-  useEffect(() => {
-    setValidPitchQuery(PITCH_QUERY_REGEX.test(textSearch))
-    console.log("useEffect textSearch, validPitchQuery: ", validPitchQuery,", textSearch: ",textSearch,", typeof textSearch", typeof textSearch,", length>0: ",(''+textSearch).length>0,", -?: ",(''+textSearch).indexOf('-')===-1);
-    console.log("showNotesTranslate: ",showNotesTranslate,", notesTranslate: ",notesTranslate);
-    let strTextSearch = ''+textSearch;
-    console.log("strTextSearch: ",strTextSearch);
-    let curTxtSearch = (strTextSearch[strTextSearch.length-1]==='-')?strTextSearch.substring(0,strTextSearch.length-1):strTextSearch;
-    if ( curTxtSearch.indexOf('-')===-1){
-      setNotesTranslate(curTxtSearch);  
-    } else {
-      setNotesTranslate(('' + curTxtSearch).split('-').map((a, i) => (i === ('' + curTxtSearch).split('-').length - 1) ?
-        (Number(a) < 21) ? '' :
-          MIDItoNote[a].replaceAll('s', '')
-        : (MIDItoNote[a] + '-').replaceAll('s', '')
-      ));
+    // Reset 'overflow' back to its original value after the scrolling
+    outputMusicSearch.style.overflow = originalOverflow;
+    lognumbersRefs.current[selecIndex].scrollIntoView({
+      behavior: "smooth",
+      block: "start",
+      inline: "start",
+    });
+  };
+  const handleScrollToRecording = (index) => {
+    lognumbersRefs.current[index].scrollIntoView({
+      behavior: "smooth",
+      block: "nearest",
+      inline: "center",
+    });
+  };
+  const handleScrollToTrack = (index) => {
+    tracksRefs.current[index].scrollIntoView({
+      behavior: "smooth",
+      block: "nearest",
+      inline: "center",
+    });
+  };
+
+
+  const calculate_fuzzy_score = (pitch_notes) => {
+    let score = 0;
+    for (let i = 0; i < pitch_notes.length - 1; i++) {
+      score += pitch_notes[i] - pitch_notes[i + 1];
     }
-    setShowNotesTranslate(strTextSearch.length>0);
-  }, [textSearch, validPitchQuery])
+    return score;
+  };
+  const map_to_fuzzy_score = (score) => {
+    if (score < -7) { return -4;} 
+    else if (score >= -7 && score <= -5) { return -3; } 
+    else if (score >= -4 && score <= -3) { return -2; } 
+    else if (score >= -2 && score <= -1) { return -1; } 
+    else if (score === 0) { return 0; } 
+    else if (score >= 1 && score <= 2) { return 1; } 
+    else if (score >= 3 && score <= 4) { return 2; } 
+    else if (score >= 5 && score <= 7) { return 3; } 
+    else { return 4; }
+  };
+
+// ---- React functions
+  useEffect(() => {
+    setValidPitchQuery(PITCH_QUERY_REGEX.test(textSearch));
+    console.log(
+      "useEffect textSearch, validPitchQuery: ",
+      validPitchQuery,
+      ", textSearch: ",
+      textSearch,
+      ", typeof textSearch",
+      typeof textSearch,
+      ", length>0: ",
+      ("" + textSearch).length > 0,
+      ", -?: ",
+      ("" + textSearch).indexOf("-") === -1
+    );
+    console.log(
+      "showNotesTranslate: ",
+      showNotesTranslate,
+      ", notesTranslate: ",
+      notesTranslate
+    );
+    let strTextSearch = "" + textSearch;
+    console.log("strTextSearch: ", strTextSearch);
+    let curTxtSearch =
+      strTextSearch[strTextSearch.length - 1] === "-"
+        ? strTextSearch.substring(0, strTextSearch.length - 1)
+        : strTextSearch;
+    if (curTxtSearch.indexOf("-") === -1) {
+      setNotesTranslate(curTxtSearch);
+    } else {
+      setNotesTranslate(
+        ("" + curTxtSearch)
+          .split("-")
+          .map((a, i) =>
+            i === ("" + curTxtSearch).split("-").length - 1
+              ? Number(a) < 21
+                ? ""
+                : MIDItoNote[a].replaceAll("s", "")
+              : (MIDItoNote[a] + "-").replaceAll("s", "")
+          )
+      );
+    }
+    setShowNotesTranslate(strTextSearch.length > 0);
+  }, [textSearch, validPitchQuery]);
 
   useEffect(() => {
     // new approach: sorting based on alphabet
     const sorted = listLogNumbers.sort();
     setListLogNumbers(sorted);
 
-    lognumbersRefs.current = 
-      lognumbersRefs.current.slice(0, listLogNumbers.length).map(
-        (ref, index) => ref || React.createRef()
-      );
+    lognumbersRefs.current = lognumbersRefs.current
+      .slice(0, listLogNumbers.length)
+      .map((ref, index) => ref || React.createRef());
   }, [listLogNumbers]);
 
   useEffect(() => {
     // new approach: sorting based on alphabet
     const sorted = listTracks.sort();
     setListTracks(sorted);
-    tracksRefs.current = 
-    tracksRefs.current.slice(0, listTracks.length).map(
-        (ref, index) => ref || React.createRef()
-      );
+    tracksRefs.current = tracksRefs.current
+      .slice(0, listTracks.length)
+      .map((ref, index) => ref || React.createRef());
   }, [listTracks]);
 
   const findMatchRecording = (recording) => {
-    console.log("~~~~ findMatchRecording | recording: ",recording,", infoRecordingTrackList: ",infoMusicList);
+    console.log(
+      "~~~~ findMatchRecording | recording: ",
+      recording,
+      ", infoRecordingTrackList: ",
+      infoMusicList
+    );
     // Not a great approach... but should work okay.
-    if ( recording.includes("SJA") ){
+    if (recording.includes("SJA")) {
       const matchIndex = infoMusicList.findIndex(
-        item => item.lognumber.substring(0,item.lognumber.lastIndexOf('_')) === recording
+        (item) =>
+          item.lognumber.substring(0, item.lognumber.lastIndexOf("_")) ===
+          recording
       );
       return matchIndex;
     } else {
-      const matchIndex = infoMusicList.findIndex(item => item.lognumber === recording);
+      const matchIndex = infoMusicList.findIndex(
+        (item) => item.lognumber === recording
+      );
       return matchIndex;
     }
-  }
-  
-  // ---- Functions handle
-  const handleChangeQueryPitch = useCallback((event) => {
-    const value = event.target.value;
-    if (PITCH_QUERY_REGEX.test(value) || value[value.length - 1] === '-') { setTextSearch(value);  }
-  }, [setTextSearch]);
+  };
 
-  const handleClickTextSearch = useCallback(async (e) => {
-    e.preventDefault();
-    console.log("", textSearch, ", (typeof textSearch): ", (typeof textSearch));
-    if (textSearch !== '') { findMatchLevenshteinDistance(textSearch); }
-  }, [textSearch, findMatchLevenshteinDistance]);
-  
+  // ---- Functions handle
+  const handleChangeQueryPitch = useCallback(
+    (event) => {
+      const value = event.target.value;
+      if (PITCH_QUERY_REGEX.test(value) || value[value.length - 1] === "-") {
+        setTextSearch(value);
+      }
+    },
+    [setTextSearch]
+  );
+
+  const handleClickTextSearch = useCallback(
+    async (e) => {
+      e.preventDefault();
+      console.log("", textSearch, ", (typeof textSearch): ", typeof textSearch);
+      if (textSearch !== "") {
+        findMatchLevenshteinDistance(textSearch);
+      }
+    },
+    [textSearch, findMatchLevenshteinDistance]
+  );
 
   // ######## TEST FOR PERFORMANCES ########
-  const handleClickTextSearchTEST = async(e) => {
-    console.log("We do nothing. T: ",new Date());
-    setTextSearch('');
-  }
+  const handleClickTextSearchTEST_getListFuzzyDist = async (e) => {
+    e.preventDefault();
+    console.log("handleClickTextSearchTEST_getListFuzzyDist: ", new Date());
+    if (textSearch !== "") {
+      let valsNotes = textSearch.split('-').map(a => Number(a));
+      console.log("valsNotes: ",valsNotes);
+      let score =  map_to_fuzzy_score (calculate_fuzzy_score(valsNotes))  // need function
+      console.log("score: ",score);
+      let distance = textSearch.split('-').length;
+      console.log("distance: ",distance);
+      getListFuzzyDist(score, distance);
+      setTextSearch("");
+    }
+  };
+
   function playMp3() {
-    console.log("---- playMp3. playing: ", playingMp3)
+    console.log("---- playMp3. playing: ", playingMp3);
     if (playingMp3) {
       audioMp3.pause();
-      setIconPlayMp3(<AiFillPlayCircle className='icon'></AiFillPlayCircle>)
+      setIconPlayMp3(<AiFillPlayCircle className="icon"></AiFillPlayCircle>);
     } else {
       audioMp3.play();
-      setIconPlayMp3(<AiFillPauseCircle className='icon'></AiFillPauseCircle>)
+      setIconPlayMp3(<AiFillPauseCircle className="icon"></AiFillPauseCircle>);
     }
     setPlayingMp3(!playingMp3);
   }
-
   function playToneSalamander() {
     const now = Tone.now();
-    Tone.loaded().then(() => { for(var i = 0; i < 3; i++){ sampler.triggerAttackRelease([`E${i+4}`,`F${i+4}`, `C${i+4}`,`G${i+4}`, `B${i+4}`,`A${i+4}`, `A#${i+4}`], 1,now+i); } })
+    Tone.loaded().then(() => {
+      for (var i = 0; i < 3; i++) {
+        sampler.triggerAttackRelease(
+          [
+            `E${i + 4}`,
+            `F${i + 4}`,
+            `C${i + 4}`,
+            `G${i + 4}`,
+            `B${i + 4}`,
+            `A${i + 4}`,
+            `A#${i + 4}`,
+          ],
+          1,
+          now + i
+        );
+      }
+    });
   }
-  
   function resetMp3() {
     if (playingMp3) {
-      audioMp3.pause(); setIconPlayMp3(<AiFillPlayCircle></AiFillPlayCircle>);setPlayingMp3(!playingMp3);
+      audioMp3.pause();
+      setIconPlayMp3(<AiFillPlayCircle></AiFillPlayCircle>);
+      setPlayingMp3(!playingMp3);
     }
-    setAudioMp3(new Audio("https://www.learningcontainer.com/wp-content/uploads/2020/02/Kalimba.mp3"));
+    setAudioMp3(
+      new Audio(
+        "https://www.learningcontainer.com/wp-content/uploads/2020/02/Kalimba.mp3"
+      )
+    );
   }
   // #######
 
   function handleKeyPress(keyName) {
-    setTextSearch((prevText) => (prevText === '') ? NotetoMIDI[keyName] : prevText + '-' + NotetoMIDI[keyName]);
+    setTextSearch((prevText) =>
+      prevText === ""
+        ? NotetoMIDI[keyName]
+        : prevText + "-" + NotetoMIDI[keyName]
+    );
     textSearchRef.current.value += NotetoMIDI[keyName];
   }
 
   // ---- Functions
   // Function for distance: arrays of int
   function calcLevenshteinDistance_int(arr1, arr2) {
-    const m = arr1.length; const n = arr2.length;
-    const dp = Array.from({ length: m + 1 }, () => Array.from({ length: n + 1 }, () => 0));
+    const m = arr1.length;
+    const n = arr2.length;
+    const dp = Array.from({ length: m + 1 }, () =>
+      Array.from({ length: n + 1 }, () => 0)
+    );
     for (let i = 0; i <= m; i++) {
       for (let j = 0; j <= n; j++) {
         if (i === 0) {
@@ -278,10 +425,10 @@ const MusicInterface = () => {
   // Note: To shift by an octave you just have to add 12. // Apparenlty supposed to use that: Math.pow(2, (m-69)/12)*440, with m being the pitch
   // We set time to the value of the onset property of the input item, note to the value of the pitch property, and duration to the value of the duration property multiplied by 16 to convert from seconds to sixteenth notes (you can adjust this factor as needed depending on your use case).
   function transformToPlayfulFormat(d) {
-    const outputArray = d.map(item => ({
+    const outputArray = d.map((item) => ({
       time: item.onset,
       note: Math.pow(2, (item.pitch - 69) / 12) * 440,
-      duration: item.duration * 16 // Assuming duration is in seconds and you want it in sixteenth notes
+      duration: item.duration * 16, // Assuming duration is in seconds and you want it in sixteenth notes
     }));
     return outputArray;
   }
@@ -300,9 +447,13 @@ const MusicInterface = () => {
     const offsetTest = 0.1;
 
     const now = Tone.now() + offsetTest;
-    music.forEach(tune => {
-      synth2.current.triggerAttackRelease(MIDItoNote[tune.note], tune.duration, now + tune.time)
-    })
+    music.forEach((tune) => {
+      synth2.current.triggerAttackRelease(
+        MIDItoNote[tune.note],
+        tune.duration,
+        now + tune.time
+      );
+    });
     Tone.Transport.stop();
   }
 
@@ -310,27 +461,27 @@ const MusicInterface = () => {
     // Reformat
     const arrNotes = item.arrNotes;
     const arrTime = item.arrTime;
-    const arrDurations = item.arrDurations
+    const arrDurations = item.arrDurations;
     const firstTime = arrTime[0];
     const combinedArray = arrNotes.map((note, index) => ({
       note,
       time: arrTime[index] - firstTime,
-      duration: arrDurations[index]
+      duration: arrDurations[index],
     }));
     playFormattedMusic(combinedArray);
   }
 
   function getMusicInfo(track, infoMusicList, setInfoMusicList = null) {
-    console.log("getMusicInfo -- infoMusicList: ",infoMusicList);
+    console.log("getMusicInfo -- infoMusicList: ", infoMusicList);
     const lognumber = track.split("-")[0];
     getTrackMetadata(lognumber, infoMusicList, setInfoMusicList);
   }
 
   function findMatchLevenshteinDistance(strNotes = "69-76-76-74-76") {
-    console.log("---- findMatchLevenshteinDistance.")
+    console.log("---- findMatchLevenshteinDistance.");
     setInfoMusicList([]);
     setOldSearch(strNotes);
-    setTextSearch('');
+    setTextSearch("");
 
     getMatchLevenshteinDistance(
       strNotes,
@@ -341,45 +492,57 @@ const MusicInterface = () => {
       setListLogNumbers,
       setListTracks,
       // Additions for loading of metadata after the loading of tracks
-      infoMusicList, 
+      infoMusicList,
       setInfoMusicList
-    )
+    );
   }
 
   return (
     <div className="musicInterface">
       {/* relative flex h-screen   flex-1  flex-col  overflow-hidden      text-accent */}
-      <BsFillInfoCircleFill className='icon infoMusicInterface w-[2rem] h-[2rem]' onClick={() => setShowExplanation(!showExplanation)} />
+      <BsFillInfoCircleFill
+        className="icon infoMusicInterface w-[2rem] h-[2rem]"
+        onClick={() => setShowExplanation(!showExplanation)}
+      />
       {showExplanation && (
-        <div className='explanation'>
-          <ImCross className='icon' onClick={() => setShowExplanation(!showExplanation)} />
-          <h1 className='title'>How to Use the Music Interface</h1>
-          <div className='detailsExplanation'>
+        <div className="explanation">
+          <ImCross
+            className="icon"
+            onClick={() => setShowExplanation(!showExplanation)}
+          />
+          <h1 className="title">How to Use the Music Interface</h1>
+          <div className="detailsExplanation">
             <p>
-              The Music Interface is designed to search for samples that match the melodies you enter in our system.
-              To do so, simply click on the piano keys for the notes you wish and submit your search.
+              The Music Interface is designed to search for samples that match
+              the melodies you enter in our system. To do so, simply click on
+              the piano keys for the notes you wish and submit your search.
             </p>
             <p>
-              The results will be displayed in a structured format indicating where the matching samples were found.
-              The system will provide information about the sample and allow you to play it.
+              The results will be displayed in a structured format indicating
+              where the matching samples were found. The system will provide
+              information about the sample and allow you to play it.
             </p>
             <p>
-              You can also read the annotations made by other users and their associated comments.
+              You can also read the annotations made by other users and their
+              associated comments.
             </p>
             <p>
-              More functionalities are available if you register an account and log in. These functionalities include:
+              More functionalities are available if you register an account and
+              log in. These functionalities include:
             </p>
-            <ul className='functionality-list'>
-              <li key='list1Explanation'>Writing annotations and comments.</li>
-              <li key='list2Explanation'>
-                Creating workflows, which are structures similar to notebooks where you can save elements of interest
-                and note your thoughts. Workflows can be found in the workflow manager.
+            <ul className="functionality-list">
+              <li key="list1Explanation">Writing annotations and comments.</li>
+              <li key="list2Explanation">
+                Creating workflows, which are structures similar to notebooks
+                where you can save elements of interest and note your thoughts.
+                Workflows can be found in the workflow manager.
               </li>
-              <li key='list3Explanation'>
-                Search for workflows based on attributes of the content used to populate the workflow.
-              </li>              
+              <li key="list3Explanation">
+                Search for workflows based on attributes of the content used to
+                populate the workflow.
+              </li>
             </ul>
-            <p className='development-info'>
+            <p className="development-info">
               More functionalities are in development. <BiWrench />
             </p>
           </div>
@@ -395,33 +558,65 @@ const MusicInterface = () => {
       <Piano onKeyPress={handleKeyPress} />
       {/* ==== SEARCH INPUT ==== */}
       <div className="topTextSearch">
-        <div className='disclaimerSearchPitch'>Play the piano keys or enter a query based on pitch notes (from 0 to 127) separated with - characters.</div>
+        <div className="disclaimerSearchPitch">
+          Play the piano keys or enter a query based on pitch notes (from 0 to
+          127) separated with - characters.
+        </div>
         <input
-          type="text" className='inputMusicSearch' placeholder="Enter melody here" ref={textSearchRef} autoComplete="off" required value={textSearch} onChange={handleChangeQueryPitch}
+          type="text"
+          className="inputMusicSearch"
+          placeholder="Enter melody here"
+          ref={textSearchRef}
+          autoComplete="off"
+          required
+          value={textSearch}
+          onChange={handleChangeQueryPitch}
         />
-        <button className='mx-[0.5rem] my-[0.25rem]' onClick={handleClickTextSearch}>Submit search</button>
-        {/* <button onClick={handleClickTextSearchTEST}>Submit search</button> */}
-        { (''+textSearch).length>0 &&  <div className="bg-slate-200 text-center mx-64 opacity-75 max-w-80%">Notes: ({notesTranslate})</div> }
+        <button
+          className="mx-[0.5rem] my-[0.25rem]"
+          onClick={handleClickTextSearch}
+        >
+          Submit search
+        </button>
+        <button onClick={handleClickTextSearchTEST_getListFuzzyDist}>
+          Submit search test fuzzy
+        </button>
+        {("" + textSearch).length > 0 && (
+          <div className="bg-slate-200 text-center mx-64 opacity-75 max-w-80%">
+            Notes: ({notesTranslate})
+          </div>
+        )}
       </div>
 
       {/* ==== OUTPUT SEARCH ==== */}
       {/* Approach with MyTabbedInterface */}
-      {(listSearchRes.length <= 0) ? (<></>) :
-        <div className='outputMusicSearch'>
+      {listSearchRes.length <= 0 ? (
+        <></>
+      ) : (
+        <div className="outputMusicSearch">
           {/* Display both pitches and notes */}
-          <p className='text-xl'>List of results for your search:</p><h4>{oldSearch} ({(('' + oldSearch).indexOf('-') === -1)
-            ? ('' + MIDItoNote['' + oldSearch]).replaceAll('s', '')
-            : ('' + oldSearch).split('-').map((a, i) => (i === ('' + oldSearch).split('-').length - 1) ?
-              MIDItoNote[a].replaceAll('s', '')
-              : (MIDItoNote[a] + '-').replaceAll('s', '')
-            )})</h4>
+          <p className="text-xl">List of results for your search:</p>
+          <h4>
+            {oldSearch} (
+            {("" + oldSearch).indexOf("-") === -1
+              ? ("" + MIDItoNote["" + oldSearch]).replaceAll("s", "")
+              : ("" + oldSearch)
+                  .split("-")
+                  .map((a, i) =>
+                    i === ("" + oldSearch).split("-").length - 1
+                      ? MIDItoNote[a].replaceAll("s", "")
+                      : (MIDItoNote[a] + "-").replaceAll("s", "")
+                  )}
+            )
+          </h4>
 
-          <div className='text-left'>
+          <div className="text-left">
             <AnnotationSystem type={"search"} info={oldSearch} />
-            {/* TODO update the workflow system so that it can save searches!!! */} {/* <EmbeddedWorkflowInteraction idCaller={null} typeCaller={"search"} /> */}
+            {/* TODO update the workflow system so that it can save searches!!! */}{" "}
+            {/* <EmbeddedWorkflowInteraction idCaller={null} typeCaller={"search"} /> */}
           </div>
 
-          {infoMusicList.length > 0 ?
+          {infoMusicList.length > 0 ? (
             <MyTabbedInterface
               listSearchRes={listSearchRes}
               listLogNumbers={listLogNumbers}
@@ -432,11 +627,11 @@ const MusicInterface = () => {
               getMusicInfo={getMusicInfo}
               setInfoMusicList={setInfoMusicList}
             />
-            : <></>
-          }
+          ) : (
+            <></>
+          )}
         </div>
-        }
-
+      )}
     </div>
   );
 }
