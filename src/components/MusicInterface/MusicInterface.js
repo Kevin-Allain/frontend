@@ -11,7 +11,8 @@ import {
   updateAnnotation,
   getListFuzzyScores,
   getAllFuzzyScores,
-  getListFuzzyDist
+  getListFuzzyDist,
+  getFuzzyLevenshtein
 } from "../../utils/HandleApi";
 import SampleRes from "./SampleRes"
 import MusicInfo from "./MusicInfo"
@@ -198,7 +199,6 @@ const MusicInterface = () => {
     });
   };
 
-
   const calculate_fuzzy_score = (pitch_notes) => {
     let score = 0;
     for (let i = 0; i < pitch_notes.length - 1; i++) {
@@ -342,6 +342,24 @@ const MusicInterface = () => {
       setTextSearch("");
     }
   };
+
+  const handleClickTextSearchTEST_getFuzzyLevenshtein = async (e) => {
+    e.preventDefault();
+    console.log("handleClickTextSearchTEST_getFuzzyLevenshtein: ", new Date());    
+    if (textSearch!== ''){
+      let percMatch = 1;
+      getFuzzyLevenshtein(
+        textSearch,
+        percMatch,
+        localStorage?.username,
+        setListSearchRes,
+        setListLogNumbers,
+        setListTracks,
+        infoMusicList, 
+        setInfoMusicList      
+      )
+    }
+  }  
 
   function playMp3() {
     console.log("---- playMp3. playing: ", playingMp3);
@@ -578,7 +596,7 @@ const MusicInterface = () => {
         >
           Submit search
         </button>
-        <button onClick={handleClickTextSearchTEST_getListFuzzyDist}>
+        <button onClick={handleClickTextSearchTEST_getFuzzyLevenshtein}>
           Submit search test fuzzy
         </button>
         {("" + textSearch).length > 0 && (

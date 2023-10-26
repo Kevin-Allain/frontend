@@ -219,6 +219,130 @@ const getTracksFromAttribute = (attributeName, attributeValue) => {
     })
 }
 
+const getFuzzyLevenshtein = ( stringNotes = "", percMatch = 1, user = null, setListSearchRes = null, setListLogNumbers = null, setListTracks = null, infoMusicList=null,  setInfoMusicList=null ) => {
+  console.log("-- handleAPI / getFuzzyLevenshtein. stringNotes: ", stringNotes, ", percMatch: ", percMatch, " user: ", user);
+  console.log("~~~~ baseUrl: ",baseUrl," ~~~~")
+  setIsLoading(true);
+  stringNotes += '';
+  let numNotesInput = stringNotes.split('-').map(a=>Number(a));
+
+  axios
+    .get(`${baseUrl}/getFuzzyLevenshtein`, {
+      params:
+        { stringNotes: stringNotes, percMatch: percMatch, user: user, },
+    })
+    .then((d) => {
+      console.log("#### Then of getFuzzyLevenshtein ####"); console.log("d: ", d); console.log("TIME AFTER QUERY: ", new Date());
+      // So now... what to do. Make something similar to the previous function? Fastest coding approach I suppose.
+      // But... do we return all the info? We should try to have it organized in the same way.
+      const resData = d.data;
+      const allTrack = [...new Set(d.data.map(a => a.track))];
+      const allLogNumber = [...new Set(d.data.map(a => a.lognumber))];
+      console.log("~~#~~ allTrack: ", allTrack, ", allLogNumber: ", allLogNumber);
+
+      let sortedTracks = allTrack.sort();
+
+      // Tricky to split the data into sections... might have to do it from previous step actually!
+      // split according to track
+      let dataSplitByTrack = {};
+      for (let i in allTrack) {
+        let filteredByTrack = d.data.filter(a => a.track === allTrack[i])
+        dataSplitByTrack[allTrack[i]] = {}
+        dataSplitByTrack[allTrack[i]].data = filteredByTrack;
+      }
+      console.log("dataSplitByTrack: ", dataSplitByTrack);
+
+      for (let i in dataSplitByTrack) {
+        // sort notes
+        dataSplitByTrack[i].data =
+          dataSplitByTrack[i].data.sort((a, b) => a.track - b.track || a.m_id - b.m_id);
+        dataSplitByTrack[i].sequences = [];
+        // let startSeQuences = dataSplitByTrack[i].data.filter(a => a.startSequence);
+        for (let ds in dataSplitByTrack[i].data) {
+          if (dataSplitByTrack[i].data[ds].startSequence) {
+            let slice = dataSplitByTrack[i].data.slice(
+              parseInt(ds), (parseInt(ds) + parseInt(numNotesInput))
+            );
+            dataSplitByTrack[i].sequences.push(slice);
+          }
+        }
+      }
+
+      // let notesAggregByTrack = [];
+      // for (let i in dataSplitByTrack) {
+      //   dataSplitByTrack[i].distances = []
+      //   dataSplitByTrack[i].slicesDist = [];
+      //   for (let j in dataSplitByTrack[i].sequences) {
+      //     let curArrNotes = dataSplitByTrack[i].sequences[j].map(a => a.pitch)
+      //     let curArrTime = dataSplitByTrack[i].sequences[j].map(a => a.onset)
+      //     let curArrDurations = dataSplitByTrack[i].sequences[j].map(a => a.duration)
+      //     let currArrIdNotes = dataSplitByTrack[i].sequences[j].map(a => a._id)
+      //     let curLogNumber = dataSplitByTrack[i].data[0].lognumber;
+      //     // // TODO change! We calculated with the previous value
+      //     // let distCalc = levenshteinDistanceFunc(arrayNotesInput, curArrNotes);
+      //     // dataSplitByTrack[i].distances.push(distCalc);
+      //     dataSplitByTrack[i].slicesDist.push({
+      //       arrNotes: curArrNotes,
+      //       arrIdNotes: currArrIdNotes,
+      //       arrTime: curArrTime.map((num) => Number(num.toFixed(2))),
+      //       arrDurations: curArrDurations.map((num) => Number(num.toFixed(2))),
+      //       // distCalc: distCalc,
+      //       track: i,
+      //       lognumber: curLogNumber
+      //     });
+      //   }
+      //   notesAggregByTrack = notesAggregByTrack.concat(
+      //     dataSplitByTrack[i].slicesDist
+      //   );
+      // }
+      // notesAggregByTrack.sort((a, b) => a.distCalc - b.distCalc);
+      // // Will be better to later allow filter
+      // console.log("// dataSplitByTrack: ", dataSplitByTrack,", notesAggregByTrack: ", notesAggregByTrack);
+      let otherLogsNumbers = [];
+      let otherTracks = [];
+      for (let [key,] of Object.entries(dataSplitByTrack)) {
+        otherLogsNumbers.push(dataSplitByTrack[key].data[0].lognumber);
+        otherTracks.push(dataSplitByTrack[key].data[0].track);
+      }
+      otherLogsNumbers = [...new Set(otherLogsNumbers)]
+      console.log("lognumbers present in res: ", otherLogsNumbers);
+      console.log("tracks present in res: ", otherTracks);
+      const sortedLogNumbers = allLogNumber.sort();
+      console.log("sortedLogNumbers: ", sortedLogNumbers);
+      // -- Worked in terminal
+      let altDataStruct = [];
+      for ( var i in resData ) {
+        altDataStruct.push({
+            distCalc: resData[i].levenshteinDistance,
+            lognumber: resData[i].lognumber,
+            track: resData[i].track,
+            arrIdNotes: resData[i]._ids,
+            arrNotes: resData[i].notes,
+            arrDurations: resData[i].durations,
+            arrTime: resData[i].onsets
+        })
+      }
+      console.log("altDataStruct: ",altDataStruct);
+      // --
+      console.log("sortedTracks: ", sortedTracks);      
+      let notesAggregByTrack = altDataStruct;
+      setListLogNumbers(sortedLogNumbers);
+      setListTracks(sortedTracks);
+      setListSearchRes(notesAggregByTrack);
+      // Calls for loading of metadata
+      getTracksMetadata(
+        sortedLogNumbers,
+        infoMusicList,
+        setInfoMusicList
+      );
+      setIsLoading(false);
+      return d;
+    })
+    .catch((err) => {
+      alert("An error occured. Reload the page. Please contact us if the error occurs often.")
+      console.log(err);
+    });
+}
 
 const getMatchLevenshteinDistance = (
   stringNotes = "",
@@ -269,7 +393,6 @@ const getMatchLevenshteinDistance = (
         }
         console.log("notesPerTrack :", notesPerTrack);
         // Tricky to split the data into sections... might have to do it from previous step actually!
-
         // split according to track
         let dataSplitByTrack = {};
         for (let i in allTrack) {
@@ -277,7 +400,6 @@ const getMatchLevenshteinDistance = (
           dataSplitByTrack[allTrack[i]] = {}
           dataSplitByTrack[allTrack[i]].data = filteredByTrack;
         }
-
         console.log("dataSplitByTrack: ", dataSplitByTrack);
 
         for (let i in dataSplitByTrack) {
@@ -322,17 +444,17 @@ const getMatchLevenshteinDistance = (
           }
           notesAggregByTrack = notesAggregByTrack.concat(dataSplitByTrack[i].slicesDist);
         }
-
         notesAggregByTrack.sort((a, b) => a.distCalc - b.distCalc);
 
         // Will be better to later allow filter
-        console.log("// dataSplitByTrack: ", dataSplitByTrack,", notesAggregByTrack: ", notesAggregByTrack);
-        // console.log("allLogNumber: ", allLogNumber);
+        console.log("// dataSplitByTrack: ", dataSplitByTrack,
+          ", notesAggregByTrack: ", notesAggregByTrack
+        );
         let otherLogsNumbers = [];
         let otherTracks = [];
         for (let [key, ] of Object.entries(dataSplitByTrack)) {
-            otherLogsNumbers.push(dataSplitByTrack[key].data[0].lognumber)
-            otherTracks.push(dataSplitByTrack[key].data[0].track)
+            otherLogsNumbers.push(dataSplitByTrack[key].data[0].lognumber);
+            otherTracks.push(dataSplitByTrack[key].data[0].track);
         }
         otherLogsNumbers = [...new Set(otherLogsNumbers)]
         console.log("lognumbers present in res: ",otherLogsNumbers);
@@ -348,10 +470,10 @@ const getMatchLevenshteinDistance = (
         setListSearchRes(notesAggregByTrack);
         // Calls for loading of metadata
         getTracksMetadata(
-          sortedLogNumbers, 
-          infoMusicList, 
+          sortedLogNumbers,
+          infoMusicList,
           setInfoMusicList
-        );      
+        );
       }
 
       setIsLoading(false);
@@ -1000,5 +1122,6 @@ export {
   addContentWorkflow, deleteWorkflowObject,
   getExactMatchWorkflowParameter, changeWorkflowPrivacy,
   getDatabaseContent,
-  getListFuzzyScores, getAllFuzzyScores, getListFuzzyDist
+  getListFuzzyScores, getAllFuzzyScores, getListFuzzyDist,
+  getFuzzyLevenshtein
 }

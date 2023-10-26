@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef } from "react";
 // import SimpleBar from 'simplebar-react';
 // import 'simplebar-react/dist/simplebar.min.css';
 import "./MyTabbedInterface.css";
@@ -53,11 +53,17 @@ const MyTabbedInterface = ({
   let trackToTitles = {};
   for (let i in listSearchRes) {
     let curSR = listSearchRes[i];
-    let curTrack = curSR.track;
-    let trackInfoCode = curTrack.replace('-T', '_')
-    if (curTrack.includes('SJA')) {
-      let selecInfo = infoMusicList.filter(a => a['SJA ID'] === trackInfoCode)
-      trackToTitles[curTrack] = selecInfo[0]['Track Title']
+    // WHY ARE THERE CASES WITH THE TRACK UNDEFINED?!
+    if (curSR.track) {
+      let curTrack = curSR.track;
+      let trackInfoCode = curTrack.replace('-T', '_')
+      if (curTrack.includes('SJA')) {
+        let selecInfo = infoMusicList.filter(a => a['SJA ID'] === trackInfoCode)
+        trackToTitles[curTrack] = selecInfo[0]['Track Title']
+      }
+    }
+    else {
+      console.log("MASSIVE ISSUE. curSR: ",curSR);
     }
   }
   console.log("trackToTitles: ",trackToTitles);
@@ -102,17 +108,6 @@ const MyTabbedInterface = ({
     a.recording > b.recording ? 1 : b.recording > a.recording ? -1 : 0
   );
   console.log("newStruct: ", newStruct, ", listTracks: ", listTracks);
-
-  // no idea if this is necessary...?!
-
-
-  // // Use useEffect to log the updated value of activeRecording
-  // useEffect(() => {
-  //   console.log("useEffect activeRecording: ", activeRecording);
-  // }, [activeRecording]);
-  // useEffect(() => {
-  //   console.log("useEffect activeTrack: ", activeTrack);
-  // }, [activeTrack]);
 
   const handleRecordingClick = (recording) => {
     console.log("~~ handleRecordingClick, recording: ", recording, " ---- listSearchRes: ", listSearchRes, ", listLogNumbers: ", listLogNumbers);
