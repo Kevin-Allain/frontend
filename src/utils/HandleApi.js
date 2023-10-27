@@ -268,36 +268,6 @@ const getFuzzyLevenshtein = ( stringNotes = "", percMatch = 1, user = null, setL
         }
       }
 
-      // let notesAggregByTrack = [];
-      // for (let i in dataSplitByTrack) {
-      //   dataSplitByTrack[i].distances = []
-      //   dataSplitByTrack[i].slicesDist = [];
-      //   for (let j in dataSplitByTrack[i].sequences) {
-      //     let curArrNotes = dataSplitByTrack[i].sequences[j].map(a => a.pitch)
-      //     let curArrTime = dataSplitByTrack[i].sequences[j].map(a => a.onset)
-      //     let curArrDurations = dataSplitByTrack[i].sequences[j].map(a => a.duration)
-      //     let currArrIdNotes = dataSplitByTrack[i].sequences[j].map(a => a._id)
-      //     let curLogNumber = dataSplitByTrack[i].data[0].lognumber;
-      //     // // TODO change! We calculated with the previous value
-      //     // let distCalc = levenshteinDistanceFunc(arrayNotesInput, curArrNotes);
-      //     // dataSplitByTrack[i].distances.push(distCalc);
-      //     dataSplitByTrack[i].slicesDist.push({
-      //       arrNotes: curArrNotes,
-      //       arrIdNotes: currArrIdNotes,
-      //       arrTime: curArrTime.map((num) => Number(num.toFixed(2))),
-      //       arrDurations: curArrDurations.map((num) => Number(num.toFixed(2))),
-      //       // distCalc: distCalc,
-      //       track: i,
-      //       lognumber: curLogNumber
-      //     });
-      //   }
-      //   notesAggregByTrack = notesAggregByTrack.concat(
-      //     dataSplitByTrack[i].slicesDist
-      //   );
-      // }
-      // notesAggregByTrack.sort((a, b) => a.distCalc - b.distCalc);
-      // // Will be better to later allow filter
-      // console.log("// dataSplitByTrack: ", dataSplitByTrack,", notesAggregByTrack: ", notesAggregByTrack);
       let otherLogsNumbers = [];
       let otherTracks = [];
       for (let [key,] of Object.entries(dataSplitByTrack)) {

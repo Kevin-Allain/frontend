@@ -71,11 +71,11 @@ const MusicInterface = () => {
   const [iconPlayMp3, setIconPlayMp3] = useState(
     <AiFillPlayCircle className="icon"></AiFillPlayCircle>
   );
-  const [audioMp3, setAudioMp3] = useState(
-    new Audio(
-      "https://www.learningcontainer.com/wp-content/uploads/2020/02/Kalimba.mp3"
-    )
-  );
+  // const [audioMp3, setAudioMp3] = useState(
+  //   new Audio(
+  //     "https://www.learningcontainer.com/wp-content/uploads/2020/02/Kalimba.mp3"
+  //   )
+  // );
 
   const [notesTranslate, setNotesTranslate] = useState("");
   const [showNotesTranslate, setShowNotesTranslate] = useState(false);
@@ -361,17 +361,17 @@ const MusicInterface = () => {
     }
   }  
 
-  function playMp3() {
-    console.log("---- playMp3. playing: ", playingMp3);
-    if (playingMp3) {
-      audioMp3.pause();
-      setIconPlayMp3(<AiFillPlayCircle className="icon"></AiFillPlayCircle>);
-    } else {
-      audioMp3.play();
-      setIconPlayMp3(<AiFillPauseCircle className="icon"></AiFillPauseCircle>);
-    }
-    setPlayingMp3(!playingMp3);
-  }
+  // function playMp3() {
+  //   console.log("---- playMp3. playing: ", playingMp3);
+  //   if (playingMp3) {
+  //     audioMp3.pause();
+  //     setIconPlayMp3(<AiFillPlayCircle className="icon"></AiFillPlayCircle>);
+  //   } else {
+  //     audioMp3.play();
+  //     setIconPlayMp3(<AiFillPauseCircle className="icon"></AiFillPauseCircle>);
+  //   }
+  //   setPlayingMp3(!playingMp3);
+  // }
   function playToneSalamander() {
     const now = Tone.now();
     Tone.loaded().then(() => {
@@ -392,18 +392,18 @@ const MusicInterface = () => {
       }
     });
   }
-  function resetMp3() {
-    if (playingMp3) {
-      audioMp3.pause();
-      setIconPlayMp3(<AiFillPlayCircle></AiFillPlayCircle>);
-      setPlayingMp3(!playingMp3);
-    }
-    setAudioMp3(
-      new Audio(
-        "https://www.learningcontainer.com/wp-content/uploads/2020/02/Kalimba.mp3"
-      )
-    );
-  }
+  // function resetMp3() {
+  //   if (playingMp3) {
+  //     audioMp3.pause();
+  //     setIconPlayMp3(<AiFillPlayCircle></AiFillPlayCircle>);
+  //     setPlayingMp3(!playingMp3);
+  //   }
+  //   setAudioMp3(
+  //     new Audio(
+  //       "https://www.learningcontainer.com/wp-content/uploads/2020/02/Kalimba.mp3"
+  //     )
+  //   );
+  // }
   // #######
 
   function handleKeyPress(keyName) {
