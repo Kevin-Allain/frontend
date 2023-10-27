@@ -14,6 +14,7 @@ import {
   getListFuzzyDist,
   getFuzzyLevenshtein
 } from "../../utils/HandleApi";
+import ToggleSwitch from "../Button/ToggleSwitch";
 import SampleRes from "./SampleRes"
 import MusicInfo from "./MusicInfo"
 import ResultsComponent from './ResultsComponent';
@@ -91,12 +92,23 @@ const MusicInterface = () => {
 
   const [showExplanation, setShowExplanation] = useState(false);
   const [percMatch, setPercMatch] = useState(0.5);
-
+  const [searchFilter, setSearchFilter] = useState('artistName');
 
   // References for scrolling
   const lognumbersRefs = useRef([]);
   const buttonListLogsNumbersRef = useRef(null);
   const tracksRefs = useRef([]);
+
+  const [isFilterMode, setFilterMode] = useState(false);
+
+  const handleToggle = () => {
+    setFilterMode(!isFilterMode);
+    // Perform actions based on the toggle state (isFilterMode)
+  };
+
+  const handleChangeSearchFilter = (event) => {
+    setSearchFilter(event.target.value);
+  }
 
   const scrollToButtonListLogsNumbers = () => {
     const buttonListLogsNumbers = document.getElementById(
@@ -566,10 +578,36 @@ const MusicInterface = () => {
           value={textSearch}
           onChange={handleChangeQueryPitch}
         />
-        <select className='selectPercMatch' value={percMatch} onChange={handleChangePercMatch}>
-          <option value={0.1}>10%</option> <option value={0.2}>20%</option> <option value={0.3}>30%</option> <option value={0.4}>40%</option> <option value={0.5}>50%</option>
-          <option value={0.6}>60%</option> <option value={0.7}>70%</option> <option value={0.8}>80%</option> <option value={0.9}>90%</option> <option value={1}>100%</option>
+        <select
+          className="selectPercMatch"
+          value={percMatch}
+          onChange={handleChangePercMatch}
+        >
+          <option value={0.1}>10%</option> <option value={0.2}>20%</option>{" "}
+          <option value={0.3}>30%</option> <option value={0.4}>40%</option>{" "}
+          <option value={0.5}>50%</option>
+          <option value={0.6}>60%</option> <option value={0.7}>70%</option>{" "}
+          <option value={0.8}>80%</option> <option value={0.9}>90%</option>{" "}
+          <option value={1}>100%</option>
         </select>
+        <p className="text-white">
+          Show filters:
+          <ToggleSwitch checked={isFilterMode} onChange={handleToggle} />
+        </p>
+        {isFilterMode && (
+          <div className="text-white">
+            <select
+              className="selectPrivacy"
+              value={searchFilter}
+              onChange={handleChangeSearchFilter}
+            >
+              <option value="artistName">Artist name</option>
+              <option value="trackTitle">Track name</option>
+              <option value="eventName">Event name</option>
+              <option value="author">User name</option>
+            </select>
+          </div>
+        )}
         <button
           className="mx-[0.5rem] my-[0.25rem]"
           onClick={handleClickTextSearch}

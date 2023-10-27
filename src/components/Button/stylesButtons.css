@@ -1,0 +1,46 @@
+/* styles.css */
+.switchButton {
+    position: relative;
+    display: inline-block;
+    width: 30px;
+    height: 17px;
+    left: 0.5rem;
+}
+
+.switchButton input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.sliderButton {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    border-radius: 17px;
+    transition: 0.4s;
+}
+
+.sliderButton:before {
+    position: absolute;
+    content: "";
+    height: 13px; /* Set the height to 13px (50% of the original size) */
+    width: 13px; /* Set the width to 13px (50% of the original size) */
+    left: 3px; /* Set the left position to create padding between slider and switch boundaries */
+    bottom: 2px; /* Set the bottom position to 2px for centering */
+    background-color: white;
+    border-radius: 50%;
+    transition: 0.4s;
+  }
+
+input:checked+.sliderButton {
+    background-color: #2196F3;
+}
+
+input:checked+.sliderButton:before {
+    transform: translateX(13px);
+}
