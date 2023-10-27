@@ -90,6 +90,8 @@ const MusicInterface = () => {
   const [listSearchRes, setListSearchRes] = useState([]);
 
   const [showExplanation, setShowExplanation] = useState(false);
+  const [percMatch, setPercMatch] = useState(0.5);
+
 
   // References for scrolling
   const lognumbersRefs = useRef([]);
@@ -198,6 +200,11 @@ const MusicInterface = () => {
       inline: "center",
     });
   };
+
+  const handleChangePercMatch = (event) => {
+    setPercMatch(event.target.value);
+  }
+
 
   const calculate_fuzzy_score = (pitch_notes) => {
     let score = 0;
@@ -347,7 +354,11 @@ const MusicInterface = () => {
     e.preventDefault();
     console.log("handleClickTextSearchTEST_getFuzzyLevenshtein: ", new Date());    
     if (textSearch!== ''){
-      let percMatch = 1;
+      setInfoMusicList([]);
+      setOldSearch(textSearch);
+      setTextSearch("");
+
+      // let percMatch = 1;
       getFuzzyLevenshtein(
         textSearch,
         percMatch,
@@ -362,49 +373,24 @@ const MusicInterface = () => {
   }  
 
   // function playMp3() {
-  //   console.log("---- playMp3. playing: ", playingMp3);
-  //   if (playingMp3) {
-  //     audioMp3.pause();
-  //     setIconPlayMp3(<AiFillPlayCircle className="icon"></AiFillPlayCircle>);
-  //   } else {
-  //     audioMp3.play();
-  //     setIconPlayMp3(<AiFillPauseCircle className="icon"></AiFillPauseCircle>);
-  //   }
+  //   if (playingMp3) { audioMp3.pause(); setIconPlayMp3(<AiFillPlayCircle className="icon"></AiFillPlayCircle>); } else { audioMp3.play(); setIconPlayMp3(<AiFillPauseCircle className="icon"></AiFillPauseCircle>); }
   //   setPlayingMp3(!playingMp3);
   // }
   function playToneSalamander() {
     const now = Tone.now();
     Tone.loaded().then(() => {
       for (var i = 0; i < 3; i++) {
-        sampler.triggerAttackRelease(
-          [
-            `E${i + 4}`,
-            `F${i + 4}`,
-            `C${i + 4}`,
-            `G${i + 4}`,
-            `B${i + 4}`,
-            `A${i + 4}`,
-            `A#${i + 4}`,
-          ],
+        sampler.triggerAttackRelease( 
+          [ `E${i + 4}`, `F${i + 4}`, `C${i + 4}`, `G${i + 4}`, `B${i + 4}`, `A${i + 4}`, `A#${i + 4}`, ],
           1,
           now + i
-        );
-      }
+        );}
     });
   }
   // function resetMp3() {
-  //   if (playingMp3) {
-  //     audioMp3.pause();
-  //     setIconPlayMp3(<AiFillPlayCircle></AiFillPlayCircle>);
-  //     setPlayingMp3(!playingMp3);
-  //   }
-  //   setAudioMp3(
-  //     new Audio(
-  //       "https://www.learningcontainer.com/wp-content/uploads/2020/02/Kalimba.mp3"
-  //     )
-  //   );
+  //   if (playingMp3) { audioMp3.pause(); setIconPlayMp3(<AiFillPlayCircle></AiFillPlayCircle>); setPlayingMp3(!playingMp3); }
+  //   setAudioMp3( new Audio("https://www.learningcontainer.com/wp-content/uploads/2020/02/Kalimba.mp3") );
   // }
-  // #######
 
   function handleKeyPress(keyName) {
     setTextSearch((prevText) =>
@@ -443,13 +429,8 @@ const MusicInterface = () => {
   // Note: To shift by an octave you just have to add 12. // Apparenlty supposed to use that: Math.pow(2, (m-69)/12)*440, with m being the pitch
   // We set time to the value of the onset property of the input item, note to the value of the pitch property, and duration to the value of the duration property multiplied by 16 to convert from seconds to sixteenth notes (you can adjust this factor as needed depending on your use case).
   function transformToPlayfulFormat(d) {
-    const outputArray = d.map((item) => ({
-      time: item.onset,
-      note: Math.pow(2, (item.pitch - 69) / 12) * 440,
-      duration: item.duration * 16, // Assuming duration is in seconds and you want it in sixteenth notes
-    }));
-    return outputArray;
-  }
+    const outputArray = d.map((item) => ({ time: item.onset, note: Math.pow(2, (item.pitch - 69) / 12) * 440, duration: item.duration * 16, }));
+    return outputArray; }
 
   function playFormattedMusic(music) {
     synth2.current.dispose(); // this may be something good, but really unsure!
@@ -457,19 +438,14 @@ const MusicInterface = () => {
     synth2.current.toDestination();
 
     Tone.Transport.stop();
-    if (Tone.Transport.state !== "started") {
-      Tone.Transport.start();
-    } else {
-      Tone.Transport.stop();
-    }
+    if (Tone.Transport.state !== "started") { Tone.Transport.start(); } 
+    else { Tone.Transport.stop(); }
     const offsetTest = 0.1;
 
     const now = Tone.now() + offsetTest;
     music.forEach((tune) => {
       synth2.current.triggerAttackRelease(
-        MIDItoNote[tune.note],
-        tune.duration,
-        now + tune.time
+        MIDItoNote[tune.note], tune.duration, now + tune.time
       );
     });
     Tone.Transport.stop();
@@ -590,6 +566,10 @@ const MusicInterface = () => {
           value={textSearch}
           onChange={handleChangeQueryPitch}
         />
+        <select className='selectPercMatch' value={percMatch} onChange={handleChangePercMatch}>
+          <option value={0.1}>10%</option> <option value={0.2}>20%</option> <option value={0.3}>30%</option> <option value={0.4}>40%</option> <option value={0.5}>50%</option>
+          <option value={0.6}>60%</option> <option value={0.7}>70%</option> <option value={0.8}>80%</option> <option value={0.9}>90%</option> <option value={1}>100%</option>
+        </select>
         <button
           className="mx-[0.5rem] my-[0.25rem]"
           onClick={handleClickTextSearch}

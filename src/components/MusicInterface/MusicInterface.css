@@ -345,4 +345,12 @@ opacity: 1;
     margin-top: 20px; /* Add some space below the list */
     text-align: center; /* Center the development info */
   }
-  
+  .selectPercMatch {
+      background: #fff;
+      color: #000;
+      border: solid;
+      border-width: thin;
+      margin-left: 0.25rem;
+      margin-right: 0.25rem;
+      border-radius: 0.25rem;
+  }
