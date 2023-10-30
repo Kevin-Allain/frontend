@@ -431,7 +431,7 @@ const loadDetailsSearchWorkflow = (_id) => {
                 <option value="author">User name</option>
                 <option value="trackTitle">Track name</option>
                 <option value="artistName">Artist name</option>
-                <option value="eventName">Event name</option>
+                <option value="eventName">Recording name</option>
               </select>
             </div>
             <input
