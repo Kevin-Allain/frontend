@@ -62,8 +62,6 @@ const durations = [0.5, 1, 1, 1, 2, 3, 1, 1, 4, 5, 2, 1, 1, 1, 0.5, 1.82];
   }).toDestination();
 
 const MusicInterface = () => {
-  // TODO consider whether useref would make more sense? We don't intend to change it according to render... // const [synth2, setSynth2] =  useState(new Tone.Synth());
-  // TODO we might create a component for the synth...
   const synth2 = useRef(new Tone.Synth());
   synth2.current.oscillator.type = "sine";
   synth2.current.toDestination();
@@ -92,22 +90,29 @@ const MusicInterface = () => {
 
   const [showExplanation, setShowExplanation] = useState(false);
   const [percMatch, setPercMatch] = useState(0.5);
-  const [searchFilter, setSearchFilter] = useState('artistName');
+  const [searchFilterArtist, setSearchFilterArtist] = useState('artistName');
+  const textFilterArtistRef = useRef('');
+  const textFilterTrackRef = useRef('');
+  const textFilterRecordingRef = useRef('');
+
+  const [isFilterMode, setFilterMode] = useState(false);
+  const [textFilterArtist, setTextFilterArtist] = useState("");
+  const [textFilterTrack, setTextFilterTrack] = useState("");
+  const [textFilterRecording, setTextFilterRecording] = useState("");
 
   // References for scrolling
   const lognumbersRefs = useRef([]);
   const buttonListLogsNumbersRef = useRef(null);
   const tracksRefs = useRef([]);
 
-  const [isFilterMode, setFilterMode] = useState(false);
 
   const handleToggle = () => {
     setFilterMode(!isFilterMode);
     // Perform actions based on the toggle state (isFilterMode)
   };
 
-  const handleChangeSearchFilter = (event) => {
-    setSearchFilter(event.target.value);
+  const handleChangeSearchFilterArtist = (event) => {
+    setSearchFilterArtist(event.target.value);
   }
 
   const scrollToButtonListLogsNumbers = () => {
@@ -335,16 +340,61 @@ const MusicInterface = () => {
     [setTextSearch]
   );
 
-  const handleClickTextSearch = useCallback(
-    async (e) => {
-      e.preventDefault();
-      console.log("", textSearch, ", (typeof textSearch): ", typeof textSearch);
-      if (textSearch !== "") {
-        findMatchLevenshteinDistance(textSearch);
-      }
-    },
-    [textSearch, findMatchLevenshteinDistance]
-  );
+const handleChangeFilterSearchArtist = useCallback (
+  (event) => {
+    const value = event.target.value;
+    setTextFilterArtist(value);
+  },
+  [setTextFilterArtist]
+);
+const handleChangeFilterSearchTrack = useCallback (
+  (event) => {
+    const value = event.target.value;
+    setTextFilterTrack(value);
+  },
+  [setTextFilterTrack]
+);
+const handleChangeFilterSearchRecording = useCallback (
+  (event) => {
+    const value = event.target.value;
+    console.log("value handleChangeFilterSearchRecording: ",value);
+    setTextFilterRecording(value);
+  },
+  [setTextFilterRecording]
+);
+
+
+  // const handleClickTextSearch = useCallback(
+  //   async (e) => {
+  //     e.preventDefault();
+  //     console.log("", textSearch, ", (typeof textSearch): ", typeof textSearch);
+  //     if (textSearch !== "") {
+  //       findMatchLevenshteinDistance(textSearch);
+  //     }
+  //   },
+  //   [textSearch, findMatchLevenshteinDistance]
+  // );
+
+  const handleClickTextSearchFuzzyLevenshtein = async (e) => {
+    e.preventDefault();
+    console.log("handleClickTextSearchFuzzyLevenshtein: ", new Date());    
+    if (textSearch!== ''){
+      setInfoMusicList([]);
+      setOldSearch(textSearch);
+      setTextSearch("");
+      getFuzzyLevenshtein(
+        textSearch,
+        percMatch,
+        localStorage?.username,
+        setListSearchRes,
+        setListLogNumbers,
+        setListTracks,
+        infoMusicList, 
+        setInfoMusicList,
+        textFilterArtist, textFilterTrack, textFilterRecording
+      )
+    }
+  }  
 
   // ######## TEST FOR PERFORMANCES ########
   const handleClickTextSearchTEST_getListFuzzyDist = async (e) => {
@@ -362,43 +412,22 @@ const MusicInterface = () => {
     }
   };
 
-  const handleClickTextSearchTEST_getFuzzyLevenshtein = async (e) => {
-    e.preventDefault();
-    console.log("handleClickTextSearchTEST_getFuzzyLevenshtein: ", new Date());    
-    if (textSearch!== ''){
-      setInfoMusicList([]);
-      setOldSearch(textSearch);
-      setTextSearch("");
-
-      // let percMatch = 1;
-      getFuzzyLevenshtein(
-        textSearch,
-        percMatch,
-        localStorage?.username,
-        setListSearchRes,
-        setListLogNumbers,
-        setListTracks,
-        infoMusicList, 
-        setInfoMusicList      
-      )
-    }
-  }  
 
   // function playMp3() {
   //   if (playingMp3) { audioMp3.pause(); setIconPlayMp3(<AiFillPlayCircle className="icon"></AiFillPlayCircle>); } else { audioMp3.play(); setIconPlayMp3(<AiFillPauseCircle className="icon"></AiFillPauseCircle>); }
   //   setPlayingMp3(!playingMp3);
   // }
-  function playToneSalamander() {
-    const now = Tone.now();
-    Tone.loaded().then(() => {
-      for (var i = 0; i < 3; i++) {
-        sampler.triggerAttackRelease( 
-          [ `E${i + 4}`, `F${i + 4}`, `C${i + 4}`, `G${i + 4}`, `B${i + 4}`, `A${i + 4}`, `A#${i + 4}`, ],
-          1,
-          now + i
-        );}
-    });
-  }
+  // function playToneSalamander() {
+  //   const now = Tone.now();
+  //   Tone.loaded().then(() => {
+  //     for (var i = 0; i < 3; i++) {
+  //       sampler.triggerAttackRelease( 
+  //         [ `E${i + 4}`, `F${i + 4}`, `C${i + 4}`, `G${i + 4}`, `B${i + 4}`, `A${i + 4}`, `A#${i + 4}`, ],
+  //         1,
+  //         now + i
+  //       );}
+  //   });
+  // }
   // function resetMp3() {
   //   if (playingMp3) { audioMp3.pause(); setIconPlayMp3(<AiFillPlayCircle></AiFillPlayCircle>); setPlayingMp3(!playingMp3); }
   //   setAudioMp3( new Audio("https://www.learningcontainer.com/wp-content/uploads/2020/02/Kalimba.mp3") );
@@ -483,25 +512,24 @@ const MusicInterface = () => {
     getTrackMetadata(lognumber, infoMusicList, setInfoMusicList);
   }
 
-  function findMatchLevenshteinDistance(strNotes = "69-76-76-74-76") {
-    console.log("---- findMatchLevenshteinDistance.");
-    setInfoMusicList([]);
-    setOldSearch(strNotes);
-    setTextSearch("");
-
-    getMatchLevenshteinDistance(
-      strNotes,
-      1,
-      localStorage?.username,
-      calcLevenshteinDistance_int,
-      setListSearchRes,
-      setListLogNumbers,
-      setListTracks,
-      // Additions for loading of metadata after the loading of tracks
-      infoMusicList,
-      setInfoMusicList
-    );
-  }
+  // function findMatchLevenshteinDistance(strNotes = "69-76-76-74-76") {
+  //   console.log("---- findMatchLevenshteinDistance.");
+  //   setInfoMusicList([]);
+  //   setOldSearch(strNotes);
+  //   setTextSearch("");
+  //   getMatchLevenshteinDistance(
+  //     strNotes,
+  //     1,
+  //     localStorage?.username,
+  //     calcLevenshteinDistance_int,
+  //     setListSearchRes,
+  //     setListLogNumbers,
+  //     setListTracks,
+  //     // Additions for loading of metadata after the loading of tracks
+  //     infoMusicList,
+  //     setInfoMusicList
+  //   );
+  // }
 
   return (
     <div className="musicInterface">
@@ -578,44 +606,69 @@ const MusicInterface = () => {
           value={textSearch}
           onChange={handleChangeQueryPitch}
         />
-        <select
-          className="selectPercMatch"
-          value={percMatch}
-          onChange={handleChangePercMatch}
-        >
-          <option value={0.1}>10%</option> <option value={0.2}>20%</option>{" "}
-          <option value={0.3}>30%</option> <option value={0.4}>40%</option>{" "}
-          <option value={0.5}>50%</option>
-          <option value={0.6}>60%</option> <option value={0.7}>70%</option>{" "}
-          <option value={0.8}>80%</option> <option value={0.9}>90%</option>{" "}
-          <option value={1}>100%</option>
-        </select>
+        <p className="text-white">
+          Select threshold for percentage of match:
+          <select
+            className="selectPercMatch"
+            value={percMatch}
+            onChange={handleChangePercMatch}
+          >
+            <option value={0.1}>10%</option> <option value={0.2}>20%</option>{" "}
+            <option value={0.3}>30%</option> <option value={0.4}>40%</option>{" "}
+            <option value={0.5}>50%</option>
+            <option value={0.6}>60%</option> <option value={0.7}>70%</option>{" "}
+            <option value={0.8}>80%</option> <option value={0.9}>90%</option>{" "}
+            <option value={1}>100%</option>
+          </select>
+        </p>
         <p className="text-white">
           Show filters:
           <ToggleSwitch checked={isFilterMode} onChange={handleToggle} />
         </p>
         {isFilterMode && (
+          <>
+          <p className="text-white">Leave input empty for parameters you don't want to filter.</p>
           <div className="text-white">
-            <select
-              className="selectPrivacy"
-              value={searchFilter}
-              onChange={handleChangeSearchFilter}
-            >
-              <option value="artistName">Artist name</option>
-              <option value="trackTitle">Track name</option>
-              <option value="eventName">Event name</option>
-              <option value="author">User name</option>
-            </select>
+            Artist name: 
+            <input
+              type="text"
+              className="inputMusicSearch mx-[0.5rem]" // could/should use a different className
+              placeholder=""
+              ref={textFilterArtistRef}
+              autoComplete="off"
+              required
+              value={textFilterArtist}
+              onChange={handleChangeFilterSearchArtist}
+            />
+            <br/>
+            Track name: 
+            <input
+              type="text"
+              className="inputMusicSearch mx-[0.5rem]" // could/should use a different className
+              placeholder=""
+              ref={textFilterTrackRef}
+              autoComplete="off"
+              required
+              value={textFilterTrack}
+              onChange={handleChangeFilterSearchTrack}
+            />
+            <br/>
+            Event name: 
+            <input
+              type="text"
+              className="inputMusicSearch mx-[0.5rem]" // could/should use a different className
+              placeholder=""
+              ref={textFilterRecordingRef}
+              autoComplete="off"
+              required
+              value={textFilterRecording}
+              onChange={handleChangeFilterSearchRecording}
+            />
           </div>
+          </>
         )}
-        <button
-          className="mx-[0.5rem] my-[0.25rem]"
-          onClick={handleClickTextSearch}
-        >
+        <button onClick={handleClickTextSearchFuzzyLevenshtein}>
           Submit search
-        </button>
-        <button onClick={handleClickTextSearchTEST_getFuzzyLevenshtein}>
-          Submit search test fuzzy
         </button>
         {("" + textSearch).length > 0 && (
           <div className="bg-slate-200 text-center mx-64 opacity-75 max-w-80%">

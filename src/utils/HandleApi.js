@@ -219,8 +219,10 @@ const getTracksFromAttribute = (attributeName, attributeValue) => {
     })
 }
 
-const getFuzzyLevenshtein = ( stringNotes = "", percMatch = 0.5, user = null, setListSearchRes = null, setListLogNumbers = null, setListTracks = null, infoMusicList=null,  setInfoMusicList=null ) => {
+const getFuzzyLevenshtein = ( stringNotes = "", percMatch = 0.5, user = null, setListSearchRes = null, setListLogNumbers = null, setListTracks = null, infoMusicList=null,  setInfoMusicList=null
+, textFilterArtist = '', textFilterTrack = '' , textFilterRecording = '' ) => {
   console.log("-- handleAPI / getFuzzyLevenshtein. stringNotes: ", stringNotes, ", percMatch: ", percMatch, " user: ", user);
+  console.log({textFilterArtist, textFilterTrack, textFilterRecording});
   console.log("~~~~ baseUrl: ",baseUrl," ~~~~")
   setIsLoading(true);
   stringNotes += '';
