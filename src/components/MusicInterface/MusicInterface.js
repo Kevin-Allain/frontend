@@ -653,7 +653,7 @@ const handleChangeFilterSearchRecording = useCallback (
               onChange={handleChangeFilterSearchTrack}
             />
             <br/>
-            Event name: 
+            Recording name: 
             <input
               type="text"
               className="inputMusicSearch mx-[0.5rem]" // could/should use a different className

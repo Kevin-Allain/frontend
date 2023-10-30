@@ -204,16 +204,16 @@ const getTrackMetadata = (lognumber, infoMusicList, setInfoMusicList) => {
     })
 }
 
-const getTracksFromAttribute = (attributeName, attributeValue) => {
+const getMetadataFromAttribute = (attributeName, attributeValue) => {
   axios
-    .get(`${baseUrl}/getTracksFromAttribute`, {
+    .get(`${baseUrl}/getMetadataFromAttribute`, {
       params: {
         attributeName: attributeName,
         attributeValue: attributeValue
       }
     })
     .then((d) => {
-      console.log("#### Then of getTracksFromAttribute ####");
+      console.log("#### Then of getMetadataFromAttribute ####");
       console.log("d: ", d, ", d.data[0]: ", d.data[0]);
       // And then stuff...
     })
@@ -231,7 +231,7 @@ const getFuzzyLevenshtein = ( stringNotes = "", percMatch = 0.5, user = null, se
   axios
     .get(`${baseUrl}/getFuzzyLevenshtein`, {
       params:
-        { stringNotes: stringNotes, percMatch: percMatch, user: user, },
+        { stringNotes: stringNotes, percMatch: percMatch, user: user, textFilterArtist: textFilterArtist, textFilterTrack: textFilterTrack, textFilterRecording: textFilterRecording},
     })
     .then((d) => {
       console.log("#### Then of getFuzzyLevenshtein ####"); console.log("d: ", d); console.log("TIME AFTER QUERY: ", new Date());
@@ -1086,7 +1086,7 @@ export {
   getAllJazzDap, addJazzDap, updateJazzDap, deleteJazzDap,
   getMusicMIDI, getSampleMIDI, getMatchLevenshteinDistance,
   getTrackMetadata, getTracksMetadata,
-  getTracksFromAttribute, 
+  getMetadataFromAttribute, 
   addAnnotation, getAnnotations, deleteAnnotation, updateAnnotation,
   addComment, getComments, getCommentsOfAnnotation, deleteComment, updateComment,
   getUserAnnotations,
