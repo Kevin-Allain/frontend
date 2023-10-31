@@ -57,28 +57,10 @@ const SampleRes = ({
                     height={200}
                 />
             </div>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Recording</th>
-                        <th>Sample Duration</th>
-                        <th>Notes</th>
-                        <th>Times</th>
-                        <th>Durations</th>
-                        <th>Distance (difference to query)</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <th>{lognumber}</th>
-                        <th>{Number(length.toFixed(2))}</th>
-                        <th>{notes}</th>
-                        <th>{times}</th>
-                        <th>{durations}</th>
-                        <th>{distance}</th>
-                    </tr>
-                </tbody>
-            </table>
+            {/* <table>
+                <thead> <tr> <th>Recording</th> <th>Sample Duration</th> <th>Notes</th> <th>Times</th> <th>Durations</th> <th>Distance (difference to query)</th> </tr> </thead>
+                <tbody> <tr> <th>{lognumber}</th> <th>{Number(length.toFixed(2))}</th> <th>{notes}</th> <th>{times}</th> <th>{durations}</th> <th>{distance}</th> </tr> </tbody>
+            </table> */}
             
             {/* <PianoRoll notes={notes.split("-").map(Number)} occurrences={times.split("-").map(Number)} durations={durations.split("-").map(Number)} width={600} height={150} /> */}
 
