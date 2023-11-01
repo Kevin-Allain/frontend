@@ -629,7 +629,7 @@ const handleChangeFilterSearchRecording = useCallback (
           <>
           <p className="text-white">Leave input empty for parameters you don't want to filter.</p>
           <div className="text-white">
-            Artist name: 
+            <p>Artist name:</p>
             <input
               type="text"
               className="inputMusicSearch mx-[0.5rem]" // could/should use a different className
@@ -640,8 +640,8 @@ const handleChangeFilterSearchRecording = useCallback (
               value={textFilterArtist}
               onChange={handleChangeFilterSearchArtist}
             />
-            <br/>
-            Track name: 
+            {/* <br/> */}
+            <p>Track name:</p>
             <input
               type="text"
               className="inputMusicSearch mx-[0.5rem]" // could/should use a different className
@@ -652,8 +652,8 @@ const handleChangeFilterSearchRecording = useCallback (
               value={textFilterTrack}
               onChange={handleChangeFilterSearchTrack}
             />
-            <br/>
-            Recording name: 
+            {/* <br/> */}
+            <p>Recording name:</p>
             <input
               type="text"
               className="inputMusicSearch mx-[0.5rem]" // could/should use a different className
