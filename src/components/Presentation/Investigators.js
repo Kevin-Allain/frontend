@@ -10,7 +10,7 @@ import Title from "./Title";
 export default function investigators() {
   return (
     <div className=" relative flex h-screen flex-1  flex-col  overflow-hidden  text-accent">
-      <Title firstLine="Our" secondLine="Investigators" />
+      <Title firstLine="Investigators" secondLine="" />
       <div className=" grid  basis-3/4   grid-cols-2 place-items-center  align-middle   md:grid-cols-3 md:px-16 md:py-12 lg:px-[20%]  lg:py-10">
         <Person
           img_src={p1}

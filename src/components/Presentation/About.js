@@ -5,10 +5,10 @@ export default function about() {
     <div className=" relative flex h-screen   flex-1  flex-col  overflow-hidden      text-accent">
       {/* afterPrivateBeta -> Very dirty approach, we should fix it after the test. */}
       <br/><br/>
-      <Title firstLine="About the" secondLine="Project" />
-      <div className="basis-3/4  p-4   text-sm text-offWhite md:columns-2  md:text-lg  lg:p-global lg:pr-[33%] lg:text-xl ">
+      <Title firstLine="The Jazz Digital Archives" secondLine="Project" />
+      <div className="basis-3/4  p-4   text-sm text-offWhite md:columns-1  md:text-lg  lg:p-global lg:pr-[33%] lg:text-xl text-justify">
         <p className=" font-regular font-Raleway ">
-          <p className=" font-Raleway  font-bold">
+          <p className=" font-Raleway  font-bold text-center">
             A NEH-AHRC New Directions for Digital Scholarship in Cultural
             Institutions project
           </p>
