@@ -1,5 +1,5 @@
 import sja from "../../assets/sja.png";
-import rutgers from "../../assets/logo_rutgers_white.png";
+import rutgers from "../../assets/RU_H_2LINE_RED_WHITE_RGB.png";
 import Title from "./Title";
 
 export default function partners() {
