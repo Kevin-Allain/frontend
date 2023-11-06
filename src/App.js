@@ -88,23 +88,6 @@ function App() {
           </button>
           : <></>
         }
-          {/* <img src={logoJazzDap} className="imageHeader" alt="some value" name="Image1" align="bottom" width="125.6" height="70" border="0" /> */}
-        {/* <div className="header">
-          <span className="alpha_warning">ALPHA</span>
-          {(showDiv || localStorage?.username !== undefined) &&
-            <div className="wrapper">
-              <div
-                className={
-                  auth !== null || localStorage.token ? "offscreen" : "auth"
-                }
-              >
-                <Register />
-                <hr />
-                <Login />
-              </div>
-            </div>
-          }
-        </div> */}
         <div className="contentApp">
           {(auth !== null || localStorage.token ? "logout" : "offscreen") ?
             (

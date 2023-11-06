@@ -48,6 +48,7 @@ import EmbeddedWorkflowInteraction from '../Workflow/EmbeddedWorkflowInteraction
 // import Row from 'react-bootstrap/Row';
 // import Tab from 'react-bootstrap/Tab';
 import MyTabbedInterface from './MyTabbedInterface'
+import GraphsResults from '../VisComponents/GraphsResults';
 
 const PITCH_QUERY_REGEX = /^$|(^(?!.*--)(?!-)([0-9]{1,2}|1[01][0-9]|12[0-7])(-([0-9]{1,2}|1[01][0-9]|12[0-7]))*(-?)$)/;
 // Test attributes
@@ -627,44 +628,44 @@ const handleChangeFilterSearchRecording = useCallback (
         </p>
         {isFilterMode && (
           <>
-          <p className="text-white">Leave input empty for parameters you don't want to filter.</p>
-          <div className="text-white">
-            <p>Artist name:</p>
-            <input
-              type="text"
-              className="inputMusicSearch mx-[0.5rem]" // could/should use a different className
-              placeholder=""
-              ref={textFilterArtistRef}
-              autoComplete="off"
-              required
-              value={textFilterArtist}
-              onChange={handleChangeFilterSearchArtist}
-            />
-            {/* <br/> */}
-            <p>Track name:</p>
-            <input
-              type="text"
-              className="inputMusicSearch mx-[0.5rem]" // could/should use a different className
-              placeholder=""
-              ref={textFilterTrackRef}
-              autoComplete="off"
-              required
-              value={textFilterTrack}
-              onChange={handleChangeFilterSearchTrack}
-            />
-            {/* <br/> */}
-            <p>Recording name:</p>
-            <input
-              type="text"
-              className="inputMusicSearch mx-[0.5rem]" // could/should use a different className
-              placeholder=""
-              ref={textFilterRecordingRef}
-              autoComplete="off"
-              required
-              value={textFilterRecording}
-              onChange={handleChangeFilterSearchRecording}
-            />
-          </div>
+            <p className="text-white">
+              Leave input empty for parameters you don't want to filter.
+            </p>
+            <div className="text-white">
+              <p>Artist name:</p>
+              <input
+                type="text"
+                className="inputMusicSearch mx-[0.5rem]" // could/should use a different className
+                placeholder=""
+                ref={textFilterArtistRef}
+                autoComplete="off"
+                required
+                value={textFilterArtist}
+                onChange={handleChangeFilterSearchArtist}
+              />
+              <p>Track name:</p>
+              <input
+                type="text"
+                className="inputMusicSearch mx-[0.5rem]" // could/should use a different className
+                placeholder=""
+                ref={textFilterTrackRef}
+                autoComplete="off"
+                required
+                value={textFilterTrack}
+                onChange={handleChangeFilterSearchTrack}
+              />
+              <p>Recording name:</p>
+              <input
+                type="text"
+                className="inputMusicSearch mx-[0.5rem]" // could/should use a different className
+                placeholder=""
+                ref={textFilterRecordingRef}
+                autoComplete="off"
+                required
+                value={textFilterRecording}
+                onChange={handleChangeFilterSearchRecording}
+              />
+            </div>
           </>
         )}
         <button onClick={handleClickTextSearchFuzzyLevenshtein}>
@@ -705,6 +706,17 @@ const handleChangeFilterSearchRecording = useCallback (
             {/* <EmbeddedWorkflowInteraction idCaller={null} typeCaller={"search"} /> */}
           </div>
 
+          {/* We should create a different type of component with some vis. */}
+          {infoMusicList.length > 0 ? (
+            <>
+              There are results: {infoMusicList.length}. <br />
+              Albums:{" "}
+              {Array.from([...new Set(infoMusicList.map((a) => a["(E) Event Name"]))]).map( a => <>{a}<br/></> )}
+              <GraphsResults/>
+            </>
+          ) : (
+            <></>
+          )}
           {infoMusicList.length > 0 ? (
             <MyTabbedInterface
               listSearchRes={listSearchRes}
