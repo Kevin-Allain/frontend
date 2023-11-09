@@ -37,16 +37,6 @@ import PianoRoll from '../VisComponents/PianoRoll';
 import Title from '../Presentation/Title';
 import EmbeddedWorkflowInteraction from '../Workflow/EmbeddedWorkflowInteraction'
 
-// beforePrivateBeta
-/** Potentially useful, but messes up the bits of code provided by the designers. 
- * Need to see if it is possible to use this and limit the scope of the... influence of the import. 
- * Otherwise, we can consider how to get a similar display without using React Bootstrap... It is not a design that complex.*/
-// ---- React Bootstrap imports
-// import 'bootstrap/dist/css/bootstrap.min.css';
-// import Col from 'react-bootstrap/Col';
-// import ListGroup from 'react-bootstrap/ListGroup';
-// import Row from 'react-bootstrap/Row';
-// import Tab from 'react-bootstrap/Tab';
 import MyTabbedInterface from './MyTabbedInterface'
 import GraphsResults from '../VisComponents/GraphsResults';
 
@@ -68,14 +58,8 @@ const MusicInterface = () => {
   synth2.current.toDestination();
 
   const [playingMp3, setPlayingMp3] = useState(false);
-  const [iconPlayMp3, setIconPlayMp3] = useState(
-    <AiFillPlayCircle className="icon"></AiFillPlayCircle>
-  );
-  // const [audioMp3, setAudioMp3] = useState(
-  //   new Audio(
-  //     "https://www.learningcontainer.com/wp-content/uploads/2020/02/Kalimba.mp3"
-  //   )
-  // );
+  const [iconPlayMp3, setIconPlayMp3] = useState( <AiFillPlayCircle className="icon"></AiFillPlayCircle> );
+  // const [audioMp3, setAudioMp3] = useState( new Audio( "https://www.learningcontainer.com/wp-content/uploads/2020/02/Kalimba.mp3" ) );
 
   const [notesTranslate, setNotesTranslate] = useState("");
   const [showNotesTranslate, setShowNotesTranslate] = useState(false);
@@ -364,17 +348,7 @@ const handleChangeFilterSearchRecording = useCallback (
   [setTextFilterRecording]
 );
 
-
-  // const handleClickTextSearch = useCallback(
-  //   async (e) => {
-  //     e.preventDefault();
-  //     console.log("", textSearch, ", (typeof textSearch): ", typeof textSearch);
-  //     if (textSearch !== "") {
-  //       findMatchLevenshteinDistance(textSearch);
-  //     }
-  //   },
-  //   [textSearch, findMatchLevenshteinDistance]
-  // );
+  // const handleClickTextSearch = useCallback( async (e) => { e.preventDefault(); if (textSearch !== "") { findMatchLevenshteinDistance(textSearch); } }, [textSearch, findMatchLevenshteinDistance]  );
 
   const handleClickTextSearchFuzzyLevenshtein = async (e) => {
     e.preventDefault();
@@ -382,7 +356,7 @@ const handleChangeFilterSearchRecording = useCallback (
     if (textSearch!== ''){
       setInfoMusicList([]);
       setOldSearch(textSearch);
-      setTextSearch("");
+      // setTextSearch("");
       getFuzzyLevenshtein(
         textSearch,
         percMatch,
@@ -513,28 +487,8 @@ const handleChangeFilterSearchRecording = useCallback (
     getTrackMetadata(lognumber, infoMusicList, setInfoMusicList);
   }
 
-  // function findMatchLevenshteinDistance(strNotes = "69-76-76-74-76") {
-  //   console.log("---- findMatchLevenshteinDistance.");
-  //   setInfoMusicList([]);
-  //   setOldSearch(strNotes);
-  //   setTextSearch("");
-  //   getMatchLevenshteinDistance(
-  //     strNotes,
-  //     1,
-  //     localStorage?.username,
-  //     calcLevenshteinDistance_int,
-  //     setListSearchRes,
-  //     setListLogNumbers,
-  //     setListTracks,
-  //     // Additions for loading of metadata after the loading of tracks
-  //     infoMusicList,
-  //     setInfoMusicList
-  //   );
-  // }
-
   return (
     <div className="musicInterface">
-      {/* relative flex h-screen   flex-1  flex-col  overflow-hidden      text-accent */}
       <BsFillInfoCircleFill
         className="icon infoMusicInterface w-[2rem] h-[2rem]"
         onClick={() => setShowExplanation(!showExplanation)}
@@ -712,7 +666,7 @@ const handleChangeFilterSearchRecording = useCallback (
               There are results: {infoMusicList.length}. <br />
               Albums:{" "}
               {Array.from([...new Set(infoMusicList.map((a) => a["(E) Event Name"]))]).map( a => <>{a}<br/></> )}
-              <GraphsResults/>
+              <GraphsResults infoMusicList={infoMusicList} />
             </>
           ) : (
             <></>
