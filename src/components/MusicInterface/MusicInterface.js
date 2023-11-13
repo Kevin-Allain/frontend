@@ -663,10 +663,10 @@ const handleChangeFilterSearchRecording = useCallback (
           {/* We should create a different type of component with some vis. */}
           {infoMusicList.length > 0 ? (
             <>
-              There are results: {infoMusicList.length}. <br />
+              {/* There are results: {infoMusicList.length}. <br />
               Albums:{" "}
-              {Array.from([...new Set(infoMusicList.map((a) => a["(E) Event Name"]))]).map( a => <>{a}<br/></> )}
-              <GraphsResults infoMusicList={infoMusicList} />
+              {Array.from([...new Set(infoMusicList.map((a) => a["(E) Event Name"]))]).map( a => <>{a}<br/></> )} */}
+              <GraphsResults infoMusicList={infoMusicList} oldSearch={oldSearch} listSearchRes={listSearchRes}/>
             </>
           ) : (
             <></>

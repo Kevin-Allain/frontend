@@ -1103,3 +1103,181 @@ function calcLevenshteinDistance_str(s1, s2) {
 //         onClick={() => handleTrackClick(a)} > {a}
 //       </li>
 //   )
+
+
+// ----- Previously in GraphsResults.js
+// const GraphsResults = ({ infoMusicList, oldSearch, listSearchRes }) => {
+//   console.log( "GraphsResults - infoMusicList: ", infoMusicList, ", oldSearch: ", oldSearch, ", listSearchRes: ", listSearchRes );
+//   // TODO change later on, we will want to consider the melodies and outputs of melodies as well.
+//   const dataInput = infoMusicList;
+//   ChartJS.register(LinearScale, PointElement, LineElement, Tooltip, Legend);
+//   const axisOptions = [ "Release Year", "Release Month", "Track Title", "Recording", "Artists" ];
+//   // Set a "" for month 0... (might be better to offset value by 1 if selection is month...)
+//   const months = [
+//     "",
+//     "January",
+//     "February",
+//     "March",
+//     "April",
+//     "May",
+//     "June",
+//     "July",
+//     "August",
+//     "September",
+//     "October",
+//     "November",
+//     "December",
+//   ];
+//   const options = { scales: { x: { beginAtZero: false }, y: { beginAtZero: false } }, };
+//   const [typeGraph, setTypeGraph] = useState("scatter");
+//   const [selectedAxisX, setSelectedAxisX] = useState("Release Year");
+//   const [selectedAxisY, setSelectedAxisY] = useState("Release Month");
+//   const handleChangeAxisX = (axis) => { setSelectedAxisX(axis); };
+//   const handleChangeAxisY = (axis) => { setSelectedAxisY(axis); };
+//   // const uniqueValues = (key) => {
+//   //   return [...new Set(dataInput.map((item) => item[key]))];
+//   // };
+//   // const categoricalToNumeric = (key) => {
+//   //   const categories = uniqueValues(key);
+//   //   const numericValues = {};
+//   //   categories.forEach((category, index) => {
+//   //     numericValues[category] = index;
+//   //   });
+//   //   return numericValues;
+//   // };
+//   // const chartData = {
+//   //   datasets: [
+//   //     {
+//   //       label: "Dot Chart",
+//   //       data: dataInput.map((item) => ({
+//   //         x: item[selectedAxisX],
+//   //         y: item[selectedAxisY],
+//   //       })),
+//   //       backgroundColor: "rgba(75,192,192,1)",
+//   //       pointRadius: 6,
+//   //     },
+//   //   ],
+//   // };
+//   const dataChart = useRef(
+//     {
+//     datasets: [
+//       {
+//         label: `${selectedAxisX} and ${selectedAxisY}`,
+//         data: dataInput
+//           .map((item, i) =>
+//             selectedAxisX !== "Release Year" ||
+//             ((selectedAxisX === "Release Year" ||
+//               selectedAxisX === "Release Month") &&
+//               Number(item[selectedAxisX]) !== 0) ||
+//             ((selectedAxisY === "Release Year" ||
+//               selectedAxisY === "Release Month") &&
+//               Number(item[selectedAxisX]) !== 0)
+//               ? {
+//                   x: Number(item[selectedAxisX]),
+//                   y: Number(item[selectedAxisY]),
+//                 }
+//               : null
+//           )
+//           .filter((a) => a)
+//           .filter((a) => !isNaN(a.x) && !isNaN(a.y)),
+//         backgroundColor: "rgb(255, 99, 132)",
+//       },
+//     ],
+//   }
+//   );
+//   useEffect(() => {
+//     // Update using setTypeGraph based on selectedAxisX and selectedAxisY
+//     // TODO update properly
+//     (selectedAxisX==="Release Year"||selectedAxisX==="Release Month"||selectedAxisY==="Release Year"||selectedAxisY==="Release Month")
+//     ?setTypeGraph("scatter")
+//     :setTypeGraph("bar");
+//     // Update the dataChart.current when selectedAxisX or selectedAxisY changes
+//     dataChart.current =
+//       typeGraph === "scatter"
+//         ? {
+//             datasets: [
+//               {
+//                 label: `${selectedAxisX} and ${selectedAxisY}`,
+//                 data: dataInput
+//                   .map((item) =>
+//                     selectedAxisX === "Release Year" ||
+//                     selectedAxisX === "Release Month" ||
+//                     ((selectedAxisX === "Release Year" ||
+//                       selectedAxisX === "Release Month") &&
+//                       Number(item[selectedAxisX]) !== 0) ||
+//                     ((selectedAxisY === "Release Year" ||
+//                       selectedAxisY === "Release Month") &&
+//                       Number(item[selectedAxisX]) !== 0)
+//                       ? {
+//                           x: Number(item[selectedAxisX]),
+//                           y: Number(item[selectedAxisY]),
+//                         }
+//                       : null
+//                   )
+//                   .filter((a) => a)
+//                   .filter((a) => !isNaN(a.x) && !isNaN(a.y)),
+//                 backgroundColor: "rgb(255, 99, 132)",
+//               },
+//             ],
+//           }
+//         : {
+//             datasets: [
+//               {
+//                 label: `${selectedAxisX} and ${selectedAxisY}`,
+//                 data: [],
+//                 backgroundColor: "rgb(255, 99, 132)",
+//               },
+//             ],
+//           };
+//   }, [selectedAxisX, selectedAxisY, dataInput, typeGraph]);
+//   return (
+//     <div>
+//     <h1 className="text-black">Attribute selection</h1>
+//       <p>The graph will adapt based on your selection.</p>
+//       <div>
+//         <label>Axis X </label>
+//         <select
+//           onChange={(e) => handleChangeAxisX(e.target.value)}
+//           value={selectedAxisX}
+//         >
+//           {axisOptions.map((option) => (
+//             <option key={option} value={option}>
+//               {option}
+//             </option>
+//           ))}
+//         </select>
+//       </div>
+//       <div>
+//         <label>Axis Y </label>
+//         <select
+//           onChange={(e) => handleChangeAxisY(e.target.value)}
+//           value={selectedAxisY}
+//         >
+//           {axisOptions.map((option) => (
+//             <option key={option} value={option}>
+//               {option}
+//             </option>
+//           ))}
+//         </select>
+//       </div>
+
+//       {/* TODO consider adaptation of graph based on type of data input...? */}
+//       {/* {typeGraph === "scatter" ? (
+//         <Scatter options={options} data={dataChart.current} />
+//       ) : (
+//         <>
+//           {typeGraph === "bar" ? (
+//             <>Work in progress for {typeGraph}</>
+//           ) : (
+//             <>Work in progress, unexpected type asked</>
+//           )}
+//         </>
+//       )} */}
+      
+//     </div>
+//   );
+// };
+
+// const xyValues = [ {x:50, y:7}, {x:60, y:8}, {x:70, y:8}, {x:80, y:9}, {x:90, y:9}, {x:100, y:9}, {x:110, y:10}, ];
+// const scatterPlot = new chartjs.Chart("myChart", { type: "scatter", data: { datasets: [{ pointRadius: 4, pointBackgroundColor: "rgba(0,0,255,1)", data: xyValues }] }, options:{} });
+// return (<>GraphsResults has { infoMusicList? infoMusicList.length : 0 } elements to work with.</>)
