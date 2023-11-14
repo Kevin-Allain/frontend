@@ -162,7 +162,7 @@ const EmbeddedWorkflowInteraction = ({idCaller, typeCaller, indexRange=0}) => {
         {/* w-fit -> doubt about this, but maybe not necessary */}
         {typeof (localStorage.token) !== 'undefined' &&
         // className="threedotsEmbedded"
-          <div className="icon flex text-[15px]" onClick={() => handleShowActionsWorkflow()}>
+          <div className="icon flex text-[15px] items-center" onClick={() => handleShowActionsWorkflow()}>
             Workflow Interface
             <BsThreeDotsVertical
               className="icon threedotsEmbedded"
@@ -192,9 +192,7 @@ const EmbeddedWorkflowInteraction = ({idCaller, typeCaller, indexRange=0}) => {
                     <option value="private">Private</option>
                   </select>
                   <br />
-                  Save this workflow{" "}
-                  <TfiSave
-                    className="icon"
+                  <div className="icon flex items-center" 
                     onClick={() => {
                       titleInput.length > 0 && descriptionInput.length > 0
                         ? handleWorkflowCreation(
@@ -213,8 +211,11 @@ const EmbeddedWorkflowInteraction = ({idCaller, typeCaller, indexRange=0}) => {
                         : console.log("empty title or description. titleInput: ", titleInput, "typeof titleInput: ", typeof titleInput, ", descriptionInput: ", descriptionInput, "typeof descriptionInput: ", typeof descriptionInput);
 
                       if (titleInput.length > 0 && descriptionInput.length > 0) { setShowWorkflowActions(!showWorkflowActions); }
-                    }}
-                />
+                    }}                  
+                  >
+                  Save this workflow{" "}
+                  <TfiSave/>
+                  </div>
                 {showLoadingIcon ?
                   <AiOutlineLoading className="spin" size={window.innerHeight / 10} />
                   : <></>

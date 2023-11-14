@@ -1,4 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
+import { FaAngleDown, FaAngleUp } from 'react-icons/fa';
+import { BsGraphUp } from "react-icons/bs";
 import * as d3 from "d3";
 import {
   Chart as ChartJS,
@@ -9,7 +11,7 @@ import {
   Legend,
 } from "chart.js";
 import { Scatter, Bar } from "react-chartjs-2";
-
+import ToggleSwitch from "../Button/ToggleSwitch";
 import MIDItoNote from "../MusicInterface/MIDItoNote.json";
 import NoteToColor from "../MusicInterface/NoteToColor.json";
 
@@ -18,6 +20,8 @@ const months = [ "January", "February", "March", "April", "May", "June", "July",
 
 const GraphsResults = ({ infoMusicList, oldSearch, listSearchRes }) => {
   console.log("GraphsResults - infoMusicList: ",infoMusicList,", oldSearch: ",oldSearch,", listSearchRes: ",listSearchRes);
+  const [showGraphs,setShowGraphs] = useState(false);
+  const handleToggle = () => { setShowGraphs(!showGraphs); };
 
   // TODO change later on, we will want to consider the melodies and outputs of melodies as well.
   const dataInput = infoMusicList;
@@ -166,54 +170,68 @@ const GraphsResults = ({ infoMusicList, oldSearch, listSearchRes }) => {
         backgroundColor: "rgba(255, 99, 132, 0.5)",
       },
     ],
-  };    
+  };
 
   return (
-    <div>
-      <h1 className="text-black">Attribute selection</h1>
-      <p>The graph will adapt based on your selection.</p>
-      <div>
-        <label>Axis X </label>
-        <select
-          onChange={(e) => handleChangeAxisX(e.target.value)}
-          value={selectedAxisX}
-        >
-          {attributesOptions.map((option) => (
-            <option key={option} value={option}>
-              {option}
-            </option>
-          ))}
-        </select>
-      </div>
-      <div>
-        <label>Axis Y </label>
-        <select
-          onChange={(e) => handleChangeAxisY(e.target.value)}
-          value={selectedAxisY}
-        >
-          {attributesOptions.map((option) => (
-            <option key={option} value={option}>
-              {option}
-            </option>
-          ))}
-        </select>
-      </div>
-
-      {typeGraph === "scatter" ? (
-        <Scatter data={dataScatter} options={options} />
-      ) : (
-        <>
-          {typeGraph === "bar" ? (
-            <>
-              Work in progress for {typeGraph}
-              <br />
-              <Scatter data={dataBar} options={options} />
-            </>
+    <div className="border-solid border-2 border-[#e5e7eb]">
+      {/* <ToggleSwitch checked={showGraphs} onChange={handleToggle} /> */}
+      <div className="metadata-header  icon flex items-center" onClick={handleToggle}>
+        <BsGraphUp />
+        <p className="mx-[1rem] my-[0.5rem]">Data Graphs</p>
+          {showGraphs ? (
+            <FaAngleUp className="metadata-icon" />
           ) : (
-            <>Work in progress </>
+            <FaAngleDown className="metadata-icon" />
+          )}
+        </div>
+
+      { showGraphs &&
+        <>
+          <p>The graph will adapt based on the attributes you select.</p>
+          <div>
+            <label>Axis X </label>
+            <select
+              onChange={(e) => handleChangeAxisX(e.target.value)}
+              value={selectedAxisX}
+            >
+              {attributesOptions.map((option) => (
+                <option key={option} value={option}>
+                  {option}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div>
+            <label>Axis Y </label>
+            <select
+              onChange={(e) => handleChangeAxisY(e.target.value)}
+              value={selectedAxisY}
+            >
+              {attributesOptions.map((option) => (
+                <option key={option} value={option}>
+                  {option}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {typeGraph === "scatter" ? (
+            <Scatter data={dataScatter} options={options} />
+          ) : (
+            <>
+              {typeGraph === "bar" ? (
+                <>
+                  Work in progress for {typeGraph}
+                  <br />
+                  <Scatter data={dataBar} options={options} />
+                </>
+              ) : (
+                <>Work in progress </>
+              )}
+            </>
           )}
         </>
-      )}
+      }
     </div>
   );
 };

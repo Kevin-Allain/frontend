@@ -188,7 +188,7 @@ const loadDetailsSearchWorkflow = (_id) => {
       {/* <Title firstLine="Workflow" secondLine="Manager" /> */}
       <h1 className="text-left">Workflow Manager</h1>
       <div className="blockWorkFlow rounded-t-lg">
-      <div className="additionWorkFlow icon flex text-lg " onClick={() => handleShowWorkflowAddition()}>
+      <div className="additionWorkFlow icon flex text-lg items-center " onClick={() => handleShowWorkflowAddition()}>
         <HiOutlineViewGridAdd className="mr-[0.25rem]"/>
         Create a new workflow{" "}
         {showWorkflowAddition ? (
@@ -223,37 +223,38 @@ const loadDetailsSearchWorkflow = (_id) => {
             <option value="private">Private</option>
           </select>
           <br/>
-          Save this workflow{" "}
-          {/* Note the call to this function is set with empty parameters as we set first the creation without objects to populate the workflow */}
-          <TfiSave
-            className="icon"
-            onClick={() => {
-              titleInput.length > 0 && descriptionInput.length > 0
-                ? createWorkflow(
-                  titleInput, descriptionInput, new Date(), localStorage.username,
-                  // These arrays are to be changed to objects, which contains an array of objects as: 
-                  [], // objectId: String
-                  [], // objectTime: Date
-                  // objectIndex: Number (not entered as function call)
-                  [], // objectNote: String
-                  [], // objectType: String
-                  setTitleInput,
-                  setDescriptionInput,
-                  dispatch,
-                  setWorkflows,
-                  [],
-                  selectedPrivacyOption,
-                  setLoadingSearchWorkflow
-                )
-                : console.log("empty title or description. titleInput: ", titleInput, "typeof titleInput: ", typeof titleInput, ", descriptionInput: ", descriptionInput, "typeof descriptionInput: ", typeof descriptionInput);
-            }}
-          />
-            {loadingSearchWorkflow && <AiOutlineLoading className="spin"/>}
-        </div>
-      )}
+          <div className="icon flex items-center"
+              onClick={() => {
+                titleInput.length > 0 && descriptionInput.length > 0
+                  ? createWorkflow(
+                    titleInput, descriptionInput, new Date(), localStorage.username,
+                    // These arrays are to be changed to objects, which contains an array of objects as: 
+                    [], // objectId: String
+                    [], // objectTime: Date
+                    // objectIndex: Number (not entered as function call)
+                    [], // objectNote: String
+                    [], // objectType: String
+                    setTitleInput,
+                    setDescriptionInput,
+                    dispatch,
+                    setWorkflows,
+                    [],
+                    selectedPrivacyOption,
+                    setLoadingSearchWorkflow
+                  )
+                  : console.log("empty title or description. titleInput: ", titleInput, "typeof titleInput: ", typeof titleInput, ", descriptionInput: ", descriptionInput, "typeof descriptionInput: ", typeof descriptionInput);
+              }}
+            >
+              Save this workflow{" "}
+              {/* Note the call to this function is set with empty parameters as we set first the creation without objects to populate the workflow */}
+              <TfiSave />
+            </div>
+            {loadingSearchWorkflow && <AiOutlineLoading className="spin" />}
+          </div>
+        )}
       </div>
       <div className="blockWorkFlow">
-      <div className="listWorkflows icon flex text-lg" onClick={handleToggleUserWorkflows}>
+      <div className="listWorkflows icon flex text-lg items-center" onClick={handleToggleUserWorkflows}>
         <BsCardChecklist className="mr-[0.25rem]"/>
         Your workflows 
         {isWorkflowListVisible ? (
@@ -424,7 +425,7 @@ const loadDetailsSearchWorkflow = (_id) => {
       }
       </div>
       <div className="blockWorkFlow rounded-b-lg">
-      <div className="workflowSearch icon flex text-lg" onClick={handleToggleSearch}>
+      <div className="workflowSearch icon flex text-lg items-center" onClick={handleToggleSearch}>
         <BiSearchAlt className="mr-[0.25rem]"/>
         Search for workflows 
         {showSearchWorkflow ? (

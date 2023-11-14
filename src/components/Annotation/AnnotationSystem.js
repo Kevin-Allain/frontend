@@ -66,7 +66,7 @@ const AnnotationSystem = ({ type, info, index=0 }) => {
         <div className='buttonShowAnnotation icon flex' onClick={
           () => handleShowAndLoadAnnotations(type, info, getAnnotations)
         }>
-          <div className='icon flex text-[15px]'>Annotation about the {type}{" "}<HiOutlineAnnotation className='icon annotationIcon' /> </div>
+          <div className='icon flex text-[15px] items-center'>Annotation about the {type}{" "}<HiOutlineAnnotation className='icon annotationIcon' /> </div>
         </div>
       
       {showInputAnnotation &&
