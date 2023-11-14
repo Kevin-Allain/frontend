@@ -177,7 +177,7 @@ const GraphsResults = ({ infoMusicList, oldSearch, listSearchRes }) => {
       {/* <ToggleSwitch checked={showGraphs} onChange={handleToggle} /> */}
       <div className="metadata-header  icon flex items-center" onClick={handleToggle}>
         <BsGraphUp />
-        <p className="mx-[1rem] my-[0.5rem]">Data Graphs</p>
+        <p className="mx-[0.5rem] my-[0.5rem]">Data Graphs</p>
           {showGraphs ? (
             <FaAngleUp className="metadata-icon" />
           ) : (

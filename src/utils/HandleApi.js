@@ -223,8 +223,8 @@ const getMetadataFromAttribute = (attributeName, attributeValue) => {
 const getFuzzyLevenshtein = ( stringNotes = "", percMatch = 0.5, user = null, setListSearchRes = null, setListLogNumbers = null, setListTracks = null, infoMusicList=null,  setInfoMusicList=null
 , textFilterArtist = '', textFilterTrack = '' , textFilterRecording = '' ) => {
   console.log("-- handleAPI / getFuzzyLevenshtein. stringNotes: ", stringNotes, ", percMatch: ", percMatch, " user: ", user);
+  console.log("~~~~ baseUrl: ",baseUrl," ~~~~");
   console.log({textFilterArtist, textFilterTrack, textFilterRecording});
-  console.log("~~~~ baseUrl: ",baseUrl," ~~~~")
   setIsLoading(true);
   stringNotes += '';
   let numNotesInput = stringNotes.split('-').map(a=>Number(a));
@@ -335,9 +335,7 @@ const getMatchLevenshteinDistance = (
   stringNotes += '';
 
   axios
-    .get(`${baseUrl}/getMatchLevenshteinDistance2`, { 
-      params: 
-      { stringNotes: stringNotes, percMatch: percMatch, user: user, }, })
+    .get(`${baseUrl}/getMatchLevenshteinDistance2`, { params: { stringNotes: stringNotes, percMatch: percMatch, user: user, }, })
     .then((d) => {
       console.log("#### Then of getMatchLevenshteinDistance ####");
       console.log("d.data: ", d.data);
@@ -756,6 +754,7 @@ const createWorkflow = (
   privacy='public',
   setShowLoadingIcon,
 ) => {
+  // TODO adapt objectsId if we are creating something that is not relateds to an existing object in database, like a search
   console.log("handleApi createWorkflow. ", {title, description, time, author, objectsId, objectsTimes, objectsNote, objectsType,privacy});
 
   const objects = [];
@@ -776,7 +775,6 @@ const createWorkflow = (
   // Metadata attributes passed can be empty if the workflow is created out of the blue.
   // Kind of dirty... but at least we trust the call to follow an order with the .then section
   if (objectsId.length > 0) {
-
     if (
       objectsType[0] === 'sample' || 
       objectsType[0] === 'track' || 
@@ -1083,6 +1081,37 @@ const getListFuzzyDist = async (score, distance, notes) => {
     });
 }
 
+/** SearchMap */
+// TODO adapt code with a function for it to enrich melodic search (and maybe the workflow save and search)
+// TODO consider the isLoading usage...!
+const getSearchMap = async(query, filterArtist='', filterRecording='', filterTrack='') => {
+  console.log("---getSearchMap. ",{query, filterArtist, filterRecording, filterTrack});
+  setIsLoading(true);
+  axios
+    .get(`${baseUrl}/getSearchMap`, {
+      params: { query: query, filterArtist: filterArtist, filterRecording: filterRecording, filterTrack: filterTrack },
+    })
+    .then((d) => {
+      console.log("Loaded getSearchMap. d: ", d);
+      setIsLoading(false);
+    });
+
+}
+
+// TODO consider what else should be done here...
+const createSearchMap = async (query, filterArtist = '', filterRecording = '', filterTrack = '', resIds = []) => {
+  console.log("---createSearchMap. ", { query, filterArtist, filterRecording, filterTrack, resIds });
+  axios
+    .post(`${baseUrl}/createSearchMap`, {
+      query, filterArtist, filterRecording, filterTrack, resIds
+    })
+    .then((data) => {
+      console.log("Then handleApi createSearchMap. data: ", data);
+    })
+    .catch(err => console.log(err))
+}
+
+
 export {
   getAllJazzDap, addJazzDap, updateJazzDap, deleteJazzDap,
   getMusicMIDI, getSampleMIDI, getMatchLevenshteinDistance,
@@ -1096,5 +1125,6 @@ export {
   getExactMatchWorkflowParameter, changeWorkflowPrivacy,
   getDatabaseContent,
   getListFuzzyScores, getAllFuzzyScores, getListFuzzyDist,
-  getFuzzyLevenshtein
+  getFuzzyLevenshtein,
+  getSearchMap, createSearchMap
 }

@@ -656,8 +656,11 @@ const handleChangeFilterSearchRecording = useCallback (
 
           <div className="text-left">
             <AnnotationSystem type={"search"} info={oldSearch} />
-            {/* TODO update the workflow system so that it can save searches!!! */}{" "}
-            {/* <EmbeddedWorkflowInteraction idCaller={null} typeCaller={"search"} /> */}
+            {/* TODO update the workflow system so that it can save searches!!! Working on it from 2023.11.14. */}
+            <EmbeddedWorkflowInteraction 
+              idCaller={oldSearch+"_fArtist("+textFilterArtist+")_fRecording("+textFilterRecording+")_fTrack("+textFilterTrack+")"} 
+              typeCaller={"search"} 
+            />
           </div>
 
           {/* We should create a different type of component with some vis. */}

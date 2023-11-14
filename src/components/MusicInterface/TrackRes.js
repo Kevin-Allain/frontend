@@ -50,7 +50,7 @@ const TrackRes = ({
           <></>
         ) : (
           <>
-            {listSearchRes.length} samples. <br />
+            {listSearchRes.length} matches. <br />
             { listSearchRes.length > itemsPerPage &&
             <div className="pagination-buttons flex">
                 <IoIosArrowBack className='icon' onClick={handlePrevRange} disabled={startIndex === 0}/> | {startIndex}-{Math.min(listSearchRes.length,startIndex + itemsPerPage)} |

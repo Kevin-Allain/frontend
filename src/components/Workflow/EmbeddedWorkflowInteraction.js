@@ -45,11 +45,8 @@ const EmbeddedWorkflowInteraction = ({idCaller, typeCaller, indexRange=0}) => {
     const [showLoadingIcon, setShowLoadingIcon] = useState(false); 
 
     // ## Functions display
-    const handleShowActionsWorkflow = () => {
-        setShowWorkflowActions(!showWorkflowActions);
-    }
-    const handleShowWorkflowAddition = () => {
-        setShowWorkflowAddition(!showWorkflowAddition);
+    const handleShowActionsWorkflow = () => { setShowWorkflowActions(!showWorkflowActions); }
+    const handleShowWorkflowAddition = () => { setShowWorkflowAddition(!showWorkflowAddition);
         // For test
         console.log("handleShowWorkflowAddition - idCaller: ",idCaller, ", typeCaller: ",typeCaller,", indexRange: ",indexRange);
     };
