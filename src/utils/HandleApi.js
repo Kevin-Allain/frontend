@@ -820,8 +820,6 @@ const createWorkflow = (
               .catch(err => console.log(err))
         })        
       })
-
-
     } else {
       // TODO what if we create from something that is not a sample? E.g. a search...
       console.log("objectType is not a sample. It is a ", objectsType[0]);
@@ -838,6 +836,34 @@ const createWorkflow = (
         let percF = Number( fullStr.split('_')[indxPercF].split('(')[1].substr(0,fullStr.split('_')[indxPercF].split('(')[1].indexOf(')')) )
         console.log("Parameters of the search: ",{strNotes, artistF, recordingF, trackF, percF});
         // TODO search if there is (and there should be) a matching saved search in SearchMap, and use that as the objectId
+        // OR specify code in the back end... i.e. take this code and put it in the back-end (PROBABLY MESSY)
+
+        axios.get(`${baseUrl}/getSearchMap`,{
+          params:{ query: strNotes, filterArtist: artistF, filterRecording: recordingF, filterTrack: trackF, percMatch: percF}
+        }).then((resSearchMap) => {
+          // TODO update properly (use the _id of the saved SearchMap)
+          console.log("Successfully called getSearchMap.resSearchMap: ",resSearchMap);
+
+          // axios
+          //   .post(`${baseUrl}/createWorkflow`, {
+          //     title, description, time, author,
+          //     objects,
+          //     privacy,
+          //     // arrMetadataToWorkflow // commented because not existing here...
+          //   })
+          //   .then((data) => {
+          //     console.log("Then handleApi createWorkflow");
+          //     setTitleInput("");
+          //     setDescriptionInput("");
+          //     setShowLoadingIcon(false);
+          //     getWorkflowsInfo(
+          //       dispatch, setWorkflows, { user: author }
+          //     )
+          //   })
+          //   .catch(err => console.log(err))
+        })
+
+  
 
       } else {
         console.log("We are not prepared for this item. It is a ", objectsType[0])
