@@ -220,8 +220,7 @@ const getMetadataFromAttribute = (attributeName, attributeValue) => {
     })
 }
 
-const getFuzzyLevenshtein = ( stringNotes = "", percMatch = 0.5, user = null, setListSearchRes = null, setListLogNumbers = null, setListTracks = null, infoMusicList=null,  setInfoMusicList=null
-, textFilterArtist = '', textFilterTrack = '' , textFilterRecording = '' ) => {
+const getFuzzyLevenshtein = ( stringNotes = "", percMatch = 0.5, user = null, setListSearchRes = null, setListLogNumbers = null, setListTracks = null, infoMusicList=null,  setInfoMusicList=null, textFilterArtist = '', textFilterTrack = '' , textFilterRecording = '' ) => {
   console.log("-- handleAPI / getFuzzyLevenshtein. stringNotes: ", stringNotes, ", percMatch: ", percMatch, " user: ", user);
   console.log("~~~~ baseUrl: ",baseUrl," ~~~~");
   console.log({textFilterArtist, textFilterTrack, textFilterRecording});
@@ -824,10 +823,25 @@ const createWorkflow = (
 
 
     } else {
-      // TODO what if we create from something that is not a sample?
-      console.log("objectType is not a sample. It is a ",objectsType[0]);
-      // If it's recording or track... it should be exactly the same, right?!
+      // TODO what if we create from something that is not a sample? E.g. a search...
+      console.log("objectType is not a sample. It is a ", objectsType[0]);
+      if (objectsType[0] === 'search') {
+        // If it's recording or track... it should be exactly the same, right?!
+        // We can consider the case of a search being saved. We make the assumption of a certain form for the string. 
+        // e.g. idCaller='69-71-72-74-76_fArtist()_fRecording()_fTrack(rosett)_fPerc(1)'
+        let fullStr = objectsId[0];
+        let  indxArtistF=1, indxRecordingF=2, indxTrackF = 3, indxPercF = 4;
+        let strNotes = fullStr.split('_')[0];
+        let artistF = fullStr.split('_')[indxArtistF].split('(')[1].substr(0,fullStr.split('_')[indxArtistF].split('(')[1].indexOf(')'))
+        let recordingF = fullStr.split('_')[indxRecordingF].split('(')[1].substr(0,fullStr.split('_')[indxRecordingF].split('(')[1].indexOf(')'))
+        let trackF = fullStr.split('_')[indxTrackF].split('(')[1].substr(0,fullStr.split('_')[indxTrackF].split('(')[1].indexOf(')'))
+        let percF = Number( fullStr.split('_')[indxPercF].split('(')[1].substr(0,fullStr.split('_')[indxPercF].split('(')[1].indexOf(')')) )
+        console.log("Parameters of the search: ",{strNotes, artistF, recordingF, trackF, percF});
+        // TODO search if there is (and there should be) a matching saved search in SearchMap, and use that as the objectId
 
+      } else {
+        console.log("We are not prepared for this item. It is a ", objectsType[0])
+      }
     }
   } else {
     axios

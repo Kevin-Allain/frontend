@@ -148,12 +148,6 @@ const EmbeddedWorkflowInteraction = ({idCaller, typeCaller, indexRange=0}) => {
 
     }
 
-    // TODO Button for the display of actions related with workflows.
-
-    // TODO Display list of actions when clicking the three dots. Those actions are
-    // - Creation of new workflow (with the info of the object content added)
-    // - Addition of object content to existing workflow
-
     return (
       <div className="embeddedWorkflowInteraction border border-2 border-inherit rounded p-[0.2rem] h-fit ">
         {/* w-fit -> doubt about this, but maybe not necessary */}
