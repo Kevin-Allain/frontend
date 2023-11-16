@@ -324,29 +324,28 @@ const MusicInterface = () => {
     },
     [setTextSearch]
   );
-
-const handleChangeFilterSearchArtist = useCallback (
-  (event) => {
-    const value = event.target.value;
-    setTextFilterArtist(value);
-  },
-  [setTextFilterArtist]
-);
-const handleChangeFilterSearchTrack = useCallback (
-  (event) => {
-    const value = event.target.value;
-    setTextFilterTrack(value);
-  },
-  [setTextFilterTrack]
-);
-const handleChangeFilterSearchRecording = useCallback (
-  (event) => {
-    const value = event.target.value;
-    console.log("value handleChangeFilterSearchRecording: ",value);
-    setTextFilterRecording(value);
-  },
-  [setTextFilterRecording]
-);
+  const handleChangeFilterSearchArtist = useCallback(
+    (event) => {
+      const value = event.target.value;
+      setTextFilterArtist(value);
+    },
+    [setTextFilterArtist]
+  );
+  const handleChangeFilterSearchTrack = useCallback(
+    (event) => {
+      const value = event.target.value;
+      setTextFilterTrack(value);
+    },
+    [setTextFilterTrack]
+  );
+  const handleChangeFilterSearchRecording = useCallback(
+    (event) => {
+      const value = event.target.value;
+      console.log("value handleChangeFilterSearchRecording: ", value);
+      setTextFilterRecording(value);
+    },
+    [setTextFilterRecording]
+  );
 
   // const handleClickTextSearch = useCallback( async (e) => { e.preventDefault(); if (textSearch !== "") { findMatchLevenshteinDistance(textSearch); } }, [textSearch, findMatchLevenshteinDistance]  );
 
@@ -660,6 +659,9 @@ const handleChangeFilterSearchRecording = useCallback (
             <EmbeddedWorkflowInteraction 
               idCaller={oldSearch+"_fArtist("+textFilterArtist+")_fRecording("+textFilterRecording+")_fTrack("+textFilterTrack+")_fPerc("+percMatch+")"} 
               typeCaller={"search"} 
+              listLogNumbers={listLogNumbers}
+              infoMusicList={infoMusicList}
+              listTracks={listTracks}
             />
           </div>
 

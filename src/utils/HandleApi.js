@@ -752,9 +752,11 @@ const createWorkflow = (
   objectIndexRange = [], // For samples we need to know how far the search goes beyond the first note identified
   privacy='public',
   setShowLoadingIcon,
+  // TODO could we pass metadata?
+  listLogNumbers = [], infoMusicList=[], listTracks=[]
 ) => {
   // TODO adapt objectsId if we are creating something that is not relateds to an existing object in database, like a search
-  console.log("handleApi createWorkflow. ", {title, description, time, author, objectsId, objectsTimes, objectsNote, objectsType,privacy});
+  console.log("handleApi createWorkflow. ", {title, description, time, author, objectsId, objectsTimes, objectsNote, objectsType,privacy, listLogNumbers,infoMusicList, listTracks});
 
   const objects = [];
   for (var i = 0; i < objectsId.length; i++) {
@@ -837,33 +839,41 @@ const createWorkflow = (
         console.log("Parameters of the search: ",{strNotes, artistF, recordingF, trackF, percF});
         // TODO search if there is (and there should be) a matching saved search in SearchMap, and use that as the objectId
         // OR specify code in the back end... i.e. take this code and put it in the back-end (PROBABLY MESSY)
+        // At least listLogNumbers would work.
 
-        axios.get(`${baseUrl}/getSearchMap`,{
-          params:{ query: strNotes, filterArtist: artistF, filterRecording: recordingF, filterTrack: trackF, percMatch: percF}
+        axios.get(`${baseUrl}/getSearchMap`, {
+          params: { query: strNotes, filterArtist: artistF, filterRecording: recordingF, filterTrack: trackF, percMatch: percF }
         }).then((resSearchMap) => {
           // TODO update properly (use the _id of the saved SearchMap)
-          console.log("Successfully called getSearchMap.resSearchMap: ",resSearchMap);
+          console.log("Successfully called getSearchMap.resSearchMap: ", resSearchMap);
+          // TODO make a call to load metadata? Or use it stored somewhere prior to the call?
+          let arrMetadataToWorkflow = [];
+          if(infoMusicList.length>0){arrMetadataToWorkflow=infoMusicList}
+          // trackObj['SJA ID']
+          //   ? arrMetadataToWorkflow.push(d.data.filter(a => a['SJA ID'] === trackObj['SJA ID'])[0])
+          //   : arrMetadataToWorkflow.push(d.data[0]); // I think this is the right approach for BGR
+          console.log("Was that actually pushed? objects: ", objects);
+          // replace objects[0].objectId
+          objects[0].objectId = resSearchMap.data[0]._id;
 
-          // axios
-          //   .post(`${baseUrl}/createWorkflow`, {
-          //     title, description, time, author,
-          //     objects,
-          //     privacy,
-          //     // arrMetadataToWorkflow // commented because not existing here...
-          //   })
-          //   .then((data) => {
-          //     console.log("Then handleApi createWorkflow");
-          //     setTitleInput("");
-          //     setDescriptionInput("");
-          //     setShowLoadingIcon(false);
-          //     getWorkflowsInfo(
-          //       dispatch, setWorkflows, { user: author }
-          //     )
-          //   })
-          //   .catch(err => console.log(err))
+          axios
+            .post(`${baseUrl}/createWorkflow`, {
+              title, description, time, author, objects, privacy,
+              arrMetadataToWorkflow // Big doubt about this...!
+            })
+            .then((data) => {
+              console.log("Then handleApi createWorkflow");
+              setTitleInput("");
+              setDescriptionInput("");
+              setShowLoadingIcon(false);
+              getWorkflowsInfo(
+                dispatch, setWorkflows, { user: author }
+              )
+            })
+            .catch(err => console.log(err))
         })
 
-  
+
 
       } else {
         console.log("We are not prepared for this item. It is a ", objectsType[0])

@@ -22,7 +22,7 @@ import { setWorkflows } from '../Reducers/WorkflowReducer';
 // We will at first follow a structure based on the attributes of the caller:
 // -the type of caller... 
 // - the idCaller, an item to identify it (either existing to an item, or loaded _id in the MongoDB database) ...
-const EmbeddedWorkflowInteraction = ({idCaller, typeCaller, indexRange=0}) => {
+const EmbeddedWorkflowInteraction = ({idCaller, typeCaller, indexRange=0,listLogNumbers=[], infoMusicList=[], listTracks=[]}) => {
   // console.log("EmbeddedWorkflowInteraction ___ ",{idCaller, typeCaller, indexRange})  
   // ## Attributes
     // Global variable for workflows
@@ -144,6 +144,7 @@ const EmbeddedWorkflowInteraction = ({idCaller, typeCaller, indexRange=0}) => {
         [indexRange], // // For samples we need to know how far the search goes beyond the first note identified
         selectedPrivacyOption,
         setShowLoadingIcon,
+        listLogNumbers,infoMusicList, listTracks
       )
 
     }
