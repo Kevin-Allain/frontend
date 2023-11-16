@@ -312,7 +312,6 @@ const loadDetailsSearchWorkflow = (_id) => {
                         {(item.content && item.content.length > 0) ?
                           (
                             <div className="contentWorkflow">
-                              {/* TODO identify here how to set the code considering the objectType should be search */}
                               {console.log("item about to show: ", item)}
                               {
                                 (item.objectType === 'sample') ? <></>
@@ -403,7 +402,6 @@ const loadDetailsSearchWorkflow = (_id) => {
                                             ))}
                               {item.objectType === 'sample' ? (
                                 <div className="sampleWorkflow">
-                                  {/* It's a sample (work in progress to include a player){" "}<BsWrenchAdjustable /> */}
                                   <div className='pianoArea'>
                                     <PianoRoll
                                       notes={[...item.content.slice().sort((a, b) => a.m_id - b.m_id).map(a => a.pitch)]}
