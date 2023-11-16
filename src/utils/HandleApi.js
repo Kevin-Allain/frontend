@@ -872,9 +872,6 @@ const createWorkflow = (
             })
             .catch(err => console.log(err))
         })
-
-
-
       } else {
         console.log("We are not prepared for this item. It is a ", objectsType[0])
       }
@@ -1007,8 +1004,6 @@ const changeWorkflowPrivacy = (_id, newPrivacy, selectedWorkflow, setIsWorkerVis
     .catch(err => console.log(err));
 }
 
-
-
 // Note: the parameter passed is the _id of the workflow
 const deleteWorkflowObject = (_id, objectIndex, workflow,
   // setListWorkflows, 
@@ -1042,7 +1037,7 @@ const getWorkflow = (setIsWorkerVisible, setSelectedWorkflow, _id, user) => {
 
       // So we will add content to the data...
       getDatabaseContent(data, setSelectedWorkflow, setIsWorkerVisible);
-
+      console.log("Just did getDatabaseContent")
       // setSelectedWorkflow(data);
       // setIsWorkerVisible(true);
     })
@@ -1058,10 +1053,10 @@ const getDatabaseContent = async (workflow, setSelectedWorkflow, setIsWorkerVisi
     const _id = object.objectId;
     const typeCaller = object.objectType;
     const indexRange = (object.objectIndexRange!==0)?(object.objectIndexRange-1):0; // doubt about this thing...
-    console.log("typeCaller: ",typeCaller);
+    console.log("typeCaller: ",typeCaller,", _id: ",_id,", indexRange: ",indexRange);
 
     // Probably need to make a different call for the track
-    if (["annotation", "comment", "recording", "track", "sample"].includes(typeCaller)) {
+    if (["annotation", "comment", "recording", "track", "sample", "search"].includes(typeCaller)) {
       return axios.get(`${baseUrl}/get_idContent_${typeCaller}`, {
         params: { _id: _id, typeCaller: typeCaller, indexRange: indexRange, },
       });

@@ -111,11 +111,9 @@ const WorkflowManager = () => {
   const handleShowWorkflowAddition = () => { setShowWorkflowAddition(!showWorkflowAddition); };
   const handleShowWorkflowDetail = () => { setSelectedWorkflow(null); }
   const handleToggleUserWorkflows = () => {
+    console.log("handleToggleUserWorkflows");
     setSelectedWorkflow(null);
-    getWorkflowsInfo(
-      dispatch, setWorkflows,
-      { user: localStorage?.username }
-    );
+    getWorkflowsInfo( dispatch, setWorkflows, { user: localStorage?.username } );
     setIsWorkflowListVisible((prevState) => !prevState);
   };
   const handleChangeWorkflowPrivacy = (_id,newPrivacy, selectedWorkflow, setIsWorkerVisible, setSelectedWorkflow, user) => 
@@ -162,6 +160,7 @@ const WorkflowManager = () => {
   }, []);
 
   const loadDetailWorkflow = (_id) => {
+    console.log("loadDetailWorkflow.")
     getWorkflow(
       setIsWorkflowVisible,
       setSelectedWorkflow,
@@ -266,7 +265,9 @@ const loadDetailsSearchWorkflow = (_id) => {
       {isWorkflowListVisible &&
         workflows.map((item, i) => (
           <div className="containerWorkflowSummary" key={'containerWorkflowSummary_' + i}>
-            <div className="workflowDetails" onClick={() => loadDetailWorkflow(item._id)} key={item._id} >
+            <div className="workflowDetails" key={item._id} onClick={
+              () => loadDetailWorkflow(item._id)} 
+            >
               Title: <u>{item.title}</u>
               {/* | {item.time.replace("T",' ').split(".")[0]} */}
             </div>
@@ -306,11 +307,13 @@ const loadDetailsSearchWorkflow = (_id) => {
                   {/* <u>Object id:</u> {item.objectId} | <u>Object type:</u>{" "} {item.objectType} | <u>Object index:</u> {item.objectIndex} <br /> */}
                   <div className="workflowContentDisplay">
                     <b className='text-white'>Content of the {item.objectType}: </b>
-                    {item.content ? (
+                    {(item.content ) ? (
                       <div className="contentItem">
                         {(item.content && item.content.length > 0) ?
                           (
                             <div className="contentWorkflow">
+                              {/* TODO identify here how to set the code considering the objectType should be search */}
+                              {console.log("item about to show: ", item)}
                               {
                                 (item.objectType === 'sample') ? <></>
                                   : (item.objectType === 'annotation') ?
@@ -322,65 +325,82 @@ const loadDetailsSearchWorkflow = (_id) => {
                                       The recording may have specific content loading soon {item.objectId}
                                       <BiWrench />
                                     </>
-                                      : (item.objectType === 'track') ? <>
-                                        The track may have specific content loading soon {item.objectId}
-                                        <BiWrench />
+                                      : (item.objectType === 'search') ? <>
+                                        The search was set with the parameters: <br/>
+                                        <table>
+                                        <tr>
+                                          <th>Filter Artist</th>
+                                          <th>Filter Recording</th>
+                                          <th>Filter Track</th>
+                                          <th>Percentage Match</th>
+                                        </tr>
+                                        <tr>
+                                          <th>{item.content[0].filterArtist}</th>
+                                          <th>{item.content[0].filterRecording}</th>
+                                          <th>{item.content[0].filterTrack}</th>
+                                          <th>{item.content[0].percMatch}</th>
+                                        </tr>
+                                        </table>
                                       </>
-                                        :
-                                        item.content
-                                          .slice() // Create a shallow copy of the array to avoid mutating the original
-                                          .sort((a, b) => a.m_id - b.m_id) // Sort by the m_id property                            
-                                          .map((contentI, index) => (
-                                            <React.Fragment key={'head_contentI_' + index}>
-                                              {index === 0 && (
-                                                <table className="tableItemContentAndFirst">
-                                                  <colgroup>
-                                                    {Object.keys(contentI).map((key) => (
-                                                      <col key={key} />
-                                                    ))}
-                                                  </colgroup>
-                                                  <thead>
-                                                    <tr> {Object.keys(contentI).map((key) => (<th key={key}> <b style={{ color: 'white' }}>{key}</b> </th>))} </tr>
-                                                  </thead>
-                                                  <tbody>
-                                                    <tr>
-                                                      {Object.values(contentI).map((value, index) => (
-                                                        <td key={'value_contentI_' + index}>
-                                                          <div className="tableCellContent">
-                                                            {['duration', 'onset'].indexOf(Object.keys(contentI)[index]) === -1
-                                                              ? value
-                                                              : Number(value).toFixed(2)}
-                                                          </div>
-                                                        </td>
+                                        : (item.objectType === 'track') ? <>
+                                          The track may have specific content loading soon {item.objectId}
+                                          <BiWrench />
+                                        </>
+                                          :
+                                          item.content
+                                            .slice() // Create a shallow copy of the array to avoid mutating the original
+                                            .sort((a, b) => a.m_id - b.m_id) // Sort by the m_id property                            
+                                            .map((contentI, index) => (
+                                              <React.Fragment key={'head_contentI_' + index}>
+                                                {index === 0 && (
+                                                  <table className="tableItemContentAndFirst">
+                                                    <colgroup>
+                                                      {Object.keys(contentI).map((key) => (
+                                                        <col key={key} />
                                                       ))}
-                                                    </tr>
-                                                  </tbody>
-                                                </table>
-                                              )}
-                                              {index > 0 && (
-                                                <table className="tableItemContentBody">
-                                                  <colgroup>
-                                                    {Object.keys(contentI).map((key) => (
-                                                      <col key={key} />
-                                                    ))}
-                                                  </colgroup>
-                                                  <tbody>
-                                                    <tr>
-                                                      {Object.values(contentI).map((value, index) => (
-                                                        <td key={'tableItemContentBody_' + index}>
-                                                          <div className="tableCellContent">
-                                                            {['duration', 'onset'].indexOf(Object.keys(contentI)[index]) === -1
-                                                              ? value
-                                                              : Number(value).toFixed(2)}
-                                                          </div>
-                                                        </td>
+                                                    </colgroup>
+                                                    <thead>
+                                                      <tr> {Object.keys(contentI).map((key) => (<th key={key}> <b style={{ color: 'white' }}>{key}</b> </th>))} </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                      <tr>
+                                                        {Object.values(contentI).map((value, index) => (
+                                                          <td key={'value_contentI_' + index}>
+                                                            <div className="tableCellContent">
+                                                              {['duration', 'onset'].indexOf(Object.keys(contentI)[index]) === -1
+                                                                ? value
+                                                                : Number(value).toFixed(2)}
+                                                            </div>
+                                                          </td>
+                                                        ))}
+                                                      </tr>
+                                                    </tbody>
+                                                  </table>
+                                                )}
+                                                {index > 0 && (
+                                                  <table className="tableItemContentBody">
+                                                    <colgroup>
+                                                      {Object.keys(contentI).map((key) => (
+                                                        <col key={key} />
                                                       ))}
-                                                    </tr>
-                                                  </tbody>
-                                                </table>
-                                              )}
-                                            </React.Fragment>
-                                          ))}
+                                                    </colgroup>
+                                                    <tbody>
+                                                      <tr>
+                                                        {Object.values(contentI).map((value, index) => (
+                                                          <td key={'tableItemContentBody_' + index}>
+                                                            <div className="tableCellContent">
+                                                              {['duration', 'onset'].indexOf(Object.keys(contentI)[index]) === -1
+                                                                ? value
+                                                                : Number(value).toFixed(2)}
+                                                            </div>
+                                                          </td>
+                                                        ))}
+                                                      </tr>
+                                                    </tbody>
+                                                  </table>
+                                                )}
+                                              </React.Fragment>
+                                            ))}
                               {item.objectType === 'sample' ? (
                                 <div className="sampleWorkflow">
                                   {/* It's a sample (work in progress to include a player){" "}<BsWrenchAdjustable /> */}
