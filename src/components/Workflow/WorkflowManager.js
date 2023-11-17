@@ -116,8 +116,7 @@ const WorkflowManager = () => {
     getWorkflowsInfo( dispatch, setWorkflows, { user: localStorage?.username } );
     setIsWorkflowListVisible((prevState) => !prevState);
   };
-  const handleChangeWorkflowPrivacy = (_id,newPrivacy, selectedWorkflow, setIsWorkerVisible, setSelectedWorkflow, user) => 
-    { changeWorkflowPrivacy(_id,newPrivacy, selectedWorkflow, setIsWorkerVisible, setSelectedWorkflow, user); }
+  const handleChangeWorkflowPrivacy = (_id,newPrivacy, selectedWorkflow, setIsWorkerVisible, setSelectedWorkflow, user) => { changeWorkflowPrivacy(_id,newPrivacy, selectedWorkflow, setIsWorkerVisible, setSelectedWorkflow, user); }
   const handleShowSearchWorkflowDetail = () => { setSelectedSearchWorkflow(null); }
   const handleToggleSearch = () => {
     setShowSearchWorkflow(!showSearchWorkflow);
@@ -301,136 +300,85 @@ const loadDetailsSearchWorkflow = (_id) => {
             {/* <em> {selectedWorkflow.author} | {selectedWorkflow.time} | {selectedWorkflow._id} |{" "} {selectedWorkflow.objects.length} objects </em> */}
             <em>Creation: {selectedWorkflow.time.replace('T',' ').split('.')[0]} </em>
             <div className="workflowListObjects">
-              {selectedWorkflow.objects.map((item, i) => (
-                <div className="workflowObject" key={'workflowObject_' + i}>
-                  {/* For testing */}
-                  {/* <u>Object id:</u> {item.objectId} | <u>Object type:</u>{" "} {item.objectType} | <u>Object index:</u> {item.objectIndex} <br /> */}
-                  <div className="workflowContentDisplay">
-                    <b className='text-white'>Content of the {item.objectType}: </b>
-                    {(item.content ) ? (
-                      <div className="contentItem">
-                        {(item.content && item.content.length > 0) ?
-                          (
-                            <div className="contentWorkflow">
-                              {console.log("item about to show: ", item)}
-                              {
-                                (item.objectType === 'sample') ? <></>
-                                  : (item.objectType === 'annotation') ?
-                                    <>
-                                      Annotation about {item.content[0].type}:{" "}{item.content[0].info}.<br />
-                                      {item.content[0].annotationInput} - {item.content[0].author} - {item.content[0].time}
-                                    </>
-                                    : (item.objectType === 'recording') ? <>
-                                      The recording may have specific content loading soon {item.objectId}
-                                      <BiWrench />
-                                    </>
-                                      : (item.objectType === 'search') ? <>
-                                        The search was set with the parameters: <br/>
-                                        <table>
-                                        <tr>
-                                          <th>Filter Artist</th>
-                                          <th>Filter Recording</th>
-                                          <th>Filter Track</th>
-                                          <th>Percentage Match</th>
-                                        </tr>
-                                        <tr>
-                                          <th>{item.content[0].filterArtist}</th>
-                                          <th>{item.content[0].filterRecording}</th>
-                                          <th>{item.content[0].filterTrack}</th>
-                                          <th>{item.content[0].percMatch}</th>
-                                        </tr>
-                                        </table>
-                                      </>
-                                        : (item.objectType === 'track') ? <>
-                                          The track may have specific content loading soon {item.objectId}
-                                          <BiWrench />
-                                        </>
-                                          :
-                                          item.content
-                                            .slice() // Create a shallow copy of the array to avoid mutating the original
-                                            .sort((a, b) => a.m_id - b.m_id) // Sort by the m_id property                            
-                                            .map((contentI, index) => (
-                                              <React.Fragment key={'head_contentI_' + index}>
-                                                {index === 0 && (
-                                                  <table className="tableItemContentAndFirst">
-                                                    <colgroup>
-                                                      {Object.keys(contentI).map((key) => (
-                                                        <col key={key} />
-                                                      ))}
-                                                    </colgroup>
-                                                    <thead>
-                                                      <tr> {Object.keys(contentI).map((key) => (<th key={key}> <b style={{ color: 'white' }}>{key}</b> </th>))} </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                      <tr>
-                                                        {Object.values(contentI).map((value, index) => (
-                                                          <td key={'value_contentI_' + index}>
-                                                            <div className="tableCellContent">
-                                                              {['duration', 'onset'].indexOf(Object.keys(contentI)[index]) === -1
-                                                                ? value
-                                                                : Number(value).toFixed(2)}
-                                                            </div>
-                                                          </td>
-                                                        ))}
-                                                      </tr>
-                                                    </tbody>
-                                                  </table>
-                                                )}
-                                                {index > 0 && (
-                                                  <table className="tableItemContentBody">
-                                                    <colgroup>
-                                                      {Object.keys(contentI).map((key) => (
-                                                        <col key={key} />
-                                                      ))}
-                                                    </colgroup>
-                                                    <tbody>
-                                                      <tr>
-                                                        {Object.values(contentI).map((value, index) => (
-                                                          <td key={'tableItemContentBody_' + index}>
-                                                            <div className="tableCellContent">
-                                                              {['duration', 'onset'].indexOf(Object.keys(contentI)[index]) === -1
-                                                                ? value
-                                                                : Number(value).toFixed(2)}
-                                                            </div>
-                                                          </td>
-                                                        ))}
-                                                      </tr>
-                                                    </tbody>
-                                                  </table>
-                                                )}
-                                              </React.Fragment>
-                                            ))}
-                              {item.objectType === 'sample' ? (
-                                <div className="sampleWorkflow">
-                                  <div className='pianoArea'>
-                                    <PianoRoll
-                                      notes={[...item.content.slice().sort((a, b) => a.m_id - b.m_id).map(a => a.pitch)]}
-                                      occurrences={[...item.content.slice().sort((a, b) => a.m_id - b.m_id).map(a => a.onset)]}
-                                      durations={[...item.content.slice().sort((a, b) => a.m_id - b.m_id).map(a => a.duration)]}
-                                      width={600}
-                                      height={200}
-                                    />
-                                  </div>
-                                  <div className="iconsSampleRes">
-                                    <WorkflowPlayer
-                                      notes={[...item.content.slice().sort((a, b) => a.m_id - b.m_id).map(a => a.pitch)]}
-                                      occurences={[...item.content.slice().sort((a, b) => a.m_id - b.m_id).map(a => a.onset)]}
-                                      durations={[...item.content.slice().sort((a, b) => a.m_id - b.m_id).map(a => a.duration)]}
-                                    />
-                                  </div>
+                {selectedWorkflow.objects.map((item, i) => (
+                  <div className="workflowObject" key={'workflowObject_' + i}>
+                    {/* For testing */}
+                    <u>Object id:</u> {item.objectId} | <u>Object type:</u>{" "} {item.objectType} | <u>Object index:</u> {item.objectIndex} <br />
+                    <div className="workflowContentDisplay">
+                      <b className='text-white'>Content of the {item.objectType}: </b>
+                      {/* TODO in practice we should make a call to get metadata based on the _id of the workflow item 
+                      * We could do that by doing a call as we define selectedWorkflow
+                      */}
+                      {(item.content) ? (
+                        <div className="contentItem">
+                          <div className="contentWorkflow">
+                            {console.log("item about to show: ", item)}
+                            {item.objectType === 'annotation' && <>
+                              Annotation about {item.content[0].type}:{" "}{item.content[0].info}.<br />
+                              {item.content[0].annotationInput} - {item.content[0].author} - {item.content[0].time}
+                            </>}
+                            {item.objectType === 'comment' && <>
+                              The comment may have specific content loading soon {item.objectId}
+                              <BiWrench />
+                            </>}
+                            {item.objectType === 'track' && <>
+                              The track may have specific content loading soon {item.objectId}
+                              <BiWrench />
+                            </>}
+                            {item.objectType === 'recording' && <>
+                              The recording may have specific content loading soon {item.objectId}
+                              <BiWrench />
+                            </>}
+                            {item.objectType === 'annotation' && <>
+                              Annotation about {item.content[0].type}:{" "}{item.content[0].info}.<br />
+                              {item.content[0].annotationInput} - {item.content[0].author} - {item.content[0].time}
+                            </>}
+                            {item.objectType === 'search' && <>
+                              The search was set with the parameters: <br />
+                              <table>
+                                <tr>
+                                  <th>Filter Artist</th>
+                                  <th>Filter Recording</th>
+                                  <th>Filter Track</th>
+                                  <th>Percentage Match</th>
+                                </tr>
+                                <tr>
+                                  <th>{item.content[0].filterArtist}</th>
+                                  <th>{item.content[0].filterRecording}</th>
+                                  <th>{item.content[0].filterTrack}</th>
+                                  <th>{item.content[0].percMatch}</th>
+                                </tr>
+                              </table>
+                            </>}
+                            {item.objectType === 'sample' &&
+                              <div className="sampleWorkflow">
+                                <div className='pianoArea'>
+                                  <PianoRoll
+                                    notes={[...item.content.slice().sort((a, b) => a.m_id - b.m_id).map(a => a.pitch)]}
+                                    occurrences={[...item.content.slice().sort((a, b) => a.m_id - b.m_id).map(a => a.onset)]}
+                                    durations={[...item.content.slice().sort((a, b) => a.m_id - b.m_id).map(a => a.duration)]}
+                                    width={600}
+                                    height={200}
+                                  />
                                 </div>
-                              ) : ('')}
-                            </div>
-                          )
-                          : (<div className="contentWorkflow">No additional content in database for the {item.objectType} </div>)
-                        }
-                      </div>
-                    ) : (
-                      <em>Loading content...</em>
-                    )}
-                    {/* {item.content} {arrayContent.map((o,indx)=>( <div className='content' key={o._id}> id: {o._id}. index: {indx} </div> ))} */}
-                  </div>
-                  <u className='text-white'>Object note:</u><br /> {item.objectNote} <br />
+                                <div className="iconsSampleRes">
+                                  <WorkflowPlayer
+                                    notes={[...item.content.slice().sort((a, b) => a.m_id - b.m_id).map(a => a.pitch)]}
+                                    occurences={[...item.content.slice().sort((a, b) => a.m_id - b.m_id).map(a => a.onset)]}
+                                    durations={[...item.content.slice().sort((a, b) => a.m_id - b.m_id).map(a => a.duration)]}
+                                  />
+                                </div>
+                              </div>
+                            }
+                          </div>
+
+                        </div>
+                      ) : (
+                        <em>No content</em>
+                      )}
+                      {/* {item.content} {arrayContent.map((o,indx)=>( <div className='content' key={o._id}> id: {o._id}. index: {indx} </div> ))} */}
+                    </div>
+                    <u className='text-white'>Object note:</u><br /> {item.objectNote?item.objectNote:'N/A'}<br/>
                   <AiFillDelete
                     className="icon"
                     onClick={() => handleDeleteWorkflowObject(selectedWorkflow._id, item.objectIndex)}

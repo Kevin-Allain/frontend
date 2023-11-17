@@ -874,6 +874,7 @@ const createWorkflow = (
         })
       } else {
         console.log("We are not prepared for this item. It is a ", objectsType[0])
+        // TODO code is not ready for the types annotation and comment?!
       }
     }
   } else {
