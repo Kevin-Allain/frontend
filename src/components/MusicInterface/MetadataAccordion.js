@@ -53,7 +53,7 @@ const MetadataAccordion = ({
                     value.length !== 0 &&
                     (key === "(A/R/D) Event Type" ||
                       key === "(N) Named Artist(s)" ||
-                      key === "(E) Event Name" ||
+                      key === "(E) Event Name" |
                       key === "(Y) Date" ||
                       key === "Label" ||
                       key === "AudioSource" ||
@@ -63,7 +63,8 @@ const MetadataAccordion = ({
                       key === "Observations") ? (
                       <p key={key}>
                         {" "}
-                        {key}: {value}
+                        {key==='(Y) Date'?'Recording Date':key}: {key==='(Y) Date'? (`${value.substr(5,4)}/${value.substr(3,2)}/${value.substr(1,2)}`) :value }
+                        {/* {key}:{value} */}
                       </p>
                     ) : (
                       <></>
