@@ -4,8 +4,10 @@ import { BsGraphUp } from "react-icons/bs";
 import * as d3 from "d3";
 import {
   Chart as ChartJS,
+  CategoryScale,
   LinearScale,
   PointElement,
+  BarElement,
   LineElement,
   Tooltip,
   Legend,
@@ -25,14 +27,8 @@ const GraphsResults = ({ infoMusicList, oldSearch, listSearchRes }) => {
 
   // TODO change later on, we will want to consider the melodies and outputs of melodies as well.
   const dataInput = infoMusicList;
-  ChartJS.register(LinearScale, PointElement, LineElement, Tooltip, Legend);
-  const attributesOptions = [
-    "Release Year",
-    "Release Month",
-    "Track Title",
-    "Recording",
-    "Artists",
-  ];
+  ChartJS.register(LinearScale,CategoryScale, PointElement, BarElement, LineElement, Tooltip, Legend);
+  const attributesOptions = [ "Release Year", "Release Month", "Track Title", "Recording", "Artists", ];
 
   const [options, setOptions] = useState({
     scales: { x: { beginAtZero: false }, y: { beginAtZero: false } },
@@ -41,6 +37,38 @@ const GraphsResults = ({ infoMusicList, oldSearch, listSearchRes }) => {
   const [selectedAxisX, setSelectedAxisX] = useState("Release Year");
   const [selectedAxisY, setSelectedAxisY] = useState("Release Month");
   const [labels, setLabels] = useState(["Label 1","Label 2", "label 3"]); // TODO set the labels value as the selection is made by user.
+
+  // ---- BarTest example
+  // Sample data
+  const axisXBarTest = ['Category A', 'Category B', 'Category C', 'Category D', 'Category E'];
+  const axisYBarTest = [10, 20, 15, 25, 18];
+  // Chart data
+  const dataBarTest = {
+    labels: axisXBarTest,
+    datasets: [
+      {
+        label: 'Sample Bar Chart',
+        data: axisYBarTest,
+        backgroundColor: 'rgba(75,192,192,0.2)', // Bar color
+        borderColor: 'rgba(75,192,192,1)', // Border color
+        borderWidth: 1, // Border width
+      },
+    ],
+  };
+  // Chart options
+  const optionsBarTest = {
+    scales: {
+      x: {
+        beginAtZero: true,
+      },
+      y: {
+        beginAtZero: true,
+      },
+    },
+  };
+  // ----
+
+
 
   useEffect(() => {
     // This is called each time there is a call to change selectedAxisX or selectedAxisY 
@@ -124,12 +152,16 @@ const GraphsResults = ({ infoMusicList, oldSearch, listSearchRes }) => {
 
 
   const handleChangeAxisX = useCallback((axis) => {
-    (axis==="Track Title" || axis==="Recording" || axis==="Artists")?setTypeGraph('bar'):setTypeGraph('scatter');
+    (axis === "Track Title" || axis === "Recording" || axis === "Artists") ?
+      setTypeGraph('bar')
+      : setTypeGraph('scatter');
     setSelectedAxisX(axis);
   }, []);
 
   const handleChangeAxisY = useCallback((axis) => {
-    (axis==="Track Title" || axis==="Recording" || axis==="Artists")?setTypeGraph('bar'):setTypeGraph('scatter');
+    (axis === "Track Title" || axis === "Recording" || axis === "Artists")
+      ? setTypeGraph('bar')
+      : setTypeGraph('scatter');
     setSelectedAxisY(axis);
   }, []);
 
@@ -215,21 +247,15 @@ const GraphsResults = ({ infoMusicList, oldSearch, listSearchRes }) => {
             </select>
           </div>
 
-          {typeGraph === "scatter" ? (
-            <Scatter data={dataScatter} options={options} />
-          ) : (
-            <>
-              {typeGraph === "bar" ? (
-                <>
-                  Work in progress for {typeGraph}
-                  <br />
-                  <Scatter data={dataBar} options={options} />
-                </>
-              ) : (
-                <>Work in progress </>
-              )}
-            </>
-          )}
+        {typeGraph === "scatter" &&
+          <Scatter data={dataScatter} options={options} />
+        }
+        {/* Work in progress for {typeGraph}
+            <br />
+            <Scatter data={dataBar} options={options} /> */}
+        {typeGraph === "bar" &&
+          <Bar data={dataBarTest} options={optionsBarTest} />
+        }
         </>
       }
     </div>
