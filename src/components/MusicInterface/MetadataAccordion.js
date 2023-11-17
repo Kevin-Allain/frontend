@@ -110,7 +110,7 @@ const MetadataAccordion = ({
                 infoMusicList.length === 0 ? ( <AiOutlineLoading className="spin" size={"20px"} /> )
                 : infoMusicList
                     .filter((a) => a.lognumber === recording)
-                    .filter((a) => a["SJA ID"] === track.replace("-T", "_"))
+                    .filter((a) => a["SJA_ID"] === track.replace("-T", "_"))
                     .length === 0 ? (
                   <>
                     <div className="text-left">
@@ -123,7 +123,7 @@ const MetadataAccordion = ({
                     infoMusicList
                       .filter((a) => a.lognumber === recording)
                       .filter(
-                        (a) => a["SJA ID"] === track.replace("-T", "_")
+                        (a) => a["SJA_ID"] === track.replace("-T", "_")
                       )[0]
                   ).map(([key, value]) =>
                     value.length !== 0 &&

@@ -786,7 +786,7 @@ const createWorkflow = (
         console.log("ran get_idContent_sample. res: ",res);
         let trackObj = res.data[0];
         let lognumbers = [trackObj.lognumber];
-        console.log("trackObj info. lognumber",trackObj.lognumber,", SJA ID",trackObj['SJA ID']);
+        console.log("trackObj info. lognumber",trackObj.lognumber,", SJA_ID",trackObj['SJA_ID']);
 
         axios
           .get(`${baseUrl}/getTracksMetadata`, {
@@ -798,8 +798,8 @@ const createWorkflow = (
 
             // should it be an array or object...? E.g. hashmap...
             let arrMetadataToWorkflow = [];
-            trackObj['SJA ID']
-              ? arrMetadataToWorkflow.push(d.data.filter(a => a['SJA ID'] === trackObj['SJA ID'])[0])
+            trackObj['SJA_ID']
+              ? arrMetadataToWorkflow.push(d.data.filter(a => a['SJA_ID'] === trackObj['SJA_ID'])[0])
               : arrMetadataToWorkflow.push(d.data[0]); // I think this is the right approach for BGR
             console.log('arrMetadataToWorkflow: ',arrMetadataToWorkflow);
 
@@ -849,8 +849,8 @@ const createWorkflow = (
           // TODO make a call to load metadata? Or use it stored somewhere prior to the call?
           let arrMetadataToWorkflow = [];
           if(infoMusicList.length>0){arrMetadataToWorkflow=infoMusicList}
-          // trackObj['SJA ID']
-          //   ? arrMetadataToWorkflow.push(d.data.filter(a => a['SJA ID'] === trackObj['SJA ID'])[0])
+          // trackObj['SJA_ID']
+          //   ? arrMetadataToWorkflow.push(d.data.filter(a => a['SJA_ID'] === trackObj['SJA_ID'])[0])
           //   : arrMetadataToWorkflow.push(d.data[0]); // I think this is the right approach for BGR
           console.log("Was that actually pushed? objects: ", objects);
           // replace objects[0].objectId
@@ -920,7 +920,7 @@ const addContentWorkflow = (
         console.log("ran get_idContent_sample. res: ", res);
         let trackObj = res.data[0];
         let lognumbers = [trackObj.lognumber];
-        console.log("trackObj info. lognumber", trackObj.lognumber, ", SJA ID", trackObj['SJA ID']);
+        console.log("trackObj info. lognumber", trackObj.lognumber, ", SJA_ID", trackObj['SJA_ID']);
         axios
           .get(`${baseUrl}/getTracksMetadata`, {
             params: { lognumbers: lognumbers, }
@@ -929,8 +929,8 @@ const addContentWorkflow = (
             console.log("#### Loaded Metadata for workflow. d: ", d);
             // should it be an array or object...? E.g. hashmap...
             let arrMetadataToWorkflow = [];
-            trackObj['SJA ID']
-              ? arrMetadataToWorkflow.push(d.data.filter(a => a['SJA ID'] === trackObj['SJA ID'])[0])
+            trackObj['SJA_ID']
+              ? arrMetadataToWorkflow.push(d.data.filter(a => a['SJA_ID'] === trackObj['SJA_ID'])[0])
               : arrMetadataToWorkflow.push(d.data[0]); // I think this is the right approach for BGR
             console.log('arrMetadataToWorkflow: ', arrMetadataToWorkflow);
             // axios call

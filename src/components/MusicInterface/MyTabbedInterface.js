@@ -58,7 +58,7 @@ const MyTabbedInterface = ({
       let curTrack = curSR.track;
       let trackInfoCode = curTrack.replace('-T', '_')
       if (curTrack.includes('SJA')) {
-        let selecInfo = infoMusicList.filter(a => a['SJA ID'] === trackInfoCode)
+        let selecInfo = infoMusicList.filter(a => a['SJA_ID'] === trackInfoCode)
         trackToTitles[curTrack] = selecInfo[0]['Track Title']
       }
     }

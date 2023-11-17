@@ -293,8 +293,7 @@ const loadDetailsSearchWorkflow = (_id) => {
                 </div>
             </div>
             <div className="workFlowDescription">
-              <u>Description:</u>
-              <br />
+              <u>Description:</u> <br/>
               {selectedWorkflow.description}
             </div>
             {/* <em> {selectedWorkflow.author} | {selectedWorkflow.time} | {selectedWorkflow._id} |{" "} {selectedWorkflow.objects.length} objects </em> */}
@@ -303,12 +302,9 @@ const loadDetailsSearchWorkflow = (_id) => {
                 {selectedWorkflow.objects.map((item, i) => (
                   <div className="workflowObject" key={'workflowObject_' + i}>
                     {/* For testing */}
-                    <u>Object id:</u> {item.objectId} | <u>Object type:</u>{" "} {item.objectType} | <u>Object index:</u> {item.objectIndex} <br />
+                    {/* <u>Object id:</u> {item.objectId} | <u>Object type:</u>{" "} {item.objectType} | <u>Object index:</u> {item.objectIndex} <br /> */}
                     <div className="workflowContentDisplay">
                       <b className='text-white'>Content of the {item.objectType}: </b>
-                      {/* TODO in practice we should make a call to get metadata based on the _id of the workflow item 
-                      * We could do that by doing a call as we define selectedWorkflow
-                      */}
                       {(item.content) ? (
                         <div className="contentItem">
                           <div className="contentWorkflow">
@@ -317,36 +313,56 @@ const loadDetailsSearchWorkflow = (_id) => {
                               Annotation about {item.content[0].type}:{" "}{item.content[0].info}.<br />
                               {item.content[0].annotationInput} - {item.content[0].author} - {item.content[0].time}
                             </>}
+                            {/* TODO But first we need to ensure the ids for comment (and annotation) are working fine! */}
                             {item.objectType === 'comment' && <>
-                              The comment may have specific content loading soon {item.objectId}
-                              <BiWrench />
-                            </>}
-                            {item.objectType === 'track' && <>
-                              The track may have specific content loading soon {item.objectId}
-                              <BiWrench />
-                            </>}
-                            {item.objectType === 'recording' && <>
-                              The recording may have specific content loading soon {item.objectId}
+                              Work in progress to set the display of the comment {item.objectId}.
                               <BiWrench />
                             </>}
                             {item.objectType === 'annotation' && <>
                               Annotation about {item.content[0].type}:{" "}{item.content[0].info}.<br />
                               {item.content[0].annotationInput} - {item.content[0].author} - {item.content[0].time}
                             </>}
+                            {item.objectType === 'track' && <>
+                              {item.content.map(c => (
+                                <>
+                                  {c['(E) Event Name'] ? <>Recording Name: {c['(E) Event Name']}</> : <></>}<br />
+                                  {c['Track Title'] ? <>Track Title: {c['Track Title']}</> : <></>}<br />
+                                  {c['(N) Named Artist(s)'] ? <>Named Artists: {c['(N) Named Artist(s)']}</> : <></>}<br />
+                                  {c['(Y) Date'] ? <>Release Date:
+                                    {c['Release Year'] ? c['Release Year'] : 'xx'}/
+                                    {c['Release Month'] ? c['Release Month'] : 'xx'}/
+                                    {c['Release Day'] ? c['Release Day'] : 'xx'}</>
+                                    : <></>}
+                                  {c['Label'] ? <>Label: {c['Label']}</> : <></>}<br />
+                                  {c['Musicians (instruments)'] ? <>Musicians (Instruments): {c['Musicians (instruments)']}</> : <></>}<br />
+                                </>
+                              ))}
+                              {item.content.length === 0 && <>This item is empty</>}
+                            </>}
+                            {item.objectType === 'recording' && <>
+                              {item.content.map(c => (
+                                <>
+                                  {c['(E) Event Name'] ? <>Recording Name: {c['(E) Event Name']}</> : <></>}<br />
+                                  {c['(N) Named Artist(s)'] ? <>Named Artists: {c['(N) Named Artist(s)']}</> : <></>}<br />
+                                  {c['(Y) Date'] ? <>Release Date:
+                                    {c['Release Year'] ? c['Release Year'] : 'xx'}/
+                                    {c['Release Month'] ? c['Release Month'] : 'xx'}/
+                                    {c['Release Day'] ? c['Release Day'] : 'xx'}</>
+                                    : <></>}
+                                  {c['Label'] ? <>Label: {c['Label']}</> : <></>}<br />
+                                  {c['Musicians (instruments)'] ? <>Musicians (Instruments): {c['Musicians (instruments)']}</> : <></>}<br />
+                                </>
+                              ))}
+                              {item.content.length === 0 && <>This item is empty</>}
+                            </>}
                             {item.objectType === 'search' && <>
                               The search was set with the parameters: <br />
                               <table>
                                 <tr>
-                                  <th>Filter Artist</th>
-                                  <th>Filter Recording</th>
-                                  <th>Filter Track</th>
-                                  <th>Percentage Match</th>
+                                  <th>Filter Artist</th><th>Filter Recording</th><th>Filter Track</th><th>Percentage Match</th>
                                 </tr>
                                 <tr>
-                                  <th>{item.content[0].filterArtist}</th>
-                                  <th>{item.content[0].filterRecording}</th>
-                                  <th>{item.content[0].filterTrack}</th>
-                                  <th>{item.content[0].percMatch}</th>
+                                  <th>{item.content[0].filterArtist}</th><th>{item.content[0].filterRecording}</th><th>{item.content[0].filterTrack}</th><th>{item.content[0].percMatch}</th>
                                 </tr>
                               </table>
                             </>}
@@ -371,7 +387,6 @@ const loadDetailsSearchWorkflow = (_id) => {
                               </div>
                             }
                           </div>
-
                         </div>
                       ) : (
                         <em>No content</em>
