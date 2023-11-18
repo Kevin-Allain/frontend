@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
-import { FaAngleDown, FaAngleUp } from 'react-icons/fa';
+import { FaAngleDown, FaAngleUp } from "react-icons/fa";
 import { BsGraphUp } from "react-icons/bs";
 import * as d3 from "d3";
 import {
@@ -17,207 +17,241 @@ import ToggleSwitch from "../Button/ToggleSwitch";
 import MIDItoNote from "../MusicInterface/MIDItoNote.json";
 import NoteToColor from "../MusicInterface/NoteToColor.json";
 
-const months = [ "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December", ];
-
+const months = [
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
+];
 
 const GraphsResults = ({ infoMusicList, oldSearch, listSearchRes }) => {
-  console.log("GraphsResults - infoMusicList: ",infoMusicList,", oldSearch: ",oldSearch,", listSearchRes: ",listSearchRes);
-  const [showGraphs,setShowGraphs] = useState(false);
-  const handleToggle = () => { setShowGraphs(!showGraphs); };
+  console.log(
+    "GraphsResults - infoMusicList: ",
+    infoMusicList,
+    ", oldSearch: ",
+    oldSearch,
+    ", listSearchRes: ",
+    listSearchRes
+  );
+  const [showGraphs, setShowGraphs] = useState(false);
+  const handleToggle = () => {
+    setShowGraphs(!showGraphs);
+  };
 
   // TODO change later on, we will want to consider the melodies and outputs of melodies as well.
   const dataInput = infoMusicList;
-  ChartJS.register(LinearScale,CategoryScale, PointElement, BarElement, LineElement, Tooltip, Legend);
-  const attributesOptions = [ "Release Year", "Release Month", "Track Title", "Recording", "Artists", ];
+  ChartJS.register(
+    LinearScale,
+    CategoryScale,
+    PointElement,
+    BarElement,
+    LineElement,
+    Tooltip,
+    Legend
+  );
 
-  const [options, setOptions] = useState({
-    scales: { x: { beginAtZero: false }, y: { beginAtZero: false } },
-  });
+  // Shared parameters
   const [typeGraph, setTypeGraph] = useState("scatter");
   const [selectedAxisX, setSelectedAxisX] = useState("Release Year");
   const [selectedAxisY, setSelectedAxisY] = useState("Release Month");
-  const [labels, setLabels] = useState(["Label 1","Label 2", "label 3"]); // TODO set the labels value as the selection is made by user.
+  const attributesOptions = [ "Release Year", "Release Month", "Track Title", "Recording", "Artists", ];
 
-  // ---- BarTest example
+  // ---- Parameters specific to certain graphs
+  // -- Scatter
+    // Assuming dataScatter is calculated based on selectedAxisX, selectedAxisY, and typeGraph
+    const [dataScatter, setDataScatter] = useState({
+      datasets: [
+        {
+          label: `${selectedAxisX} and ${selectedAxisY}`,
+          data: dataInput
+            .map((item, i) =>
+              selectedAxisX !== "Release Year" ||
+              ((selectedAxisX === "Release Year" ||
+                selectedAxisX === "Release Month") &&
+                Number(item[selectedAxisX]) !== 0) ||
+              ((selectedAxisY === "Release Year" ||
+                selectedAxisY === "Release Month") &&
+                Number(item[selectedAxisX]) !== 0)
+                ? {
+                    x: Number(item[selectedAxisX]),
+                    y: Number(item[selectedAxisY]),
+                  }
+                : null
+            )
+            .filter((a) => a)
+            .filter((a) => !isNaN(a.x) && !isNaN(a.y)),
+          backgroundColor: "rgb(255, 99, 132)",
+        },
+      ],
+    });  
+  const [optionsScatter, setOptionsScatter] = useState({ scales: { x: { beginAtZero: false }, y: { beginAtZero: false } }, });
+  // -- BarGraph
   // Sample data
-  const axisXBarTest = ['Category A', 'Category B', 'Category C', 'Category D', 'Category E'];
-  const axisYBarTest = [10, 20, 15, 25, 18];
+  const [axisLabelXBarGraph, setAxisLabelXBarGraph] = useState(["Category A", "Category B", "Category C", "Category D", "Category E", ]);
+  const [axisYBarGraph, setAxisYBarGraph] = useState([10, 20, 15, 25, 18]);
   // Chart data
-  const dataBarTest = {
-    labels: axisXBarTest,
+  const [dataBarGraph, setDataBarGraph] = useState({
+    labels: axisLabelXBarGraph,
     datasets: [
       {
-        label: 'Sample Bar Chart',
-        data: axisYBarTest,
-        backgroundColor: 'rgba(75,192,192,0.2)', // Bar color
-        borderColor: 'rgba(75,192,192,1)', // Border color
+        label: "Sample Bar Chart",
+        data: axisYBarGraph,
+        backgroundColor: "rgba(75,192,192,0.2)", // Bar color
+        borderColor: "rgba(75,192,192,1)", // Border color
         borderWidth: 1, // Border width
       },
     ],
-  };
+  });
   // Chart options
-  const optionsBarTest = {
-    scales: {
-      x: {
-        beginAtZero: true,
-      },
-      y: {
-        beginAtZero: true,
-      },
-    },
-  };
+  const [optionsBarGraph, setOptionsBarGraph] = useState({
+    scales: { x: { beginAtZero: true }, y: { beginAtZero: true } },
+  });
   // ----
 
-
-
   useEffect(() => {
-    // This is called each time there is a call to change selectedAxisX or selectedAxisY 
+    // This is called each time there is a call to change selectedAxisX or selectedAxisY
 
     const updateOptions = () => {
+      if (typeGraph === "scatter") {
+        const minAxisX =
+          selectedAxisX === "Release Month"? 1
+            : selectedAxisX === "Release Year"? Math.min(...infoMusicList.map((a) => Number(a["Release Year"])).filter((a) => a).filter((a) => a !== 0)) - 1
+            : 0;
+        const maxAxisX =
+          selectedAxisX === "Release Month" ? 12
+            : selectedAxisX === "Release Year" ? Math.max(...infoMusicList.map((a) => Number(a["Release Year"])).filter((a) => a).filter((a) => a !== 0)) + 1
+            : 100;
+        const minAxisY =
+          selectedAxisY === "Release Month"? 1
+            : selectedAxisY === "Release Year"? Math.min(...infoMusicList.map((a) => Number(a["Release Year"])).filter((a) => a).filter((a) => a !== 0)) - 1
+            : 0;
+        const maxAxisY =
+          selectedAxisY === "Release Month"? 12
+            : selectedAxisY === "Release Year"? Math.max(...infoMusicList.map((a) => Number(a["Release Year"])).filter((a) => a).filter((a) => a !== 0)) + 1
+            : 100;
 
-      const minAxisX = selectedAxisX === 'Release Month' ? 1
-          : selectedAxisX === 'Release Year'
-          ? (Math.min( ...infoMusicList
-                .map((a) => Number(a['Release Year']))
+        setDataScatter({
+          datasets: [
+            {
+              label: `${selectedAxisX} and ${selectedAxisY}`,
+              data: dataInput
+                .map((item, i) =>
+                  selectedAxisX !== "Release Year" ||
+                  ((selectedAxisX === "Release Year" ||
+                    selectedAxisX === "Release Month") &&
+                    Number(item[selectedAxisX]) !== 0) ||
+                  ((selectedAxisY === "Release Year" ||
+                    selectedAxisY === "Release Month") &&
+                    Number(item[selectedAxisX]) !== 0)
+                    ? {
+                        x: Number(item[selectedAxisX]),
+                        y: Number(item[selectedAxisY]),
+                      }
+                    : null
+                )
                 .filter((a) => a)
-                .filter((a) => a !== 0)
-            )-1)
-          : 0;
-      const maxAxisX = selectedAxisX === 'Release Month' ? 12
-          : selectedAxisX === 'Release Year'
-          ? (Math.max( ...infoMusicList
-                .map((a) => Number(a['Release Year']))
-                .filter((a) => a)
-                .filter((a) => a !== 0)
-            )+1)
-          : 100;
-      const minAxisY = selectedAxisY === 'Release Month' ? 1
-          : selectedAxisY === 'Release Year'
-          ? (Math.min( ...infoMusicList
-                .map((a) => Number(a['Release Year']))
-                .filter((a) => a)
-                .filter((a) => a !== 0)
-            )-1)
-          : 0;
-      const maxAxisY = selectedAxisY === 'Release Month' ? 12
-          : selectedAxisY === 'Release Year'
-          ? (Math.max( ...infoMusicList
-                .map((a) => Number(a['Release Year']))
-                .filter((a) => a)
-                .filter((a) => a !== 0)
-            )+1)
-          : 100;
+                .filter((a) => !isNaN(a.x) && !isNaN(a.y)),
+              backgroundColor: "rgb(255, 99, 132)",
+            },
+          ],
+        });
 
-      if (typeGraph === 'scatter') {
-        setOptions({
+        setOptionsScatter({
           scales: {
             x: {
-              type: 'linear',
-              position: 'bottom',
+              type: "linear",
+              position: "bottom",
               min: minAxisX,
               max: maxAxisX,
               ticks: {
-                callback: function (value) { return Math.round(value); },
+                callback: function (value) {
+                  return Math.round(value);
+                },
               },
             },
             y: {
-              type: 'linear',
-              position: 'left',
+              type: "linear",
+              position: "left",
               min: minAxisY,
               max: maxAxisY,
               ticks: {
-                callback: function (value) { return Math.round(value); },
+                callback: function (value) {
+                  return Math.round(value);
+                },
               },
             },
           },
         });
-      } else if (typeGraph ==='bar'){        
-        setOptions({
-          responsive: true,
-          plugins: {
-            legend: {
-              position: 'top'
+      } else if (typeGraph === "bar") {
+
+        // TODO adapt for this to be the labels to pass, based on selectedAxisX
+        setAxisLabelXBarGraph();
+        // TODO adapt for this to be the data object in the datasets object, based on selectedAxisY
+        setAxisYBarGraph();
+        // TODO set options... somehow
+        // setOptions({ responsive: true, plugins: { legend: { position: 'top' }, title: { display: true, text: 'Bar Chart', }, }, })
+
+        setDataBarGraph({
+          labels: axisLabelXBarGraph,
+          datasets: [
+            {
+              label: "Sample Bar Chart",
+              data: axisYBarGraph,
+              backgroundColor: "rgba(75,192,192,0.2)", // Bar color
+              borderColor: "rgba(75,192,192,1)", // Border color
+              borderWidth: 1, // Border width
             },
-            title: {
-              display: true,
-              text: 'Bar Chart',
-            },
-          },        
+          ],
         })
-      } else { console.log(`Unexpected ${typeGraph}`); }
+
+      } else {
+        console.log(`Unexpected ${typeGraph}`);
+      }
     };
 
     updateOptions();
   }, [selectedAxisX, selectedAxisY, infoMusicList, typeGraph]);
 
-
+  // Set visualization type
   const handleChangeAxisX = useCallback((axis) => {
-    (axis === "Track Title" || axis === "Recording" || axis === "Artists") ?
-      setTypeGraph('bar')
-      : setTypeGraph('scatter');
+    axis === "Track Title" || axis === "Recording" || axis === "Artists"
+      ? setTypeGraph("bar")
+      : setTypeGraph("scatter");
     setSelectedAxisX(axis);
   }, []);
 
   const handleChangeAxisY = useCallback((axis) => {
-    (axis === "Track Title" || axis === "Recording" || axis === "Artists")
-      ? setTypeGraph('bar')
-      : setTypeGraph('scatter');
+    axis === "Track Title" || axis === "Recording" || axis === "Artists"
+      ? setTypeGraph("bar")
+      : setTypeGraph("scatter");
     setSelectedAxisY(axis);
   }, []);
-
-  // Assuming dataScatter is calculated based on selectedAxisX, selectedAxisY, and typeGraph
-  let dataScatter = {
-    datasets: [
-      {
-        label: `${selectedAxisX} and ${selectedAxisY}`,
-        data: dataInput
-          .map((item, i) =>
-            selectedAxisX !== "Release Year" ||
-            ((selectedAxisX === "Release Year" ||
-              selectedAxisX === "Release Month") &&
-              Number(item[selectedAxisX]) !== 0) ||
-            ((selectedAxisY === "Release Year" ||
-              selectedAxisY === "Release Month") &&
-              Number(item[selectedAxisX]) !== 0)
-              ? {
-                  x: Number(item[selectedAxisX]),
-                  y: Number(item[selectedAxisY]),
-                }
-              : null
-          )
-          .filter((a) => a)
-          .filter((a) => !isNaN(a.x) && !isNaN(a.y)),
-        backgroundColor: "rgb(255, 99, 132)",
-      },
-    ],
-  };
-
-  // TODO assess whether this will work... (we might have to consider forcing certain attributes for certain axes to avoid worrying about setting up horizontal or vertical bar charts)
-  let dataBar = {
-    labels,
-    datasets: [
-      {
-        label: "Dataset 1",
-        data: dataInput[selectedAxisY],
-        backgroundColor: "rgba(255, 99, 132, 0.5)",
-      },
-    ],
-  };
 
   return (
     <div className="border-solid border-2 border-[#e5e7eb]">
       {/* <ToggleSwitch checked={showGraphs} onChange={handleToggle} /> */}
-      <div className="metadata-header  icon flex items-center" onClick={handleToggle}>
+      <div
+        className="metadata-header  icon flex items-center"
+        onClick={handleToggle}
+      >
         <BsGraphUp />
         <p className="mx-[0.5rem] my-[0.5rem]">Data Graphs</p>
-          {showGraphs ? (
-            <FaAngleUp className="metadata-icon" />
-          ) : (
-            <FaAngleDown className="metadata-icon" />
-          )}
-        </div>
+        {showGraphs ? (
+          <FaAngleUp className="metadata-icon" />
+        ) : (
+          <FaAngleDown className="metadata-icon" />
+        )}
+      </div>
 
-      { showGraphs &&
+      {showGraphs && (
         <>
           <p>The graph will adapt based on the attributes you select.</p>
           <div>
@@ -247,21 +281,19 @@ const GraphsResults = ({ infoMusicList, oldSearch, listSearchRes }) => {
             </select>
           </div>
 
-        {typeGraph === "scatter" &&
-          <Scatter data={dataScatter} options={options} />
-        }
-        {/* Work in progress for {typeGraph}
+          {typeGraph === "scatter" && (
+            <Scatter data={dataScatter} options={optionsScatter} />
+          )}
+          {/* Work in progress for {typeGraph}
             <br />
             <Scatter data={dataBar} options={options} /> */}
-        {typeGraph === "bar" &&
-          <Bar data={dataBarTest} options={optionsBarTest} />
-        }
+          {typeGraph === "bar" && (
+            <Bar data={dataBarGraph} options={optionsBarGraph} />
+          )}
         </>
-      }
+      )}
     </div>
   );
 };
-
-
 
 export default GraphsResults;
