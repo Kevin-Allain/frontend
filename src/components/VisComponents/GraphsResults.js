@@ -64,6 +64,42 @@ const GraphsResults = ({ infoMusicList, oldSearch, listSearchRes }) => {
   const [selectedAxisY, setSelectedAxisY] = useState("Release Month");
   const attributesOptions = [ "Release Year", "Release Month", "Track Title", "Recording", "Artists", ];
 
+  // Derived parameters (will require making calls to the database)
+  const [numMelodies, setMumMelodies] = useState(listSearchRes.length);
+  const [percMatchesCount, setPercMatchesCount] = useState(listSearchRes.reduce((acc, obj) => {
+    const value = obj.distCalc;
+    if (acc[value]) { acc[value]++; } else { acc[value] = 1; }
+    return acc;
+  }, {}));
+  const [lognumbersCount, setLognumbersCount] = useState(listSearchRes.reduce((acc, obj) => {
+    const value = obj.lognumber;
+    if (acc[value]) { acc[value]++; } else { acc[value] = 1; }
+    return acc;
+  }, {}))
+  const [tracksCount, setTracksCount] = useState(listSearchRes.reduce((acc, obj) => {
+    const value = obj.track;
+    if (acc[value]) { acc[value]++; } else { acc[value] = 1; }
+    return acc;
+  }, {}));
+
+  // Create a hashmap
+  const resultMap = {};
+  // Iterate over InfoMusicList
+  infoMusicList.forEach((infoObj) => {
+    const { SJA_ID } = infoObj;
+    if (SJA_ID) {
+      // Find the corresponding object in listSearchRes
+      const matchedObject = listSearchRes.find((searchObj) => searchObj.track.replace(/-T/g, '_') === SJA_ID);
+      // If a match is found, add it to the hashmap
+      if (matchedObject) { resultMap[SJA_ID] = matchedObject; }
+    }
+  });
+  console.log("resultMap: ",resultMap);
+
+
+
+  console.log("numMelodies: ",numMelodies,", percMatchesCount: ",percMatchesCount,", lognumbersCount: ",lognumbersCount,", tracksCount: ",tracksCount);
+
   // ---- Parameters specific to certain graphs
   // -- Scatter
     // Assuming dataScatter is calculated based on selectedAxisX, selectedAxisY, and typeGraph
