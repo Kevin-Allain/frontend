@@ -17,30 +17,10 @@ import ToggleSwitch from "../Button/ToggleSwitch";
 import MIDItoNote from "../MusicInterface/MIDItoNote.json";
 import NoteToColor from "../MusicInterface/NoteToColor.json";
 
-const months = [
-  "January",
-  "February",
-  "March",
-  "April",
-  "May",
-  "June",
-  "July",
-  "August",
-  "September",
-  "October",
-  "November",
-  "December",
-];
+const months = ["January","February","March","April","May","June","July","August","September","October","November","December",];
 
 const GraphsResults = ({ infoMusicList, oldSearch, listSearchRes }) => {
-  console.log(
-    "GraphsResults - infoMusicList: ",
-    infoMusicList,
-    ", oldSearch: ",
-    oldSearch,
-    ", listSearchRes: ",
-    listSearchRes
-  );
+  console.log( "GraphsResults - infoMusicList: ", infoMusicList, ", oldSearch: ", oldSearch, ", listSearchRes: ", listSearchRes );
   const [showGraphs, setShowGraphs] = useState(false);
   const handleToggle = () => {
     setShowGraphs(!showGraphs);
@@ -64,7 +44,7 @@ const GraphsResults = ({ infoMusicList, oldSearch, listSearchRes }) => {
   const [selectedAxisY, setSelectedAxisY] = useState("Release Month");
   const attributesOptions = [ "Release Year", "Release Month", "Track Title", "Recording", "Artists", ];
 
-  // Derived parameters (will require making calls to the database)
+  // Derived parameters (might require making calls to the database)
   const [numMelodies, setMumMelodies] = useState(listSearchRes.length);
   const [percMatchesCount, setPercMatchesCount] = useState(listSearchRes.reduce((acc, obj) => {
     const value = obj.distCalc;
@@ -82,23 +62,35 @@ const GraphsResults = ({ infoMusicList, oldSearch, listSearchRes }) => {
     return acc;
   }, {}));
 
-  // Create a hashmap
-  const resultMap = {};
-  // Iterate over InfoMusicList
-  infoMusicList.forEach((infoObj) => {
-    const { SJA_ID } = infoObj;
-    if (SJA_ID) {
-      // Find the corresponding object in listSearchRes
-      const matchedObject = listSearchRes.find((searchObj) => searchObj.track.replace(/-T/g, '_') === SJA_ID);
-      // If a match is found, add it to the hashmap
-      if (matchedObject) { resultMap[SJA_ID] = matchedObject; }
-    }
-  });
-  console.log("resultMap: ",resultMap);
+  const mapRecordingToName = {};
+  [...new Set(listSearchRes.map(element =>
+    element.lognumber
+  ))].map(b => mapRecordingToName[b] =
+    infoMusicList.filter(a => a.lognumber === b)[0]
+      ? infoMusicList.filter(a => a.lognumber === b)[0]['(E) Event Name']
+      : null
+  )
+  const mapTrackToName = {};
+  [...new Set(listSearchRes.map(element =>
+    element.track.replace(/-T/g, '_')
+  ))].map(b => mapTrackToName[b] =
+    infoMusicList.filter(a => a['SJA_ID'] === b)[0]
+      ? infoMusicList.filter(a => a['SJA_ID'] === b)[0]['Track Title']
+      : null
+  )
 
+  const recordingsCount= {}
+  for ( let i in mapRecordingToName){
+    recordingsCount[mapRecordingToName[i]] = lognumbersCount[i]
+  }
+  console.log("recordingsCount: ",recordingsCount);
+  const trackNamesCount= {};
+  for ( let i in mapTrackToName){
+    trackNamesCount[mapTrackToName[i]] = tracksCount[i]
+  }
+  console.log("trackNamesCount: ",trackNamesCount);  
 
-
-  console.log("numMelodies: ",numMelodies,", percMatchesCount: ",percMatchesCount,", lognumbersCount: ",lognumbersCount,", tracksCount: ",tracksCount);
+  console.log("numMelodies: ",numMelodies,", percMatchesCount: ",percMatchesCount,", lognumbersCount: ",lognumbersCount,", tracksCount: ",tracksCount,", mapRecordingToName: ",mapRecordingToName,", mapTrackToName: ",mapTrackToName);
 
   // ---- Parameters specific to certain graphs
   // -- Scatter
