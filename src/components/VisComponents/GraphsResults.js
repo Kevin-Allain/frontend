@@ -125,21 +125,26 @@ const GraphsResults = ({ infoMusicList, oldSearch, listSearchRes }) => {
   const [optionsScatter, setOptionsScatter] = useState({ scales: { x: { beginAtZero: false }, y: { beginAtZero: false } }, });
   // -- BarGraph
   // Sample data
-  const [axisLabelXBarGraph, setAxisLabelXBarGraph] = useState(["Category A", "Category B", "Category C", "Category D", "Category E", ]);
-  const [axisYBarGraph, setAxisYBarGraph] = useState([10, 20, 15, 25, 18]);
+  // const [axisLabelXBarGraph, setAxisLabelXBarGraph] = useState(["Category A", "Category B", "Category C", "Category D", "Category E", ]);
+  // const [axisYBarGraph, setAxisYBarGraph] = useState([10, 20, 15, 25, 18]);
+  const axisLabelXBarGraphRef = useRef([]);
+  const axisYBarGraphRef = useRef([]);
+  
   // Chart data
-  const [dataBarGraph, setDataBarGraph] = useState({
-    labels: axisLabelXBarGraph,
+  // const[dataBarGraph, setDataBarGraph] = useState({})
+  // const[dataBarGraph, setDataBarGraph] = useState({    
+  //   labels: axisLabelXBarGraphRef,
+  //   datasets: [
+  //     { label: "Sample Bar Chart", data: axisYBarGraphRef, backgroundColor: "rgba(75,192,192,0.2)", borderColor: "rgba(75,192,192,1)", borderWidth: 1, },
+  //   ],
+  // });
+  const dataBarGraphRef = useRef({
+    labels: axisLabelXBarGraphRef,
     datasets: [
-      {
-        label: "Sample Bar Chart",
-        data: axisYBarGraph,
-        backgroundColor: "rgba(75,192,192,0.2)", // Bar color
-        borderColor: "rgba(75,192,192,1)", // Border color
-        borderWidth: 1, // Border width
-      },
+      { label: "Sample Bar Chart", data: axisYBarGraphRef, backgroundColor: "rgba(75,192,192,0.2)", borderColor: "rgba(75,192,192,1)", borderWidth: 1, },
     ],
-  });
+  })
+
   // Chart options
   const [optionsBarGraph, setOptionsBarGraph] = useState({
     scales: { x: { beginAtZero: true }, y: { beginAtZero: true } },
@@ -148,7 +153,7 @@ const GraphsResults = ({ infoMusicList, oldSearch, listSearchRes }) => {
 
   useEffect(() => {
     // This is called each time there is a call to change selectedAttributeMix or selectedAxisY
-    console.log("dataBarGraph: ",dataBarGraph,", axisLabelXBarGraph: ",axisLabelXBarGraph,", axisYBarGraph: ",axisYBarGraph);
+    console.log("dataBarGraphRef: ",dataBarGraphRef,", axisLabelXBarGraphRef: ",axisLabelXBarGraphRef,", axisYBarGraphRef: ",axisYBarGraphRef);
 
     const updateOptions = () => {
       if (typeGraph === "scatter") {
@@ -223,37 +228,64 @@ const GraphsResults = ({ infoMusicList, oldSearch, listSearchRes }) => {
           },
         });
       } else if (typeGraph === "bar") {
+        console.log("Updating with typeGraph bar. selectedAttributeMix: ",selectedAttributeMix,", axisLabelXBarGraphRef: ",axisLabelXBarGraphRef);
 
-        // TODO adapt for this to be the labels to pass, based on selectedAttributeMix
+        // Destroy the existing chart before creating a new one
+        if (dataBarGraphRef.current) {
+          dataBarGraphRef.current.destroy();
+        }
 
-        if (selectedAttributeMix === "Number of results per recording") { setAxisLabelXBarGraph(Object.keys(recordingsCount)) }
-        if (selectedAttributeMix === "Number of results per track") { setAxisLabelXBarGraph(Object.keys(trackNamesCount)) }
-        // TODO adapt for this to be the data object in the datasets object, based on selectedAxisY        
-        if (selectedAttributeMix === "Number of results per recording") { setAxisYBarGraph(Object.values(recordingsCount)) }
-        if (selectedAttributeMix === "Number of results per track") { setAxisYBarGraph(Object.values(trackNamesCount)) }
+        // Work in progrress: adapt for this to be the labels to pass, based on selectedAttributeMix
+        // if (selectedAttributeMix === "Number of results per recording") {
+        //   setAxisLabelXBarGraph((prevLabels) => { const newLabels = Object.keys(recordingsCount); return newLabels; });
+        // }
+        // if (selectedAttributeMix === "Number of results per track") { setAxisLabelXBarGraph(Object.keys(trackNamesCount)) }
+        if (selectedAttributeMix === "Number of results per recording") { axisLabelXBarGraphRef.current = Object.keys(recordingsCount); }
+        if (selectedAttributeMix === "Number of results per track") { axisLabelXBarGraphRef.current = Object.keys(trackNamesCount); }
 
-        // TODO set options... somehow
-        // setOptions({ responsive: true, plugins: { legend: { position: 'top' }, title: { display: true, text: 'Bar Chart', }, }, })
+        // Work in progrress: adapt for this to be the data object in the datasets object, based on selectedAxisY        
+        // if (selectedAttributeMix === "Number of results per track") { setAxisYBarGraph(Object.values(trackNamesCount)) }
+        // if (selectedAttributeMix === "Number of results per recording") {
+        //   setAxisYBarGraph((prevData) => { const newData = Object.values(recordingsCount); return newData; });
+        // }
+        if (selectedAttributeMix === "Number of results per recording") { axisYBarGraphRef.current = Object.values(recordingsCount); }
+        if (selectedAttributeMix === "Number of results per track") { axisYBarGraphRef.current = Object.values(trackNamesCount); }
 
-        setDataBarGraph({
-          labels: axisLabelXBarGraph,
+        console.log("Update made. axisLabelXBarGraphRef: ",axisLabelXBarGraphRef,". Also axisLabelXBarGraphRef.current.indexOf: ",axisLabelXBarGraphRef.current.indexOf,", typeof axisLabelXBarGraphRef.current[0]: ",typeof axisLabelXBarGraphRef.current[0]);
+
+        // // Create a new bar chart
+        // const ctx = canvasRef.current.getContext("2d");
+        // barChartRef.current = new Chart(ctx, {
+        //   type: "bar",
+        //   data: dataBarGraphRef.current,
+        //   options: optionsBarGraphRef.current,
+        // });
+
+        dataBarGraphRef.current=({
+          labels: axisLabelXBarGraphRef.current,
           datasets: [
             {
               label: selectedAttributeMix,
-              data: axisYBarGraph,
-              backgroundColor: "rgba(75,192,192,0.2)", // Bar color
-              borderColor: "rgba(75,192,192,1)", // Border color
+              data: axisYBarGraphRef.current,
+              backgroundColor: "rgba(75,192,192,0.2)", 
+              borderColor: "rgba(75,192,192,1)",
               borderWidth: 1,
             },
           ],
         })
-
       } else {
         console.log(`Unexpected ${typeGraph}`);
       }
     };
 
     updateOptions();
+
+    // Cleanup: Destroy the chart when the component is unmounted
+    return () => {
+      if (dataBarGraphRef.current) {
+        dataBarGraphRef.current.destroy();
+      }
+    };
   }, [selectedAttributeMix, selectedAxisY, infoMusicList, typeGraph]);
 
   // Set visualization type
@@ -309,7 +341,7 @@ const GraphsResults = ({ infoMusicList, oldSearch, listSearchRes }) => {
             <br />
             <Scatter data={dataBar} options={options} /> */}
           {typeGraph === "bar" && (
-            <Bar data={dataBarGraph} options={optionsBarGraph} />
+            <Bar data={dataBarGraphRef.current} options={optionsBarGraph} />
           )}
         </>
       )}
