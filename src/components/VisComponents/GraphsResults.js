@@ -282,7 +282,7 @@ const GraphsResults = ({ infoMusicList, oldSearch, listSearchRes }) => {
           {/* {typeGraph === "scatter" && ( <Scatter data={dataScatter} options={optionsScatter} /> )} */}
           {/* {typeGraph === "bar" && ( <Bar data={dataBarGraph.current} options={optionsBarGraph} /> )} */}
           
-          {typeGraph ==="bar" && (<BarChart data={axisYBarGraph} labels={axisLabelXBarGraph} />)}
+          {typeGraph ==="bar" && (<BarChart data={axisYBarGraph} labels={axisLabelXBarGraph} title={selectedAttributeMix} />)}
         </>
       )}
     </div>

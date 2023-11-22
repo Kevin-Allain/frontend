@@ -47,36 +47,89 @@
 
 // export default BarChart;
 
+// import React, { useEffect, useState } from "react";
+// import { Bar } from "react-chartjs-2";
+
+
+// const BarChart = ({ data, labels, title}) => {
+//     // test parameters
+//     const [axisLabelXBarGraph, setAxisLabelXBarGraph] = useState(["Category A", "Category B", "Category C", "Category D", "Category E", ]);
+//     const [axisYBarGraph, setAxisYBarGraph] = useState([10, 20, 15, 25, 18]);
+//     const[dataBarGraph, setDataBarGraph] = useState({    
+//       labels: axisLabelXBarGraph,
+//       datasets: [
+//         { label: title, data: axisYBarGraph, backgroundColor: "rgba(75,192,192,0.2)", borderColor: "rgba(75,192,192,1)", borderWidth: 1, },
+//       ],
+//     });
+    
+//     console.log("-- BarChart - data: ", data, ", labels: ", labels);
+//     const [chartData, setChartData] = useState({
+//         labels: labels,
+//         datasets: [
+//             {
+//                 label: title,
+//                 data: data,
+//                 backgroundColor:"rgba(255, 99, 132, 0.2)",
+//                 borderColor: "rgba(255, 99, 132, 1)",
+//                 borderWidth: 1,
+//             },
+//         ],
+//     });
+
+//     useEffect(() => {
+//         console.log("-- BarChart useEffect - data: ",data,", labels: ",labels,", title: ",title);
+//         setChartData((prevData) => ({
+//             ...prevData,
+//             labels: [labels],
+//             datasets: [
+//                 {
+//                     ...prevData.datasets[0],
+//                     data: data,
+//                     label:title,
+//                 },
+//             ],
+//         }));
+//     }, [data, labels, title]);
+
+//     // return <Bar data={chartData} />;
+//     return <Bar data={dataBarGraph} />
+// };
+
+// export default BarChart;
+
+
 
 import React, { useEffect, useState } from "react";
 import { Bar } from "react-chartjs-2";
 
-const BarChart = ({ data, labels }) => {
+const BarChart = ({ data, labels, title }) => {
   const [chartData, setChartData] = useState({
-    labels: [],
+    labels: labels,
     datasets: [
       {
-        label: "Bar Chart",
-        data: [],
-        backgroundColor: Array(data.length).fill("rgba(255, 99, 132, 0.2)"),
-        borderColor: Array(data.length).fill("rgba(255, 99, 132, 1)"),
+        label: title,
+        data: data,
+        backgroundColor: "rgba(255, 99, 132, 0.2)",
+        borderColor: "rgba(255, 99, 132, 1)",
         borderWidth: 1,
       },
     ],
   });
 
   useEffect(() => {
+    // console.log("useEffect BarChart. ",{data,labels,title});
     setChartData((prevData) => ({
       ...prevData,
-      labels: [labels],
+      labels: labels,
       datasets: [
         {
           ...prevData.datasets[0],
           data: data,
+          label: title,
         },
       ],
     }));
-  }, [data, labels]);
+  }, [data, labels, title]);
 
   return <Bar data={chartData} />;
 };
