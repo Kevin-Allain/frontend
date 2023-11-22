@@ -20,12 +20,11 @@ import NoteToColor from "../MusicInterface/NoteToColor.json";
 const months = ["January","February","March","April","May","June","July","August","September","October","November","December",];
 
 const GraphsResults = ({ infoMusicList, oldSearch, listSearchRes }) => {
-  console.log( "GraphsResults - infoMusicList: ", infoMusicList, ", oldSearch: ", oldSearch, ", listSearchRes: ", listSearchRes );
+  console.log("GraphsResults - infoMusicList: ", infoMusicList, ", oldSearch: ", oldSearch, ", listSearchRes: ", listSearchRes);
   const [showGraphs, setShowGraphs] = useState(false);
   const handleToggle = () => {
     setShowGraphs(!showGraphs);
   };
-
   // TODO change later on, we will want to consider the melodies and outputs of melodies as well.
   const dataInput = infoMusicList;
   ChartJS.register(
@@ -37,6 +36,73 @@ const GraphsResults = ({ infoMusicList, oldSearch, listSearchRes }) => {
     Tooltip,
     Legend
   );
+
+
+  // ---- Using a reference example
+  // Inspiration with useRef
+  // https://codesandbox.io/s/example-chartjs-and-useref-wlq78?file=/src/Components/ExampleChart.jsx:209-229
+  const chartRef = useRef(null);
+  const [myChart, setMyChart] = useState(null);
+  const labelsChart = ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"];
+  const dataChart = [1,2,3,4,5,6];
+  useEffect(() => {
+    if (!chartRef) return;
+    // const [labelsChart, setLabelsChart] = useState(["Red", "Blue", "Yellow", "Green", "Purple", "Orange"]);    
+    // const [dataChart, setDataChart] = useState([1,2,3,4,5,6]);
+
+    const ctx = chartRef.current.getContext("2d");
+    const myChart = new ChartJS(ctx, {
+      type: "bar",
+      data: {
+        labels: labelsChart,
+        datasets: [
+          {
+            label: "Label chart",
+            data: dataChart,
+            backgroundColor: [
+              "rgba(255, 99, 132, 0.2)",
+              "rgba(54, 162, 235, 0.2)",
+              "rgba(255, 206, 86, 0.2)",
+              "rgba(75, 192, 192, 0.2)",
+              "rgba(153, 102, 255, 0.2)",
+              "rgba(255, 159, 64, 0.2)"
+            ],
+            borderColor: [
+              "rgba(255, 99, 132, 1)",
+              "rgba(54, 162, 235, 1)",
+              "rgba(255, 206, 86, 1)",
+              "rgba(75, 192, 192, 1)",
+              "rgba(153, 102, 255, 1)",
+              "rgba(255, 159, 64, 1)"
+            ],
+            borderWidth: 1
+          }
+        ]
+      },
+      options: {
+        scales: {
+          yAxes: [
+            {
+              ticks: {
+                beginAtZero: true
+              }
+            }
+          ]
+        }
+      }
+    });
+    setMyChart(myChart);
+  }, [chartRef]);
+
+  useEffect(() => {
+    if (!myChart) return;
+    myChart.data.datasets[0].data = dataChart;
+    myChart.update();
+  }, [dataChart, myChart]);
+
+  return <canvas ref={chartRef} id="myChart" width="400" height="400" />;
+// ----
+
 
   // Shared parameters
   // TODO we should probably set the attribute combinations in one array directly
@@ -231,9 +297,7 @@ const GraphsResults = ({ infoMusicList, oldSearch, listSearchRes }) => {
         console.log("Updating with typeGraph bar. selectedAttributeMix: ",selectedAttributeMix,", axisLabelXBarGraphRef: ",axisLabelXBarGraphRef);
 
         // Destroy the existing chart before creating a new one
-        if (dataBarGraphRef.current) {
-          dataBarGraphRef.current.destroy();
-        }
+        if (dataBarGraphRef.current) { dataBarGraphRef.current.destroy(); }
 
         // Work in progrress: adapt for this to be the labels to pass, based on selectedAttributeMix
         // if (selectedAttributeMix === "Number of results per recording") {
