@@ -35,8 +35,8 @@ const GraphsResults = ({ infoMusicList, oldSearch, listSearchRes }) => {
 
   // Shared parameters
   // TODO we should probably set the attribute combinations in one array directly
-  const [typeGraph, setTypeGraph] = useState("scatter");
-  const [selectedAttributeMix, setSelectedAttributeMix] = useState("Release Year");
+  const [typeGraph, setTypeGraph] = useState("bar");
+  const [selectedAttributeMix, setSelectedAttributeMix] = useState("Number of results per recording");
   const [selectedAxisY, setSelectedAxisY] = useState("Release Month");
   const attributesOptions = ["Release Year", "Release Month", "Track Title", "Recording", "Artists"];
   // attributeMix can relate to a single attribute. What matters is we set the selection for the axes
@@ -239,8 +239,7 @@ const GraphsResults = ({ infoMusicList, oldSearch, listSearchRes }) => {
         // // Create a new bar chart
         // const ctx = canvasRef.current.getContext("2d");
         // barChartRef.current = new Chart(ctx, { type: "bar", data: dataBarGraphRef.current, options: optionsBarGraphRef.current,  });
-
-        dataBarGraph = ({
+        setDataBarGraph({
           labels: axisLabelXBarGraph.current,
           datasets: [{ label: selectedAttributeMix, data: axisYBarGraph, backgroundColor: "rgba(75,192,192,0.2)", borderColor: "rgba(75,192,192,1)", borderWidth: 1 }],
         })
@@ -250,60 +249,39 @@ const GraphsResults = ({ infoMusicList, oldSearch, listSearchRes }) => {
     };
 
     updateOptions();
-
-    // Cleanup: Destroy the chart when the component is unmounted
-    // return () => {
-    //   if (dataBarGraphRef.current) {
-    //     dataBarGraphRef.current.destroy();
-    //   }
-    // };
   }, [selectedAttributeMix, selectedAxisY, infoMusicList, typeGraph]);
 
   // Set visualization type
-  const handleChangeSelection = ((value) => {
+  const handleChangeSelection = (value) => {
     value === "Number of results per recording"
       || value === "Number of results per track"
       || value === "Number of occurences per melody"
       ? setTypeGraph("bar")
       : setTypeGraph("scatter");
     setSelectedAttributeMix(value);
-  }, []);
-
-  // const handleChangeAxisY = useCallback((axis) => {axis === "Track Title" || axis === "Recording" || axis === "Artists" ? setTypeGraph("bar") : setTypeGraph("scatter"); setSelectedAxisY(axis); }, []);
+  };
 
   return (
     <div className="border-solid border-2 border-[#e5e7eb]">
-      {/* <ToggleSwitch checked={showGraphs} onChange={handleToggle} /> */}
-      <div
-        className="metadata-header  icon flex items-center"
-        onClick={handleToggle}
-      >
+      <div className="metadata-header  icon flex items-center" onClick={handleToggle} >
         <BsGraphUp />
         <p className="mx-[0.5rem] my-[0.5rem]">Data Graphs</p>
-        {showGraphs ? (
-          <FaAngleUp className="metadata-icon" />
-        ) : (
-          <FaAngleDown className="metadata-icon" />
-        )}
+        {showGraphs ? ( <FaAngleUp className="metadata-icon" /> ) : ( <FaAngleDown className="metadata-icon" /> )}
       </div>
       {showGraphs && (
         <>
           <p>The graph will adapt based on the attributes you select.</p>
           <div>
             <label>Information selection</label>
-            <select
-              onChange={(e) => handleChangeSelection(e.target.value)}
-              value={selectedAttributeMix}
-            >
-              {attributeMix.map((option) => (
-                <option key={option} value={option}> {option} </option>
-              ))}
+            <select onChange={(e) => handleChangeSelection(e.target.value)} value={selectedAttributeMix} >
+              {attributeMix.map((option) => ( <option key={option} value={option}> {option} </option> ))}
             </select>
           </div>
           {/* <div> <label>Axis Y </label> <select onChange={(e) => handleChangeAxisY(e.target.value)} value={selectedAxisY} > {attributesOptions.map((option) => ( <option key={option} value={option}> {option} </option> ))} </select> </div> */}
 
           {/* {typeGraph === "scatter" && ( <Scatter data={dataScatter} options={optionsScatter} /> )} */}
           {/* {typeGraph === "bar" && ( <Bar data={dataBarGraph.current} options={optionsBarGraph} /> )} */}
+          
           {typeGraph ==="bar" && (<BarChart data={axisYBarGraph} labels={axisLabelXBarGraph} />)}
         </>
       )}
