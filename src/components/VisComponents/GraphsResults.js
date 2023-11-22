@@ -3,106 +3,35 @@ import { FaAngleDown, FaAngleUp } from "react-icons/fa";
 import { BsGraphUp } from "react-icons/bs";
 import * as d3 from "d3";
 import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  BarElement,
-  LineElement,
-  Tooltip,
-  Legend,
+  Chart as ChartJS, CategoryScale, LinearScale, PointElement, BarElement, LineElement, Tooltip, Legend,
 } from "chart.js";
 import { Scatter, Bar } from "react-chartjs-2";
 import ToggleSwitch from "../Button/ToggleSwitch";
 import MIDItoNote from "../MusicInterface/MIDItoNote.json";
 import NoteToColor from "../MusicInterface/NoteToColor.json";
+import BarChart from "./BarChart";
 
 const months = ["January","February","March","April","May","June","July","August","September","October","November","December",];
 
 const GraphsResults = ({ infoMusicList, oldSearch, listSearchRes }) => {
   console.log("GraphsResults - infoMusicList: ", infoMusicList, ", oldSearch: ", oldSearch, ", listSearchRes: ", listSearchRes);
   const [showGraphs, setShowGraphs] = useState(false);
-  const handleToggle = () => {
-    setShowGraphs(!showGraphs);
-  };
+  const handleToggle = () => { setShowGraphs(!showGraphs); };
   // TODO change later on, we will want to consider the melodies and outputs of melodies as well.
   const dataInput = infoMusicList;
   ChartJS.register(
-    LinearScale,
-    CategoryScale,
-    PointElement,
-    BarElement,
-    LineElement,
-    Tooltip,
-    Legend
+    LinearScale, CategoryScale, PointElement, BarElement, LineElement, Tooltip, Legend
   );
 
 
   // ---- Using a reference example
   // Inspiration with useRef
   // https://codesandbox.io/s/example-chartjs-and-useref-wlq78?file=/src/Components/ExampleChart.jsx:209-229
-  const chartRef = useRef(null);
-  const [myChart, setMyChart] = useState(null);
-  const labelsChart = ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"];
-  const dataChart = [1,2,3,4,5,6];
-  useEffect(() => {
-    if (!chartRef) return;
-    // const [labelsChart, setLabelsChart] = useState(["Red", "Blue", "Yellow", "Green", "Purple", "Orange"]);    
-    // const [dataChart, setDataChart] = useState([1,2,3,4,5,6]);
+  // We should: Set the selection of attributeMix in this component.
+  // Then: pass the data to components that will have the graph drawn.
+  // TODO create components that are inspired by link for drawing the graph. The data can be tracked with useState.
 
-    const ctx = chartRef.current.getContext("2d");
-    const myChart = new ChartJS(ctx, {
-      type: "bar",
-      data: {
-        labels: labelsChart,
-        datasets: [
-          {
-            label: "Label chart",
-            data: dataChart,
-            backgroundColor: [
-              "rgba(255, 99, 132, 0.2)",
-              "rgba(54, 162, 235, 0.2)",
-              "rgba(255, 206, 86, 0.2)",
-              "rgba(75, 192, 192, 0.2)",
-              "rgba(153, 102, 255, 0.2)",
-              "rgba(255, 159, 64, 0.2)"
-            ],
-            borderColor: [
-              "rgba(255, 99, 132, 1)",
-              "rgba(54, 162, 235, 1)",
-              "rgba(255, 206, 86, 1)",
-              "rgba(75, 192, 192, 1)",
-              "rgba(153, 102, 255, 1)",
-              "rgba(255, 159, 64, 1)"
-            ],
-            borderWidth: 1
-          }
-        ]
-      },
-      options: {
-        scales: {
-          yAxes: [
-            {
-              ticks: {
-                beginAtZero: true
-              }
-            }
-          ]
-        }
-      }
-    });
-    setMyChart(myChart);
-  }, [chartRef]);
-
-  useEffect(() => {
-    if (!myChart) return;
-    myChart.data.datasets[0].data = dataChart;
-    myChart.update();
-  }, [dataChart, myChart]);
-
-  return <canvas ref={chartRef} id="myChart" width="400" height="400" />;
-// ----
-
+  // Call it after data generation
 
   // Shared parameters
   // TODO we should probably set the attribute combinations in one array directly
@@ -111,12 +40,7 @@ const GraphsResults = ({ infoMusicList, oldSearch, listSearchRes }) => {
   const [selectedAxisY, setSelectedAxisY] = useState("Release Month");
   const attributesOptions = ["Release Year", "Release Month", "Track Title", "Recording", "Artists"];
   // attributeMix can relate to a single attribute. What matters is we set the selection for the axes
-  const attributeMix = [
-    "Recording dates",
-    "Number of results per recording",
-    "Number of results per track",
-    "Number of occurences per melody"
-  ];
+  const attributeMix = [ "Recording dates", "Number of results per recording", "Number of results per track", "Number of occurences per melody" ];
 
   // Derived parameters (might require making calls to the database)
   const [numMelodies, setMumMelodies] = useState(listSearchRes.length);
@@ -137,7 +61,6 @@ const GraphsResults = ({ infoMusicList, oldSearch, listSearchRes }) => {
   }, {}));
   const [uniqueMelodiesStr, setUniqueMelodiesStr] = useState([...new Set(listSearchRes.map(a => a.arrNotes.join('-')))])
   
-
   const mapRecordingToName = {};
   [...new Set(listSearchRes.map(element => element.lognumber))]
     .map(b => mapRecordingToName[b] =
@@ -191,25 +114,23 @@ const GraphsResults = ({ infoMusicList, oldSearch, listSearchRes }) => {
   const [optionsScatter, setOptionsScatter] = useState({ scales: { x: { beginAtZero: false }, y: { beginAtZero: false } }, });
   // -- BarGraph
   // Sample data
-  // const [axisLabelXBarGraph, setAxisLabelXBarGraph] = useState(["Category A", "Category B", "Category C", "Category D", "Category E", ]);
-  // const [axisYBarGraph, setAxisYBarGraph] = useState([10, 20, 15, 25, 18]);
-  const axisLabelXBarGraphRef = useRef([]);
-  const axisYBarGraphRef = useRef([]);
+  const [axisLabelXBarGraph, setAxisLabelXBarGraph] = useState(["Category A", "Category B", "Category C", "Category D", "Category E", ]);
+  const [axisYBarGraph, setAxisYBarGraph] = useState([10, 20, 15, 25, 18]);
+  // const axisLabelXBarGraphRef = useRef([]);
+  // const axisYBarGraphRef = useRef([]);
   
   // Chart data
   // const[dataBarGraph, setDataBarGraph] = useState({})
-  // const[dataBarGraph, setDataBarGraph] = useState({    
-  //   labels: axisLabelXBarGraphRef,
-  //   datasets: [
-  //     { label: "Sample Bar Chart", data: axisYBarGraphRef, backgroundColor: "rgba(75,192,192,0.2)", borderColor: "rgba(75,192,192,1)", borderWidth: 1, },
-  //   ],
-  // });
-  const dataBarGraphRef = useRef({
-    labels: axisLabelXBarGraphRef,
+  const[dataBarGraph, setDataBarGraph] = useState({    
+    labels: axisLabelXBarGraph,
     datasets: [
-      { label: "Sample Bar Chart", data: axisYBarGraphRef, backgroundColor: "rgba(75,192,192,0.2)", borderColor: "rgba(75,192,192,1)", borderWidth: 1, },
+      { label: "Sample Bar Chart", data: axisYBarGraph, backgroundColor: "rgba(75,192,192,0.2)", borderColor: "rgba(75,192,192,1)", borderWidth: 1, },
     ],
-  })
+  });
+  // const dataBarGraphRef = useRef({
+  //   labels: axisLabelXBarGraphRef,
+  //   datasets: [ { label: "Sample Bar Chart", data: axisYBarGraphRef, backgroundColor: "rgba(75,192,192,0.2)", borderColor: "rgba(75,192,192,1)", borderWidth: 1, }, ],
+  // })
 
   // Chart options
   const [optionsBarGraph, setOptionsBarGraph] = useState({
@@ -219,7 +140,7 @@ const GraphsResults = ({ infoMusicList, oldSearch, listSearchRes }) => {
 
   useEffect(() => {
     // This is called each time there is a call to change selectedAttributeMix or selectedAxisY
-    console.log("dataBarGraphRef: ",dataBarGraphRef,", axisLabelXBarGraphRef: ",axisLabelXBarGraphRef,", axisYBarGraphRef: ",axisYBarGraphRef);
+    console.log("dataBarGraph: ",dataBarGraph,", axisLabelXBarGraph: ",axisLabelXBarGraph,", axisYBarGraph: ",axisYBarGraph);
 
     const updateOptions = () => {
       if (typeGraph === "scatter") {
@@ -294,48 +215,34 @@ const GraphsResults = ({ infoMusicList, oldSearch, listSearchRes }) => {
           },
         });
       } else if (typeGraph === "bar") {
-        console.log("Updating with typeGraph bar. selectedAttributeMix: ",selectedAttributeMix,", axisLabelXBarGraphRef: ",axisLabelXBarGraphRef);
+        console.log("Updating with typeGraph bar. selectedAttributeMix: ",selectedAttributeMix,", axisLabelXBarGraph: ",axisLabelXBarGraph);
 
         // Destroy the existing chart before creating a new one
-        if (dataBarGraphRef.current) { dataBarGraphRef.current.destroy(); }
+        // if (dataBarGraphRef.current) { dataBarGraphRef.current.destroy(); }
 
         // Work in progrress: adapt for this to be the labels to pass, based on selectedAttributeMix
-        // if (selectedAttributeMix === "Number of results per recording") {
-        //   setAxisLabelXBarGraph((prevLabels) => { const newLabels = Object.keys(recordingsCount); return newLabels; });
-        // }
-        // if (selectedAttributeMix === "Number of results per track") { setAxisLabelXBarGraph(Object.keys(trackNamesCount)) }
-        if (selectedAttributeMix === "Number of results per recording") { axisLabelXBarGraphRef.current = Object.keys(recordingsCount); }
-        if (selectedAttributeMix === "Number of results per track") { axisLabelXBarGraphRef.current = Object.keys(trackNamesCount); }
+        // if (selectedAttributeMix === "Number of results per recording") { setAxisLabelXBarGraph((prevLabels) => { const newLabels = Object.keys(recordingsCount); return newLabels; }); }
+        if (selectedAttributeMix === "Number of results per track") { setAxisLabelXBarGraph(Object.keys(trackNamesCount)) }
+        if (selectedAttributeMix === "Number of results per recording") { setAxisLabelXBarGraph(Object.keys(recordingsCount)) }
+        // if (selectedAttributeMix === "Number of results per recording") { axisLabelXBarGraphRef.current = Object.keys(recordingsCount); }
+        // if (selectedAttributeMix === "Number of results per track") { axisLabelXBarGraphRef.current = Object.keys(trackNamesCount); }
 
         // Work in progrress: adapt for this to be the data object in the datasets object, based on selectedAxisY        
-        // if (selectedAttributeMix === "Number of results per track") { setAxisYBarGraph(Object.values(trackNamesCount)) }
-        // if (selectedAttributeMix === "Number of results per recording") {
-        //   setAxisYBarGraph((prevData) => { const newData = Object.values(recordingsCount); return newData; });
-        // }
-        if (selectedAttributeMix === "Number of results per recording") { axisYBarGraphRef.current = Object.values(recordingsCount); }
-        if (selectedAttributeMix === "Number of results per track") { axisYBarGraphRef.current = Object.values(trackNamesCount); }
+        if (selectedAttributeMix === "Number of results per track") { setAxisYBarGraph(Object.values(trackNamesCount)) }
+        if (selectedAttributeMix === "Number of results per recording") { setAxisYBarGraph(Object.values(recordingsCount)); }
+        // if (selectedAttributeMix === "Number of results per recording") { setAxisYBarGraph((prevData) => { const newData = Object.values(recordingsCount); return newData; }); }
+        // if (selectedAttributeMix === "Number of results per recording") { axisYBarGraphRef.current = Object.values(recordingsCount); }
+        // if (selectedAttributeMix === "Number of results per track") { axisYBarGraphRef.current = Object.values(trackNamesCount); }
 
-        console.log("Update made. axisLabelXBarGraphRef: ",axisLabelXBarGraphRef,". Also axisLabelXBarGraphRef.current.indexOf: ",axisLabelXBarGraphRef.current.indexOf,", typeof axisLabelXBarGraphRef.current[0]: ",typeof axisLabelXBarGraphRef.current[0]);
+        console.log("Update made. axisLabelXBarGraph: ",axisLabelXBarGraph);
 
         // // Create a new bar chart
         // const ctx = canvasRef.current.getContext("2d");
-        // barChartRef.current = new Chart(ctx, {
-        //   type: "bar",
-        //   data: dataBarGraphRef.current,
-        //   options: optionsBarGraphRef.current,
-        // });
+        // barChartRef.current = new Chart(ctx, { type: "bar", data: dataBarGraphRef.current, options: optionsBarGraphRef.current,  });
 
-        dataBarGraphRef.current=({
-          labels: axisLabelXBarGraphRef.current,
-          datasets: [
-            {
-              label: selectedAttributeMix,
-              data: axisYBarGraphRef.current,
-              backgroundColor: "rgba(75,192,192,0.2)", 
-              borderColor: "rgba(75,192,192,1)",
-              borderWidth: 1,
-            },
-          ],
+        dataBarGraph = ({
+          labels: axisLabelXBarGraph.current,
+          datasets: [{ label: selectedAttributeMix, data: axisYBarGraph, backgroundColor: "rgba(75,192,192,0.2)", borderColor: "rgba(75,192,192,1)", borderWidth: 1 }],
         })
       } else {
         console.log(`Unexpected ${typeGraph}`);
@@ -345,15 +252,15 @@ const GraphsResults = ({ infoMusicList, oldSearch, listSearchRes }) => {
     updateOptions();
 
     // Cleanup: Destroy the chart when the component is unmounted
-    return () => {
-      if (dataBarGraphRef.current) {
-        dataBarGraphRef.current.destroy();
-      }
-    };
+    // return () => {
+    //   if (dataBarGraphRef.current) {
+    //     dataBarGraphRef.current.destroy();
+    //   }
+    // };
   }, [selectedAttributeMix, selectedAxisY, infoMusicList, typeGraph]);
 
   // Set visualization type
-  const handleChangeSelection = useCallback((value) => {
+  const handleChangeSelection = ((value) => {
     value === "Number of results per recording"
       || value === "Number of results per track"
       || value === "Number of occurences per melody"
@@ -379,7 +286,6 @@ const GraphsResults = ({ infoMusicList, oldSearch, listSearchRes }) => {
           <FaAngleDown className="metadata-icon" />
         )}
       </div>
-
       {showGraphs && (
         <>
           <p>The graph will adapt based on the attributes you select.</p>
@@ -390,23 +296,15 @@ const GraphsResults = ({ infoMusicList, oldSearch, listSearchRes }) => {
               value={selectedAttributeMix}
             >
               {attributeMix.map((option) => (
-                <option key={option} value={option}>
-                  {option}
-                </option>
+                <option key={option} value={option}> {option} </option>
               ))}
             </select>
           </div>
           {/* <div> <label>Axis Y </label> <select onChange={(e) => handleChangeAxisY(e.target.value)} value={selectedAxisY} > {attributesOptions.map((option) => ( <option key={option} value={option}> {option} </option> ))} </select> </div> */}
 
-          {typeGraph === "scatter" && (
-            <Scatter data={dataScatter} options={optionsScatter} />
-          )}
-          {/* Work in progress for {typeGraph}
-            <br />
-            <Scatter data={dataBar} options={options} /> */}
-          {typeGraph === "bar" && (
-            <Bar data={dataBarGraphRef.current} options={optionsBarGraph} />
-          )}
+          {/* {typeGraph === "scatter" && ( <Scatter data={dataScatter} options={optionsScatter} /> )} */}
+          {/* {typeGraph === "bar" && ( <Bar data={dataBarGraph.current} options={optionsBarGraph} /> )} */}
+          {typeGraph ==="bar" && (<BarChart data={axisYBarGraph} labels={axisLabelXBarGraph} />)}
         </>
       )}
     </div>
