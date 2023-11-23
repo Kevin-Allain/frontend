@@ -22,6 +22,13 @@ const GraphsResults = ({ infoMusicList, oldSearch, listSearchRes }) => {
   console.log("GraphsResults - infoMusicList: ", infoMusicList, ", oldSearch: ", oldSearch, ", listSearchRes: ", listSearchRes);
   const [showGraphs, setShowGraphs] = useState(false);
   const handleToggle = () => { setShowGraphs(!showGraphs); };
+  // Set up date in javascript format
+  for (let a in infoMusicList) {
+    infoMusicList[a].dateEvent = infoMusicList[a]['Event Year']
+      ? new Date(infoMusicList[a]['Event Year'], infoMusicList[a]['Event Month'] !== '' ? infoMusicList[a]['Event Month'] : 1, infoMusicList[a]['Event Day'] !== '' ? infoMusicList[a]['Event Day'] : 1)
+      : null
+  }
+
   // TODO change later on, we will want to consider the melodies and outputs of melodies as well.
   const dataInput = infoMusicList;
   ChartJS.register(
@@ -94,7 +101,6 @@ const GraphsResults = ({ infoMusicList, oldSearch, listSearchRes }) => {
   for (var k in mapMelodyToCount) {
     if (mapMelodyToCount[k] > numberFilterMelodyCount) { filteredMapMelodyCount[k] = mapMelodyToCount[k] }
   }
-      
 
   // console.log("uniqueMelodiesStr: ",uniqueMelodiesStr);
   // console.log("recordingsCount: ", recordingsCount, ", trackNamesCount: ", trackNamesCount);
