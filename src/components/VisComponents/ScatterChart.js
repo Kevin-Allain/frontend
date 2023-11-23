@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { Bar } from "react-chartjs-2";
+import { Scatter } from "react-chartjs-2";
 
-const BarChart = ({ data, labels, title }) => {
+const ScatterChart = ({ data, labels, title }) => {
   const [chartData, setChartData] = useState({
     labels: labels,
     datasets: [
@@ -30,7 +30,8 @@ const BarChart = ({ data, labels, title }) => {
     }));
   }, [data, labels, title]);
 
-  return <Bar data={chartData} />;
+  // return <Bar data={chartData} />;
+  return <>Work in progress</>
 };
 
-export default BarChart;
+export default ScatterChart;

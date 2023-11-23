@@ -641,9 +641,9 @@ const MusicInterface = () => {
           <p className="text-xl">List of results for your search:</p>
           <h4>
             {oldSearch} (
-            {("" + oldSearch).indexOf("-") === -1
-              ? ("" + MIDItoNote["" + oldSearch]).replaceAll("s", "")
-              : ("" + oldSearch)
+              {("" + oldSearch).indexOf("-") === -1
+                ? ("" + MIDItoNote["" + oldSearch]).replaceAll("s", "")
+                : ("" + oldSearch)
                   .split("-")
                   .map((a, i) =>
                     i === ("" + oldSearch).split("-").length - 1
