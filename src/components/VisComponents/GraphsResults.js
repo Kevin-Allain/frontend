@@ -100,8 +100,16 @@ const GraphsResults = ({ infoMusicList, oldSearch, listSearchRes }) => {
   const filteredMapMelodyCount = {};
   const numberFilterMelodyCount = 2;
   for (var k in mapMelodyToCount) {
-    if (mapMelodyToCount[k] > numberFilterMelodyCount) { filteredMapMelodyCount[k] = mapMelodyToCount[k] }
+    if (mapMelodyToCount[k] > numberFilterMelodyCount) { filteredMapMelodyCount[arrayStrPitchesToNotes(k)] = mapMelodyToCount[k] }
   }
+  console.log("filteredMapMelodyCount: ",filteredMapMelodyCount);
+  // TODO sort that object?
+  let sortedMelodyCount = {}
+  for (let i in Object.keys(filteredMapMelodyCount).sort()){
+    sortedMelodyCount[Object.keys(filteredMapMelodyCount).sort()[i]] = filteredMapMelodyCount[Object.keys(filteredMapMelodyCount).sort()[i]]
+  }
+  console.log("- sortedMelodyCount: ", sortedMelodyCount);
+
 
   const datesCount = {};
   let mapRecordingToDate = {};
@@ -290,7 +298,7 @@ const GraphsResults = ({ infoMusicList, oldSearch, listSearchRes }) => {
         if (selectedAttributeMix === "Number of melodies per track") { setAxisLabelXBarGraph(Object.keys(trackNamesCount)) }
         if (selectedAttributeMix === "Number of melodies per recording") { setAxisLabelXBarGraph(Object.keys(recordingsCount)) }
         if (selectedAttributeMix === "Number of occurences per melody") {
-          setAxisLabelXBarGraph(Object.keys(filteredMapMelodyCount).map(a => arrayStrPitchesToNotes(a)))
+          setAxisLabelXBarGraph(Object.keys(sortedMelodyCount))
         }
         // if (selectedAttributeMix === "Number of melodies per recording") { axisLabelXBarGraphRef.current = Object.keys(recordingsCount); }
         // if (selectedAttributeMix === "Number of melodies per track") { axisLabelXBarGraphRef.current = Object.keys(trackNamesCount); }
@@ -303,7 +311,7 @@ const GraphsResults = ({ infoMusicList, oldSearch, listSearchRes }) => {
         }
         if (selectedAttributeMix === "Number of melodies per track") { setAxisYBarGraph(Object.values(trackNamesCount)) }
         if (selectedAttributeMix === "Number of melodies per recording") { setAxisYBarGraph(Object.values(recordingsCount)); }
-        if (selectedAttributeMix === "Number of occurences per melody") { setAxisYBarGraph(Object.values(filteredMapMelodyCount)); }
+        if (selectedAttributeMix === "Number of occurences per melody") { setAxisYBarGraph(Object.values(sortedMelodyCount)); }
         // if (selectedAttributeMix === "Number of melodies per recording") { setAxisYBarGraph((prevData) => { const newData = Object.values(recordingsCount); return newData; }); }
         // if (selectedAttributeMix === "Number of melodies per recording") { axisYBarGraphRef.current = Object.values(recordingsCount); }
         // if (selectedAttributeMix === "Number of melodies per track") { axisYBarGraphRef.current = Object.values(trackNamesCount); }
