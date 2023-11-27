@@ -82,7 +82,7 @@ const MetadataAccordion = ({
             ) : (
               <></>
             )}
-            <AnnotationSystem type={"recording"} recording={recording} />
+            <AnnotationSystem type={"recording"} recording={recording} idCaller={content} />
             <EmbeddedWorkflowInteraction
               idCaller={content}
               typeCaller={"recording"}
@@ -137,7 +137,7 @@ const MetadataAccordion = ({
                 )
               ) : (<></>)}
             </div>
-            <AnnotationSystem type={"track"} track={track} />
+            <AnnotationSystem type={"track"} track={track} idCaller={content} />
             <EmbeddedWorkflowInteraction
               idCaller={content}
               typeCaller={"track"}

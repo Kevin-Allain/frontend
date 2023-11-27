@@ -13,8 +13,8 @@ import "./AnnotationSystem.css"
 
 // TODO assess how we want to convey information about the object that uses the annotation system. 
 // We need to standardize (maybe use a different structure?)
-const AnnotationSystem = ({ type, info, index=0 }) => {
-
+const AnnotationSystem = ({ type, info, index=0, idCaller = null }) => {
+  console.log("-- AnnotationSystem -- ", { type, info, index, idCaller});
   const [textInputAnnotation, setTextInputAnnotation] = useState("");
   const [isUpdating, setIsUpdating] = useState(false);
   const [annotationId, setAnnotationId] = useState("");

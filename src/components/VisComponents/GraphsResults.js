@@ -29,7 +29,7 @@ const GraphsResults = ({ infoMusicList, oldSearch, listSearchRes }) => {
       : null
   }
 
-  // TODO change later on, we will want to consider the melodies and outputs of melodies as well.
+  // TODO change later on, we will want to consider the matches and outputs of matches as well.
   const dataInput = infoMusicList;
   ChartJS.register(
     LinearScale, CategoryScale, PointElement, BarElement, LineElement, Tooltip, Legend
@@ -48,11 +48,11 @@ const GraphsResults = ({ infoMusicList, oldSearch, listSearchRes }) => {
   // Shared parameters
   // TODO we should probably set the attribute combinations in one array directly
   const [typeGraph, setTypeGraph] = useState("bar");
-  const [selectedAttributeMix, setSelectedAttributeMix] = useState("Number of melodies per recording");
+  const [selectedAttributeMix, setSelectedAttributeMix] = useState("Number of matches per recording");
   const [selectedAxisY, setSelectedAxisY] = useState("Release Month");
   const attributesOptions = ["Release Year", "Release Month", "Track Title", "Recording", "Artists"];
   // attributeMix can relate to a single attribute. What matters is we set the selection for the axes
-  const attributeMix = [ "Recording dates of melodies", "Number of melodies per recording", "Number of melodies per track", "Number of occurences per melody" ];
+  const attributeMix = [ "Recording dates of matches", "Number of matches per recording", "Number of matches per track", "Number of occurences per match" ];
 
   // Derived parameters (might require making calls to the database)
   const [numMelodies, setMumMelodies] = useState(listSearchRes.length);
@@ -146,7 +146,7 @@ const GraphsResults = ({ infoMusicList, oldSearch, listSearchRes }) => {
   // console.log("uniqueMelodiesStr: ",uniqueMelodiesStr);
   // console.log("recordingsCount: ", recordingsCount, ", trackNamesCount: ", trackNamesCount);
   // console.log("numMelodies: ", numMelodies, ", percMatchesCount: ", percMatchesCount, ", lognumbersCount: ", lognumbersCount, ", tracksCount: ", tracksCount, ", mapRecordingToName: ", mapRecordingToName, ", mapTrackToName: ", mapTrackToName);
-  // // TODO consider a number of melodies we are happy with?
+  // // TODO consider a number of matches we are happy with?
   // console.log("mapMelodyToCount: ",mapMelodyToCount);
   // console.log("filteredMapMelodyCount: ",filteredMapMelodyCount);
 
@@ -288,33 +288,33 @@ const GraphsResults = ({ infoMusicList, oldSearch, listSearchRes }) => {
         // if (dataBarGraphRef.current) { dataBarGraphRef.current.destroy(); }
 
         // Work in progrress: adapt for this to be the labels to pass, based on selectedAttributeMix
-        // if (selectedAttributeMix === "Number of melodies per recording") { setAxisLabelXBarGraph((prevLabels) => { const newLabels = Object.keys(recordingsCount); return newLabels; }); }
+        // if (selectedAttributeMix === "Number of matches per recording") { setAxisLabelXBarGraph((prevLabels) => { const newLabels = Object.keys(recordingsCount); return newLabels; }); }
         
 
 
-        if (selectedAttributeMix === "Recording dates of melodies") {
+        if (selectedAttributeMix === "Recording dates of matches") {
           setAxisLabelXBarGraph(Object.keys(sortedIso))
         }
-        if (selectedAttributeMix === "Number of melodies per track") { setAxisLabelXBarGraph(Object.keys(trackNamesCount)) }
-        if (selectedAttributeMix === "Number of melodies per recording") { setAxisLabelXBarGraph(Object.keys(recordingsCount)) }
-        if (selectedAttributeMix === "Number of occurences per melody") {
+        if (selectedAttributeMix === "Number of matches per track") { setAxisLabelXBarGraph(Object.keys(trackNamesCount)) }
+        if (selectedAttributeMix === "Number of matches per recording") { setAxisLabelXBarGraph(Object.keys(recordingsCount)) }
+        if (selectedAttributeMix === "Number of occurences per match") {
           setAxisLabelXBarGraph(Object.keys(sortedMelodyCount))
         }
-        // if (selectedAttributeMix === "Number of melodies per recording") { axisLabelXBarGraphRef.current = Object.keys(recordingsCount); }
-        // if (selectedAttributeMix === "Number of melodies per track") { axisLabelXBarGraphRef.current = Object.keys(trackNamesCount); }
+        // if (selectedAttributeMix === "Number of matches per recording") { axisLabelXBarGraphRef.current = Object.keys(recordingsCount); }
+        // if (selectedAttributeMix === "Number of matches per track") { axisLabelXBarGraphRef.current = Object.keys(trackNamesCount); }
 
         // Work in progrress: adapt for this to be the data object in the datasets object, based on selectedAxisY        
-        if (selectedAttributeMix === "Recording dates of melodies") {
+        if (selectedAttributeMix === "Recording dates of matches") {
           setAxisYBarGraph(Object.values(
             sortedIso
           ))
         }
-        if (selectedAttributeMix === "Number of melodies per track") { setAxisYBarGraph(Object.values(trackNamesCount)) }
-        if (selectedAttributeMix === "Number of melodies per recording") { setAxisYBarGraph(Object.values(recordingsCount)); }
-        if (selectedAttributeMix === "Number of occurences per melody") { setAxisYBarGraph(Object.values(sortedMelodyCount)); }
-        // if (selectedAttributeMix === "Number of melodies per recording") { setAxisYBarGraph((prevData) => { const newData = Object.values(recordingsCount); return newData; }); }
-        // if (selectedAttributeMix === "Number of melodies per recording") { axisYBarGraphRef.current = Object.values(recordingsCount); }
-        // if (selectedAttributeMix === "Number of melodies per track") { axisYBarGraphRef.current = Object.values(trackNamesCount); }
+        if (selectedAttributeMix === "Number of matches per track") { setAxisYBarGraph(Object.values(trackNamesCount)) }
+        if (selectedAttributeMix === "Number of matches per recording") { setAxisYBarGraph(Object.values(recordingsCount)); }
+        if (selectedAttributeMix === "Number of occurences per match") { setAxisYBarGraph(Object.values(sortedMelodyCount)); }
+        // if (selectedAttributeMix === "Number of matches per recording") { setAxisYBarGraph((prevData) => { const newData = Object.values(recordingsCount); return newData; }); }
+        // if (selectedAttributeMix === "Number of matches per recording") { axisYBarGraphRef.current = Object.values(recordingsCount); }
+        // if (selectedAttributeMix === "Number of matches per track") { axisYBarGraphRef.current = Object.values(trackNamesCount); }
 
         // console.log("Update made. axisLabelXBarGraph: ",axisLabelXBarGraph);
 
@@ -335,10 +335,10 @@ const GraphsResults = ({ infoMusicList, oldSearch, listSearchRes }) => {
 
   // Set visualization type
   const handleChangeSelection = (value) => {
-    value === "Number of melodies per recording"
-      || value === "Number of melodies per track"
-      || value === "Number of occurences per melody"
-      || value === "Recording dates of melodies"
+    value === "Number of matches per recording"
+      || value === "Number of matches per track"
+      || value === "Number of occurences per match"
+      || value === "Recording dates of matches"
       ? setTypeGraph("bar")
       : setTypeGraph("scatter");
     setSelectedAttributeMix(value);

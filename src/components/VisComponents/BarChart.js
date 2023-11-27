@@ -1,7 +1,23 @@
 import React, { useEffect, useState } from "react";
 import { Bar } from "react-chartjs-2";
 
+const calculateFontSize = (numberOfLabels) => {
+  // Define your criteria for font size adaptation
+  const baseFontSize = 14; // Initial font size
+
+  // Gradually decrease font size as the number of labels increases
+  const adaptedFontSize = Math.round(Math.max(4, baseFontSize
+    - Math.log(numberOfLabels*2)));
+
+  console.log("adaptedFontSize: ",adaptedFontSize);  
+  return adaptedFontSize;
+};
+
+
 const BarChart = ({ data, labels, title }) => {
+  const numberOfLabels = labels.length;
+  const fontSize = calculateFontSize(numberOfLabels);
+
   const [chartData, setChartData] = useState({
     labels: labels,
     datasets: [
@@ -14,6 +30,23 @@ const BarChart = ({ data, labels, title }) => {
       },
     ],
   });
+
+  const [optionsBarGraph, setOptionsBarGraph] = useState({
+    scales: {
+      x: { ticks: {
+          font: { size: fontSize, },
+          autoSkip: false,
+          maxTicksLimit: 20, // or another number that fits your design
+          maxRotation: 0,
+          minRotation: 0,
+        },
+      },
+      y: {
+        ticks: { font: { size: 12, },  },
+      },
+    },
+  });
+
 
   useEffect(() => {
     // console.log("useEffect BarChart. ",{data,labels,title});
@@ -28,9 +61,26 @@ const BarChart = ({ data, labels, title }) => {
         },
       ],
     }));
+
+
+    setOptionsBarGraph({
+      scales: {
+        x: {
+          ticks: {
+            font: { size: calculateFontSize(labels.length), },
+            autoSkip: false,
+            // maxTicksLimit: 20, // or another number that fits your design
+            // maxRotation: 0,
+            // minRotation: 0,
+          },
+        },
+        y: { ticks: { font: { size: 12, }, },
+        },
+      },
+    })
   }, [data, labels, title]);
 
-  return <Bar data={chartData} />;
+  return <Bar data={chartData} options={optionsBarGraph} />;
 };
 
 export default BarChart;
