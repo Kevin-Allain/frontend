@@ -465,16 +465,17 @@ const addAnnotation = (
   annotationInput,
   setAnnotationInput,
   setListAnnotations,
+  idCaller = null,
   author = null,
   privacy = 'public'
 ) => {
-  console.log(`HandeAPI addAnnotation: \n${baseUrl}/saveAnnotation`, { type, info, annotationInput, author, indexAnnotation, privacy });
+  console.log(`HandeAPI addAnnotation: \n${baseUrl}/saveAnnotation`, { type, info, annotationInput, author, indexAnnotation, privacy, idCaller });
   // setIsLoading(true);
 
   let time = new Date();
 
   axios
-    .post(`${baseUrl}/addAnnotation`, { type, info, indexAnnotation, annotationInput, author, privacy, time })
+    .post(`${baseUrl}/addAnnotation`, { type, info, indexAnnotation, annotationInput, author, privacy, time, idCaller })
     .then((data) => {
       console.log(data);
       setAnnotationInput("");
@@ -527,9 +528,10 @@ const getAnnotations = (
   info,
   setListAnnotations,
   indexAnnotation = 0,
+  idCaller=null,
   user = null
 ) => {
-  console.log("HandeAPI getAnnotations type: ", type, ", info: ", info, ", indexAnnotation: ", indexAnnotation, ", user: ", user);
+  console.log("HandeAPI getAnnotations type: ", type, ", info: ", info, ", indexAnnotation: ", indexAnnotation,", idCaller: ",idCaller,", user: ", user);
   // setIsLoading(true);
 
   axios
@@ -538,6 +540,7 @@ const getAnnotations = (
         type: type,
         info: info,
         indexAnnotation: indexAnnotation,
+        idCaller: idCaller,
         user: user
       }
     })
