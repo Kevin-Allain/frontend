@@ -469,7 +469,7 @@ const addAnnotation = (
   author = null,
   privacy = 'public'
 ) => {
-  console.log(`HandeAPI addAnnotation: \n${baseUrl}/saveAnnotation`, { type, info, annotationInput, author, indexAnnotation, privacy, idCaller });
+  console.log(`HandeAPI addAnnotation: \n${baseUrl}/addAnnotation`, { type, info, annotationInput, author, indexAnnotation, privacy, idCaller });
   // setIsLoading(true);
 
   let time = new Date();
@@ -533,6 +533,8 @@ const getAnnotations = (
 ) => {
   console.log("HandeAPI getAnnotations type: ", type, ", info: ", info, ", indexAnnotation: ", indexAnnotation,", idCaller: ",idCaller,", user: ", user);
   // setIsLoading(true);
+
+  // TODO update the call to use the _id of idCaller
 
   axios
     .get(`${baseUrl}/getAnnotations`, {
@@ -826,12 +828,9 @@ const createWorkflow = (
         })        
       })
     } else {
-      // TODO what if we create from something that is not a sample? E.g. a search...
       console.log("objectType is not a sample. It is a ", objectsType[0]);
       if (objectsType[0] === 'search') {
         // If it's recording or track... it should be exactly the same, right?!
-        // We can consider the case of a search being saved. We make the assumption of a certain form for the string. 
-        // e.g. idCaller='69-71-72-74-76_fArtist()_fRecording()_fTrack(rosett)_fPerc(1)'
         let fullStr = objectsId[0];
         let  indxArtistF=1, indxRecordingF=2, indxTrackF = 3, indxPercF = 4;
         let strNotes = fullStr.split('_')[0];
@@ -840,7 +839,6 @@ const createWorkflow = (
         let trackF = fullStr.split('_')[indxTrackF].split('(')[1].substr(0,fullStr.split('_')[indxTrackF].split('(')[1].indexOf(')'))
         let percF = Number( fullStr.split('_')[indxPercF].split('(')[1].substr(0,fullStr.split('_')[indxPercF].split('(')[1].indexOf(')')) )
         console.log("Parameters of the search: ",{strNotes, artistF, recordingF, trackF, percF});
-        // TODO search if there is (and there should be) a matching saved search in SearchMap, and use that as the objectId
         // OR specify code in the back end... i.e. take this code and put it in the back-end (PROBABLY MESSY)
         // At least listLogNumbers would work.
 

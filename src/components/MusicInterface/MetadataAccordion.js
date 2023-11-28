@@ -8,15 +8,24 @@ const MetadataAccordion = ({
     content,recording, track, findMatchRecording = null, infoMusicList = null, structData = null
 }) => {
 
-    console.log('# MetadataAccordion: ',{recording,track, content, findMatchRecording,infoMusicList,structData});
-    /** About the presentation of metadata: we do not know what elements are unique between tracks sharing (E) Event Name 
-     * TODO: investigate if we can assess the unique bits of the data for each lognumber... then we could present them in their distinct bits...
-     * Might be worth discussing it with Pedro...
-    */
+    console.log('# MetadataAccordion: ',{recording, track, content, findMatchRecording, infoMusicList, structData});
+
+    console.log(
+      "Issue with this: ",
+      Object.entries(
+        infoMusicList
+          .filter((a) => a.lognumber === recording)
+          .filter((a) => a["SJA_ID"] === track.replace("-T", "_"))[0]
+      )
+    );
+
     const [expandedRecording, setExpandedRecording] = useState(false);
     const toggleAccordionRecording = () => { setExpandedRecording(!expandedRecording); };
     const [expandedTrack, setExpandedTrack] = useState(false);
     const toggleAccordionTrack = () => { setExpandedTrack(!expandedTrack); };
+    const [mongoObjId, setMongoObjId] = useState(content);
+
+    console.log("mongoObjId: ",mongoObjId);
 
     return (
       <div className="metadata-accordion ">
@@ -50,11 +59,10 @@ const MetadataAccordion = ({
                   {Object.entries(
                     infoMusicList.filter((a) => a.lognumber === recording)[0]
                   ).map(([key, value]) =>
-                    value.length !== 0 &&
+                    key && value.length !== 0 &&
                     (key === "(A/R/D) Event Type" ||
                       key === "(N) Named Artist(s)" ||
-                      key === "(E) Event Name" |
-                      key === "(Y) Date" ||
+                      (key === "(E) Event Name") | (key === "(Y) Date") ||
                       key === "Label" ||
                       key === "AudioSource" ||
                       key === "Musicians (instruments)" ||
@@ -63,7 +71,13 @@ const MetadataAccordion = ({
                       key === "Observations") ? (
                       <p key={key}>
                         {" "}
-                        {key==='(Y) Date'?'Recording Date':key}: {key==='(Y) Date'? (`${value.substr(5,4)}/${value.substr(3,2)}/${value.substr(1,2)}`) :value }
+                        {key === "(Y) Date" ? "Recording Date" : key}:{" "}
+                        {key === "(Y) Date"
+                          ? `${value.substr(5, 4)}/${value.substr(
+                              3,
+                              2
+                            )}/${value.substr(1, 2)}`
+                          : value}
                         {/* {key}:{value} */}
                       </p>
                     ) : (
@@ -71,18 +85,15 @@ const MetadataAccordion = ({
                     )
                   )}
                 </div>
-              ) : (
-                <>
-                  <div className="text-left">
-                    No metadata about the recording
-                  </div>
-                  <br />
-                </>
-              )
-            ) : (
-              <></>
-            )}
-            <AnnotationSystem type={"recording"} recording={recording} idCaller={content} />
+              ) : ( <> <div className="text-left"> No metadata about the recording </div> <br /> </> )
+            ) : ( <></> )}
+            <AnnotationSystem
+              type={"recording"}
+              recording={recording}
+              idCaller={mongoObjId}
+              recordingCode={recording}
+              trackCode={track}
+            />
             <EmbeddedWorkflowInteraction
               idCaller={content}
               typeCaller={"recording"}
@@ -108,8 +119,9 @@ const MetadataAccordion = ({
             <div className="detailResultMeta">
               <u>Info about track:</u>
               {infoMusicList !== null ? (
-                infoMusicList.length === 0 ? ( <AiOutlineLoading className="spin" size={"20px"} /> )
-                : infoMusicList
+                infoMusicList.length === 0 ? (
+                  <AiOutlineLoading className="spin" size={"20px"} />
+                ) : infoMusicList
                     .filter((a) => a.lognumber === recording)
                     .filter((a) => a["SJA_ID"] === track.replace("-T", "_"))
                     .length === 0 ? (
@@ -127,17 +139,32 @@ const MetadataAccordion = ({
                         (a) => a["SJA_ID"] === track.replace("-T", "_")
                       )[0]
                   ).map(([key, value]) =>
+                    key &&
+                    value &&
                     value.length !== 0 &&
-                    (key === "Track Title" || key === "Track #" || key === "Duration") ? (
-                      <p key={key}> {" "} {key}: {value} </p>
+                    (key === "Track Title" ||
+                      key === "Track #" ||
+                      key === "Duration") ? (
+                      <p key={key}>
+                        {" "}
+                        {key}: {value}{" "}
+                      </p>
                     ) : (
                       <></>
                     )
                   )
                 )
-              ) : (<></>)}
+              ) : (
+                <></>
+              )}
             </div>
-            <AnnotationSystem type={"track"} track={track} idCaller={content} />
+            <AnnotationSystem
+              type={"track"}
+              track={track}
+              idCaller={mongoObjId}
+              recordingCode={recording}
+              trackCode={track}
+            />
             <EmbeddedWorkflowInteraction
               idCaller={content}
               typeCaller={"track"}
