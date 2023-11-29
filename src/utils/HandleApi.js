@@ -474,6 +474,12 @@ const addAnnotation = (
 
   let time = new Date();
 
+  if (type === "recording" || type === "track") {
+    console.log("type requires a call to get the right idCalled");
+    // the idCaller is the note _id. Can we assume that it is always right, or do we need to pass parameters?
+    
+  }
+
   axios
     .post(`${baseUrl}/addAnnotation`, { type, info, indexAnnotation, annotationInput, author, privacy, time, idCaller })
     .then((data) => {
