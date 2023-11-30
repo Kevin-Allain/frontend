@@ -489,10 +489,15 @@ const addAnnotation = (
   if (type === "recording" || type === "track") {
     console.log("type requires a call to get the right idCalled. idCaller: ",idCaller);
     // the idCaller is the note _id. Can we assume that it is always right, or do we need to pass parameters?
+    const idTrack = idCaller;
+    console.log("idTrack: ",idTrack);
     axios
-      .get(`${baseUrl}/getTrackMetaFromNoteId`,{idCaller})
+      .get(`${baseUrl}/getTrackMetaFromNoteId`,{ params: { idTrack } })
       .then(d => {
         console.log("Loaded data with getTrackMetaFromNoteId. d: ", d);
+        if (d.data.length>0){ idCaller = d.data[0]._id; } else {idCaller=null;}
+        console.log("updated idCaller: ",idCaller);
+
         axios
           .post(`${baseUrl}/addAnnotation`, { type, info, indexAnnotation, annotationInput, author, privacy, time, idCaller })
           .then((data) => {
