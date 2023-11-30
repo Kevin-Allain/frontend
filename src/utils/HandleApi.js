@@ -173,6 +173,18 @@ const getTracksMetadata = (lognumbers, infoMusicList, setInfoMusicList) => {
     })
 }
 
+
+const getTrackMetaFromNoteId = (idTrack) => {
+  console.log("---- HandleApi / idtrack: ", idTrack);
+  axios
+    .get(`${baseUrl}/getTrackMetaFromNoteId`, {
+      params: { idTrack: idTrack, }
+    })
+    .then((d) => {
+      console.log("#### Then of getTrackMetaFromNoteId #### d: ", d);
+    })
+}
+
 /** TODO would make more sense if we loaded all the albums already returned. */
 const getTrackMetadata = (lognumber, infoMusicList, setInfoMusicList) => {
   // setIsLoading(true);
@@ -475,31 +487,48 @@ const addAnnotation = (
   let time = new Date();
 
   if (type === "recording" || type === "track") {
-    console.log("type requires a call to get the right idCalled");
+    console.log("type requires a call to get the right idCalled. idCaller: ",idCaller);
     // the idCaller is the note _id. Can we assume that it is always right, or do we need to pass parameters?
     axios
-    .get(`${baseUrl}/getTrackMetaFromNoteId`,{idCaller})
-      .then(d => 
-        console.log("Loaded data with getTrackMetaFromNoteId. d: ",d)
+      .get(`${baseUrl}/getTrackMetaFromNoteId`,{idCaller})
+      .then(d => {
+        console.log("Loaded data with getTrackMetaFromNoteId. d: ", d);
+        axios
+          .post(`${baseUrl}/addAnnotation`, { type, info, indexAnnotation, annotationInput, author, privacy, time, idCaller })
+          .then((data) => {
+            console.log(data);
+            setAnnotationInput("");
+            getAnnotations(
+              type,
+              info,
+              setListAnnotations,
+              indexAnnotation,
+              localStorage.username ? localStorage.username : null)
+
+            // setIsLoading(false);        
+          })
+          .catch(err => console.log(err))
+
+      }
       )
       .catch(err => console.log(err))
   }
 
-  axios
-    .post(`${baseUrl}/addAnnotation`, { type, info, indexAnnotation, annotationInput, author, privacy, time, idCaller })
-    .then((data) => {
-      console.log(data);
-      setAnnotationInput("");
-      getAnnotations(
-        type,
-        info,
-        setListAnnotations,
-        indexAnnotation,
-        localStorage.username ? localStorage.username : null)
+  // axios
+  //   .post(`${baseUrl}/addAnnotation`, { type, info, indexAnnotation, annotationInput, author, privacy, time, idCaller })
+  //   .then((data) => {
+  //     console.log(data);
+  //     setAnnotationInput("");
+  //     getAnnotations(
+  //       type,
+  //       info,
+  //       setListAnnotations,
+  //       indexAnnotation,
+  //       localStorage.username ? localStorage.username : null)
 
-      // setIsLoading(false);        
-    })
-    .catch(err => console.log(err))
+  //     // setIsLoading(false);        
+  //   })
+  //   .catch(err => console.log(err))
 }
 
 const updateAnnotation = (
@@ -1175,6 +1204,7 @@ export {
   getMusicMIDI, getSampleMIDI, getMatchLevenshteinDistance,
   getTrackMetadata, getTracksMetadata,
   getMetadataFromAttribute, 
+  getTrackMetaFromNoteId,
   addAnnotation, getAnnotations, deleteAnnotation, updateAnnotation,
   addComment, getComments, getCommentsOfAnnotation, deleteComment, updateComment,
   getUserAnnotations,

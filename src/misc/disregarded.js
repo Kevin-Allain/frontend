@@ -1281,3 +1281,16 @@ function calcLevenshteinDistance_str(s1, s2) {
 // const xyValues = [ {x:50, y:7}, {x:60, y:8}, {x:70, y:8}, {x:80, y:9}, {x:90, y:9}, {x:100, y:9}, {x:110, y:10}, ];
 // const scatterPlot = new chartjs.Chart("myChart", { type: "scatter", data: { datasets: [{ pointRadius: 4, pointBackgroundColor: "rgba(0,0,255,1)", data: xyValues }] }, options:{} });
 // return (<>GraphsResults has { infoMusicList? infoMusicList.length : 0 } elements to work with.</>)
+
+
+
+// backend musicinfocontroller
+// // New approach with a Promise 
+// module.exports.getTracksMetadata = async (req, res) => {
+//     const lognumbers = [...new Set(req.query.lognumbers)];    
+//     return new Promise((resolve, reject) => {
+//         MusicInfoControllerModel.find({ lognumber: { $in: lognumbers } })
+//             .then(data => { console.log("Searched successfully MusicInfoControllerModel.find"); console.log("data.length: ", data.length); console.log("data[0]: ", data[0]); resolve(data); })
+//             .catch(error => { reject(error); });
+//     });
+// }
