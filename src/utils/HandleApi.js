@@ -498,8 +498,9 @@ const addAnnotation = (
         if (d.data.length>0){ idCaller = d.data[0]._id; } else {idCaller=null;} 
         console.log("updated idCaller: ",idCaller);
 
+        // Updated info to use the lognumber...
         axios
-          .post(`${baseUrl}/addAnnotation`, { type, info, indexAnnotation, annotationInput, author, privacy, time, idCaller })
+          .post(`${baseUrl}/addAnnotation`, { type, info:d.data[0].lognumber, indexAnnotation, annotationInput, author, privacy, time, idCaller })
           .then((data) => {
             console.log(data);
             setAnnotationInput("");
@@ -566,6 +567,7 @@ const updateAnnotation = (
     .catch(err => console.log(err))
 }
 
+// TODO still wrong: if type is recording, we should not base it based on the idCaller, but on the lognumber... or lognumber of object with the idCaller!
 const getAnnotations = (
   type, info, setListAnnotations, indexAnnotation = 0, idCaller=null, user = null, directMetaIdCaller=false
 ) => {
@@ -594,13 +596,18 @@ const getAnnotations = (
       .get(`${baseUrl}/getTrackMetaFromNoteId`, { params: { idTrack: idCaller } })
       .then((d) => {
         console.log("Loaded data with getTrackMetaFromNoteId. d: ", d);
-        if (d.data.length > 0) { idMetaObj = d.data[0]._id; } 
-        console.log("idMetaObj: ", idMetaObj);
-  
+        let metadataLognumber = null
+        if (d.data.length > 0) { 
+          idMetaObj = d.data[0]._id; 
+          metadataLognumber = d.data[0].lognumber;
+        } 
+        console.log("idMetaObj: ", idMetaObj,", metadataLognumber: ",metadataLognumber);
+        // we should set the info with metadataLognumber, and make that call different in the AnnotationController if it is a recording type...
+
         axios
           .get(`${baseUrl}/getAnnotations`, {
             params: {
-              type: type, info: info, indexAnnotation: indexAnnotation, idCaller: idMetaObj, user: user,
+              type: type, info: metadataLognumber, indexAnnotation: indexAnnotation, idCaller: idMetaObj, user: user,
             },
           })
           .then(({ data }) => {
