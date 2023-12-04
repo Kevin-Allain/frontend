@@ -25,7 +25,26 @@ const MetadataAccordion = ({
     const toggleAccordionTrack = () => { setExpandedTrack(!expandedTrack); };
     const [mongoObjId, setMongoObjId] = useState(content);
 
-    console.log("mongoObjId: ",mongoObjId);
+    const [metaObjId, setMetaObjId] = useState(Object.entries(
+      infoMusicList
+        .filter((a) => a.lognumber === recording)
+        .filter((a) => a["SJA_ID"] === track.replace("-T", "_"))
+    )[0][1]?._id);
+
+
+    useEffect(() => {
+      setMongoObjId(content);
+      setMetaObjId(
+        Object.entries(
+          infoMusicList
+            .filter((a) => a.lognumber === recording)
+            .filter((a) => a["SJA_ID"] === track.replace("-T", "_"))
+        )[0][1]?._id
+      );
+      console.log("useEffect MetadataAccordion. track: ",track,", mongoObjId: ",mongoObjId,", metaObjId: ",metaObjId);
+    }, [content, recording, track, infoMusicList, mongoObjId, metaObjId]);
+
+    console.log("mongoObjId: ",mongoObjId,", content: ",content,", metaObjId: ",metaObjId); // TODO wrong!!! Doesn't adapt. Might need to use content directly
 
     return (
       <div className="metadata-accordion ">
@@ -93,6 +112,7 @@ const MetadataAccordion = ({
               idCaller={mongoObjId}
               recordingCode={recording}
               trackCode={track}
+              metaObjId={metaObjId}
             />
             <EmbeddedWorkflowInteraction
               idCaller={content}

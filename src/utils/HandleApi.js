@@ -495,7 +495,7 @@ const addAnnotation = (
       .get(`${baseUrl}/getTrackMetaFromNoteId`,{ params: { idTrack } })
       .then(d => {
         console.log("Loaded data with getTrackMetaFromNoteId. d: ", d);
-        if (d.data.length>0){ idCaller = d.data[0]._id; } else {idCaller=null;}
+        if (d.data.length>0){ idCaller = d.data[0]._id; } else {idCaller=null;} 
         console.log("updated idCaller: ",idCaller);
 
         axios
@@ -504,37 +504,28 @@ const addAnnotation = (
             console.log(data);
             setAnnotationInput("");
             getAnnotations(
-              type,
-              info,
-              setListAnnotations,
-              indexAnnotation,
-              localStorage.username ? localStorage.username : null)
-
+              type, info, setListAnnotations, indexAnnotation, null, localStorage.username ? localStorage.username : null)
             // setIsLoading(false);        
           })
           .catch(err => console.log(err))
-
-      }
-      )
+      })
       .catch(err => console.log(err))
+  } else {
+    axios
+      .post(`${baseUrl}/addAnnotation`, { 
+        type, info, indexAnnotation, annotationInput, author, privacy, time, idCaller, 
+      })
+      .then((data) => {
+        console.log(data);
+        setAnnotationInput("");
+        getAnnotations(
+          type, info, setListAnnotations, indexAnnotation, null,localStorage.username ? localStorage.username : null
+        );
+      })
+      .catch((err) => console.log(err));
   }
-
-  // axios
-  //   .post(`${baseUrl}/addAnnotation`, { type, info, indexAnnotation, annotationInput, author, privacy, time, idCaller })
-  //   .then((data) => {
-  //     console.log(data);
-  //     setAnnotationInput("");
-  //     getAnnotations(
-  //       type,
-  //       info,
-  //       setListAnnotations,
-  //       indexAnnotation,
-  //       localStorage.username ? localStorage.username : null)
-
-  //     // setIsLoading(false);        
-  //   })
-  //   .catch(err => console.log(err))
 }
+
 
 const updateAnnotation = (
   annotationId,
@@ -569,34 +560,48 @@ const updateAnnotation = (
 }
 
 const getAnnotations = (
-  type,
-  info,
-  setListAnnotations,
-  indexAnnotation = 0,
-  idCaller=null,
-  user = null
+  type, info, setListAnnotations, indexAnnotation = 0, idCaller=null, user = null
 ) => {
   console.log("HandeAPI getAnnotations type: ", type, ", info: ", info, ", indexAnnotation: ", indexAnnotation,", idCaller: ",idCaller,", user: ", user);
   // setIsLoading(true);
 
   // TODO update the call to use the _id of idCaller
-
+  console.log("idCaller: ",idCaller);
+  // doubt: do we ever need to make a specific type for a note... I guess not
+  if (type === 'recording' || type ==='track'){
   axios
+    .get(`${baseUrl}/getTrackMetaFromNoteId`, { params: { idTrack: idCaller } })
+    .then((d) => {
+      console.log("Loaded data with getTrackMetaFromNoteId. d: ", d);
+      let idMetaObj = null;
+      if (d.data.length > 0) { idMetaObj = d.data[0]._id; } 
+      console.log("idMetaObj: ", idMetaObj);
+
+      axios
+        .get(`${baseUrl}/getAnnotations`, {
+          params: {
+            type: type, info: info, indexAnnotation: indexAnnotation, idCaller: idMetaObj, user: user,
+          },
+        })
+        .then(({ data }) => {
+          console.log("data: ", data);
+          setListAnnotations(data);
+        })
+        .catch((err) => console.log(err));
+    });
+  } else {
+    axios
     .get(`${baseUrl}/getAnnotations`, {
       params: {
-        type: type,
-        info: info,
-        indexAnnotation: indexAnnotation,
-        idCaller: idCaller,
-        user: user
-      }
+        type: type, info: info, indexAnnotation: indexAnnotation, idCaller: idCaller, user: user,
+      },
     })
     .then(({ data }) => {
-      console.log('data: ', data);
+      console.log("data: ", data);
       setListAnnotations(data);
-      // setIsLoading(false);
     })
-    .catch(err => console.log(err))
+    .catch((err) => console.log(err));
+  }
 }
 
 const deleteAnnotation = (annotationId, type, info, setListAnnotations, indexAnnotation = 0) => {

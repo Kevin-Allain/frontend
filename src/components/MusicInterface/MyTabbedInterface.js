@@ -1,11 +1,9 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 // import SimpleBar from 'simplebar-react';
 // import 'simplebar-react/dist/simplebar.min.css';
 import "./MyTabbedInterface.css";
 import { AiOutlineLoading } from "react-icons/ai";
 import TrackRes from "./TrackRes"; // You should adjust the import path
-import AnnotationSystem from "../Annotation/AnnotationSystem";
-import EmbeddedWorkflowInteraction from "../Workflow/EmbeddedWorkflowInteraction";
 import MetadataAccordion from "./MetadataAccordion";
 
 const MyTabbedInterface = ({
@@ -23,7 +21,7 @@ const MyTabbedInterface = ({
   const [visibleTracks, setVisibleTracks] = useState({});
   const tracksContainerRef = useRef(null);
 
-  console.log("-- MyTabbedInterface. listLogNumbers: ", listLogNumbers, ", infoMusicList: ", infoMusicList, ", listSearchRes: ", listSearchRes,", listTracks: ",listTracks);
+  // console.log("-- MyTabbedInterface. listLogNumbers: ", listLogNumbers, ", infoMusicList: ", infoMusicList, ", listSearchRes: ", listSearchRes,", listTracks: ",listTracks);
 
   let prettyNamesLogNumber = {};
   for (var i = 0; i < listLogNumbers.length; i++) {
@@ -46,8 +44,7 @@ const MyTabbedInterface = ({
     } else { prettyNamesLogNumber[lognumber] = lognumber }
   }
   let uniqueListLogNumbers = [...new Set(listLogNumbers)];
-  console.log("|| uniqueListLogNumbers: ", uniqueListLogNumbers,
-    ", prettyNamesLogNumber: ", prettyNamesLogNumber);
+  // console.log("|| uniqueListLogNumbers: ", uniqueListLogNumbers, ", prettyNamesLogNumber: ", prettyNamesLogNumber);
   let tracksForEvent = [];
   let newStruct = [];
   let trackToTitles = {};
@@ -88,8 +85,8 @@ const MyTabbedInterface = ({
       mergedData[lognumber].tracks[nextTrackNumber].push(item);
     }
   });
-  const result = Object.values(mergedData);
-  console.log("result: ", result);
+  // const result = Object.values(mergedData);
+  // console.log("result: ", result);
 
   let keysEvents = Object.keys(mergedData);
   for (var d in mergedData) {
@@ -107,7 +104,7 @@ const MyTabbedInterface = ({
   newStruct = newStruct.sort((a, b) =>
     a.recording > b.recording ? 1 : b.recording > a.recording ? -1 : 0
   );
-  console.log("newStruct: ", newStruct, ", listTracks: ", listTracks);
+  // console.log("newStruct: ", newStruct, ", listTracks: ", listTracks);
 
   const handleRecordingClick = (recording) => {
     console.log("~~ handleRecordingClick, recording: ", recording, " ---- listSearchRes: ", listSearchRes, ", listLogNumbers: ", listLogNumbers);
@@ -125,6 +122,11 @@ const MyTabbedInterface = ({
     setActiveTrack(track);
     console.log("activeTrack: ", activeTrack);
   };
+
+  useEffect(() => {
+    console.log("MyTabbedInterface # useEffect - activeTrack: ", activeTrack);
+  }, [activeTrack]);
+  
 
   return (
     <div className="flex h-[40rem] bg-gray-100">
@@ -240,10 +242,11 @@ const MyTabbedInterface = ({
             </h2>
             {/* Accordion for Recording AND Track */}
             <div className="border rounded border-2 mb-[0.5rem]">
+              {/* // TODO critically WRONG?! Not updated when clicking the handleTrackClick?! */}
               <MetadataAccordion
                 content={listSearchRes.filter(
                   (a) => a.track === activeTrack
-                )[0].arrIdNotes[0]} // WRONG?! Needs to be adapted to the sorted list!!! // update 2023/06/10
+                )[0].arrIdNotes[0]} 
                 recording={activeRecording}
                 track={activeTrack}
                 findMatchRecording={findMatchRecording}

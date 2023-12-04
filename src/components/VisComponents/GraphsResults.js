@@ -102,13 +102,13 @@ const GraphsResults = ({ infoMusicList, oldSearch, listSearchRes }) => {
   for (var k in mapMelodyToCount) {
     if (mapMelodyToCount[k] > numberFilterMelodyCount) { filteredMapMelodyCount[arrayStrPitchesToNotes(k)] = mapMelodyToCount[k] }
   }
-  console.log("filteredMapMelodyCount: ",filteredMapMelodyCount);
+  // console.log("filteredMapMelodyCount: ",filteredMapMelodyCount);
   // TODO sort that object?
   let sortedMelodyCount = {}
   for (let i in Object.keys(filteredMapMelodyCount).sort()){
     sortedMelodyCount[Object.keys(filteredMapMelodyCount).sort()[i]] = filteredMapMelodyCount[Object.keys(filteredMapMelodyCount).sort()[i]]
   }
-  console.log("- sortedMelodyCount: ", sortedMelodyCount);
+  // console.log("- sortedMelodyCount: ", sortedMelodyCount);
 
 
   const datesCount = {};
@@ -118,9 +118,9 @@ const GraphsResults = ({ infoMusicList, oldSearch, listSearchRes }) => {
       infoMusicList.filter(a => a.lognumber === b)[0]
         ? infoMusicList.filter(a => a.lognumber === b)[0]['dateEvent']
         : null)
-  console.log("mapRecordingToDate: ", mapRecordingToDate);
+  // console.log("mapRecordingToDate: ", mapRecordingToDate);
   for (let i in mapRecordingToDate) { datesCount[mapRecordingToDate[i]] = lognumbersCount[i] }
-  console.log("datesCount: ", datesCount);
+  // console.log("datesCount: ", datesCount);
     
   let keysTime = [];
   let valuesTime = [];
@@ -135,12 +135,12 @@ const GraphsResults = ({ infoMusicList, oldSearch, listSearchRes }) => {
     valuesTime = Object.values(datesCount)
     for (var i in keysTime) { objIso[keysTime[i]] = valuesTime[i] }
   }
-  console.log("- objIso: ", objIso);
+  // console.log("- objIso: ", objIso);
   let sortedIso = {}
   for (let i in Object.keys(objIso).sort()){
       sortedIso[Object.keys(objIso).sort()[i]] = objIso[Object.keys(objIso).sort()[i]]
   }
-  console.log("- sortedIso: ", sortedIso);
+  // console.log("- sortedIso: ", sortedIso);
   
 
   // console.log("uniqueMelodiesStr: ",uniqueMelodiesStr);
