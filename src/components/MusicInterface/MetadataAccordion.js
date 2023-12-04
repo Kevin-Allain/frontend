@@ -48,18 +48,10 @@ const MetadataAccordion = ({
 
     return (
       <div className="metadata-accordion ">
-        <div
-          className="metadata-header flex"
-          onClick={toggleAccordionRecording}
-        >
-          <div className="metadata-title font-semibold">
-            Recording Interaction and Metadata
-          </div>
-          {expandedRecording ? (
-            <FaAngleUp className="metadata-icon" />
-          ) : (
-            <FaAngleDown className="metadata-icon" />
-          )}
+      <div> content: {content}, recording: {recording}, track: {track},  mongoObjId: {mongoObjId}, metaObjId: {metaObjId} </div>
+        <div className="metadata-header flex" onClick={toggleAccordionRecording} >
+          <div className="metadata-title font-semibold"> Recording Interaction and Metadata </div>
+          {expandedRecording ? ( <FaAngleUp className="metadata-icon" /> ) : ( <FaAngleDown className="metadata-icon" /> )}
         </div>
         {expandedRecording && (
           <div className="metadata-content">
@@ -70,11 +62,7 @@ const MetadataAccordion = ({
                 <div className="detailResultMeta">
                   <u>Info about recording:</u>
                   {/* Full display set for testing */}
-                  {/* {Object.entries(infoMusicList.filter(a => a.lognumber === recording)[0])
-                                    .map(([key, value]) => (
-                                        (value.length !== 0 ) ? <p key={key}> {key}: {value}</p> : <></>
-                                    ))}
-                                <br/><hr /><br/> */}
+                  {/* {Object.entries(infoMusicList.filter(a => a.lognumber === recording)[0]) .map(([key, value]) => ( (value.length !== 0 ) ? <p key={key}> {key}: {value}</p> : <></> ))} <br/><hr /><br/> */}
                   {Object.entries(
                     infoMusicList.filter((a) => a.lognumber === recording)[0]
                   ).map(([key, value]) =>

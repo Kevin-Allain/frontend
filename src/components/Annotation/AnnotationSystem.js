@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { HiOutlineAnnotation } from 'react-icons/hi'
 import {
   addAnnotation,
@@ -25,6 +25,9 @@ const AnnotationSystem = ({ type, info,idCaller = null, index=0, recordingCode=n
 
   const [selectedPrivacyOption, setSelectedPrivacyOption] = useState('public');
 
+  useEffect(() => {
+    console.log("useEffect ~ AnnotationSystem: ",{ type, info,idCaller, index, recordingCode, trackCode,metaObjId})
+  })
 
   const updateMode = (_id, text) => {
     console.log("updateMode AnnotationSystem. text: ",text);
@@ -75,86 +78,111 @@ const AnnotationSystem = ({ type, info,idCaller = null, index=0, recordingCode=n
       </div>
 
       {showInputAnnotation && (
-        <div className="areaAnnotation">
-          {typeof localStorage.token !== "undefined" && (
-            <div className="areaInputAnnotation">
-              <input
-                type="text"
-                placeholder={"Add annotation about " + type}
-                name="AddAnnotation"
-                id="AddAnnotation"
-                className="annotation"
-                value={textInputAnnotation}
-                onChange={(e) => setTextInputAnnotation(e.target.value)}
-              />
-              <select
-                className="selectPrivacy"
-                value={selectedPrivacyOption}
-                onChange={handleChangeOption}
-              >
-                <option value="public">Public</option>
-                <option value="private">Private</option>
-              </select>
-              <div
-                className="add"
-                onClick={
-                  textInputAnnotation !== ""
-                    ? isUpdating
-                      ? () => updateAnnotation(
-                            annotationId, textInputAnnotation, setTextInputAnnotation, index, type, info, setListAnnotations, setIsUpdating, localStorage?.username
-                          )
-                      : () => addAnnotation(
-                            type, info, index, textInputAnnotation, setTextInputAnnotation, setListAnnotations, idCaller, localStorage?.username, selectedPrivacyOption, recordingCode, trackCode
-                          )
-                    : () => console.log("empty")
-                }
-              >
-                {isUpdating ? "Update" : "Add"}
+        <>
+          <div>
+            For test - type: {type}, info: {info}, idCaller: {idCaller}, metaObjId: {metaObjId}
+          </div>
+          <div className="areaAnnotation">
+            {typeof localStorage.token !== "undefined" && (
+              <div className="areaInputAnnotation">
+                <input
+                  type="text"
+                  placeholder={"Add annotation about " + type}
+                  name="AddAnnotation"
+                  id="AddAnnotation"
+                  className="annotation"
+                  value={textInputAnnotation}
+                  onChange={(e) => setTextInputAnnotation(e.target.value)}
+                />
+                <select
+                  className="selectPrivacy"
+                  value={selectedPrivacyOption}
+                  onChange={handleChangeOption}
+                >
+                  <option value="public">Public</option>
+                  <option value="private">Private</option>
+                </select>
+                <div
+                  className="add"
+                  onClick={
+                    textInputAnnotation !== ""
+                      ? isUpdating
+                        ? () =>
+                            updateAnnotation(
+                              annotationId,
+                              textInputAnnotation,
+                              setTextInputAnnotation,
+                              index,
+                              type,
+                              info,
+                              setListAnnotations,
+                              setIsUpdating,
+                              localStorage?.username
+                            )
+                        : () =>
+                            addAnnotation(
+                              type,
+                              info,
+                              index,
+                              textInputAnnotation,
+                              setTextInputAnnotation,
+                              setListAnnotations,
+                              idCaller,
+                              localStorage?.username,
+                              selectedPrivacyOption,
+                              recordingCode,
+                              trackCode
+                            )
+                      : () => console.log("empty")
+                  }
+                >
+                  {isUpdating ? "Update" : "Add"}
+                </div>
+              </div>
+            )}
+            <div className="outerAreaDisplayAnnotation">
+              <div className="areaDisplayAnnotation">
+                {listAnnotations.length === 0 && (
+                  <p className="text-black">
+                    No annotation made for this {type}.
+                  </p>
+                )}
+                {listAnnotations.map((item, i) => (
+                  <Annotation
+                    key={item._id}
+                    _id={item._id}
+                    annotationInput={item.annotationInput}
+                    info={item.info}
+                    type={item.type}
+                    author={item.author}
+                    privacy={item.privacy}
+                    indexAnnotation={i}
+                    time={item.time}
+                    // TODO (and think about more) e.g. star
+                    handleShowAndLoadCommentsSystem={() =>
+                      handleShowAndLoadCommentsSystem(item._id)
+                    }
+                    updateMode={() =>
+                      updateMode(
+                        item._id,
+                        item.annotationInput,
+                        localStorage?.username
+                      )
+                    }
+                    deleteAnnotation={() =>
+                      deleteAnnotation(
+                        item._id,
+                        item.type,
+                        item.info,
+                        setListAnnotations
+                      )
+                    }
+                  />
+                ))}
               </div>
             </div>
-          )}
-          <div className="outerAreaDisplayAnnotation">
-            <div className="areaDisplayAnnotation">
-              {listAnnotations.length === 0 && (
-                <p className="text-black">
-                  No annotation made for this {type}.
-                </p>
-              )}
-              {listAnnotations.map((item, i) => (
-                <Annotation
-                  key={item._id}
-                  _id={item._id}
-                  annotationInput={item.annotationInput}
-                  info={item.info}
-                  type={item.type}
-                  author={item.author}
-                  privacy={item.privacy}
-                  indexAnnotation={i}
-                  time={item.time}
-                  // TODO (and think about more) e.g. star
-                  handleShowAndLoadCommentsSystem={() =>
-                    handleShowAndLoadCommentsSystem(item._id)
-                  }
-                  updateMode={() =>
-                    updateMode(
-                      item._id,
-                      item.annotationInput,
-                      localStorage?.username
-                    )
-                  }
-                  deleteAnnotation={() =>
-                    deleteAnnotation(
-                      item._id,
-                      item.type,
-                      item.info,
-                      setListAnnotations
-                    )
-                  }
-                />
-              ))}
-            </div>
           </div>
-        </div>
+        </>
       )}
     </div>
   );
