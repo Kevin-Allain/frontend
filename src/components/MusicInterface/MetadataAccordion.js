@@ -5,19 +5,15 @@ import EmbeddedWorkflowInteraction from '../Workflow/EmbeddedWorkflowInteraction
 import { AiOutlineLoading } from 'react-icons/ai'
 
 const MetadataAccordion = ({
-    content,recording, track, findMatchRecording = null, infoMusicList = null, structData = null
+    content,recording, track, findMatchRecording = null, infoMusicList = null, structData = null, 
 }) => {
 
     console.log('# MetadataAccordion: ',{recording, track, content, findMatchRecording, infoMusicList, structData});
 
-    console.log(
-      "Issue with this: ",
-      Object.entries(
-        infoMusicList
-          .filter((a) => a.lognumber === recording)
-          .filter((a) => a["SJA_ID"] === track.replace("-T", "_"))[0]
-      )
-    );
+    // console.log( "Issue with this: ", Object.entries( infoMusicList
+    //       .filter((a) => a.lognumber === recording)
+    //       .filter((a) => a["SJA_ID"] === track.replace("-T", "_"))[0] )
+    // );
 
     const [expandedRecording, setExpandedRecording] = useState(false);
     const toggleAccordionRecording = () => { setExpandedRecording(!expandedRecording); };

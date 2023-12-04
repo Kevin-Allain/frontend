@@ -504,7 +504,14 @@ const addAnnotation = (
             console.log(data);
             setAnnotationInput("");
             getAnnotations(
-              type, info, setListAnnotations, indexAnnotation, null, localStorage.username ? localStorage.username : null)
+              type, 
+              info, 
+              setListAnnotations, 
+              indexAnnotation, 
+              idCaller, // doubt about this... 
+              localStorage.username ? localStorage.username : null,
+              true
+              )
             // setIsLoading(false);        
           })
           .catch(err => console.log(err))
@@ -560,35 +567,49 @@ const updateAnnotation = (
 }
 
 const getAnnotations = (
-  type, info, setListAnnotations, indexAnnotation = 0, idCaller=null, user = null
+  type, info, setListAnnotations, indexAnnotation = 0, idCaller=null, user = null, directMetaIdCaller=false
 ) => {
-  console.log("HandeAPI getAnnotations type: ", type, ", info: ", info, ", indexAnnotation: ", indexAnnotation,", idCaller: ",idCaller,", user: ", user);
+  console.log("HandeAPI getAnnotations type: ", type, ", info: ", info, ", indexAnnotation: ", indexAnnotation,", idCaller: ",idCaller,", user: ", user,", directMetaIdCaller: ",directMetaIdCaller);
   // setIsLoading(true);
-
-  // TODO update the call to use the _id of idCaller
   console.log("idCaller: ",idCaller);
   // doubt: do we ever need to make a specific type for a note... I guess not
   if (type === 'recording' || type ==='track'){
-  axios
-    .get(`${baseUrl}/getTrackMetaFromNoteId`, { params: { idTrack: idCaller } })
-    .then((d) => {
-      console.log("Loaded data with getTrackMetaFromNoteId. d: ", d);
-      let idMetaObj = null;
-      if (d.data.length > 0) { idMetaObj = d.data[0]._id; } 
-      console.log("idMetaObj: ", idMetaObj);
-
+    let idMetaObj = null;
+    if (directMetaIdCaller) {
+      console.log("Passed a metadata first.");
+      idMetaObj = idCaller;
       axios
-        .get(`${baseUrl}/getAnnotations`, {
-          params: {
-            type: type, info: info, indexAnnotation: indexAnnotation, idCaller: idMetaObj, user: user,
-          },
-        })
-        .then(({ data }) => {
-          console.log("data: ", data);
-          setListAnnotations(data);
-        })
-        .catch((err) => console.log(err));
-    });
+      .get(`${baseUrl}/getAnnotations`, {
+        params: {
+          type: type, info: info, indexAnnotation: indexAnnotation, idCaller: idMetaObj, user: user,
+        },
+      })
+      .then(({ data }) => {
+        console.log("data: ", data);
+        setListAnnotations(data);
+      })
+      .catch((err) => console.log(err));
+    } else { 
+      axios
+      .get(`${baseUrl}/getTrackMetaFromNoteId`, { params: { idTrack: idCaller } })
+      .then((d) => {
+        console.log("Loaded data with getTrackMetaFromNoteId. d: ", d);
+        if (d.data.length > 0) { idMetaObj = d.data[0]._id; } 
+        console.log("idMetaObj: ", idMetaObj);
+  
+        axios
+          .get(`${baseUrl}/getAnnotations`, {
+            params: {
+              type: type, info: info, indexAnnotation: indexAnnotation, idCaller: idMetaObj, user: user,
+            },
+          })
+          .then(({ data }) => {
+            console.log("data: ", data);
+            setListAnnotations(data);
+          })
+          .catch((err) => console.log(err));
+      });      
+    }
   } else {
     axios
     .get(`${baseUrl}/getAnnotations`, {

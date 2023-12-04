@@ -242,7 +242,6 @@ const MyTabbedInterface = ({
             </h2>
             {/* Accordion for Recording AND Track */}
             <div className="border rounded border-2 mb-[0.5rem]">
-              {/* // TODO critically WRONG?! Not updated when clicking the handleTrackClick?! */}
               <MetadataAccordion
                 content={listSearchRes.filter(
                   (a) => a.track === activeTrack
