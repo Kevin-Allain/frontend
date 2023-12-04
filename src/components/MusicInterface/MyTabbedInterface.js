@@ -21,6 +21,19 @@ const MyTabbedInterface = ({
   const [visibleTracks, setVisibleTracks] = useState({});
   const tracksContainerRef = useRef(null);
 
+  
+  const [expandedRecording, setExpandedRecording] = useState(false);
+  const [expandedTrack, setExpandedTrack] = useState(false);
+
+  const setBlockToggles = () => {
+    setExpandedRecording(false);
+    setExpandedTrack(false);
+  };
+
+
+  // About display for the MetadataAccordion
+
+
   // console.log("-- MyTabbedInterface. listLogNumbers: ", listLogNumbers, ", infoMusicList: ", infoMusicList, ", listSearchRes: ", listSearchRes,", listTracks: ",listTracks);
 
   let prettyNamesLogNumber = {};
@@ -121,6 +134,7 @@ const MyTabbedInterface = ({
     console.log("~~ handleTrackClick, track: ",track,", typeof track: ",typeof track,", activeRecording: ",activeRecording);
     setActiveTrack(track);
     console.log("activeTrack: ", activeTrack);
+    setBlockToggles();
   };
 
   useEffect(() => {
@@ -257,6 +271,11 @@ const MyTabbedInterface = ({
                     )
                   ]
                 }
+                setBlockToggles={setBlockToggles}
+                expandedRecording={expandedRecording}
+                setExpandedRecording={setExpandedRecording}
+                expandedTrack={expandedTrack}
+                setExpandedTrack={setExpandedTrack}
               />
             </div>
             {/* We should change TrackRes I think... */}

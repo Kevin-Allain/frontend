@@ -6,6 +6,11 @@ import { AiOutlineLoading } from 'react-icons/ai'
 
 const MetadataAccordion = ({
     content,recording, track, findMatchRecording = null, infoMusicList = null, structData = null, 
+    setBlockToggles=null,
+    expandedRecording=null,
+    setExpandedRecording=null,
+    expandedTrack=null,
+    setExpandedTrack=null
 }) => {
 
     console.log('# MetadataAccordion: ',{recording, track, content, findMatchRecording, infoMusicList, structData});
@@ -15,9 +20,9 @@ const MetadataAccordion = ({
     //       .filter((a) => a["SJA_ID"] === track.replace("-T", "_"))[0] )
     // );
 
-    const [expandedRecording, setExpandedRecording] = useState(false);
+    // const [expandedRecording, setExpandedRecording] = useState(false);
     const toggleAccordionRecording = () => { setExpandedRecording(!expandedRecording); };
-    const [expandedTrack, setExpandedTrack] = useState(false);
+    // const [expandedTrack, setExpandedTrack] = useState(false);
     const toggleAccordionTrack = () => { setExpandedTrack(!expandedTrack); };
     const [mongoObjId, setMongoObjId] = useState(content);
 
@@ -39,6 +44,20 @@ const MetadataAccordion = ({
       );
       console.log("useEffect MetadataAccordion. track: ",track,", mongoObjId: ",mongoObjId,", metaObjId: ",metaObjId);
     }, [content, recording, track, infoMusicList, mongoObjId, metaObjId]);
+
+
+    // TODO doubt about this...
+    useEffect(() => {
+      console.log("useEffect MetadataAccordion ~ ",{setBlockToggles, setExpandedRecording, setExpandedTrack});
+      // // Use the 'setBlockToggles' callback function when needed
+      // // Example: Call it when some event happens in the child component
+      // setBlockToggles();
+      // // Update 'expandedRecording' and 'expandedTrack' from within MetadataAccordion
+      // // Example: Call it when some event happens in the child component
+      // setExpandedRecording(true);
+      // setExpandedTrack(true);
+    }, [setBlockToggles, setExpandedRecording, setExpandedTrack]);
+  
 
     console.log("mongoObjId: ",mongoObjId,", content: ",content,", metaObjId: ",metaObjId); // TODO wrong!!! Doesn't adapt. Might need to use content directly
 
