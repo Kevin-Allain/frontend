@@ -823,7 +823,21 @@ const createWorkflow = (
   listLogNumbers = [], infoMusicList=[], listTracks=[]
 ) => {
   // TODO adapt objectsId if we are creating something that is not relateds to an existing object in database, like a search
-  console.log("handleApi createWorkflow. ", {title, description, time, author, objectsId, objectsTimes, objectsNote, objectsType,privacy, listLogNumbers,infoMusicList, listTracks});
+  console.log("handleApi createWorkflow. ",
+    {
+      title,
+      description,
+      time,
+      author,
+      objectsId,
+      objectsTimes,
+      objectsNote,
+      objectsType,
+      privacy,
+      listLogNumbers,
+      infoMusicList,
+      listTracks
+    });
 
   const objects = [];
   for (var i = 0; i < objectsId.length; i++) {
@@ -896,14 +910,13 @@ const createWorkflow = (
         let fullStr = objectsId[0];
         let  indxArtistF=1, indxRecordingF=2, indxTrackF = 3, indxPercF = 4;
         let strNotes = fullStr.split('_')[0];
-        let artistF = fullStr.split('_')[indxArtistF].split('(')[1].substr(0,fullStr.split('_')[indxArtistF].split('(')[1].indexOf(')'))
-        let recordingF = fullStr.split('_')[indxRecordingF].split('(')[1].substr(0,fullStr.split('_')[indxRecordingF].split('(')[1].indexOf(')'))
-        let trackF = fullStr.split('_')[indxTrackF].split('(')[1].substr(0,fullStr.split('_')[indxTrackF].split('(')[1].indexOf(')'))
-        let percF = Number( fullStr.split('_')[indxPercF].split('(')[1].substr(0,fullStr.split('_')[indxPercF].split('(')[1].indexOf(')')) )
-        console.log("Parameters of the search: ",{strNotes, artistF, recordingF, trackF, percF});
+        let artistF = fullStr.split('_')[indxArtistF].split('(')[1].substr(0, fullStr.split('_')[indxArtistF].split('(')[1].indexOf(')'))
+        let recordingF = fullStr.split('_')[indxRecordingF].split('(')[1].substr(0, fullStr.split('_')[indxRecordingF].split('(')[1].indexOf(')'))
+        let trackF = fullStr.split('_')[indxTrackF].split('(')[1].substr(0, fullStr.split('_')[indxTrackF].split('(')[1].indexOf(')'))
+        let percF = Number(fullStr.split('_')[indxPercF].split('(')[1].substr(0, fullStr.split('_')[indxPercF].split('(')[1].indexOf(')')))
+        console.log("Parameters of the search: ", { strNotes, artistF, recordingF, trackF, percF });
         // OR specify code in the back end... i.e. take this code and put it in the back-end (PROBABLY MESSY)
         // At least listLogNumbers would work.
-
         axios.get(`${baseUrl}/getSearchMap`, {
           params: { query: strNotes, filterArtist: artistF, filterRecording: recordingF, filterTrack: trackF, percMatch: percF }
         }).then((resSearchMap) => {
@@ -911,7 +924,7 @@ const createWorkflow = (
           console.log("Successfully called getSearchMap.resSearchMap: ", resSearchMap);
           // TODO make a call to load metadata? Or use it stored somewhere prior to the call?
           let arrMetadataToWorkflow = [];
-          if(infoMusicList.length>0){arrMetadataToWorkflow=infoMusicList}
+          if (infoMusicList.length > 0) { arrMetadataToWorkflow = infoMusicList }
           // trackObj['SJA_ID']
           //   ? arrMetadataToWorkflow.push(d.data.filter(a => a['SJA_ID'] === trackObj['SJA_ID'])[0])
           //   : arrMetadataToWorkflow.push(d.data[0]); // I think this is the right approach for BGR
@@ -935,6 +948,36 @@ const createWorkflow = (
             })
             .catch(err => console.log(err))
         })
+      } else if (objectsType[0] === 'annotation') {
+        axios
+          .post(`${baseUrl}/createWorkflow`, {
+            title, description, time, author, objects, privacy,
+          })
+          .then((data) => {
+            console.log("Then handleApi createWorkflow");
+            setTitleInput("");
+            setDescriptionInput("");
+            setShowLoadingIcon(false);
+            getWorkflowsInfo(
+              dispatch, setWorkflows, { user: author }
+            )
+          })
+          .catch(err => console.log(err))
+      } else if (objectsType[0] === 'comment') {
+        axios
+          .post(`${baseUrl}/createWorkflow`, {
+            title, description, time, author, objects, privacy,
+          })
+          .then((data) => {
+            console.log("Then handleApi createWorkflow");
+            setTitleInput("");
+            setDescriptionInput("");
+            setShowLoadingIcon(false);
+            getWorkflowsInfo(
+              dispatch, setWorkflows, { user: author }
+            )
+          })
+          .catch(err => console.log(err))
       } else {
         console.log("We are not prepared for this item. It is a ", objectsType[0])
         // TODO code is not ready for the types annotation and comment?!

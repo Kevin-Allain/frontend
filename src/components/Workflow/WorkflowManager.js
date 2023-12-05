@@ -311,17 +311,13 @@ const loadDetailsSearchWorkflow = (_id) => {
                           <div className="contentWorkflow">
                             {console.log("item about to show: ", item)}
                             {item.objectType === 'annotation' && <>
-                              Annotation about {item.content[0].type}:{" "}{item.content[0].info}.<br />
+                              Annotation about {item.content[0].type}:{" "}{item.content[0].info}<br />
                               {item.content[0].annotationInput} - {item.content[0].author} - {item.content[0].time}
                             </>}
                             {/* TODO But first we need to ensure the ids for comment (and annotation) are working fine! */}
                             {item.objectType === 'comment' && <>
                               Work in progress to set the display of the comment {item.objectId}.
                               <BiWrench />
-                            </>}
-                            {item.objectType === 'annotation' && <>
-                              Annotation about {item.content[0].type}:{" "}{item.content[0].info}.<br />
-                              {item.content[0].annotationInput} - {item.content[0].author} - {item.content[0].time}
                             </>}
                             {item.objectType === 'track' && <>
                               {item.content.map(c => (
