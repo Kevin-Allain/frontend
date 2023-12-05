@@ -22,6 +22,7 @@ import {
 } from "../../utils/HandleApi";
 // import WorkflowInterface from "./WorkflowInterface";
 import Title from "../Presentation/Title";
+import AnnotationSystem from "../Annotation/AnnotationSystem"
 
 // Work in progress: list of workflows with the reducer...
 import { useSelector, useDispatch } from 'react-redux';
@@ -405,47 +406,51 @@ const loadDetailsSearchWorkflow = (_id) => {
         </div>
       }
       </div>
+      {/* 
+        SEARCH RELATED SECTION
+        TODO: Create a different component
+      */}
       <div className="blockWorkFlow rounded-b-lg">
-      <div className="workflowSearch icon flex text-lg items-center" onClick={handleToggleSearch}>
-        <BiSearchAlt className="mr-[0.25rem]"/>
-        Search for workflows 
-        {showSearchWorkflow ? (
+        <div className="workflowSearch icon flex text-lg items-center" onClick={handleToggleSearch}>
+          <BiSearchAlt className="mr-[0.25rem]" />
+          Search for workflows
+          {showSearchWorkflow ? (
             <FaAngleUp className="metadata-icon" />
           ) : (
             <FaAngleDown className="metadata-icon" />
           )}
 
-      </div>
-      {showSearchWorkflow &&
-        (
-          <div className="topTextSearchWorkflow mx-[0.5rem] my-[0.25rem]">
-            <div className='disclaimerSearchWorkflow'>Workflow search based on
-              <select className='selectPrivacy' value={searchAttribute} onChange={handleChangeSearchAttribute}>
-                <option value="author">User name</option>
-                <option value="trackTitle">Track name</option>
-                <option value="artistName">Artist name</option>
-                <option value="eventName">Recording name</option>
-              </select>
+        </div>
+        {showSearchWorkflow &&
+          (
+            <div className="topTextSearchWorkflow mx-[0.5rem] my-[0.25rem]">
+              <div className='disclaimerSearchWorkflow'>Workflow search based on
+                <select className='selectPrivacy' value={searchAttribute} onChange={handleChangeSearchAttribute}>
+                  <option value="author">User name</option>
+                  <option value="trackTitle">Track name</option>
+                  <option value="artistName">Artist name</option>
+                  <option value="eventName">Recording name</option>
+                </select>
+              </div>
+              <input
+                type="text"
+                className='inputWorkflowSearch'
+                placeholder="Enter search here"
+                ref={textSearchRef}
+                autoComplete="off"
+                required
+                value={textSearch}
+                onChange={handleChangeQueryWorkflow}
+              />
+              <button
+                className='mx-[0.5rem] my-[0.25rem]'
+                onClick={handleClickWorkflowSearch}>
+                Submit search
+              </button>
+              {loadingSearchWorkflow && <AiOutlineLoading className="spin" />}
             </div>
-            <input
-              type="text"
-              className='inputWorkflowSearch'
-              placeholder="Enter search here"
-              ref={textSearchRef}
-              autoComplete="off"
-              required 
-              value={textSearch}
-              onChange={handleChangeQueryWorkflow}
-            />
-            <button
-              className='mx-[0.5rem] my-[0.25rem]'
-              onClick={handleClickWorkflowSearch}>
-              Submit search
-            </button>
-            {loadingSearchWorkflow && <AiOutlineLoading className="spin"/>}
-          </div>
-        )
-      }
+          )
+        }
         <div className="areaSearchWorkflowOutput mx-[1rem] my-[0.25rem] ">
           {showSearchWorkflow && oldTextSearch !== '' &&
             <u className='my-[0.5rem]'>Your search for: {oldTextSearch} with the parameter: {oldSelectionParameter}</u>
@@ -457,103 +462,111 @@ const loadDetailsSearchWorkflow = (_id) => {
           }
           {/* The display of the content of the searched workflow */}
           {isSearchWorkflowVisible && selectedSearchWorkflow &&
-        <div className="workflowInterface">
-          <h1>Workflow Interface from Search</h1>{" "}<AiOutlineEyeInvisible className="icon" onClick={handleShowSearchWorkflowDetail} />
-          <div className="workflowHeader">
-            <div className="workFlowTitle">{selectedSearchWorkflow.title}</div> <div className="privacyWorkflowInfo">({selectedSearchWorkflow.privacy})</div>
-            <div className="workFlowDescription">
-              <u>Description:</u>
-              <br />
-              {selectedSearchWorkflow.description}
-            </div>
-            {/* <em> {selectedSearchWorkflow.author} | {selectedSearchWorkflow.time} | {selectedSearchWorkflow._id} |{" "} {selectedSearchWorkflow.objects.length} objects </em> */}
-            <em>Creation: {selectedSearchWorkflow.time.replace('T',' ').split('.')[0]} </em>
-            <div className="workflowListObjects">
-              {selectedSearchWorkflow.objects.map((item, i) => (
-                <div className="workflowObject" key={'workflowObject_' + i}>
-                  {/* For testing */}
-                  {/* <u>Object id:</u> {item.objectId} | <u>Object type:</u>{" "} {item.objectType} | <u>Object index:</u> {item.objectIndex} <br /> */}
-                  <div className="workflowContentDisplay">
-                    <b>Content of the {item.objectType}: </b>
-                    {item.content ? (
-                      <div className="contentItem">
-                        {(item.content && item.content.length > 0 )?  
-                        (
-                          <div className="contentWorkflow">
-                              {item.content
-                                .slice() // Create a shallow copy of the array to avoid mutating the original
-                                .sort((a, b) => a.m_id - b.m_id) // Sort by the m_id property                            
-                                .map((contentI, index) => (
-                                  <React.Fragment key={'head_contentI_' + index}>
-                                    {index === 0 && (
-                                      <table className="tableItemContentAndFirst">
-                                        <colgroup>
-                                          {Object.keys(contentI).map((key) => ( <col key={key} /> ))}
-                                        </colgroup>
-                                        <thead>
-                                          <tr>
-                                            {Object.keys(contentI).map((key) => (
-                                              <th key={key}> <b style={{ color: 'white' }}>{key}</b> </th>
-                                            ))}
-                                          </tr>
-                                        </thead>
-                                        <tbody>
-                                          <tr>
-                                            {Object.values(contentI).map((value, index) => (
-                                              <td key={'value_contentI_' + index}>
-                                                <div className="tableCellContent">
-                                                  {['duration', 'onset'].indexOf(Object.keys(contentI)[index]) === -1
-                                                    ? value
-                                                    : Number(value).toFixed(2)}
-                                                </div>
-                                              </td>
-                                            ))}
-                                          </tr>
-                                        </tbody>
-                                      </table>
-                                    )}
-                                    {index > 0 && (
-                                      <table className="tableItemContentBody">
-                                        <colgroup> {Object.keys(contentI).map((key) => ( <col key={key} /> ))} </colgroup>
-                                        <tbody>
-                                          <tr>
-                                            {Object.values(contentI).map((value, index) => (
-                                              <td key={'tableItemContentBody_' + index}>
-                                                <div className="tableCellContent">
-                                                  {['duration', 'onset'].indexOf(Object.keys(contentI)[index]) === -1
-                                                    ? value
-                                                    : Number(value).toFixed(2)}
-                                                </div>
-                                              </td>
-                                            ))}
-                                          </tr>
-                                        </tbody>
-                                      </table>
-                                    )}
-                                  </React.Fragment>
-                                ))}
-                              {item.objectType === 'sample' ? (
-                                <div className="sampleWorkflow">
-                                  <div className='pianoArea'>
-                                    <PianoRoll notes={[...item.content.slice().sort((a, b) => a.m_id - b.m_id).map(a => a.pitch)]} occurrences={[...item.content.slice().sort((a, b) => a.m_id - b.m_id).map(a => a.onset)]} durations={[...item.content.slice().sort((a, b) => a.m_id - b.m_id).map(a => a.duration)]} width={600} height={200} />
-                                  </div>
-                                  <div className="iconsSampleRes">
-                                    <WorkflowPlayer notes={[...item.content.slice().sort((a, b) => a.m_id - b.m_id).map(a => a.pitch)]} occurences={[...item.content.slice().sort((a, b) => a.m_id - b.m_id).map(a => a.onset)]} durations={[...item.content.slice().sort((a, b) => a.m_id - b.m_id).map(a => a.duration)]} />
-                                  </div>
-                                </div>
-                              ) : ('')}
-                            </div>
-                          )
-                          : (<div className="contentWorkflow">No additional content in database for the {item.objectType} </div>)
-                        }
-                      </div>
-                    ) : (<em>Loading content...</em>)}
-                  </div>
-                  <u>Object note:</u><br /> {item.objectNote} <br />
+            <div className="workflowInterface">
+              <h1>Workflow Interface from Search</h1>{" "}<AiOutlineEyeInvisible className="icon" onClick={handleShowSearchWorkflowDetail} />
+              <div className="workflowHeader">
+                <div className="workFlowTitle">{selectedSearchWorkflow.title}</div> <div className="privacyWorkflowInfo">({selectedSearchWorkflow.privacy})</div>
+                <div className="workFlowDescription">
+                  <u>Description:</u>
+                  <br />
+                  {selectedSearchWorkflow.description}
                 </div>
-              ))}
+                {/* <em> {selectedSearchWorkflow.author} | {selectedSearchWorkflow.time} | {selectedSearchWorkflow._id} |{" "} {selectedSearchWorkflow.objects.length} objects </em> */}
+                <em>Creation: {selectedSearchWorkflow.time.replace('T', ' ').split('.')[0]} </em>
+                <div className="workflowListObjects">
+                  {selectedSearchWorkflow.objects.map((item, i) => (
+                    <div className="workflowObject" key={'workflowObject_' + i}>
+                      {/* For testing */}
+                      {/* <u>Object id:</u> {item.objectId} | <u>Object type:</u>{" "} {item.objectType} | <u>Object index:</u> {item.objectIndex} <br /> */}
+                      <div className="workflowContentDisplay">
+                        <b>Content of the {item.objectType}: </b>
+                        {item.content ? (
+                          <div className="contentItem">
+                            {(item.content && item.content.length > 0) ?
+                              (
+                                <div className="contentWorkflow">
+                                  {item.content
+                                    .slice() // Create a shallow copy of the array to avoid mutating the original
+                                    .sort((a, b) => a.m_id - b.m_id) // Sort by the m_id property                            
+                                    .map((contentI, index) => (
+                                      <React.Fragment key={'head_contentI_' + index}>
+                                        {index === 0 && (
+                                          <table className="tableItemContentAndFirst">
+                                            <colgroup>
+                                              {Object.keys(contentI).map((key) => (<col key={key} />))}
+                                            </colgroup>
+                                            <thead>
+                                              <tr>
+                                                {Object.keys(contentI).map((key) => (
+                                                  <th key={key}> <b style={{ color: 'white' }}>{key}</b> </th>
+                                                ))}
+                                              </tr>
+                                            </thead>
+                                            <tbody>
+                                              <tr>
+                                                {Object.values(contentI).map((value, index) => (
+                                                  <td key={'value_contentI_' + index}>
+                                                    <div className="tableCellContent">
+                                                      {['duration', 'onset'].indexOf(Object.keys(contentI)[index]) === -1
+                                                        ? value
+                                                        : Number(value).toFixed(2)}
+                                                    </div>
+                                                  </td>
+                                                ))}
+                                              </tr>
+                                            </tbody>
+                                          </table>
+                                        )}
+                                        {index > 0 && (
+                                          <table className="tableItemContentBody">
+                                            <colgroup> {Object.keys(contentI).map((key) => (<col key={key} />))} </colgroup>
+                                            <tbody>
+                                              <tr>
+                                                {Object.values(contentI).map((value, index) => (
+                                                  <td key={'tableItemContentBody_' + index}>
+                                                    <div className="tableCellContent">
+                                                      {['duration', 'onset'].indexOf(Object.keys(contentI)[index]) === -1
+                                                        ? value
+                                                        : Number(value).toFixed(2)}
+                                                    </div>
+                                                  </td>
+                                                ))}
+                                              </tr>
+                                            </tbody>
+                                          </table>
+                                        )}
+                                      </React.Fragment>
+                                    ))}
+                                  {item.objectType === 'sample' ? (
+                                    <div className="sampleWorkflow">
+                                      <div className='pianoArea'>
+                                        <PianoRoll notes={[...item.content.slice().sort((a, b) => a.m_id - b.m_id).map(a => a.pitch)]} occurrences={[...item.content.slice().sort((a, b) => a.m_id - b.m_id).map(a => a.onset)]} durations={[...item.content.slice().sort((a, b) => a.m_id - b.m_id).map(a => a.duration)]} width={600} height={200} />
+                                      </div>
+                                      <div className="iconsSampleRes">
+                                        <WorkflowPlayer notes={[...item.content.slice().sort((a, b) => a.m_id - b.m_id).map(a => a.pitch)]} occurences={[...item.content.slice().sort((a, b) => a.m_id - b.m_id).map(a => a.onset)]} durations={[...item.content.slice().sort((a, b) => a.m_id - b.m_id).map(a => a.duration)]} />
+                                      </div>
+                                    </div>
+                                  ) : ('')}
+                                </div>
+                              )
+                              : (<div className="contentWorkflow">No additional content in database for the {item.objectType} </div>)
+                            }
+                          </div>
+                        ) : (<em>Loading content...</em>)}
+                      </div>
+                      <u>Object note:</u><br /> {item.objectNote} <br />
+                    </div>
+                  ))}
                 </div>
               </div>
+                <AnnotationSystem
+                  type={"workflow"}
+                  recording={null}
+                  idCaller={selectedSearchWorkflow._id}
+                  recordingCode={null}
+                  trackCode={null}
+                  metaObjId={null}
+                />
             </div>
           }
         </div>
