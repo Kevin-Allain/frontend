@@ -471,19 +471,10 @@ const getMatchLevenshteinDistance = (
 
 // indexAnnotation added because we can have one sequence occur several times in a track
 const addAnnotation = (
-  type,
-  info,
-  indexAnnotation = 0,
-  annotationInput,
-  setAnnotationInput,
-  setListAnnotations,
-  idCaller = null,
-  author = null,
-  privacy = 'public'
+  type, info, indexAnnotation = 0, annotationInput, setAnnotationInput, setListAnnotations, idCaller = null, author = null, privacy = 'public'
 ) => {
   console.log(`HandeAPI addAnnotation: \n${baseUrl}/addAnnotation`, { type, info, annotationInput, author, indexAnnotation, privacy, idCaller });
   // setIsLoading(true);
-
   let time = new Date();
 
   if (type === "recording" || type === "track") {
@@ -505,15 +496,8 @@ const addAnnotation = (
             console.log(data);
             setAnnotationInput("");
             getAnnotations(
-              type, 
-              info, 
-              setListAnnotations, 
-              indexAnnotation, 
-              idCaller, // doubt about this... 
-              localStorage.username ? localStorage.username : null,
-              true
-              )
-            // setIsLoading(false);        
+              type, info, setListAnnotations, indexAnnotation, idCaller, localStorage.username ? localStorage.username : null, true
+            )
           })
           .catch(err => console.log(err))
       })
