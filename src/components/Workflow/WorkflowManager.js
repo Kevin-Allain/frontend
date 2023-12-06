@@ -316,8 +316,8 @@ const loadDetailsSearchWorkflow = (_id) => {
                             </>}
                             {/* TODO But first we need to ensure the ids for comment (and annotation) are working fine! */}
                             {item.objectType === 'comment' && <>
-                              Work in progress to set the display of the comment {item.objectId}.
-                              <BiWrench />
+                              Comment: {item.content[0].commentInput} - {item.content[0].time}<br/> 
+                              Author: {item.content[0].author}
                             </>}
                             {item.objectType === 'track' && <>
                               {item.content.map(c => (
@@ -481,7 +481,8 @@ const loadDetailsSearchWorkflow = (_id) => {
                             {(item.content && item.content.length > 0) ?
                               (
                                 <div className="contentWorkflow">
-                                  {item.content
+                                  {/* For test */}
+                                  {/* {item.content
                                     .slice() // Create a shallow copy of the array to avoid mutating the original
                                     .sort((a, b) => a.m_id - b.m_id) // Sort by the m_id property                            
                                     .map((contentI, index) => (
@@ -532,7 +533,49 @@ const loadDetailsSearchWorkflow = (_id) => {
                                           </table>
                                         )}
                                       </React.Fragment>
+                                    ))} */}
+                                  {item.objectType === 'annotation' && <>
+                                    Annotation about {item.content[0].type}:{" "}{item.content[0].info}<br />
+                                    {item.content[0].annotationInput} - {item.content[0].author} - {item.content[0].time}
+                                  </>}
+                                  {/* TODO But first we need to ensure the ids for comment (and annotation) are working fine! */}
+                                  {item.objectType === 'comment' && <>
+                                    Comment: {item.content[0].commentInput} - {item.content[0].time}<br />
+                                    Author: {item.content[0].author}
+                                  </>}
+                                  {item.objectType === 'track' && <>
+                                    {item.content.map(c => (
+                                      <>
+                                        {c['(E) Event Name'] ? <>Recording Name: {c['(E) Event Name']}</> : <></>}<br />
+                                        {c['Track Title'] ? <>Track Title: {c['Track Title']}</> : <></>}<br />
+                                        {c['(N) Named Artist(s)'] ? <>Named Artists: {c['(N) Named Artist(s)']}</> : <></>}<br />
+                                        {c['(Y) Date'] ? <>Release Date:
+                                          {c['Release Year'] ? c['Release Year'] : 'xx'}/
+                                          {c['Release Month'] ? c['Release Month'] : 'xx'}/
+                                          {c['Release Day'] ? c['Release Day'] : 'xx'}</>
+                                          : <></>}
+                                        {c['Label'] ? <>Label: {c['Label']}</> : <></>}<br />
+                                        {c['Musicians (instruments)'] ? <>Musicians (Instruments): {c['Musicians (instruments)']}</> : <></>}<br />
+                                      </>
                                     ))}
+                                    {item.content.length === 0 && <>This item is empty</>}
+                                  </>}
+                                  {item.objectType === 'recording' && <>
+                                    {item.content.map(c => (
+                                      <>
+                                        {c['(E) Event Name'] ? <>Recording Name: {c['(E) Event Name']}</> : <></>}<br />
+                                        {c['(N) Named Artist(s)'] ? <>Named Artists: {c['(N) Named Artist(s)']}</> : <></>}<br />
+                                        {c['(Y) Date'] ? <>Release Date:
+                                          {c['Release Year'] ? c['Release Year'] : 'xx'}/
+                                          {c['Release Month'] ? c['Release Month'] : 'xx'}/
+                                          {c['Release Day'] ? c['Release Day'] : 'xx'}</>
+                                          : <></>}
+                                        {c['Label'] ? <>Label: {c['Label']}</> : <></>}<br />
+                                        {c['Musicians (instruments)'] ? <>Musicians (Instruments): {c['Musicians (instruments)']}</> : <></>}<br />
+                                      </>
+                                    ))}
+                                    {item.content.length === 0 && <>This item is empty</>}
+                                  </>}
                                   {item.objectType === 'sample' ? (
                                     <div className="sampleWorkflow">
                                       <div className='pianoArea'>
