@@ -52,7 +52,13 @@ const GraphsResults = ({ infoMusicList, oldSearch, listSearchRes }) => {
   const [selectedAxisY, setSelectedAxisY] = useState("Release Month");
   const attributesOptions = ["Release Year", "Release Month", "Track Title", "Recording", "Artists"];
   // attributeMix can relate to a single attribute. What matters is we set the selection for the axes
-  const attributeMix = [ "Recording dates of matches", "Number of matches per recording", "Number of matches per track", "Number of occurences per match" ];
+  const attributeMix = [ 
+    "Recording dates of matches", 
+    "Number of matches per recording", 
+    "Number of matches per track", 
+    "Number of occurences per match",
+    "Number of melodies per artist over time"
+  ];
 
   // Derived parameters (might require making calls to the database)
   const [numMelodies, setMumMelodies] = useState(listSearchRes.length);
@@ -211,6 +217,8 @@ const GraphsResults = ({ infoMusicList, oldSearch, listSearchRes }) => {
 
     const updateOptions = () => {
       if (typeGraph === "scatter") {
+        console.log("Work in progress for scatter. We want to display information for ", "Number of melodies per artist over time");
+        
         const minAxisX =
           selectedAttributeMix === "Release Month"? 1
             : selectedAttributeMix === "Release Year"? Math.min(...infoMusicList.map((a) => Number(a["Release Year"])).filter((a) => a).filter((a) => a !== 0)) - 1
