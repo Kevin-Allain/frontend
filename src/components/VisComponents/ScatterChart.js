@@ -13,6 +13,19 @@ const ScatterChart = ({ data, labels, title }) => {
       },
     },
   };
+  const optionsTest2 = {
+    scales: {
+      x: {
+        type: 'category', // Use a category scale for text on the X-axis
+        labels: ['Category A', 'Category B', 'Category C', 'Category D', 'Category E'],
+      },
+      y: {
+        type: 'category', // Use a category scale for text on the Y-axis
+        labels: ['Type 1', 'Type 2', 'Type 3', 'Type 4'],
+      },
+    },
+  };
+
   const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
 
   const dataTest = {
@@ -39,7 +52,24 @@ const ScatterChart = ({ data, labels, title }) => {
       },
     ],
   };
-  console.log("dataTest: ",dataTest);
+  const dataTest2 = {
+    datasets: [
+      {
+        label: 'Bubble Chart',
+        data: [
+          { x: 'Category A', y: 'Type 1', r: 10 },
+          { x: 'Category B', y: 'Type 2', r: 20 },
+          { x: 'Category C', y: 'Type 1', r: 15 },
+          { x: 'Category E', y: 'Type 3', r: 35 },
+          // Add more data points as needed
+        ],
+        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+        borderColor: 'rgba(75, 192, 192, 1)',
+      },
+    ],
+  };
+
+  console.log("dataTest: ",dataTest,", dataTest2: ",dataTest2);
   // -- 
 
   const [chartData, setChartData] = useState({
@@ -70,7 +100,7 @@ const ScatterChart = ({ data, labels, title }) => {
     }));
   }, [data, labels, title]);
 
-  return <Bubble options={options} data={dataTest} />;
+  return <Bubble options={optionsTest2} data={dataTest2} />;
   // return <>Work in progress</>
 };
 
