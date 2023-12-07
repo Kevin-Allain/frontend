@@ -53,9 +53,9 @@ const GraphsResults = ({ infoMusicList, oldSearch, listSearchRes }) => {
   const attributesOptions = ["Release Year", "Release Month", "Track Title", "Recording", "Artists"];
   // attributeMix can relate to a single attribute. What matters is we set the selection for the axes
   const attributeMix = [ 
-    "Recording dates of matches", 
-    "Number of matches per recording", 
-    "Number of matches per track", 
+    "Recording dates of matches",
+    "Number of matches per recording",
+    "Number of matches per track",
     "Number of occurences per match",
     "Number of melodies per artist over time"
   ];
@@ -79,8 +79,13 @@ const GraphsResults = ({ infoMusicList, oldSearch, listSearchRes }) => {
   }, {}));
   const [uniqueMelodiesStr, setUniqueMelodiesStr] = useState(
     [...new Set(listSearchRes.map(a => a.arrNotes.join('-')))]
-  )
-  
+  );
+  // need to set data for artists.
+  const [uniqueArtists, setUniqueArtists] = useState(
+    [...new Set(infoMusicList.map(a => a['(N) Named Artist(s)'] ))]
+  );
+  console.log("uniqueArtists: ",uniqueArtists);
+
   const mapRecordingToName = {};
   [...new Set(listSearchRes.map(element => element.lognumber))]
     .map(b => mapRecordingToName[b] =
@@ -93,24 +98,39 @@ const GraphsResults = ({ infoMusicList, oldSearch, listSearchRes }) => {
       infoMusicList.filter(a => a['SJA_ID'] === b)[0]
         ? infoMusicList.filter(a => a['SJA_ID'] === b)[0]['Track Title']
         : null)
+  console.log("- mapTrackToName: ",mapTrackToName);
+  const mapTrackToArtist = {};
+  [...new Set(listSearchRes.map(element => element.track.replace(/-T/g, '_')))]
+    .map(b => mapTrackToArtist[b] =
+      infoMusicList.filter(a => a['SJA_ID'] === b)[0]
+        ? infoMusicList.filter(a => a['SJA_ID'] === b)[0]['(N) Named Artist(s)']
+        : null)
+  console.log("- mapTrackToArtist: ",mapTrackToArtist);
 
   const recordingsCount = {}
-  for (let i in mapRecordingToName) { recordingsCount[mapRecordingToName[i]] = lognumbersCount[i] }
+  for (let i in mapRecordingToName) { 
+    recordingsCount[mapRecordingToName[i]] = lognumbersCount[i] 
+  }
   const trackNamesCount = {};
-  for (let i in mapTrackToName) { trackNamesCount[mapTrackToName[i]] = tracksCount[i.substring(0,i.lastIndexOf('_'))+'-T'+i.substring(i.lastIndexOf('_')+1)]; }
+  for (let i in mapTrackToName) { 
+    trackNamesCount[mapTrackToName[i]] = tracksCount[i.substring(0,i.lastIndexOf('_'))+'-T'+i.substring(i.lastIndexOf('_')+1)]; 
+  }
   const mapMelodyToCount = {};
   uniqueMelodiesStr.map(
     b => mapMelodyToCount[b] = listSearchRes.map(a => a.arrNotes.join('-')).filter(a => a === b).length
   );
-  console.log("- mapMelodyToCount: ",mapMelodyToCount);
-  // TODO is 2 a good value for this filter? NO! Maybe it should be based on number of output rather than an input...
+  const trackArtistsCount = {};
+  for (let i in mapTrackToArtist) { trackArtistsCount[mapTrackToArtist[i]] = tracksCount[i.substring(0,i.lastIndexOf('_'))+'-T'+i.substring(i.lastIndexOf('_')+1)]; }
+  console.log("- trackArtistsCount: ",trackArtistsCount);
+
+  // TODO Current version is based on cases with only 1 occurence being filtered out if they represent less than 80%. Not very stable. A hard limit could be added.
   // if 1 represents a high number of the results... then just go with it...
   // Are they ordered?! Sort first
   const firstIndex1 = Object.values(mapMelodyToCount).sort().indexOf(1);
   const lastIndex1 = Object.values(mapMelodyToCount).sort().lastIndexOf(1);
   const rangeIndex1 = lastIndex1 - firstIndex1;
   let filteredMapMelodyCount = {};
-  if (rangeIndex1 / numMelodies > 0.85) {
+  if (rangeIndex1 / numMelodies > 0.80) {
     filteredMapMelodyCount = mapMelodyToCount;
   } else {
     const numberFilterMelodyCount = 2;
@@ -161,47 +181,47 @@ const GraphsResults = ({ infoMusicList, oldSearch, listSearchRes }) => {
 
   // console.log("uniqueMelodiesStr: ",uniqueMelodiesStr);
   // console.log("recordingsCount: ", recordingsCount, ", trackNamesCount: ", trackNamesCount);
-  // console.log("numMelodies: ", numMelodies, ", percMatchesCount: ", percMatchesCount, ", lognumbersCount: ", lognumbersCount, ", tracksCount: ", tracksCount, ", mapRecordingToName: ", mapRecordingToName, ", mapTrackToName: ", mapTrackToName);
+  console.log("numMelodies: ", numMelodies, ", percMatchesCount: ", percMatchesCount, ", lognumbersCount: ", lognumbersCount, ", tracksCount: ", tracksCount, ", mapRecordingToName: ", mapRecordingToName, ", mapTrackToName: ", mapTrackToName);
   // // TODO consider a number of matches we are happy with?
   // console.log("mapMelodyToCount: ",mapMelodyToCount);
   // console.log("filteredMapMelodyCount: ",filteredMapMelodyCount);
 
   // ---- Parameters specific to certain graphs
   // -- Scatter
-    // Assuming dataScatter is calculated based on selectedAttributeMix, selectedAxisY, and typeGraph
-    const [dataScatter, setDataScatter] = useState({
-      datasets: [
-        {
-          label: `${selectedAttributeMix} and ${selectedAxisY}`,
-          data: dataInput
-            .map((item, i) =>
-              selectedAttributeMix !== "Release Year" ||
+  // Assuming dataScatter is calculated based on selectedAttributeMix, selectedAxisY, and typeGraph
+  const [dataScatter, setDataScatter] = useState({
+    datasets: [
+      {
+        label: `${selectedAttributeMix} and ${selectedAxisY}`,
+        data: dataInput
+          .map((item, i) =>
+            selectedAttributeMix !== "Release Year" ||
               ((selectedAttributeMix === "Release Year" ||
                 selectedAttributeMix === "Release Month") &&
                 Number(item[selectedAttributeMix]) !== 0) ||
               ((selectedAxisY === "Release Year" ||
                 selectedAxisY === "Release Month") &&
                 Number(item[selectedAttributeMix]) !== 0)
-                ? {
-                    x: Number(item[selectedAttributeMix]),
-                    y: Number(item[selectedAxisY]),
-                  }
-                : null
-            )
-            .filter((a) => a)
-            .filter((a) => !isNaN(a.x) && !isNaN(a.y)),
-          backgroundColor: "rgb(255, 99, 132)",
-        },
-      ],
-    });  
+              ? {
+                x: Number(item[selectedAttributeMix]),
+                y: Number(item[selectedAxisY]),
+              }
+              : null
+          )
+          .filter((a) => a)
+          .filter((a) => !isNaN(a.x) && !isNaN(a.y)),
+        backgroundColor: "rgb(255, 99, 132)",
+      },
+    ],
+  });
   const [optionsScatter, setOptionsScatter] = useState({ scales: { x: { beginAtZero: false }, y: { beginAtZero: false } }, });
   // -- BarGraph
   // Sample data
-  const [axisLabelXBarGraph, setAxisLabelXBarGraph] = useState(["Category A", "Category B", "Category C", "Category D", "Category E", ]);
+  const [axisLabelXBarGraph, setAxisLabelXBarGraph] = useState(["Category A", "Category B", "Category C", "Category D", "Category E",]);
   const [axisYBarGraph, setAxisYBarGraph] = useState([10, 20, 15, 25, 18]);
   // const axisLabelXBarGraphRef = useRef([]);
   // const axisYBarGraphRef = useRef([]);
-  
+
   // Chart data
   // const[dataBarGraph, setDataBarGraph] = useState({})
   const[dataBarGraph, setDataBarGraph] = useState({    
