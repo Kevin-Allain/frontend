@@ -138,13 +138,14 @@ const GraphsResults = ({ infoMusicList, oldSearch, listSearchRes }) => {
       if (mapMelodyToCount[k] > numberFilterMelodyCount) { filteredMapMelodyCount[arrayStrPitchesToNotes(k)] = mapMelodyToCount[k] }
     }
   }
-  console.log("- filteredMapMelodyCount: ", filteredMapMelodyCount);
+  console.log("- filteredMapMelodyCount: ", filteredMapMelodyCount,", length: ",Object.keys(filteredMapMelodyCount).length);
   // TODO sort that object?
   let sortedMelodyCount = {}
-  for (let i in Object.keys(filteredMapMelodyCount).sort()){
-    sortedMelodyCount[Object.keys(filteredMapMelodyCount).sort()[i]] = filteredMapMelodyCount[Object.keys(filteredMapMelodyCount).sort()[i]]
+  for (let i in Object.keys(filteredMapMelodyCount).sort()) {
+    sortedMelodyCount[Object.keys(filteredMapMelodyCount).sort()[i]] =
+      filteredMapMelodyCount[Object.keys(filteredMapMelodyCount).sort()[i]]
   }
-  console.log("- sortedMelodyCount: ", sortedMelodyCount);
+  console.log("- sortedMelodyCount: ", sortedMelodyCount,", length: ",Object.keys(sortedMelodyCount).length);
 
 
   const datesCount = {};
