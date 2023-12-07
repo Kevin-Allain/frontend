@@ -6,8 +6,9 @@ const calculateFontSize = (numberOfLabels) => {
   const baseFontSize = 14; // Initial font size
 
   // Gradually decrease font size as the number of labels increases
-  const adaptedFontSize = Math.round(Math.max(4, baseFontSize
-    - Math.log(numberOfLabels*2)));
+  const adaptedFontSize = isFinite(Math.round(Math.max(4, baseFontSize - Math.log(numberOfLabels * 2))))
+    ? Math.round(Math.max(4, baseFontSize - Math.log(numberOfLabels * 2)))
+    : 5;
 
   console.log("adaptedFontSize: ",adaptedFontSize);  
   return adaptedFontSize;
@@ -17,6 +18,8 @@ const calculateFontSize = (numberOfLabels) => {
 const BarChart = ({ data, labels, title }) => {
   const numberOfLabels = labels.length;
   const fontSize = calculateFontSize(numberOfLabels);
+
+  console.log("data: ",data);
 
   const [chartData, setChartData] = useState({
     labels: labels,

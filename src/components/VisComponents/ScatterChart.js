@@ -13,6 +13,7 @@ const ScatterChart = ({ data, labels, title }) => {
       },
     },
   };
+  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
 
   const dataTest = {
     datasets: [
@@ -21,6 +22,7 @@ const ScatterChart = ({ data, labels, title }) => {
         data: Array.from({ length: 50 }, () => ({
           x: Math.round(4*Math.random()) + Math.round(-4*Math.random()),
           y: Math.round(8*Math.random()) + Math.round(-8*Math.random()),
+          // y: characters[Math.round(characters.length*Math.random())],
           r: Math.round(20*Math.random()) + Math.round(-20*Math.random()),
         })),
         backgroundColor: 'rgba(255, 99, 132, 0.5)',
@@ -30,6 +32,7 @@ const ScatterChart = ({ data, labels, title }) => {
         data: Array.from({ length: 50 }, () => ({
           x: Math.round(4*Math.random()) + Math.round(-4*Math.random()),
           y: Math.round(8*Math.random()) + Math.round(-8*Math.random()),
+          // y: characters[Math.round(characters.length*Math.random())],
           r: Math.round(20*Math.random()) + Math.round(-20*Math.random()),
         })),
         backgroundColor: 'rgba(53, 162, 235, 0.5)',

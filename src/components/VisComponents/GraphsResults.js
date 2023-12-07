@@ -102,19 +102,29 @@ const GraphsResults = ({ infoMusicList, oldSearch, listSearchRes }) => {
   uniqueMelodiesStr.map(
     b => mapMelodyToCount[b] = listSearchRes.map(a => a.arrNotes.join('-')).filter(a => a === b).length
   );
-  // TODO is 2 a good value for this filter? Maybe it should be based on number of output rather than an input...
-  const filteredMapMelodyCount = {};
-  const numberFilterMelodyCount = 2;
-  for (var k in mapMelodyToCount) {
-    if (mapMelodyToCount[k] > numberFilterMelodyCount) { filteredMapMelodyCount[arrayStrPitchesToNotes(k)] = mapMelodyToCount[k] }
+  console.log("- mapMelodyToCount: ",mapMelodyToCount);
+  // TODO is 2 a good value for this filter? NO! Maybe it should be based on number of output rather than an input...
+  // if 1 represents a high number of the results... then just go with it...
+  // Are they ordered?! Sort first
+  const firstIndex1 = Object.values(mapMelodyToCount).sort().indexOf(1);
+  const lastIndex1 = Object.values(mapMelodyToCount).sort().lastIndexOf(1);
+  const rangeIndex1 = lastIndex1 - firstIndex1;
+  let filteredMapMelodyCount = {};
+  if (rangeIndex1 / numMelodies > 0.85) {
+    filteredMapMelodyCount = mapMelodyToCount;
+  } else {
+    const numberFilterMelodyCount = 2;
+    for (var k in mapMelodyToCount) {
+      if (mapMelodyToCount[k] > numberFilterMelodyCount) { filteredMapMelodyCount[arrayStrPitchesToNotes(k)] = mapMelodyToCount[k] }
+    }
   }
-  // console.log("filteredMapMelodyCount: ",filteredMapMelodyCount);
+  console.log("- filteredMapMelodyCount: ", filteredMapMelodyCount);
   // TODO sort that object?
   let sortedMelodyCount = {}
   for (let i in Object.keys(filteredMapMelodyCount).sort()){
     sortedMelodyCount[Object.keys(filteredMapMelodyCount).sort()[i]] = filteredMapMelodyCount[Object.keys(filteredMapMelodyCount).sort()[i]]
   }
-  // console.log("- sortedMelodyCount: ", sortedMelodyCount);
+  console.log("- sortedMelodyCount: ", sortedMelodyCount);
 
 
   const datesCount = {};
