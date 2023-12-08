@@ -1,22 +1,16 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { FaAngleDown, FaAngleUp } from "react-icons/fa";
 import { BsGraphUp } from "react-icons/bs";
-import * as d3 from "d3";
 import {
   Chart as ChartJS, CategoryScale, LinearScale, PointElement, BarElement, LineElement, Tooltip, Legend,
 } from "chart.js";
-import { Scatter, Bar } from "react-chartjs-2";
-import ToggleSwitch from "../Button/ToggleSwitch";
 import MIDItoNote from "../MusicInterface/MIDItoNote.json";
-import NoteToColor from "../MusicInterface/NoteToColor.json";
 import BarChart from "./BarChart";
 import ScatterChart from "./ScatterChart";
 import './GraphsResults.css'
 
-const months = ["January","February","March","April","May","June","July","August","September","October","November","December",];
-const arrayStrPitchesToNotes = (arrStrNotes) => {
-  return arrStrNotes.split("-").map((a, i) => MIDItoNote[a].replaceAll("s", "")).join('-');
-}
+const arrayStrPitchesToNotes = (arrStrNotes) => { return arrStrNotes.split("-").map((a, i) => MIDItoNote[a].replaceAll("s", "")).join('-'); }
+
 
 const GraphsResults = ({ infoMusicList, oldSearch, listSearchRes }) => {
   console.log("GraphsResults - infoMusicList: ", infoMusicList, ", oldSearch: ", oldSearch, ", listSearchRes: ", listSearchRes);
@@ -29,24 +23,17 @@ const GraphsResults = ({ infoMusicList, oldSearch, listSearchRes }) => {
       : null
   }
 
-  // TODO change later on, we will want to consider the matches and outputs of matches as well.
+  // TODO change this
   const dataInput = infoMusicList;
-  ChartJS.register(
-    LinearScale, CategoryScale, PointElement, BarElement, LineElement, Tooltip, Legend
-  );
-
+  ChartJS.register(LinearScale, CategoryScale, PointElement, BarElement, LineElement, Tooltip, Legend);
 
   // ---- Using a reference example
   // Inspiration with useRef
   // https://codesandbox.io/s/example-chartjs-and-useref-wlq78?file=/src/Components/ExampleChart.jsx:209-229
   // We should: Set the selection of attributeMix in this component.
   // Then: pass the data to components that will have the graph drawn.
-  // TODO create components that are inspired by link for drawing the graph. The data can be tracked with useState.
-
-  // Call it after data generation
 
   // Shared parameters
-  // TODO we should probably set the attribute combinations in one array directly
   const [typeGraph, setTypeGraph] = useState("bar");
   const [selectedAttributeMix, setSelectedAttributeMix] = useState("Number of matches per recording");
   const [selectedAxisY, setSelectedAxisY] = useState("Release Month");
@@ -56,6 +43,7 @@ const GraphsResults = ({ infoMusicList, oldSearch, listSearchRes }) => {
     "Recording dates of matches",
     "Number of matches per recording",
     "Number of matches per track",
+    "Number of matches per artist",
     "Number of occurences per match",
     "Number of melodies per artist over time"
   ];
@@ -63,45 +51,41 @@ const GraphsResults = ({ infoMusicList, oldSearch, listSearchRes }) => {
   // Derived parameters (might require making calls to the database)
   const [numMelodies, setMumMelodies] = useState(listSearchRes.length);
   const [percMatchesCount, setPercMatchesCount] = useState(listSearchRes.reduce((acc, obj) => {
-    const value = obj.distCalc;
-    if (acc[value]) { acc[value]++; } else { acc[value] = 1; }
-    return acc;
+    const value = obj.distCalc; if (acc[value]) { acc[value]++; } else { acc[value] = 1; } return acc;
   }, {}));
+  // percMatchesCount is OK
   const [lognumbersCount, setLognumbersCount] = useState(listSearchRes.reduce((acc, obj) => {
     const value = obj.lognumber;
     if (acc[value]) { acc[value]++; } else { acc[value] = 1; }
     return acc;
   }, {}))
+  console.log("- lognumbersCount: ",lognumbersCount, "count: ", Object.values(lognumbersCount).reduce((partialSum, a) => partialSum + a, 0));
   const [tracksCount, setTracksCount] = useState(listSearchRes.reduce((acc, obj) => {
     const value = obj.track;
     if (acc[value]) { acc[value]++; } else { acc[value] = 1; }
     return acc;
   }, {}));
-  const [uniqueMelodiesStr, setUniqueMelodiesStr] = useState(
-    [...new Set(listSearchRes.map(a => a.arrNotes.join('-')))]
-  );
-  // need to set data for artists.
-  const [uniqueArtists, setUniqueArtists] = useState(
-    [...new Set(infoMusicList.map(a => a['(N) Named Artist(s)'] ))]
-  );
-  console.log("uniqueArtists: ",uniqueArtists);
+  // lognumbersCount is OK
+  console.log("- tracksCount: ",tracksCount, "count: ", Object.values(tracksCount).reduce((partialSum, a) => partialSum + a, 0) )
+  
+  const [uniqueMelodiesStr, setUniqueMelodiesStr] = useState([...new Set(listSearchRes.map(a => a.arrNotes.join('-')))]);
+  const [uniqueArtists, setUniqueArtists] = useState([...new Set(infoMusicList.map(a => a['(N) Named Artist(s)'] ))]);
+  console.log("- uniqueArtists: ",uniqueArtists," - uniqueMelodiesStr: ",uniqueMelodiesStr);
 
   const mapRecordingToName = {};
-  [...new Set(listSearchRes.map(element => element.lognumber))]
-    .map(b => mapRecordingToName[b] =
+  [...new Set(listSearchRes.map(element => element.lognumber))].map(b => mapRecordingToName[b] =
       infoMusicList.filter(a => a.lognumber === b)[0]
         ? infoMusicList.filter(a => a.lognumber === b)[0]['(E) Event Name']
-        : null)
+        : b) // was null previously
+  console.log("- mapRecordingToName: ",mapRecordingToName);
   const mapTrackToName = {};
-  [...new Set(listSearchRes.map(element => element.track.replace(/-T/g, '_')))]
-    .map(b => mapTrackToName[b] =
+  [...new Set(listSearchRes.map(element => element.track.replace(/-T/g, '_')))].map(b => mapTrackToName[b] =
       infoMusicList.filter(a => a['SJA_ID'] === b)[0]
         ? infoMusicList.filter(a => a['SJA_ID'] === b)[0]['Track Title']
         : null)
   console.log("- mapTrackToName: ",mapTrackToName);
   const mapTrackToArtist = {};
-  [...new Set(listSearchRes.map(element => element.track.replace(/-T/g, '_')))]
-    .map(b => mapTrackToArtist[b] =
+  [...new Set(listSearchRes.map(element => element.track.replace(/-T/g, '_')))].map(b => mapTrackToArtist[b] =
       infoMusicList.filter(a => a['SJA_ID'] === b)[0]
         ? infoMusicList.filter(a => a['SJA_ID'] === b)[0]['(N) Named Artist(s)']
         : null)
@@ -109,19 +93,29 @@ const GraphsResults = ({ infoMusicList, oldSearch, listSearchRes }) => {
 
   const recordingsCount = {}
   for (let i in mapRecordingToName) { 
-    recordingsCount[mapRecordingToName[i]] = lognumbersCount[i] 
+    recordingsCount[mapRecordingToName[i]] = recordingsCount[mapRecordingToName[i]]? recordingsCount[mapRecordingToName[i]]+lognumbersCount[i] : lognumbersCount[i];
   }
+  // recordingsCount is OK
+  console.log("- recordingsCount: ",recordingsCount, "count: ", Object.values(recordingsCount).reduce((partialSum, a) => partialSum + a, 0));
   const trackNamesCount = {};
   for (let i in mapTrackToName) { 
-    trackNamesCount[mapTrackToName[i]] = tracksCount[i.substring(0,i.lastIndexOf('_'))+'-T'+i.substring(i.lastIndexOf('_')+1)]; 
+    trackNamesCount[mapTrackToName[i]] = trackNamesCount[mapTrackToName[i]]? trackNamesCount[mapTrackToName[i]] + tracksCount[i.substring(0,i.lastIndexOf('_'))+'-T'+i.substring(i.lastIndexOf('_')+1)] : tracksCount[i.substring(0,i.lastIndexOf('_'))+'-T'+i.substring(i.lastIndexOf('_')+1)]; 
   }
+  console.log("- trackNamesCount: ",trackNamesCount, "count: ", Object.values(trackNamesCount).reduce((partialSum, a) => partialSum + a, 0));
   const mapMelodyToCount = {};
   uniqueMelodiesStr.map(
     b => mapMelodyToCount[b] = listSearchRes.map(a => a.arrNotes.join('-')).filter(a => a === b).length
   );
+  console.log("- mapMelodyToCount: ",mapMelodyToCount, "count: ", Object.values(mapMelodyToCount).reduce((partialSum, a) => partialSum + a, 0));
+  // mapMelodyToCount is OK
   const trackArtistsCount = {};
-  for (let i in mapTrackToArtist) { trackArtistsCount[mapTrackToArtist[i]] = tracksCount[i.substring(0,i.lastIndexOf('_'))+'-T'+i.substring(i.lastIndexOf('_')+1)]; }
-  console.log("- trackArtistsCount: ",trackArtistsCount);
+  for (let i in mapTrackToArtist) { 
+    trackArtistsCount[mapTrackToArtist[i]] = trackArtistsCount[ mapTrackToArtist[i] ]
+      ? trackArtistsCount[mapTrackToArtist[i]] + tracksCount[ i.substring(0, i.lastIndexOf("_"))+"-T"+i.substring(i.lastIndexOf("_") + 1)]
+      : tracksCount[i.substring(0, i.lastIndexOf("_")) +"-T" +i.substring(i.lastIndexOf("_") + 1)];
+  }
+  // trackArtistsCount is OK
+  console.log("- trackArtistsCount: ",trackArtistsCount, "count: ", Object.values(trackArtistsCount).reduce((partialSum, a) => partialSum + a, 0));
 
   // TODO Current version is based on cases with only 1 occurence being filtered out if they represent less than 80%. Not very stable. A hard limit could be added.
   // if 1 represents a high number of the results... then just go with it...
@@ -131,15 +125,25 @@ const GraphsResults = ({ infoMusicList, oldSearch, listSearchRes }) => {
   const rangeIndex1 = lastIndex1 - firstIndex1;
   let filteredMapMelodyCount = {};
   if (rangeIndex1 / numMelodies > 0.80) {
-    filteredMapMelodyCount = mapMelodyToCount;
+    console.log("No filter");
+    // filteredMapMelodyCount = mapMelodyToCount;
+    for (let k in mapMelodyToCount) {
+      filteredMapMelodyCount[arrayStrPitchesToNotes(k)] = filteredMapMelodyCount[arrayStrPitchesToNotes(k)]
+      ? filteredMapMelodyCount[arrayStrPitchesToNotes(k)] + mapMelodyToCount[k] 
+      : mapMelodyToCount[k];
+    }
   } else {
+    console.log("Filter");
     const numberFilterMelodyCount = 2;
-    for (var k in mapMelodyToCount) {
-      if (mapMelodyToCount[k] > numberFilterMelodyCount) { filteredMapMelodyCount[arrayStrPitchesToNotes(k)] = mapMelodyToCount[k] }
+    for (let k in mapMelodyToCount) {
+      if (mapMelodyToCount[k] > numberFilterMelodyCount) { 
+        filteredMapMelodyCount[arrayStrPitchesToNotes(k)] = filteredMapMelodyCount[arrayStrPitchesToNotes(k)]
+        ? filteredMapMelodyCount[arrayStrPitchesToNotes(k)] + mapMelodyToCount[k] 
+        : mapMelodyToCount[k];
+      }
     }
   }
   console.log("- filteredMapMelodyCount: ", filteredMapMelodyCount,", length: ",Object.keys(filteredMapMelodyCount).length);
-  // TODO sort that object?
   let sortedMelodyCount = {}
   for (let i in Object.keys(filteredMapMelodyCount).sort()) {
     sortedMelodyCount[Object.keys(filteredMapMelodyCount).sort()[i]] =
@@ -155,9 +159,7 @@ const GraphsResults = ({ infoMusicList, oldSearch, listSearchRes }) => {
       infoMusicList.filter(a => a.lognumber === b)[0]
         ? infoMusicList.filter(a => a.lognumber === b)[0]['dateEvent']
         : null)
-  // console.log("mapRecordingToDate: ", mapRecordingToDate);
   for (let i in mapRecordingToDate) { datesCount[mapRecordingToDate[i]] = lognumbersCount[i] }
-  // console.log("datesCount: ", datesCount);
     
   let keysTime = [];
   let valuesTime = [];
@@ -165,27 +167,19 @@ const GraphsResults = ({ infoMusicList, oldSearch, listSearchRes }) => {
   if (datesCount[null]) {
     keysTime = Object.keys(datesCount).filter(a => a !== 'null').map(a => new Date(a).toISOString().split('T')[0])
     valuesTime = Object.values(datesCount).slice(1)
-    for (var i in keysTime) { objIso[keysTime[i]] = valuesTime[i] }
+    for (let i in keysTime) { objIso[keysTime[i]] = valuesTime[i] }
     objIso["No date"] = datesCount[null];
   } else {
     keysTime = Object.keys(datesCount).map(a => new Date(a).toISOString().split('T')[0])
     valuesTime = Object.values(datesCount)
-    for (var i in keysTime) { objIso[keysTime[i]] = valuesTime[i] }
+    for (let i in keysTime) { objIso[keysTime[i]] = valuesTime[i] }
   }
-  // console.log("- objIso: ", objIso);
+  console.log("- objIso: ", objIso);
   let sortedIso = {}
   for (let i in Object.keys(objIso).sort()){
       sortedIso[Object.keys(objIso).sort()[i]] = objIso[Object.keys(objIso).sort()[i]]
   }
-  // console.log("- sortedIso: ", sortedIso);
-  
-
-  // console.log("uniqueMelodiesStr: ",uniqueMelodiesStr);
-  // console.log("recordingsCount: ", recordingsCount, ", trackNamesCount: ", trackNamesCount);
-  console.log("numMelodies: ", numMelodies, ", percMatchesCount: ", percMatchesCount, ", lognumbersCount: ", lognumbersCount, ", tracksCount: ", tracksCount, ", mapRecordingToName: ", mapRecordingToName, ", mapTrackToName: ", mapTrackToName);
-  // // TODO consider a number of matches we are happy with?
-  // console.log("mapMelodyToCount: ",mapMelodyToCount);
-  // console.log("filteredMapMelodyCount: ",filteredMapMelodyCount);
+  console.log("- sortedIso: ", sortedIso, ", numMelodies: ", numMelodies, ", percMatchesCount: ", percMatchesCount, ", lognumbersCount: ", lognumbersCount, ", tracksCount: ", tracksCount, ", mapRecordingToName: ", mapRecordingToName, ", mapTrackToName: ", mapTrackToName);
 
   // ---- Parameters specific to certain graphs
   // -- Scatter
@@ -197,16 +191,15 @@ const GraphsResults = ({ infoMusicList, oldSearch, listSearchRes }) => {
         data: dataInput
           .map((item, i) =>
             selectedAttributeMix !== "Release Year" ||
-              ((selectedAttributeMix === "Release Year" ||
-                selectedAttributeMix === "Release Month") &&
-                Number(item[selectedAttributeMix]) !== 0) ||
-              ((selectedAxisY === "Release Year" ||
-                selectedAxisY === "Release Month") &&
-                Number(item[selectedAttributeMix]) !== 0)
+            ((selectedAttributeMix === "Release Year" ||
+              selectedAttributeMix === "Release Month") &&
+              Number(item[selectedAttributeMix]) !== 0) ||
+            ((selectedAxisY === "Release Year" ||
+              selectedAxisY === "Release Month") &&
+              Number(item[selectedAttributeMix]) !== 0)
               ? {
-                x: Number(item[selectedAttributeMix]),
-                y: Number(item[selectedAxisY]),
-              }
+                  x: Number(item[selectedAttributeMix]), y: Number(item[selectedAxisY]),
+                }
               : null
           )
           .filter((a) => a)
@@ -220,25 +213,13 @@ const GraphsResults = ({ infoMusicList, oldSearch, listSearchRes }) => {
   // Sample data
   const [axisLabelXBarGraph, setAxisLabelXBarGraph] = useState(["Category A", "Category B", "Category C", "Category D", "Category E",]);
   const [axisYBarGraph, setAxisYBarGraph] = useState([10, 20, 15, 25, 18]);
-  // const axisLabelXBarGraphRef = useRef([]);
-  // const axisYBarGraphRef = useRef([]);
 
   // Chart data
-  // const[dataBarGraph, setDataBarGraph] = useState({})
-  const[dataBarGraph, setDataBarGraph] = useState({    
+  const[dataBarGraph, setDataBarGraph] = useState({
     labels: axisLabelXBarGraph,
     datasets: [
       { label: "Sample Bar Chart", data: axisYBarGraph, backgroundColor: "rgba(75,192,192,0.2)", borderColor: "rgba(75,192,192,1)", borderWidth: 1, },
     ],
-  });
-  // const dataBarGraphRef = useRef({
-  //   labels: axisLabelXBarGraphRef,
-  //   datasets: [ { label: "Sample Bar Chart", data: axisYBarGraphRef, backgroundColor: "rgba(75,192,192,0.2)", borderColor: "rgba(75,192,192,1)", borderWidth: 1, }, ],
-  // })
-
-  // Chart options
-  const [optionsBarGraph, setOptionsBarGraph] = useState({
-    scales: { x: { beginAtZero: true }, y: { beginAtZero: true } },
   });
   // ----
 
@@ -321,45 +302,19 @@ const GraphsResults = ({ infoMusicList, oldSearch, listSearchRes }) => {
           },
         });
       } else if (typeGraph === "bar") {
-        // console.log("Updating with typeGraph bar. selectedAttributeMix: ",selectedAttributeMix,", axisLabelXBarGraph: ",axisLabelXBarGraph);
-
-        // Destroy the existing chart before creating a new one
-        // if (dataBarGraphRef.current) { dataBarGraphRef.current.destroy(); }
-
-        // Work in progrress: adapt for this to be the labels to pass, based on selectedAttributeMix
-        // if (selectedAttributeMix === "Number of matches per recording") { setAxisLabelXBarGraph((prevLabels) => { const newLabels = Object.keys(recordingsCount); return newLabels; }); }
-        
-
-
-        if (selectedAttributeMix === "Recording dates of matches") {
-          setAxisLabelXBarGraph(Object.keys(sortedIso))
-        }
-        if (selectedAttributeMix === "Number of matches per track") { setAxisLabelXBarGraph(Object.keys(trackNamesCount)) }
-        if (selectedAttributeMix === "Number of matches per recording") { setAxisLabelXBarGraph(Object.keys(recordingsCount)) }
-        if (selectedAttributeMix === "Number of occurences per match") {
-          setAxisLabelXBarGraph(Object.keys(sortedMelodyCount))
-        }
-        // if (selectedAttributeMix === "Number of matches per recording") { axisLabelXBarGraphRef.current = Object.keys(recordingsCount); }
-        // if (selectedAttributeMix === "Number of matches per track") { axisLabelXBarGraphRef.current = Object.keys(trackNamesCount); }
+        if (selectedAttributeMix === "Recording dates of matches"){setAxisLabelXBarGraph(Object.keys(sortedIso))}
+        if (selectedAttributeMix === "Number of matches per track"){ setAxisLabelXBarGraph(Object.keys(trackNamesCount)) }
+        if (selectedAttributeMix === "Number of matches per recording"){ setAxisLabelXBarGraph(Object.keys(recordingsCount)) }
+        if (selectedAttributeMix === "Number of occurences per match"){ setAxisLabelXBarGraph(Object.keys(sortedMelodyCount)) }
+        if (selectedAttributeMix === "Number of matches per artist"){ setAxisLabelXBarGraph(Object.keys(trackArtistsCount)) }
 
         // Work in progrress: adapt for this to be the data object in the datasets object, based on selectedAxisY        
-        if (selectedAttributeMix === "Recording dates of matches") {
-          setAxisYBarGraph(Object.values(
-            sortedIso
-          ))
-        }
+        if (selectedAttributeMix === "Recording dates of matches"){ setAxisYBarGraph(Object.values(sortedIso)) }
         if (selectedAttributeMix === "Number of matches per track") { setAxisYBarGraph(Object.values(trackNamesCount)) }
         if (selectedAttributeMix === "Number of matches per recording") { setAxisYBarGraph(Object.values(recordingsCount)); }
         if (selectedAttributeMix === "Number of occurences per match") { setAxisYBarGraph(Object.values(sortedMelodyCount)); }
-        // if (selectedAttributeMix === "Number of matches per recording") { setAxisYBarGraph((prevData) => { const newData = Object.values(recordingsCount); return newData; }); }
-        // if (selectedAttributeMix === "Number of matches per recording") { axisYBarGraphRef.current = Object.values(recordingsCount); }
-        // if (selectedAttributeMix === "Number of matches per track") { axisYBarGraphRef.current = Object.values(trackNamesCount); }
+        if (selectedAttributeMix === "Number of matches per artist"){ setAxisYBarGraph(Object.values(trackArtistsCount)) }
 
-        // console.log("Update made. axisLabelXBarGraph: ",axisLabelXBarGraph);
-
-        // // Create a new bar chart
-        // const ctx = canvasRef.current.getContext("2d");
-        // barChartRef.current = new Chart(ctx, { type: "bar", data: dataBarGraphRef.current, options: optionsBarGraphRef.current,  });
         setDataBarGraph({
           labels: axisLabelXBarGraph.current,
           datasets: [{ label: selectedAttributeMix, data: axisYBarGraph, backgroundColor: "rgba(75,192,192,0.2)", borderColor: "rgba(75,192,192,1)", borderWidth: 1 }],
@@ -378,6 +333,7 @@ const GraphsResults = ({ infoMusicList, oldSearch, listSearchRes }) => {
       || value === "Number of matches per track"
       || value === "Number of occurences per match"
       || value === "Recording dates of matches"
+      || value === "Number of matches per artist"
       ? setTypeGraph("bar")
       : setTypeGraph("scatter");
     setSelectedAttributeMix(value);
@@ -386,7 +342,7 @@ const GraphsResults = ({ infoMusicList, oldSearch, listSearchRes }) => {
   return (
     <div className="border-solid border-2 border-[#e5e7eb]">
       <div className="metadata-header  icon flex items-center" onClick={handleToggle} >
-        <BsGraphUp />
+        <BsGraphUp/>
         <p className="mx-[0.5rem] my-[0.5rem]">Data Graphs</p>
         {showGraphs ? ( <FaAngleUp className="metadata-icon" /> ) : ( <FaAngleDown className="metadata-icon" /> )}
       </div>
@@ -399,10 +355,6 @@ const GraphsResults = ({ infoMusicList, oldSearch, listSearchRes }) => {
               {attributeMix.map((option) => ( <option key={option} value={option}> {option} </option> ))}
             </select>
           </div>
-          {/* <div> <label>Axis Y </label> <select onChange={(e) => handleChangeAxisY(e.target.value)} value={selectedAxisY} > {attributesOptions.map((option) => ( <option key={option} value={option}> {option} </option> ))} </select> </div> */}
-
-          {/* {typeGraph === "scatter" && ( <Scatter data={dataScatter} options={optionsScatter} /> )} */}
-          {/* {typeGraph === "bar" && ( <Bar data={dataBarGraph.current} options={optionsBarGraph} /> )} */}
           <div className="chartArea">
             {typeGraph === "bar" && (<BarChart data={axisYBarGraph} labels={axisLabelXBarGraph} title={selectedAttributeMix} />)}
             {typeGraph === "scatter" && (<ScatterChart data={axisYBarGraph} labels={axisLabelXBarGraph} title={selectedAttributeMix} />)}

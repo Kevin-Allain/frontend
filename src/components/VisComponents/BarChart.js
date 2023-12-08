@@ -18,7 +18,6 @@ const calculateFontSize = (numberOfLabels) => {
 const BarChart = ({ data, labels, title }) => {
   const numberOfLabels = labels.length;
   const fontSize = calculateFontSize(numberOfLabels);
-
   console.log("data: ",data);
 
   const [chartData, setChartData] = useState({
@@ -36,51 +35,25 @@ const BarChart = ({ data, labels, title }) => {
 
   const [optionsBarGraph, setOptionsBarGraph] = useState({
     scales: {
-      x: { ticks: {
-          font: { size: fontSize, },
-          autoSkip: false,
-          maxTicksLimit: 20, // or another number that fits your design
-          maxRotation: 0,
-          minRotation: 0,
-        },
-      },
-      y: {
-        ticks: { font: { size: 12, },  },
-      },
+      x: { ticks: { font: { size: fontSize, }, autoSkip: false, maxTicksLimit: 20, maxRotation: 0, minRotation: 0, }, },
+      y: { ticks: { font: { size: 12, },  }, },
     },
   });
 
-
   useEffect(() => {
-    // console.log("useEffect BarChart. ",{data,labels,title});
+    console.log("useEffect BarChart. ", { data, labels, title });
     setChartData((prevData) => ({
       ...prevData,
       labels: labels,
-      datasets: [
-        {
-          ...prevData.datasets[0],
-          data: data,
-          label: title,
-        },
-      ],
+      datasets: [{ ...prevData.datasets[0], data: data, label: title }],
     }));
-
 
     setOptionsBarGraph({
       scales: {
-        x: {
-          ticks: {
-            font: { size: calculateFontSize(labels.length), },
-            autoSkip: false,
-            // maxTicksLimit: 20, // or another number that fits your design
-            // maxRotation: 0,
-            // minRotation: 0,
-          },
-        },
-        y: { ticks: { font: { size: 12, }, },
-        },
+        x: { ticks: { font: { size: calculateFontSize(labels.length) }, autoSkip: false, }, },// maxTicksLimit: 20, maxRotation: 0, minRotation: 0,
+        y: { ticks: { font: { size: 12 } } },
       },
-    })
+    });
   }, [data, labels, title]);
 
   return <Bar data={chartData} options={optionsBarGraph} />;
