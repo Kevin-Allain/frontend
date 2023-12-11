@@ -18,7 +18,7 @@ const calculateFontSize = (numberOfLabels) => {
 const BarChart = ({ data, labels, title }) => {
   const numberOfLabels = labels.length;
   const fontSize = calculateFontSize(numberOfLabels);
-  console.log("data: ",data);
+  console.log("data: ",data,", labels: ",labels,", typeof labels[0]: ",(typeof labels[0]));
 
   const [chartData, setChartData] = useState({
     labels: labels,
