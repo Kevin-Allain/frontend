@@ -12,6 +12,37 @@ import './GraphsResults.css'
 
 const arrayStrPitchesToNotes = (arrStrNotes) => { return arrStrNotes.split("-").map((a, i) => MIDItoNote[a].replaceAll("s", "")).join('-'); }
 
+// Making the assumption labels is thus: ["1963-12-20",...] and data: [4,...]
+const generateAllValuesYears = (labels,data) => {
+  let result = {};
+  for( let i=0; i<labels.length; i++ ){
+    // console.log("---- i: ",i,", label_i: ",labels[i],", label_i+1: ",labels[i+1],", data_i: ",data[i]);
+    const [year, month, day] = labels[i].split("-").map(a => parseInt(a) );
+    const nextYear = labels[i+1]?parseInt(labels[i+1].split("-")[0]):null;
+    // console.log("year: ",year,", nextYear: ",nextYear,", labels[i+1]: ",labels[i+1],", typeof parseInt(labels[i+1]): ",typeof parseInt(labels[i+1]),", parseInt(labels[i+1]): ",parseInt(labels[i+1]),", !isNaN(year): ",!isNaN(year),", !isNaN(nextYear): ",!isNaN(nextYear));
+
+    if (!isNaN(year) && !isNaN(nextYear)){
+          // console.log("!isNaN(year) && !isNaN(nextYear) ~ result[year]: ",result[year]);
+          if(result[year]){
+              result[year]+=data[i];
+          } else {
+            result[year]=data[i];
+          }
+          
+        if( !isNaN(nextYear) && (year<nextYear) ) {
+                // console.log("year<nextYear");
+                for(let j = year+1; j<nextYear; j++){
+                    console.log("- j: ",j);
+                    result[j]=0;
+                }
+            }
+          }
+      console.log("result[year]: ",result[year]);
+      }
+  console.log("generateAllYears - result: ", result);
+  return result;
+};
+
 
 const GraphsResults = ({ infoMusicList, oldSearch, listSearchRes }) => {
   console.log("GraphsResults - infoMusicList: ", infoMusicList, ", oldSearch: ", oldSearch, ", listSearchRes: ", listSearchRes);
@@ -287,8 +318,10 @@ const GraphsResults = ({ infoMusicList, oldSearch, listSearchRes }) => {
 
 
       } else if (typeGraph === "histogram") {
-        if (selectedAttributeMix === "Recording dates of matches"){setAxisLabelXBarGraph(Object.keys(sortedIso))}
-        if (selectedAttributeMix === "Recording dates of matches"){ setAxisYBarGraph(Object.values(sortedIso)) }
+
+        let filledUpDates = generateAllValuesYears(Object.keys(sortedIso), Object.values(sortedIso));
+        if (selectedAttributeMix === "Recording dates of matches"){setAxisLabelXBarGraph(Object.keys(filledUpDates))}
+        if (selectedAttributeMix === "Recording dates of matches"){ setAxisYBarGraph(Object.values(filledUpDates)) }
 
         setDataBarGraph({
           labels: axisLabelXBarGraph.current,
@@ -349,18 +382,18 @@ const GraphsResults = ({ infoMusicList, oldSearch, listSearchRes }) => {
             </select>
           </div>
           <div className="chartArea">
-            {typeGraph === "bar" && 
+            {(typeGraph === "bar" || typeGraph === "histogram") && 
               (<BarChart 
                 data={axisYBarGraph} 
                 labels={axisLabelXBarGraph} 
                 title={selectedAttributeMix} 
               />)}
-            {typeGraph === "histogram" && 
+            {/* {typeGraph === "histogram" && 
               (<HistogramChart 
                   data={axisYBarGraph}
                   labels={axisLabelXBarGraph}
                   title={selectedAttributeMix}
-              />)}
+              />)} */}
             {typeGraph === "scatter" && 
               (<ScatterChart
                 data={axisYBarGraph}
