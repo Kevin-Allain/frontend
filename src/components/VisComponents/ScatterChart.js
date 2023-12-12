@@ -6,14 +6,7 @@ import { Scatter, Bubble } from "react-chartjs-2";
 const ScatterChart = ({ data, labels, title }) => {
 
   // -- From example online
-  const options = {
-    scales: {
-      y: {
-        beginAtZero: true,
-      },
-    },
-  };
-
+  const options = { scales: { y: { beginAtZero: true, }, }, };
   const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
 
   const dataTest = {
@@ -44,7 +37,7 @@ const ScatterChart = ({ data, labels, title }) => {
   const dataTest2 = {
     datasets: [
       {
-        label: 'Bubble Chart',
+        label: title,
         data: [
           { x: 'Category A', y: 'Type 1', r: 10 },
           { x: 'Category B', y: 'Type 2', r: 20 },

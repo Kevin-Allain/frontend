@@ -38,35 +38,6 @@ const generateAllYears = (labels) => {
   
   
 
-// TODO work in progress 
-const generateAllValuesYears = (labels,data) => {
-    let result = {};
-    for( let i=0; i<labels.length; i++ ){
-      const [year, month, day] = labels[i].split("-").map(a => parseInt(a) );
-      const nextYear = parseInt(labels[i+1].split("-")[0]);
-        console.log("year: ",year,", nextYear: ",nextYear,", labels[i+1]: ",labels[i+1],", typeof parseInt(labels[i+1]): ",typeof parseInt(labels[i+1]),", parseInt(labels[i+1]): ",parseInt(labels[i+1]),", !isNaN(year): ",!isNaN(year),", !isNaN(nextYear): ",!isNaN(nextYear));
-  
-  if (!isNaN(year) && !isNaN(nextYear)){
-        console.log("!isNaN(year) && !isNaN(nextYear)")
-        if(result[year]){
-            result[year]+=data[i];
-        } else {
-          result[year]=data[i];
-        }
-        
-      if( !isNaN(nextYear) && (year<nextYear)
-          ){
-              console.log("year<nextYear");
-              for(let j = year; j<nextYear; j++){
-                  console.log("--- j: ",j);
-                  result[j]=0;
-              }
-          }
-        }
-    }
-    console.log("generateAllYears - result: ", result);
-    return result;
-  };
   
 
 // Function to format a date as month-year string

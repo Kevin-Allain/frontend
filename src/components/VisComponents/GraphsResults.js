@@ -72,12 +72,12 @@ const GraphsResults = ({ infoMusicList, oldSearch, listSearchRes }) => {
   const attributesOptions = ["Release Year", "Release Month", "Track Title", "Recording", "Artists"];
   // attributeMix can relate to a single attribute. What matters is we set the selection for the axes
   const attributeMix = [ 
-    "Recording dates of matches",
+    "Recording years of matches",
     "Number of matches per recording",
     "Number of matches per track",
     "Number of matches per artist",
     "Number of occurences per match",
-    "Number of melodies per artist over time"
+    "Number of melodies per artist and year"
   ];
 
   // Derived parameters (might require making calls to the database)
@@ -123,6 +123,18 @@ const GraphsResults = ({ infoMusicList, oldSearch, listSearchRes }) => {
         : null)
   console.log("- mapTrackToArtist: ",mapTrackToArtist);
 
+  const mapTrackToIso = {};
+  [...new Set(listSearchRes.map(element => element.track.replace(/-T/g, '_')))].map(b => mapTrackToIso[b] =
+    (infoMusicList.filter(a => a['SJA_ID'] === b)[0]) 
+    ? (''+infoMusicList.filter(a => a['SJA_ID'] === b)[0]['Event Year']+'-'
+          +infoMusicList.filter(a => a['SJA_ID'] === b)[0]['Event Month']+'-'
+          +infoMusicList.filter(a => a['SJA_ID'] === b)[0]['Event Day']
+      )
+    : null)
+  console.log("- mapTrackToIso: ",mapTrackToIso);
+
+
+
   const recordingsCount = {}
   for (let i in mapRecordingToName) { 
     recordingsCount[mapRecordingToName[i]] = recordingsCount[mapRecordingToName[i]]? recordingsCount[mapRecordingToName[i]]+lognumbersCount[i] : lognumbersCount[i];
@@ -141,7 +153,7 @@ const GraphsResults = ({ infoMusicList, oldSearch, listSearchRes }) => {
   console.log("- mapMelodyToCount: ",mapMelodyToCount, "count: ", Object.values(mapMelodyToCount).reduce((partialSum, a) => partialSum + a, 0));
   // mapMelodyToCount is OK
   const melodyArtistsCount = {};
-  const melodyCountPerArtistOverTime ={}
+  const melodyCountPerArtistAndYearTime ={}
   for (let i in mapTrackToArtist) { 
     melodyArtistsCount[mapTrackToArtist[i]] = (melodyArtistsCount[ mapTrackToArtist[i] ])
       ? melodyArtistsCount[mapTrackToArtist[i]] + tracksCount[ i.substring(0, i.lastIndexOf("_"))+"-T"+i.substring(i.lastIndexOf("_") + 1)]
@@ -193,7 +205,7 @@ const GraphsResults = ({ infoMusicList, oldSearch, listSearchRes }) => {
         ? infoMusicList.filter(a => a.lognumber === b)[0]['dateEvent']
         : null)
   for (let i in mapRecordingToDate) { datesCount[mapRecordingToDate[i]] = lognumbersCount[i] }
-    
+  console.log("- datesCount: ",datesCount);
   let keysTime = [];
   let valuesTime = [];
   let objIso = {}
@@ -235,6 +247,10 @@ const GraphsResults = ({ infoMusicList, oldSearch, listSearchRes }) => {
   const [optionsScatter, setOptionsScatter] = useState({ 
     scales: { x: { beginAtZero: false }, y: { beginAtZero: false } }, 
   });
+
+  const [labelsXscatter, setLabelsXscatter] = useState([]);
+  const [labelsYscatter, setLabelsYscatter] = useState([]);
+  const [valsScatter, setValscatter] = useState([]);
   // -- BarGraph
   // Sample data
   const [axisLabelXBarGraph, setAxisLabelXBarGraph] = useState(["Category A", "Category B", "Category C", "Category D", "Category E",]);
@@ -255,12 +271,16 @@ const GraphsResults = ({ infoMusicList, oldSearch, listSearchRes }) => {
 
     const updateOptions = () => {
       if (typeGraph === "scatter") {
-        console.log("Work in progress for scatter. We want to display information for ", "Number of melodies per artist over time");
+        console.log("Work in progress for scatter. We want to display information for ", "Number of melodies per artist and year");
         // This might not be useful this way.
         const minAxisX = selectedAttributeMix === "Release Month"? 1 : selectedAttributeMix === "Release Year"? Math.min(...infoMusicList.map((a) => Number(a["Release Year"])).filter((a) => a).filter((a) => a !== 0)) - 1 : 0;
         const maxAxisX = selectedAttributeMix === "Release Month" ? 12 : selectedAttributeMix === "Release Year" ? Math.max(...infoMusicList.map((a) => Number(a["Release Year"])).filter((a) => a).filter((a) => a !== 0)) + 1 : 100;
         const minAxisY = selectedAxisY === "Release Month"? 1 : selectedAxisY === "Release Year"? Math.min(...infoMusicList.map((a) => Number(a["Release Year"])).filter((a) => a).filter((a) => a !== 0)) - 1 : 0;
         const maxAxisY = selectedAxisY === "Release Month"? 12 : selectedAxisY === "Release Year"? Math.max(...infoMusicList.map((a) => Number(a["Release Year"])).filter((a) => a).filter((a) => a !== 0)) + 1 : 100;
+
+        // The variables that should be changed: labelsXscatter, labelsYscatter, valsScatter
+        let filledUpDates = generateAllValuesYears(Object.keys(sortedIso), Object.values(sortedIso));
+        
 
         // TODO change and fix
         setDataScatter({
@@ -320,8 +340,8 @@ const GraphsResults = ({ infoMusicList, oldSearch, listSearchRes }) => {
       } else if (typeGraph === "histogram") {
 
         let filledUpDates = generateAllValuesYears(Object.keys(sortedIso), Object.values(sortedIso));
-        if (selectedAttributeMix === "Recording dates of matches"){setAxisLabelXBarGraph(Object.keys(filledUpDates))}
-        if (selectedAttributeMix === "Recording dates of matches"){ setAxisYBarGraph(Object.values(filledUpDates)) }
+        if (selectedAttributeMix === "Recording years of matches"){setAxisLabelXBarGraph(Object.keys(filledUpDates))}
+        if (selectedAttributeMix === "Recording years of matches"){ setAxisYBarGraph(Object.values(filledUpDates)) }
 
         setDataBarGraph({
           labels: axisLabelXBarGraph.current,
@@ -359,7 +379,7 @@ const GraphsResults = ({ infoMusicList, oldSearch, listSearchRes }) => {
       || value === "Number of occurences per match"
       || value === "Number of matches per artist")? 
         setTypeGraph("bar") 
-        : (value=== "Recording dates of matches")? 
+        : (value=== "Recording years of matches")? 
           setTypeGraph("histogram")
           : setTypeGraph("scatter");
     setSelectedAttributeMix(value);
@@ -388,16 +408,11 @@ const GraphsResults = ({ infoMusicList, oldSearch, listSearchRes }) => {
                 labels={axisLabelXBarGraph} 
                 title={selectedAttributeMix} 
               />)}
-            {/* {typeGraph === "histogram" && 
-              (<HistogramChart 
-                  data={axisYBarGraph}
-                  labels={axisLabelXBarGraph}
-                  title={selectedAttributeMix}
-              />)} */}
-            {typeGraph === "scatter" && 
+            {/* labelsXscatter; labelsYscatter; valsScatter */}
+            {typeGraph === "scatter" &&
               (<ScatterChart
-                data={axisYBarGraph}
-                labels={axisLabelXBarGraph}
+                data={valsScatter}
+                labels={[labelsXscatter, labelsYscatter]}
                 title={selectedAttributeMix}
               />)
             }
