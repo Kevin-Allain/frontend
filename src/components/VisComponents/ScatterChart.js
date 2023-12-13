@@ -95,7 +95,11 @@ const ScatterChart = ({ data, labels, title }) => {
     }));
   }, [data, labels, title]);
 
-  return <Bubble options={optionsTest2} data={dataTest2} />;
+  return <>
+    <h1>Work in progress</h1>
+    <Bubble options={optionsTest2} data={dataTest2} />
+  </>
+    ;
   // return <>Work in progress</>
 };
 
