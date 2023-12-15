@@ -92,8 +92,10 @@ const GraphsResults = ({ infoMusicList, oldSearch, listSearchRes }) => {
     return acc;
   }, {}))
   console.log("- lognumbersCount: ",lognumbersCount, "count: ", Object.values(lognumbersCount).reduce((partialSum, a) => partialSum + a, 0));
-  const [tracksCount, setTracksCount] = useState(listSearchRes.reduce((acc, obj) => {
-    const value = obj.track;
+  const [tracksCount, setTracksCount] = useState(
+    listSearchRes.reduce((acc, obj) => {
+    // const value = obj.track;
+    const value = obj.track.replace(/-T/g, '_');
     if (acc[value]) { acc[value]++; } else { acc[value] = 1; }
     return acc;
   }, {}));
@@ -133,7 +135,37 @@ const GraphsResults = ({ infoMusicList, oldSearch, listSearchRes }) => {
     : null)
   console.log("- mapTrackToIso: ",mapTrackToIso);
 
-
+  // TODO work in progress. We should make an object trackTo_artist_count_iso
+  const mapTrackTo_artist_count_iso = {};
+  [...new Set(listSearchRes.map(element => element.track.replace(/-T/g, '_')))]
+    .map(b => mapTrackTo_artist_count_iso[b] =
+    {
+      'iso':
+        ((infoMusicList.filter(a => a['SJA_ID'] === b)[0])
+          ? ('' + infoMusicList.filter(a => a['SJA_ID'] === b)[0]['Event Year'] + '-'
+            + infoMusicList.filter(a => a['SJA_ID'] === b)[0]['Event Month'] + '-'
+            + infoMusicList.filter(a => a['SJA_ID'] === b)[0]['Event Day']
+          )
+          : null),
+      'artist':
+        (infoMusicList.filter(a => a['SJA_ID'] === b)[0]
+          ? infoMusicList.filter(a => a['SJA_ID'] === b)[0]['(N) Named Artist(s)']
+          : null),
+      'count':
+        tracksCount[b]
+    }
+    )
+    console.log("- mapTrackTo_artist_count_iso: ",mapTrackTo_artist_count_iso);
+    let sortedArray_track_artist_count_iso = Object.entries(mapTrackTo_artist_count_iso).map(([key, value]) => ({
+      track: key,
+      ...value
+    })).sort((a, b) => {
+      let dateA = new Date(a.iso), dateB = new Date(b.iso);
+      return dateA - dateB;
+    });
+    
+    console.log("- sortedArray_track_artist_count_iso: ",sortedArray_track_artist_count_iso);
+    console.log("keys tracksCount: ",Object.keys(tracksCount),", keys mapTrackTo_artist_count_iso: ",Object.keys(mapTrackTo_artist_count_iso));
 
   const recordingsCount = {}
   for (let i in mapRecordingToName) { 
