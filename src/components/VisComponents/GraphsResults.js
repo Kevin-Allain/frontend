@@ -12,42 +12,6 @@ import './GraphsResults.css'
 
 const arrayStrPitchesToNotes = (arrStrNotes) => { return arrStrNotes.split("-").map((a, i) => MIDItoNote[a].replaceAll("s", "")).join('-'); }
 
-function mergeDuplicates(data) {
-  const result = [];
-  // Create a map to store the sums of 'r' values for each unique combination of 'x' and 'y'
-  const sumMap = new Map();
-  // Iterate through the original array
-  data.forEach(item => {
-    const { x, y, r } = item;
-    const key = `${x}*${y}`;
-    // If the combination of 'x' and 'y' is already in the map, add 'r' to the existing sum
-    if (sumMap.has(key)) {
-      sumMap.set(key, sumMap.get(key) + r);
-    } else {
-      // If it's a new combination, add it to the map with the current 'r' value
-      sumMap.set(key, r);
-    }
-  });
-  // Find the minimum and maximum sums
-  let minSum = Number.POSITIVE_INFINITY;
-  let maxSum = Number.NEGATIVE_INFINITY;
-  console.log("sumMap: ",sumMap);
-  sumMap.forEach(sum => {
-    minSum = Math.min(minSum, sum);
-    maxSum = Math.max(maxSum, sum);
-  });
-  // Convert the map back to an array of objects with adjusted 'r' values
-  sumMap.forEach((sum, key) => {
-    const [x, y] = key.split('*');
-    // Adjust 'r' to be between 5 and 30
-    // TODO: do we actually want to scale the data? => normalize?
-    const adjustedR = Math.max(5, Math.min(30, 
-      Math.round((sum - minSum) / ((maxSum-minSum===0)?1:maxSum-minSum) * 25 + 5 )
-    ));
-    result.push({ x, y, r: adjustedR });
-  });
-  return result;
-}
 
 
 
@@ -507,7 +471,7 @@ const GraphsResults = ({ infoMusicList, oldSearch, listSearchRes }) => {
               <ScatterChart
                 data={valsScatter}
                 labels={[labelsXscatter, labelsYscatter]}
-                dataBubble={mergeDuplicates(
+                dataBubble={ 
                   sortedArray_track_artist_count_iso
                     .map((a) =>
                       a.iso !== null
@@ -516,7 +480,7 @@ const GraphsResults = ({ infoMusicList, oldSearch, listSearchRes }) => {
                     )
                     .filter((a) => a !== null)
                     .filter((a) => a.x !== "--")
-                )}
+                }
                 title={selectedAttributeMix}
               />
             )}
