@@ -551,6 +551,14 @@ const updateAnnotation = (
     .catch(err => console.log(err))
 }
 
+const testMetadata = () => {
+  axios.get(`${baseUrl}/testMetadata`,{})
+  .then(({ data }) => {
+    console.log("data: ", data);
+  })
+  .catch((err) => console.log(err));
+}
+
 // TODO still wrong: if type is recording, we should not base it based on the idCaller, but on the lognumber... or lognumber of object with the idCaller!
 const getAnnotations = (
   type, info, setListAnnotations, indexAnnotation = 0, idCaller=null, user = null, directMetaIdCaller=false
@@ -1268,6 +1276,7 @@ export {
   getAllJazzDap, addJazzDap, updateJazzDap, deleteJazzDap,
   getMusicMIDI, getSampleMIDI, getMatchLevenshteinDistance,
   getTrackMetadata, getTracksMetadata,
+  testMetadata,
   getMetadataFromAttribute, 
   getTrackMetaFromNoteId,
   addAnnotation, getAnnotations, deleteAnnotation, updateAnnotation,

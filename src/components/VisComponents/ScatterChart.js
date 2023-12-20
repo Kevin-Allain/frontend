@@ -3,12 +3,11 @@ import { Scatter, Bubble } from "react-chartjs-2";
 
 // Might use a bubble chart... 
 // https://react-chartjs-2.js.org/examples/bubble-chart
-const ScatterChart = ({ data, labels, title }) => {
-
+const ScatterChart = ({ data, labels, dataBubble=undefined, title }) => {
+  console.log("dataBubble: ",dataBubble);
   // -- From example online
   const options = { scales: { y: { beginAtZero: true, }, }, };
   const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-
   const dataTest = {
     datasets: [
       {
@@ -33,7 +32,6 @@ const ScatterChart = ({ data, labels, title }) => {
       },
     ],
   };
-
   const dataTest2 = {
     datasets: [
       {
@@ -63,8 +61,31 @@ const ScatterChart = ({ data, labels, title }) => {
       },
     },
   };
-
-  console.log("dataTest: ",dataTest,", dataTest2: ",dataTest2);
+  
+  const dataTest3 = {
+    datasets: [
+      {
+        label:title,
+        data: dataBubble,
+        backgroundColor: "rgba(255, 99, 132, 0.2)",
+        borderColor: "rgba(255, 99, 132, 1)", // TODO adapt color based on value
+        borderWidth: 1,
+      }
+    ]
+  }
+  const optionsTest3 = {
+    scales: {
+      x: {
+        type: 'category', // Use a category scale for text on the X-axis
+        labels: [...new Set( dataBubble.map(a => a.x) )],
+      },
+      y: {
+        type: 'category', // Use a category scale for text on the Y-axis
+        labels: [...new Set( dataBubble.map(a => a.y) )],
+      },
+    },
+  };
+  console.log("dataTest: ",dataTest,", dataTest2: ",dataTest2,", dataTest3: ",dataTest3,", optionsTest3: ",optionsTest3);
   // -- 
 
   const [chartData, setChartData] = useState({
@@ -93,14 +114,17 @@ const ScatterChart = ({ data, labels, title }) => {
         },
       ],
     }));
-  }, [data, labels, title]);
+  }, [data, labels, dataBubble, title]);
 
-  return <>
-    <h1>Work in progress</h1>
-    <Bubble options={optionsTest2} data={dataTest2} />
-  </>
-    ;
-  // return <>Work in progress</>
+  return (
+    <>
+      <h1>Work in progress</h1>
+      <Bubble
+        options={optionsTest3 ? optionsTest3 : null}
+        data={dataTest3 ? dataTest3 : null}
+      />
+    </>
+  );
 };
 
 export default ScatterChart;

@@ -12,6 +12,45 @@ import './GraphsResults.css'
 
 const arrayStrPitchesToNotes = (arrStrNotes) => { return arrStrNotes.split("-").map((a, i) => MIDItoNote[a].replaceAll("s", "")).join('-'); }
 
+function mergeDuplicates(data) {
+  const result = [];
+  // Create a map to store the sums of 'r' values for each unique combination of 'x' and 'y'
+  const sumMap = new Map();
+  // Iterate through the original array
+  data.forEach(item => {
+    const { x, y, r } = item;
+    const key = `${x}*${y}`;
+    // If the combination of 'x' and 'y' is already in the map, add 'r' to the existing sum
+    if (sumMap.has(key)) {
+      sumMap.set(key, sumMap.get(key) + r);
+    } else {
+      // If it's a new combination, add it to the map with the current 'r' value
+      sumMap.set(key, r);
+    }
+  });
+  // Find the minimum and maximum sums
+  let minSum = Number.POSITIVE_INFINITY;
+  let maxSum = Number.NEGATIVE_INFINITY;
+  console.log("sumMap: ",sumMap);
+  sumMap.forEach(sum => {
+    minSum = Math.min(minSum, sum);
+    maxSum = Math.max(maxSum, sum);
+  });
+  // Convert the map back to an array of objects with adjusted 'r' values
+  sumMap.forEach((sum, key) => {
+    const [x, y] = key.split('*');
+    // Adjust 'r' to be between 5 and 30
+    // TODO: do we actually want to scale the data? => normalize?
+    const adjustedR = Math.max(5, Math.min(30, 
+      Math.round((sum - minSum) / ((maxSum-minSum===0)?1:maxSum-minSum) * 25 + 5 )
+    ));
+    result.push({ x, y, r: adjustedR });
+  });
+  return result;
+}
+
+
+
 // Making the assumption labels is thus: ["1963-12-20",...] and data: [4,...]
 const generateAllValuesYears = (labels,data) => {
   let result = {};
@@ -136,6 +175,7 @@ const GraphsResults = ({ infoMusicList, oldSearch, listSearchRes }) => {
   console.log("- mapTrackToIso: ",mapTrackToIso);
 
   // TODO work in progress. We should make an object trackTo_artist_count_iso
+  // TODO Might create an aggregations by year, and add empty years...
   const mapTrackTo_artist_count_iso = {};
   [...new Set(listSearchRes.map(element => element.track.replace(/-T/g, '_')))]
     .map(b => mapTrackTo_artist_count_iso[b] =
@@ -171,11 +211,15 @@ const GraphsResults = ({ infoMusicList, oldSearch, listSearchRes }) => {
   for (let i in mapRecordingToName) { 
     recordingsCount[mapRecordingToName[i]] = recordingsCount[mapRecordingToName[i]]? recordingsCount[mapRecordingToName[i]]+lognumbersCount[i] : lognumbersCount[i];
   }
+  
   // recordingsCount is OK
   console.log("- recordingsCount: ",recordingsCount, "count: ", Object.values(recordingsCount).reduce((partialSum, a) => partialSum + a, 0));
   const trackNamesCount = {};
   for (let i in mapTrackToName) { 
-    trackNamesCount[mapTrackToName[i]] = trackNamesCount[mapTrackToName[i]]? trackNamesCount[mapTrackToName[i]] + tracksCount[i.substring(0,i.lastIndexOf('_'))+'-T'+i.substring(i.lastIndexOf('_')+1)] : tracksCount[i.substring(0,i.lastIndexOf('_'))+'-T'+i.substring(i.lastIndexOf('_')+1)]; 
+    trackNamesCount[mapTrackToName[i]] = 
+      trackNamesCount[mapTrackToName[i]]
+      ? trackNamesCount[mapTrackToName[i]] + tracksCount[i]  //trackNamesCount[mapTrackToName[i]] + tracksCount[i.substring(0,i.lastIndexOf('_'))+'-T'+i.substring(i.lastIndexOf('_')+1)] 
+      : tracksCount[i]; //tracksCount[i.substring(0,i.lastIndexOf('_'))+'-T'+i.substring(i.lastIndexOf('_')+1)]; 
   }
   console.log("- trackNamesCount: ",trackNamesCount, "count: ", Object.values(trackNamesCount).reduce((partialSum, a) => partialSum + a, 0));
   const mapMelodyToCount = {};
@@ -183,13 +227,14 @@ const GraphsResults = ({ infoMusicList, oldSearch, listSearchRes }) => {
     b => mapMelodyToCount[b] = listSearchRes.map(a => a.arrNotes.join('-')).filter(a => a === b).length
   );
   console.log("- mapMelodyToCount: ",mapMelodyToCount, "count: ", Object.values(mapMelodyToCount).reduce((partialSum, a) => partialSum + a, 0));
+  
   // mapMelodyToCount is OK
   const melodyArtistsCount = {};
   const melodyCountPerArtistAndYearTime ={}
   for (let i in mapTrackToArtist) { 
     melodyArtistsCount[mapTrackToArtist[i]] = (melodyArtistsCount[ mapTrackToArtist[i] ])
-      ? melodyArtistsCount[mapTrackToArtist[i]] + tracksCount[ i.substring(0, i.lastIndexOf("_"))+"-T"+i.substring(i.lastIndexOf("_") + 1)]
-      : tracksCount[i.substring(0, i.lastIndexOf("_")) +"-T" +i.substring(i.lastIndexOf("_") + 1)];
+      ? melodyArtistsCount[mapTrackToArtist[i]] + tracksCount[i] //melodyArtistsCount[mapTrackToArtist[i]] + tracksCount[ i.substring(0, i.lastIndexOf("_"))+"-T"+i.substring(i.lastIndexOf("_") + 1)]
+      : tracksCount[i];//tracksCount[i.substring(0, i.lastIndexOf("_")) +"-T" +i.substring(i.lastIndexOf("_") + 1)];
   }
   // trackArtistsCount is OK
   console.log("- melodyArtistsCount: ",melodyArtistsCount, "count: ", Object.values(melodyArtistsCount).reduce((partialSum, a) => partialSum + a, 0));
@@ -419,35 +464,62 @@ const GraphsResults = ({ infoMusicList, oldSearch, listSearchRes }) => {
 
   return (
     <div className="border-solid border-2 border-[#e5e7eb]">
-      <div className="metadata-header  icon flex items-center" onClick={handleToggle} >
-        <BsGraphUp/>
+      <div
+        className="metadata-header  icon flex items-center"
+        onClick={handleToggle}
+      >
+        <BsGraphUp />
         <p className="mx-[0.5rem] my-[0.5rem]">Data Graphs</p>
-        {showGraphs ? ( <FaAngleUp className="metadata-icon" /> ) : ( <FaAngleDown className="metadata-icon" /> )}
+        {showGraphs ? (
+          <FaAngleUp className="metadata-icon" />
+        ) : (
+          <FaAngleDown className="metadata-icon" />
+        )}
       </div>
       {showGraphs && (
         <>
           <p>The graph will adapt based on the attributes you select.</p>
           <div className="mx-[0.5rem] inline-flex items-center">
             <label>Information selection</label>
-            <select className="mx-[0.5rem]" onChange={(e) => handleChangeSelection(e.target.value)} value={selectedAttributeMix} >
-              {attributeMix.map((option) => ( <option key={option} value={option}> {option} </option> ))}
+            <select
+              className="mx-[0.5rem]"
+              onChange={(e) => handleChangeSelection(e.target.value)}
+              value={selectedAttributeMix}
+            >
+              {attributeMix.map((option) => (
+                <option key={option} value={option}>
+                  {" "}
+                  {option}{" "}
+                </option>
+              ))}
             </select>
           </div>
           <div className="chartArea">
-            {(typeGraph === "bar" || typeGraph === "histogram") && 
-              (<BarChart 
-                data={axisYBarGraph} 
-                labels={axisLabelXBarGraph} 
-                title={selectedAttributeMix} 
-              />)}
+            {(typeGraph === "bar" || typeGraph === "histogram") && (
+              <BarChart
+                data={axisYBarGraph}
+                labels={axisLabelXBarGraph}
+                title={selectedAttributeMix}
+              />
+            )}
             {/* labelsXscatter; labelsYscatter; valsScatter */}
-            {typeGraph === "scatter" &&
-              (<ScatterChart
+            {typeGraph === "scatter" && (
+              <ScatterChart
                 data={valsScatter}
                 labels={[labelsXscatter, labelsYscatter]}
+                dataBubble={mergeDuplicates(
+                  sortedArray_track_artist_count_iso
+                    .map((a) =>
+                      a.iso !== null
+                        ? { x: a.iso, y: a.artist, r: a.count }
+                        : null
+                    )
+                    .filter((a) => a !== null)
+                    .filter((a) => a.x !== "--")
+                )}
                 title={selectedAttributeMix}
-              />)
-            }
+              />
+            )}
           </div>
         </>
       )}
