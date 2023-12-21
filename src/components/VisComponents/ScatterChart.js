@@ -3,7 +3,7 @@ import { Scatter, Bubble } from "react-chartjs-2";
 
 // Might use a bubble chart... 
 // https://react-chartjs-2.js.org/examples/bubble-chart
-const ScatterChart = ({ data, labels, dataBubble = undefined, title }) => {
+const ScatterChart = ({ data, labels, dataBubble = undefined, title, mergePerYear=false }) => {
   console.log("dataBubble: ", dataBubble);
   const minR = 5; const maxR = 30;
 
@@ -50,7 +50,53 @@ const ScatterChart = ({ data, labels, dataBubble = undefined, title }) => {
     return [result,resNormalSize];
   }
 
-  const [dataBubbleMerged,resNormalSize] = mergeDuplicates(dataBubble, minR, maxR);
+
+  const mergeDuplicatesByYear = (data, minR=5, maxR=30) =>{
+    const result = [];
+    // Create a map to store the sums of 'r' values for each unique combination of 'x' and 'y'
+    const sumMap = new Map();
+    // Iterate through the original array
+    data.forEach((item) => {
+      const { x, y, r } = item;
+      const key = `${x.split('-')[0]}*${y}`;
+      // If the combination of 'x' and 'y' is already in the map, add 'r' to the existing sum
+      if (sumMap.has(key)) {
+        sumMap.set(key, sumMap.get(key) + r);
+      } else {
+        // If it's a new combination, add it to the map with the current 'r' value
+        sumMap.set(key, r);
+      }
+    });
+    // Find the minimum and maximum sums
+    let minSum = Number.POSITIVE_INFINITY;
+    let maxSum = Number.NEGATIVE_INFINITY;
+    console.log("sumMap: ", sumMap);
+    sumMap.forEach((sum) => {
+      minSum = Math.min(minSum, sum);
+      maxSum = Math.max(maxSum, sum);
+    });
+    const resNormalSize = [];
+    // Convert the map back to an array of objects with adjusted 'r' values
+    sumMap.forEach((sum, key) => {
+      const [x, y] = key.split("*");
+      // Adjust 'r' to be between minR and maxR
+      // TODO: do we actually want to scale the data? => normalize?
+      const adjustedR = Math.max( minR, Math.min( maxR,
+          Math.round(
+            ((sum - minSum) / (maxSum - minSum === 0 ? 1 : maxSum - minSum)) *
+              (maxR - minR) + minR
+          )
+        )
+      );
+      result.push({ x, y, r: adjustedR });
+      resNormalSize.push({ x, y, r: sum });
+    });
+    return [result,resNormalSize];    
+  }
+
+  const [dataBubbleMerged,resNormalSize] = mergePerYear
+  ? mergeDuplicatesByYear(dataBubble, minR, maxR)
+  : mergeDuplicates(dataBubble, minR, maxR);
   // console.log("Post calculation, resNormalSize: ",resNormalSize);
   // Custom legend data
   const legendData = [
@@ -131,11 +177,27 @@ const ScatterChart = ({ data, labels, dataBubble = undefined, title }) => {
       },
     ],
   };
+
+  console.log("Array([...new Set(resNormalSize.map((a) => a.x))]): ",Array([...new Set(resNormalSize.map((a) => a.x))])[0] );
+  let maxY = Number(Math.max(...Array([...new Set(resNormalSize.map((a) => a.x))])[0] ));
+  let minY = Number(Math.min(...Array([...new Set(resNormalSize.map((a) => a.x))])[0]  ));
+  console.log("diffY: ", maxY-minY)
+  let diffY = maxY-minY;
+  let allY = Array.from(
+    Array(diffY+1),
+    (_,x)=> minY + x  )
+    .map(a => `${a}`)
+    console.log("allY: ",allY);
+  console.log("All years? : ", Array.from(
+    Array(diffY+1),
+    (_,x)=> minY + x  )  
+    .sort())
+
   const optionsChart = {
     scales: {
       x: {
         type: "category", // Use a category scale for text on the X-axis
-        labels: [...new Set(resNormalSize.map((a) => a.x))],
+        labels: mergePerYear?allY:[...new Set(resNormalSize.map((a) => a.x))],
       },
       y: {
         type: "category", // Use a category scale for text on the Y-axis

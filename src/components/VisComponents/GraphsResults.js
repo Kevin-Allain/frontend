@@ -482,6 +482,7 @@ const GraphsResults = ({ infoMusicList, oldSearch, listSearchRes }) => {
                     .filter((a) => a.x !== "--")
                 }
                 title={selectedAttributeMix}
+                mergePerYear={true}
               />
             )}
           </div>
