@@ -3,7 +3,8 @@ import { Scatter, Bubble } from "react-chartjs-2";
 
 // Might use a bubble chart... 
 // https://react-chartjs-2.js.org/examples/bubble-chart
-const ScatterChart = ({ data, labels, dataBubble = undefined, title, mergePerYear=false }) => {
+// TODO can this still be used for a scatter chart? I suppose so...
+const ScatterChart = ({ dataBubble = undefined, title, mergePerYear=false }) => {
   console.log("dataBubble: ", dataBubble);
   const minR = 5; const maxR = 30;
 
@@ -26,7 +27,6 @@ const ScatterChart = ({ data, labels, dataBubble = undefined, title, mergePerYea
     // Find the minimum and maximum sums
     let minSum = Number.POSITIVE_INFINITY;
     let maxSum = Number.NEGATIVE_INFINITY;
-    console.log("sumMap: ", sumMap);
     sumMap.forEach((sum) => {
       minSum = Math.min(minSum, sum);
       maxSum = Math.max(maxSum, sum);
@@ -70,7 +70,6 @@ const ScatterChart = ({ data, labels, dataBubble = undefined, title, mergePerYea
     // Find the minimum and maximum sums
     let minSum = Number.POSITIVE_INFINITY;
     let maxSum = Number.NEGATIVE_INFINITY;
-    console.log("sumMap: ", sumMap);
     sumMap.forEach((sum) => {
       minSum = Math.min(minSum, sum);
       maxSum = Math.max(maxSum, sum);
@@ -99,10 +98,13 @@ const ScatterChart = ({ data, labels, dataBubble = undefined, title, mergePerYea
   : mergeDuplicates(dataBubble, minR, maxR);
   // console.log("Post calculation, resNormalSize: ",resNormalSize);
   // Custom legend data
-  const legendData = [
+  // If all the values of r are the same, only one label is necessary.
+  const legendData = (! dataBubble.map(a => a.r ).every(a => a===dataBubble[0].r ))
+  ? [
     { label: Math.min(...resNormalSize.map(a => a.r)), radius: minR },
     { label: Math.max(...resNormalSize.map(a => a.r)), radius: maxR },
-  ];
+  ]
+  :[ { label: Math.min(...resNormalSize.map(a => a.r)), radius: minR }, ];
 
   const options = { scales: { y: { beginAtZero: true } } };
   const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
@@ -178,20 +180,11 @@ const ScatterChart = ({ data, labels, dataBubble = undefined, title, mergePerYea
     ],
   };
 
-  console.log("Array([...new Set(resNormalSize.map((a) => a.x))]): ",Array([...new Set(resNormalSize.map((a) => a.x))])[0] );
   let maxY = Number(Math.max(...Array([...new Set(resNormalSize.map((a) => a.x))])[0] ));
   let minY = Number(Math.min(...Array([...new Set(resNormalSize.map((a) => a.x))])[0]  ));
-  console.log("diffY: ", maxY-minY)
   let diffY = maxY-minY;
-  let allY = Array.from(
-    Array(diffY+1),
-    (_,x)=> minY + x  )
+  let allY = Array.from( Array(diffY+1), (_,x)=> minY + x  )
     .map(a => `${a}`)
-    console.log("allY: ",allY);
-  console.log("All years? : ", Array.from(
-    Array(diffY+1),
-    (_,x)=> minY + x  )  
-    .sort())
 
   const optionsChart = {
     scales: {
@@ -218,33 +211,6 @@ const ScatterChart = ({ data, labels, dataBubble = undefined, title, mergePerYea
     },
   };
   console.log("dataChart: ",dataChart,", optionsChart: ",optionsChart);
-
-  // const [chartData, setChartData] = useState({
-  //   labels: labels,
-  //   datasets: [
-  //     {
-  //       label: title,
-  //       data: data,
-  //       backgroundColor: "rgba(255, 99, 132, 0.2)",
-  //       borderColor: "rgba(255, 99, 132, 1)",
-  //       borderWidth: 1,
-  //     },
-  //   ],
-  // });
-
-  // useEffect(() => {
-  //   setChartData((prevData) => ({
-  //     ...prevData,
-  //     labels: labels,
-  //     datasets: [
-  //       {
-  //         ...prevData.datasets[0],
-  //         data: data,
-  //         label: title,
-  //       },
-  //     ],
-  //   }));
-  // }, [data, labels, dataBubble, title]);
 
   return (
     <>
