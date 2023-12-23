@@ -12,9 +12,6 @@ import './GraphsResults.css'
 
 const arrayStrPitchesToNotes = (arrStrNotes) => { return arrStrNotes.split("-").map((a, i) => MIDItoNote[a].replaceAll("s", "")).join('-'); }
 
-
-
-
 // Making the assumption labels is thus: ["1963-12-20",...] and data: [4,...]
 const generateAllValuesYears = (labels,data) => {
   let result = {};
@@ -46,7 +43,6 @@ const generateAllValuesYears = (labels,data) => {
   return result;
 };
 
-
 const GraphsResults = ({ infoMusicList, oldSearch, listSearchRes }) => {
   console.log("GraphsResults - infoMusicList: ", infoMusicList, ", oldSearch: ", oldSearch, ", listSearchRes: ", listSearchRes);
   const [showGraphs, setShowGraphs] = useState(false);
@@ -70,9 +66,9 @@ const GraphsResults = ({ infoMusicList, oldSearch, listSearchRes }) => {
 
   // Shared parameters
   const [typeGraph, setTypeGraph] = useState("bar");
-  const [selectedAttributeMix, setSelectedAttributeMix] = useState("Number of matches per recording");
+  const [selectedAttributeMix, setSelectedAttributeMix] = useState("Matches per recording");
   const [selectedAxisY, setSelectedAxisY] = useState("Release Month");
-  const attributesOptions = ["Release Year", "Release Month", "Track Title", "Recording", "Artists"];
+
   // attributeMix can relate to a single attribute. What matters is we set the selection for the axes
   const attributeMix = [ 
     "Matches per year",
@@ -322,8 +318,8 @@ const GraphsResults = ({ infoMusicList, oldSearch, listSearchRes }) => {
   const [valsScatter, setValscatter] = useState([]);
   // -- BarGraph
   // Sample data
-  const [axisLabelXBarGraph, setAxisLabelXBarGraph] = useState(["Category A", "Category B", "Category C", "Category D", "Category E",]);
-  const [axisYBarGraph, setAxisYBarGraph] = useState([10, 20, 15, 25, 18]);
+  const [axisLabelXBarGraph, setAxisLabelXBarGraph] = useState([]);
+  const [axisYBarGraph, setAxisYBarGraph] = useState([]);
 
   // Chart data
   const[dataBarGraph, setDataBarGraph] = useState({
@@ -338,32 +334,8 @@ const GraphsResults = ({ infoMusicList, oldSearch, listSearchRes }) => {
 
     const updateOptions = () => {
       if (typeGraph === "scatter") {
-        console.log("Work in progress for scatter. We want to display information for ", "Number of melodies per artist and year");
-        // This might not be useful this way.
-        const minAxisX = selectedAttributeMix === "Release Month"
-        ? 1 
-        : selectedAttributeMix === "Release Year"
-          ? Math.min(...infoMusicList.map((a) => Number(a["Release Year"])).filter((a) => a).filter((a) => a !== 0)) - 1 
-          : 0;
-        const maxAxisX = selectedAttributeMix === "Release Month" 
-          ? 12 
-          : selectedAttributeMix === "Release Year" 
-            ? Math.max(...infoMusicList.map((a) => Number(a["Release Year"])).filter((a) => a).filter((a) => a !== 0)) + 1 
-            : 100;
-        const minAxisY = selectedAxisY === "Release Month"
-        ? 1 
-        : selectedAxisY === "Release Year"
-          ? Math.min(...infoMusicList.map((a) => Number(a["Release Year"])).filter((a) => a).filter((a) => a !== 0)) - 1 
-          : 0;
-        const maxAxisY = selectedAxisY === "Release Month"
-        ? 12 
-        : selectedAxisY === "Release Year"
-          ? Math.max(...infoMusicList.map((a) => Number(a["Release Year"])).filter((a) => a).filter((a) => a !== 0)) + 1 
-          : 100;
-
         // The variables that should be changed: labelsXscatter, labelsYscatter, valsScatter
         // let filledUpDates = generateAllValuesYears(Object.keys(sortedIso), Object.values(sortedIso));
-        
 
         // TODO change and fix... (remove?)
         setDataScatter({
@@ -385,30 +357,23 @@ const GraphsResults = ({ infoMusicList, oldSearch, listSearchRes }) => {
             },
           ],
         });
-
+      
+        // TODO update here
         setOptionsScatter({
           scales: {
             x: {
               type: "linear",
               position: "bottom",
-              min: minAxisX,
-              max: maxAxisX,
-              ticks: {
-                callback: function (value) {
-                  return Math.round(value);
-                },
-              },
+              min: 0,
+              max: 0,
+              ticks: { callback: function (value) { return Math.round(value); }, },
             },
             y: {
               type: "linear",
               position: "left",
-              min: minAxisY,
-              max: maxAxisY,
-              ticks: {
-                callback: function (value) {
-                  return Math.round(value);
-                },
-              },
+              min: 0, // TODO update
+              max: 0,
+              ticks: { callback: function (value) { return Math.round(value); }, },
             },
           },
         });
