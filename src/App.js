@@ -22,7 +22,7 @@ import MusicInterface from "./components/MusicInterface/MusicInterface";
 import { Provider } from 'react-redux';
 import store from './components/App/store';
 
-import Navbar from "./components/Presentation/Navbar";
+import NewNavbar from "./components/Presentation/NewNavbar";
 import About from "./components/Presentation/About";
 import Funding from "./components/Presentation/Funding";
 import Investigators from "./components/Presentation/Investigators";
@@ -74,6 +74,20 @@ function App() {
           </button>
           : <></>
         }
+          <div>
+            <NewNavbar
+              onLanding={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+            />
+            {/* <div className=" -mt-[40vh]  h-[550vh]  pt-[40vh] h-auto"
+              style={{ background:
+                  "linear-gradient(122deg, rgba(2,3,12,1) 5%, rgba(42,45,78,1) 28%, rgba(33,29,56,1) 76%, rgba(80,111,127,1) 100%)", }} >
+              <div className="scroll-mt-10" ref={about}> <About /> </div>
+              <div className="scroll-mt-10" ref={invest}> <Investigators /> </div>
+              <div className="scroll-mt-10" ref={partners}> <Partners /> </div>
+              <div className="scroll-mt-10" ref={funding}> <Funding /> </div>
+            </div> */}
+          </div>
+
         <div className="contentApp">
           {(auth !== null || localStorage.token ? "logout" : "offscreen") ?
             (
@@ -89,24 +103,6 @@ function App() {
             :
             <MusicInterface />
           } 
-
-          <div className=" overflow-hidden">
-            <Navbar
-              onLanding={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-              onInvest={() => scrollTo(invest)}
-              onAbout={() => scrollTo(about)}
-              onPartner={() => scrollTo(partners)}
-              onFunding={() => scrollTo(funding)}
-            />
-            <div className=" -mt-[40vh]  h-[550vh]  pt-[40vh] h-auto"
-              style={{ background:
-                  "linear-gradient(122deg, rgba(2,3,12,1) 5%, rgba(42,45,78,1) 28%, rgba(33,29,56,1) 76%, rgba(80,111,127,1) 100%)", }} >
-              <div className="scroll-mt-10" ref={about}> <About /> </div>
-              <div className="scroll-mt-10" ref={invest}> <Investigators /> </div>
-              <div className="scroll-mt-10" ref={partners}> <Partners /> </div>
-              <div className="scroll-mt-10" ref={funding}> <Funding /> </div>
-            </div>
-          </div>
 
         </div>
         {isLoading && (
