@@ -47,24 +47,11 @@ function App() {
   const handleClose = () => setOpen(false);
   const [showDiv, setShowDiv] = useState(false);
 
-  // Addition for components provided by designers
-  // const [open, setOpen] = useState(false);
-  // const invest = useRef < null | HTMLDivElement > (null);
   const invest = useRef(null);
-  // const about = useRef < null | HTMLDivElement > (null);
   const about = useRef(null);
-  // const partners = useRef < null | HTMLDivElement > (null);
   const partners = useRef(null);
-  // const funding = useRef < null | HTMLDivElement > (null);
   const funding = useRef(null); 
-  // const landing = useRef < null | HTMLDivElement > (null);
-  // const search = useRef < null | HTMLDivElement > (null);
-  // const search = useRef(null);
-  // const handleOpen = () => setOpen(true);
-  // const handleClose = () => setOpen(false);
-  // : React.RefObject<HTMLDivElement>
   function scrollTo(ref) {
-    // ref.current!.scrollIntoView({
     ref.current.scrollIntoView({ behavior: "smooth", })
   };
 
@@ -73,7 +60,6 @@ function App() {
     setIsLoading = setIsLoadingState; // Assign the function to the exported variable
   }, []);
 
-  // useEffect(() => { getAllJazzDap(setListJazzDap); }, []);
   const updateMode = (_id, text) => { setIsUpdating(true); setTextInputJazzDAP(text); setJazzDapId(_id); };
 
   return (
@@ -92,7 +78,9 @@ function App() {
           {(auth !== null || localStorage.token ? "logout" : "offscreen") ?
             (
               <>
-                <div className={auth !== null || localStorage.token ? "logout" : "offscreen"}>
+                <div className={
+                  auth !== null || localStorage.token ? "logout" : "offscreen"
+                }>
                   <Logout />
                 </div>
                 <MusicInterface />
@@ -103,23 +91,16 @@ function App() {
           } 
 
           <div className=" overflow-hidden">
-            {/* <ModalUnstyled open={open} onClose={handleClose}>
-              <Login onClose={handleClose}></Login>
-            </ModalUnstyled> */}
             <Navbar
               onLanding={() => window.scrollTo({ top: 0, behavior: "smooth" })}
               onInvest={() => scrollTo(invest)}
               onAbout={() => scrollTo(about)}
               onPartner={() => scrollTo(partners)}
               onFunding={() => scrollTo(funding)}
-              // onLogin={handleOpen}
             />
-            {/* <div ref={landing}> <Landing onClick={() => scrollTo(search)} /> </div> */}
-            {/* added h-auto (might have to remove it) */}
             <div className=" -mt-[40vh]  h-[550vh]  pt-[40vh] h-auto"
               style={{ background:
                   "linear-gradient(122deg, rgba(2,3,12,1) 5%, rgba(42,45,78,1) 28%, rgba(33,29,56,1) 76%, rgba(80,111,127,1) 100%)", }} >
-              {/* <div className="scroll-mt-10" ref={search}> <Search /> </div> */}
               <div className="scroll-mt-10" ref={about}> <About /> </div>
               <div className="scroll-mt-10" ref={invest}> <Investigators /> </div>
               <div className="scroll-mt-10" ref={partners}> <Partners /> </div>

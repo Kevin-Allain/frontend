@@ -5,14 +5,6 @@ import Login from "../Login/Login";
 
 import {ImCross} from 'react-icons/im'
 import logo from "../../assets/logo.png";
-// type Props = {
-//   onLogin: () => void;
-//   onInvest: () => void;
-//   onAbout: () => void;
-//   onPartner: () => void;
-//   onFunding: () => void;
-//   onLanding: () => void;
-// };
 function Navbar(props
   // : Props
 ) {
@@ -58,21 +50,13 @@ function Navbar(props
         </a>
 
       </div>
-      {/* Hidden as login is set somewhere else... */}
-      {/* <a
-        onClick={props.onLogin}
-        className=" flex cursor-pointer flex-row items-center gap-1 hover:text-accentLight"
-      >
-        Login
-      </a> */}
-      {/* <div> Inclusion of login/register elements here... </div> */}
+      {/* Inclusion of login/register elements here... */}
       {(localStorage?.username === undefined) ?
         <div 
             className='buttonShowDiv'
             onClick={() => setShowDiv(!showDiv)}
           >
             {showDiv ? (<></>) : 'Login / Register'}
-            {/* <ImCross className='icon'/> */}
         </div>
         : <></>
       }

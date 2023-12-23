@@ -54,45 +54,16 @@ export default function Logout() {
 
             const token = auth ? auth.accessToken : localStorage.token;
             console.log("token: ",token,", auth", JSON.stringify(auth),", localStorage.token: ",localStorage.token);
-
             setSuccess(false);
             setUserName('');
             setPassword('');
-
             // annotations load tryout
             setListAnnotations([]);
 
             localStorage.clear();
             setAuth(null);
             axios.defaults.headers.common['Authorization'] = null;
-
             window.location.reload();
-
-            // TODO consider if we want to keep track, on the database, of numbers of active users, and who they are (in which case, we need to modify code for login as well, and set a table for active users)
-            /*
-            const response = await
-                axios.post(`${baseUrl}/${LOGOUT_URL}`,
-                    JSON.stringify({ token }),
-                    {
-                        headers: { 'Content-Type': 'application/json' } //, withCredentials: true// issue with cors with that
-                    }
-                )
-                    .then((d) => {
-                        console.log(`successfully logged out. d: `,JSON.stringify(d));
-                        setSuccess(true);
-                        setUserName('');
-                        setPassword('');
-
-                        localStorage.setItem('token',null);
-                        setAuth(null);
-                        axios.defaults.headers.common['Authorization'] = null;                        
-
-                    })
-                    .catch(err => {
-                        console.log(`catch err: ${err}`);
-                        setSuccess(false);
-                    })
-                    */
         } catch (err) {
             console.log("err: ", err);
             if (!err?.response) {
