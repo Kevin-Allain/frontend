@@ -77,7 +77,10 @@ const GraphsResults = ({ infoMusicList, oldSearch, listSearchRes }) => {
     "Matches per artist",
     "Occurences per match",
     "Matches per artist and year",
-    "Matches per recording and track"
+    // "Matches per recording and track" // kind of lame, right?
+    // "Occurences per match and year"// TODO
+    // "Occurences per recording and years" // TODO
+    // "Occurences per tracks and years" // kind of lame, right?
   ];
 
   // Derived parameters (might require making calls to the database)

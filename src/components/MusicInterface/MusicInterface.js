@@ -548,7 +548,7 @@ const MusicInterface = () => {
       <div className="topTextSearch">
         <div className="disclaimerSearchPitch">
           Play the piano keys or enter a query based on pitch notes (from 0 to
-          127) separated with - characters.
+          127) separated with - characters. Enter between 4 and 10 notes.
         </div>
         <input
           type="text"
@@ -567,8 +567,8 @@ const MusicInterface = () => {
             value={percMatch}
             onChange={handleChangePercMatch}
           >
-            <option value={0.1}>10%</option> <option value={0.2}>20%</option>{" "}
-            <option value={0.3}>30%</option> <option value={0.4}>40%</option>{" "}
+            {/* <option value={0.1}>10%</option> <option value={0.2}>20%</option>{" "}
+            <option value={0.3}>30%</option> <option value={0.4}>40%</option>{" "} */}
             <option value={0.5}>50%</option>
             <option value={0.6}>60%</option> <option value={0.7}>70%</option>{" "}
             <option value={0.8}>80%</option> <option value={0.9}>90%</option>{" "}
