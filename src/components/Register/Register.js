@@ -7,9 +7,9 @@ import '../../App.css'
 
 // TODO Seems like we will need to modify this to use the mongoose controller
 // import axios from 'axios';
-// const baseUrl = "http://localhost:5000" // can be used for development
+const baseUrl = "http://localhost:5000" // can (and should) used for development
 // const baseUrl = "https://fullstack-proto-jazzdap-backend.onrender.com"
-const baseUrl= "https://jazzdap-backend.onrender.com"
+// const baseUrl= "https://jazzdap-backend.onrender.com"
 
 const USER_REGEX = /^[A-z][A-z0-9-_]{3,23}$/;
 const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/;

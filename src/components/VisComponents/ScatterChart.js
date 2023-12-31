@@ -4,7 +4,7 @@ import { Scatter, Bubble } from "react-chartjs-2";
 // Might use a bubble chart... 
 // https://react-chartjs-2.js.org/examples/bubble-chart
 // TODO can this still be used for a scatter chart? I suppose so...
-const ScatterChart = ({ dataBubble = undefined, title, mergePerYear=false }) => {
+const ScatterChart = ({ dataBubble = undefined, title, mergePerYear=false, setShowLoadingIcon }) => {
   console.log("dataBubble: ", dataBubble);
   const minR = 5; const maxR = 30;
 
@@ -108,46 +108,7 @@ const ScatterChart = ({ dataBubble = undefined, title, mergePerYear=false }) => 
 
   const options = { scales: { y: { beginAtZero: true } } };
   const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-  const dataTest = {
-    datasets: [
-      {
-        label: "Red dataset",
-        data: Array.from({ length: 50 }, () => ({
-          x: Math.round(4 * Math.random()) + Math.round(-4 * Math.random()),
-          y: Math.round(8 * Math.random()) + Math.round(-8 * Math.random()),
-          // y: characters[Math.round(characters.length*Math.random())],
-          r: Math.round(20 * Math.random()) + Math.round(-20 * Math.random()),
-        })),
-        backgroundColor: "rgba(255, 99, 132, 0.5)",
-      },
-      {
-        label: "Blue dataset",
-        data: Array.from({ length: 50 }, () => ({
-          x: Math.round(4 * Math.random()) + Math.round(-4 * Math.random()),
-          y: Math.round(8 * Math.random()) + Math.round(-8 * Math.random()),
-          // y: characters[Math.round(characters.length*Math.random())],
-          r: Math.round(20 * Math.random()) + Math.round(-20 * Math.random()),
-        })),
-        backgroundColor: "rgba(53, 162, 235, 0.5)",
-      },
-    ],
-  };
-  const dataTest2 = {
-    datasets: [
-      {
-        label: title,
-        data: [ { x: "Category A", y: "Type 1", r: 10 }, { x: "Category B", y: "Type 2", r: 20 }, { x: "Category C", y: "Type 1", r: 15 }, { x: "Category C", y: "Type 4", r: 5 }, { x: "Category E", y: "Type 3", r: 35 }, { x: "Category F", y: "Type 2", r: 15 }, ],
-        backgroundColor: "rgba(75, 192, 192, 0.2)",
-        borderColor: "rgba(75, 192, 192, 1)",
-      },
-    ],
-  };
-  const optionsTest2 = {
-    scales: {
-      x: { type: "category", labels: [ "Category A", "Category B", "Category C", "Category D", "Category E", "Category F", ], },
-      y: { type: "category", labels: ["Type 1", "Type 2", "Type 3", "Type 4"], },
-    },
-  };
+
   const dataChart = {
     datasets: [
       {
@@ -165,6 +126,8 @@ const ScatterChart = ({ dataBubble = undefined, title, mergePerYear=false }) => 
   let diffY = maxY-minY;
   let allY = Array.from( Array(diffY+1), (_,x)=> minY + x  )
     .map(a => `${a}`)
+
+  console.log("scatter chart. issue with x axis: allY: ",allY,"\n or ",(resNormalSize.map((a) => a.x)))
 
   const optionsChart = {
     scales: {
@@ -191,6 +154,10 @@ const ScatterChart = ({ dataBubble = undefined, title, mergePerYear=false }) => 
     },
   };
   console.log("dataChart: ",dataChart,", optionsChart: ",optionsChart);
+
+  useEffect(() => {
+    setShowLoadingIcon(false);
+  }, [dataBubble, title, mergePerYear])
 
   return (
     <>

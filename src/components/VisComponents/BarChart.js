@@ -15,7 +15,7 @@ const calculateFontSize = (numberOfLabels) => {
 };
 
 
-const BarChart = ({ data, labels, title }) => {
+const BarChart = ({ data, labels, title, setShowLoadingIcon }) => {
   const numberOfLabels = labels.length;
   const fontSize = calculateFontSize(numberOfLabels);
   console.log("data: ",data,", labels: ",labels,", typeof labels[0]: ",(typeof labels[0]));
@@ -54,6 +54,8 @@ const BarChart = ({ data, labels, title }) => {
         y: { ticks: { font: { size: 12 } } },
       },
     });
+
+    setShowLoadingIcon(false);
   }, [data, labels, title]);
 
   return <Bar data={chartData} options={optionsBarGraph} />;

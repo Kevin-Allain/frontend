@@ -89,17 +89,12 @@ const MusicInterface = () => {
   const lognumbersRefs = useRef([]);
   const buttonListLogsNumbersRef = useRef(null);
   const tracksRefs = useRef([]);
-
-
-  const handleToggle = () => {
-    setFilterMode(!isFilterMode);
-    // Perform actions based on the toggle state (isFilterMode)
-  };
+  
+  const handleToggle = () => {setFilterMode(!isFilterMode);};
 
   const handleChangeSearchFilterArtist = (event) => {
     setSearchFilterArtist(event.target.value);
   }
-
   const scrollToButtonListLogsNumbers = () => {
     const buttonListLogsNumbers = document.getElementById(
       "buttonListLogsNumbers"
@@ -112,7 +107,6 @@ const MusicInterface = () => {
       });
     }
   };
-
   const scrollToButtonListTracksFollowing = (
     e,
     indexButton,
@@ -653,44 +647,43 @@ const MusicInterface = () => {
             )
           </h4>
 
-          <div className="text-left">
-            <AnnotationSystem type={"search"} info={oldSearch} />
-            {/* TODO update the workflow system so that it can save searches!!! Working on it from 2023.11.14. */}
-            <EmbeddedWorkflowInteraction 
-              idCaller={oldSearch+"_fArtist("+textFilterArtist+")_fRecording("+textFilterRecording+")_fTrack("+textFilterTrack+")_fPerc("+percMatch+")"} 
-              typeCaller={"search"} 
-              listLogNumbers={listLogNumbers}
-              infoMusicList={infoMusicList}
-              listTracks={listTracks}
-            />
-          </div>
+            <div className="text-left">
+              <AnnotationSystem type={"search"} info={oldSearch} />
+              {/* TODO update the workflow system so that it can save searches!!! Working on it from 2023.11.14. */}
+              <EmbeddedWorkflowInteraction
+                idCaller={oldSearch + "_fArtist(" + textFilterArtist + ")_fRecording(" + textFilterRecording + ")_fTrack(" + textFilterTrack + ")_fPerc(" + percMatch + ")"}
+                typeCaller={"search"}
+                listLogNumbers={listLogNumbers}
+                infoMusicList={infoMusicList}
+                listTracks={listTracks}
+              />
+            </div>
 
-          {/* We should create a different type of component with some vis. */}
-          {infoMusicList.length > 0 ? (
-            <>
-              {/* There are results: {infoMusicList.length}. <br />
-              Albums:{" "}
-              {Array.from([...new Set(infoMusicList.map((a) => a["(E) Event Name"]))]).map( a => <>{a}<br/></> )} */}
-              <GraphsResults infoMusicList={infoMusicList} oldSearch={oldSearch} listSearchRes={listSearchRes}/>
-            </>
-          ) : (
-            <></>
-          )}
-          {infoMusicList.length > 0 ? (
-            <MyTabbedInterface
-              listSearchRes={listSearchRes}
-              listLogNumbers={listLogNumbers}
-              listTracks={listTracks}
-              infoMusicList={infoMusicList}
-              findMatchRecording={findMatchRecording}
-              formatAndPlay={formatAndPlay}
-              getMusicInfo={getMusicInfo}
-              setInfoMusicList={setInfoMusicList}
-            />
-          ) : (
-            <></>
-          )}
-        </div>
+            {/* We should create a different type of component with some vis. */}
+            {/* This is rendered twice?! */}
+            {infoMusicList.length > 0 &&
+              (<GraphsResults
+                infoMusicList={infoMusicList}
+                oldSearch={oldSearch}
+                listSearchRes={listSearchRes}
+              />)
+            }
+            {/* Is this rendered twice too?! */}
+            {infoMusicList.length > 0 ? (
+              <MyTabbedInterface
+                listSearchRes={listSearchRes}
+                listLogNumbers={listLogNumbers}
+                listTracks={listTracks}
+                infoMusicList={infoMusicList}
+                findMatchRecording={findMatchRecording}
+                formatAndPlay={formatAndPlay}
+                getMusicInfo={getMusicInfo}
+                setInfoMusicList={setInfoMusicList}
+              />
+            ) : (
+              <></>
+            )}
+          </div>
       )}
     </div>
   );
