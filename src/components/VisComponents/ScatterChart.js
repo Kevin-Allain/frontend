@@ -90,7 +90,8 @@ const mergeDuplicatesByYear = (data, minR = 5, maxR = 30) => {
 // https://react-chartjs-2.js.org/examples/bubble-chart
 // TODO can this still be used for a scatter chart? I suppose so...
 const ScatterChart = ({ dataBubble = undefined, title, mergePerYear=false, setShowLoadingIcon }) => {
-  console.log("~~~~ScatterChart . dataBubble: ", dataBubble);
+  console.log("~~~~ScatterChart ");
+  // console.log(". dataBubble: ", dataBubble);
   const minR = 2; const maxR = 20;
 
   const [objBubble_andSize, setObjBubble_andSize] = useState(mergePerYear

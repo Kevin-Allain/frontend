@@ -4,8 +4,9 @@ import { FaArrowRight, FaArrowLeft } from "react-icons/fa";
 
 // Pagination helps, but we should consider having it sorted prior to passing it.
 const BarChart = ({ data, labels, title, setShowLoadingIcon }) => {
-  console.log("~~~~ BarChart | data: ",data,", labels: ",labels,", typeof labels[0]: ",(typeof labels[0]));
-  
+  console.log("~~~~ BarChart");
+  // console.log("| data: ",data,", labels: ",labels,", typeof labels[0]: ",(typeof labels[0]));
+
   const itemsPerPage = title==="Matches per year"?100:50;
   const [currentPage, setCurrentPage] = useState(0);
 

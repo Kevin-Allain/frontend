@@ -662,12 +662,7 @@ const MusicInterface = () => {
             {/* We should create a different type of component with some vis. */}
             {/* This is rendered twice?! */}
             {/* {infoMusicList.length > 0 &&
-            (<GraphsResults
-              infoMusicList={infoMusicList}
-              oldSearch={oldSearch}
-              listSearchRes={listSearchRes}
-            />)
-          } */}
+              (<GraphsResults infoMusicList={infoMusicList} oldSearch={oldSearch} listSearchRes={listSearchRes} />) } */}
             {infoMusicList.length > 0 && (
               <MemoizedGraphsResults
                 infoMusicList={infoMusicList}

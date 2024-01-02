@@ -61,7 +61,6 @@ const GraphsResults = ({ infoMusicList, oldSearch, listSearchRes }) => {
       : null
   }
 
-  // TODO change this?
   const dataInput = infoMusicList;
   ChartJS.register(LinearScale, CategoryScale, PointElement, BarElement, LineElement, Tooltip, Legend);
 
@@ -484,13 +483,11 @@ const GraphsResults = ({ infoMusicList, oldSearch, listSearchRes }) => {
         className="metadata-header  icon flex items-center"
         onClick={handleToggle}
       >
-        <BsGraphUp />
+        <BsGraphUp/>
         <p className="mx-[0.5rem] my-[0.5rem]">Data Graphs</p>
-        {showGraphs ? (
-          <FaAngleUp className="metadata-icon" />
-        ) : (
-          <FaAngleDown className="metadata-icon" />
-        )}
+        {showGraphs 
+          ? ( <FaAngleUp className="metadata-icon" /> ) 
+          : ( <FaAngleDown className="metadata-icon" /> )}
       </div>
       {showGraphs && (
         <>
@@ -520,11 +517,9 @@ const GraphsResults = ({ infoMusicList, oldSearch, listSearchRes }) => {
                 setShowLoadingIcon={setShowLoadingIcon}
               />
             )}
-            {/* labelsXscatter; labelsYscatter; valsScatter */}
             {typeGraph === "scatter" && (
               <ScatterChart
                 dataBubble={
-                  // TODO more conditions for other selections
                   (arrayDataBubble.length===0)
                   ? (selectedAttributeMix==="Occurences per match and year")
                     ? setArrayDataBubble(mapMatchToYear_iso)
