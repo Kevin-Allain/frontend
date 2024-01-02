@@ -51,7 +51,7 @@ const generateAllValuesYears = (labels,data) => {
 };
 
 const GraphsResults = ({ infoMusicList, oldSearch, listSearchRes }) => {
-  console.log("GraphsResults - infoMusicList: ", infoMusicList, ", oldSearch: ", oldSearch, ", listSearchRes: ", listSearchRes);
+  console.log("~~ GraphsResults - infoMusicList: ", infoMusicList, ", oldSearch: ", oldSearch, ", listSearchRes: ", listSearchRes);
   const [showGraphs, setShowGraphs] = useState(false);
   const handleToggle = () => { setShowGraphs(!showGraphs); };
   // Set up date in javascript format
@@ -61,7 +61,7 @@ const GraphsResults = ({ infoMusicList, oldSearch, listSearchRes }) => {
       : null
   }
 
-  // TODO change this
+  // TODO change this?
   const dataInput = infoMusicList;
   ChartJS.register(LinearScale, CategoryScale, PointElement, BarElement, LineElement, Tooltip, Legend);
 
@@ -112,30 +112,25 @@ const GraphsResults = ({ infoMusicList, oldSearch, listSearchRes }) => {
     return acc;
   }, {}));
   // lognumbersCount is OK
-  console.log("- tracksCount: ",tracksCount, "count: ", Object.values(tracksCount).reduce((partialSum, a) => partialSum + a, 0) )
   
   const [uniqueMelodiesStr, setUniqueMelodiesStr] = useState([...new Set(listSearchRes.map(a => a.arrNotes.join('-')))]);
   const [uniqueArtists, setUniqueArtists] = useState([...new Set(infoMusicList.map(a => a['(N) Named Artist(s)'] ))]);
-  console.log("- uniqueArtists: ",uniqueArtists," - uniqueMelodiesStr: ",uniqueMelodiesStr);
 
   const mapRecordingToName = {};
   [...new Set(listSearchRes.map(element => element.lognumber))].map(b => mapRecordingToName[b] =
       infoMusicList.filter(a => a.lognumber === b)[0]
         ? infoMusicList.filter(a => a.lognumber === b)[0]['(E) Event Name']
         : b) // was null previously
-  console.log("- mapRecordingToName: ",mapRecordingToName);
   const mapTrackToName = {};
   [...new Set(listSearchRes.map(element => element.track.replace(/-T/g, '_')))].map(b => mapTrackToName[b] =
       infoMusicList.filter(a => a['SJA_ID'] === b)[0]
         ? infoMusicList.filter(a => a['SJA_ID'] === b)[0]['Track Title']
         : null)
-  console.log("- mapTrackToName: ",mapTrackToName);
   const mapTrackToArtist = {};
   [...new Set(listSearchRes.map(element => element.track.replace(/-T/g, '_')))].map(b => mapTrackToArtist[b] =
       infoMusicList.filter(a => a['SJA_ID'] === b)[0]
         ? infoMusicList.filter(a => a['SJA_ID'] === b)[0]['(N) Named Artist(s)']
         : null)
-  console.log("- mapTrackToArtist: ",mapTrackToArtist);
 
   const mapTrackToIso = {};
   [...new Set(listSearchRes.map(element => element.track.replace(/-T/g, '_')))].map(b => mapTrackToIso[b] =
@@ -145,7 +140,6 @@ const GraphsResults = ({ infoMusicList, oldSearch, listSearchRes }) => {
           +infoMusicList.filter(a => a['SJA_ID'] === b)[0]['Event Day']
       )
     : null)
-  console.log("- mapTrackToIso: ",mapTrackToIso);
 
   const mapTrackTo_artist_count_iso = {};
   [...new Set(listSearchRes.map(element => element.track.replace(/-T/g, '_')))]
@@ -165,7 +159,6 @@ const GraphsResults = ({ infoMusicList, oldSearch, listSearchRes }) => {
       'count':
         tracksCount[b]
     })
-  console.log("- mapTrackTo_artist_count_iso: ", mapTrackTo_artist_count_iso);
   let sortedArray_track_artist_count_iso = Object.entries(mapTrackTo_artist_count_iso)
     .map(([key, value]) => ({
       track: key,
@@ -194,9 +187,7 @@ const GraphsResults = ({ infoMusicList, oldSearch, listSearchRes }) => {
     const occurrences = {};
     listSearchRes.forEach((listItem) => {
       const { arrNotes, year } = extractInfo(listItem);
-      // Use a combination of arrNotes and year as the key
       const key = `${arrNotes}/${year}`;
-      // Increment the count for the key or initialize it to 1
       occurrences[key] = (occurrences[key] || 0) + 1;
     });
     return occurrences;
@@ -210,29 +201,22 @@ const GraphsResults = ({ infoMusicList, oldSearch, listSearchRes }) => {
   const transformToObjectsArray = (occurrencesMap) => {
     return Object.entries(occurrencesMap).map(([key, count]) => {
       const [notes, date] = key.split('/');
-      //.replaceAll('00',''),
       return {
-        x: date, 
-        y: notes,
-        count: count,
+        x: date, y: notes, count: count,
       };
     });
   };
   const filteredMapCleanYear = Object.fromEntries(
     Object.entries(strCountOccurences_notesYear).filter(([key, value]) => {
       const [notes, datePart] = key.split('/');
-      const yearPart = datePart.split('-')[0];
-  
+      const yearPart = datePart.split('-')[0];  
       // Filter out pairs where the length of the characters for years is different than 4
       return yearPart.length === 4;
     })
   );
-  console.log("filteredMapCleanYear: ", filteredMapCleanYear);
+
   mapMatchToYear_iso = transformToObjectsArray(filteredMapCleanYear);
   mapMatchToYear_iso = sortByY(mapMatchToYear_iso);
-  console.log("mapMatchToYear_iso: ", mapMatchToYear_iso);
-  console.log("- sortedArray_track_artist_count_iso: ", sortedArray_track_artist_count_iso);
-  console.log("keys tracksCount: ", Object.keys(tracksCount), ", keys mapTrackTo_artist_count_iso: ", Object.keys(mapTrackTo_artist_count_iso));
 
   // TODO 2023-12-22 Set this data for another view
   // TODO base type of graph based on number of elements or something...! 
@@ -254,7 +238,6 @@ const GraphsResults = ({ infoMusicList, oldSearch, listSearchRes }) => {
         tracksCount[b]
     }
     )
-    console.log("- mapTrackTo_recording_count: ",mapTrackTo_recording_count);
   // let sortedArray_track_recording_count = {} 
 
   const recordingsCount = {}
@@ -263,7 +246,6 @@ const GraphsResults = ({ infoMusicList, oldSearch, listSearchRes }) => {
   }
   
   // recordingsCount is OK
-  console.log("- recordingsCount: ",recordingsCount, "count: ", Object.values(recordingsCount).reduce((partialSum, a) => partialSum + a, 0));
   const trackNamesCount = {};
   for (let i in mapTrackToName) { 
     trackNamesCount[mapTrackToName[i]] = 
@@ -271,12 +253,10 @@ const GraphsResults = ({ infoMusicList, oldSearch, listSearchRes }) => {
       ? trackNamesCount[mapTrackToName[i]] + tracksCount[i]  //trackNamesCount[mapTrackToName[i]] + tracksCount[i.substring(0,i.lastIndexOf('_'))+'-T'+i.substring(i.lastIndexOf('_')+1)] 
       : tracksCount[i]; //tracksCount[i.substring(0,i.lastIndexOf('_'))+'-T'+i.substring(i.lastIndexOf('_')+1)]; 
   }
-  console.log("- trackNamesCount: ",trackNamesCount, "count: ", Object.values(trackNamesCount).reduce((partialSum, a) => partialSum + a, 0));
   const mapMelodyToCount = {};
   uniqueMelodiesStr.map(
     b => mapMelodyToCount[b] = listSearchRes.map(a => a.arrNotes.join('-')).filter(a => a === b).length
   );
-  console.log("- mapMelodyToCount: ",mapMelodyToCount, "count: ", Object.values(mapMelodyToCount).reduce((partialSum, a) => partialSum + a, 0));
   
   // mapMelodyToCount is OK
   const melodyArtistsCount = {};
@@ -287,9 +267,10 @@ const GraphsResults = ({ infoMusicList, oldSearch, listSearchRes }) => {
       : tracksCount[i];//tracksCount[i.substring(0, i.lastIndexOf("_")) +"-T" +i.substring(i.lastIndexOf("_") + 1)];
   }
   // trackArtistsCount is OK
-  console.log("- melodyArtistsCount: ",melodyArtistsCount, "count: ", Object.values(melodyArtistsCount).reduce((partialSum, a) => partialSum + a, 0));
+  // console.log("- melodyArtistsCount: ",melodyArtistsCount, "count: ", Object.values(melodyArtistsCount).reduce((partialSum, a) => partialSum + a, 0));
 
-  // TODO Current version is based on cases with only 1 occurence being filtered out if they represent less than 80%. Not very stable. A hard limit could be added.
+  // TODO Christmas Critical fix this...! Mediocre parameters
+  // Current version is based on cases with only 1 occurence being filtered out if they represent less than 80%. Not very stable. A hard limit could be added.
   // if 1 represents a high number of the results... then just go with it...
   // if there is a low number of melodies (proper number to be determined), we don't filter
   // Are they ordered?! Sort first
@@ -347,12 +328,11 @@ const GraphsResults = ({ infoMusicList, oldSearch, listSearchRes }) => {
     valuesTime = Object.values(datesCount)
     for (let i in keysTime) { objIso[keysTime[i]] = valuesTime[i] }
   }
-  console.log("- objIso: ", objIso);
+
   let sortedIso = {}
   for (let i in Object.keys(objIso).sort()){
       sortedIso[Object.keys(objIso).sort()[i]] = objIso[Object.keys(objIso).sort()[i]]
   }
-  console.log("- sortedIso: ", sortedIso, ", numMelodies: ", numMelodies, ", percMatchesCount: ", percMatchesCount, ", lognumbersCount: ", lognumbersCount, ", tracksCount: ", tracksCount, ", mapRecordingToName: ", mapRecordingToName, ", mapTrackToName: ", mapTrackToName);
 
   // ---- Parameters specific to certain graphs
   // -- Scatter
@@ -397,7 +377,6 @@ const GraphsResults = ({ infoMusicList, oldSearch, listSearchRes }) => {
   useEffect(() => {
     // This is called each time there is a call to change selectedAttributeMix or selectedAxisY
     const updateOptions = () => {
-
       console.log("-- updateOptions | typeGraph: ",typeGraph,", arrayDataBubble: ",arrayDataBubble,", selectedAttributeMix: ",selectedAttributeMix);
 
       if (typeGraph === "scatter") {
@@ -424,7 +403,6 @@ const GraphsResults = ({ infoMusicList, oldSearch, listSearchRes }) => {
             },
           ],
         });
-      
         // TODO update here
         setOptionsScatter({
           scales: {
@@ -452,7 +430,7 @@ const GraphsResults = ({ infoMusicList, oldSearch, listSearchRes }) => {
           setArrayDataBubble(mapMatchToYear_iso);
         }
 
-        console.log("typegraph is scatter. sortedArray_track_artist_count_iso: ",sortedArray_track_artist_count_iso,", arrayDataBubble: ",arrayDataBubble);
+        // console.log("typegraph is scatter. sortedArray_track_artist_count_iso: ",sortedArray_track_artist_count_iso,", arrayDataBubble: ",arrayDataBubble);
 
       } else if (typeGraph === "histogram") {
         let filledUpDates = generateAllValuesYears(Object.keys(sortedIso), Object.values(sortedIso));

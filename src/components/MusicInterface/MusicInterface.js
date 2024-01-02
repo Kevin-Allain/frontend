@@ -40,6 +40,9 @@ import EmbeddedWorkflowInteraction from '../Workflow/EmbeddedWorkflowInteraction
 import MyTabbedInterface from './MyTabbedInterface'
 import GraphsResults from '../VisComponents/GraphsResults';
 
+// Trying to have better performances
+const MemoizedGraphsResults = React.memo(GraphsResults);
+
 const PITCH_QUERY_REGEX = /^$|(^(?!.*--)(?!-)([0-9]{1,2}|1[01][0-9]|12[0-7])(-([0-9]{1,2}|1[01][0-9]|12[0-7]))*(-?)$)/;
 // Test attributes
 const notes = [60, 61, 62, 63, 64, 65, 66, 59, 67, 68, 69, 55, 77, 89, 90, 82];
@@ -53,6 +56,7 @@ const durations = [0.5, 1, 1, 1, 2, 3, 1, 1, 4, 5, 2, 1, 1, 1, 0.5, 1.82];
   }).toDestination();
 
 const MusicInterface = () => {
+  console.log("~~~~ MusicInterface");
   const synth2 = useRef(new Tone.Synth());
   synth2.current.oscillator.type = "sine";
   synth2.current.toDestination();
@@ -89,7 +93,7 @@ const MusicInterface = () => {
   const lognumbersRefs = useRef([]);
   const buttonListLogsNumbersRef = useRef(null);
   const tracksRefs = useRef([]);
-  
+
   const handleToggle = () => {setFilterMode(!isFilterMode);};
 
   const handleChangeSearchFilterArtist = (event) => {
@@ -340,8 +344,6 @@ const MusicInterface = () => {
     },
     [setTextFilterRecording]
   );
-
-  // const handleClickTextSearch = useCallback( async (e) => { e.preventDefault(); if (textSearch !== "") { findMatchLevenshteinDistance(textSearch); } }, [textSearch, findMatchLevenshteinDistance]  );
 
   const handleClickTextSearchFuzzyLevenshtein = async (e) => {
     e.preventDefault();
@@ -615,9 +617,7 @@ const MusicInterface = () => {
             </div>
           </>
         )}
-        <button onClick={handleClickTextSearchFuzzyLevenshtein}>
-          Submit search
-        </button>
+        <button onClick={handleClickTextSearchFuzzyLevenshtein}> Submit search </button>
         {("" + textSearch).length > 0 && (
           <div className="bg-slate-200 text-center mx-64 opacity-75 max-w-80%">
             Notes: ({notesTranslate})
@@ -635,55 +635,62 @@ const MusicInterface = () => {
           <p className="text-xl">List of results for your search:</p>
           <h4>
             {oldSearch} (
-              {("" + oldSearch).indexOf("-") === -1
-                ? ("" + MIDItoNote["" + oldSearch]).replaceAll("s", "")
-                : ("" + oldSearch)
-                  .split("-")
-                  .map((a, i) =>
-                    i === ("" + oldSearch).split("-").length - 1
-                      ? MIDItoNote[a].replaceAll("s", "")
-                      : (MIDItoNote[a] + "-").replaceAll("s", "")
-                  )}
+            {("" + oldSearch).indexOf("-") === -1
+              ? ("" + MIDItoNote["" + oldSearch]).replaceAll("s", "")
+              : ("" + oldSearch)
+                .split("-")
+                .map((a, i) =>
+                  i === ("" + oldSearch).split("-").length - 1
+                    ? MIDItoNote[a].replaceAll("s", "")
+                    : (MIDItoNote[a] + "-").replaceAll("s", "")
+                )}
             )
           </h4>
 
-            <div className="text-left">
-              <AnnotationSystem type={"search"} info={oldSearch} />
-              {/* TODO update the workflow system so that it can save searches!!! Working on it from 2023.11.14. */}
-              <EmbeddedWorkflowInteraction
-                idCaller={oldSearch + "_fArtist(" + textFilterArtist + ")_fRecording(" + textFilterRecording + ")_fTrack(" + textFilterTrack + ")_fPerc(" + percMatch + ")"}
-                typeCaller={"search"}
-                listLogNumbers={listLogNumbers}
-                infoMusicList={infoMusicList}
-                listTracks={listTracks}
-              />
-            </div>
+          <div className="text-left">
+            <AnnotationSystem type={"search"} info={oldSearch} />
+            {/* TODO update the workflow system so that it can save searches!!! Working on it from 2023.11.14. */}
+            <EmbeddedWorkflowInteraction
+              idCaller={oldSearch + "_fArtist(" + textFilterArtist + ")_fRecording(" + textFilterRecording + ")_fTrack(" + textFilterTrack + ")_fPerc(" + percMatch + ")"}
+              typeCaller={"search"}
+              listLogNumbers={listLogNumbers}
+              infoMusicList={infoMusicList}
+              listTracks={listTracks}
+            />
+          </div>
 
             {/* We should create a different type of component with some vis. */}
             {/* This is rendered twice?! */}
-            {infoMusicList.length > 0 &&
-              (<GraphsResults
+            {/* {infoMusicList.length > 0 &&
+            (<GraphsResults
+              infoMusicList={infoMusicList}
+              oldSearch={oldSearch}
+              listSearchRes={listSearchRes}
+            />)
+          } */}
+            {infoMusicList.length > 0 && (
+              <MemoizedGraphsResults
                 infoMusicList={infoMusicList}
                 oldSearch={oldSearch}
                 listSearchRes={listSearchRes}
-              />)
-            }
-            {/* Is this rendered twice too?! */}
-            {infoMusicList.length > 0 ? (
-              <MyTabbedInterface
-                listSearchRes={listSearchRes}
-                listLogNumbers={listLogNumbers}
-                listTracks={listTracks}
-                infoMusicList={infoMusicList}
-                findMatchRecording={findMatchRecording}
-                formatAndPlay={formatAndPlay}
-                getMusicInfo={getMusicInfo}
-                setInfoMusicList={setInfoMusicList}
               />
-            ) : (
-              <></>
             )}
-          </div>
+          {/* Is this rendered twice too?! */}
+          {infoMusicList.length > 0 ? (
+            <MyTabbedInterface
+              listSearchRes={listSearchRes}
+              listLogNumbers={listLogNumbers}
+              listTracks={listTracks}
+              infoMusicList={infoMusicList}
+              findMatchRecording={findMatchRecording}
+              formatAndPlay={formatAndPlay}
+              getMusicInfo={getMusicInfo}
+              setInfoMusicList={setInfoMusicList}
+            />
+          ) : (
+            <></>
+          )}
+        </div>
       )}
     </div>
   );
