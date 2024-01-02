@@ -2,18 +2,17 @@ import React, { useEffect, useState } from "react";
 import { Bar } from "react-chartjs-2";
 import { FaArrowRight, FaArrowLeft } from "react-icons/fa";
 
+// Pagination helps, but we should consider having it sorted prior to passing it.
 const BarChart = ({ data, labels, title, setShowLoadingIcon }) => {
   console.log("~~~~ BarChart | data: ",data,", labels: ",labels,", typeof labels[0]: ",(typeof labels[0]));
   
-  const itemsPerPage = 100;
-  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = title==="Matches per year"?100:50;
+  const [currentPage, setCurrentPage] = useState(0);
 
   const startIndex = (currentPage) * itemsPerPage;
   const endIndex = Math.min(startIndex + itemsPerPage, labels.length);
-  
   const visibleLabels = labels.slice(startIndex, endIndex);
   const visibleData = data.slice(startIndex, endIndex);
-  
 
   // Should it be adapted for y axis as well?
   const calculateFontSize = (numberOfLabels) => {
@@ -23,12 +22,10 @@ const BarChart = ({ data, labels, title, setShowLoadingIcon }) => {
     const adaptedFontSize = isFinite(Math.round(Math.max(4, baseFontSize - Math.log(numberOfLabels * 2))))
       ? Math.round(Math.max(4, baseFontSize - Math.log(numberOfLabels * 2)))
       : 5;
-    console.log("adaptedFontSize: ", adaptedFontSize);
     return adaptedFontSize;
   };
 
-  // const numberOfLabels = labels.length;
-  // const fontSize = calculateFontSize(numberOfLabels);
+  // const numberOfLabels = visibleLabels.length;
   const numberOfLabels = visibleLabels.length;
   const fontSize = calculateFontSize(numberOfLabels);
 
@@ -49,7 +46,10 @@ const BarChart = ({ data, labels, title, setShowLoadingIcon }) => {
   const [optionsBarGraph, setOptionsBarGraph] = useState({
     scales: {
       x: { ticks: { font: { size: fontSize, }, autoSkip: false, maxTicksLimit: 20, maxRotation: 0, minRotation: 0, }, },
-      y: { ticks: { font: { size: 12, },  }, },
+      y: { 
+        ticks: { font: { size: 12, },  },
+        suggestedMax: Math.max(...data), // Set to the maximum value in the data array
+      },
     },
   });
 
@@ -73,7 +73,10 @@ const BarChart = ({ data, labels, title, setShowLoadingIcon }) => {
       scales: {
         // x: { ticks: { font: { size: calculateFontSize(labels.length) }, autoSkip: false, }, },// maxTicksLimit: 20, maxRotation: 0, minRotation: 0,
         x: { ticks: { font: { size: calculateFontSize(visibleLabels.length) }, autoSkip: false, }, },// maxTicksLimit: 20, maxRotation: 0, minRotation: 0,
-        y: { ticks: { font: { size: 12 } } },
+        y: { 
+          ticks: { font: { size: 12 } },
+          suggestedMax: Math.max(...data), // Set to the maximum value in the data array
+        },
       },
     });
 
@@ -82,8 +85,11 @@ const BarChart = ({ data, labels, title, setShowLoadingIcon }) => {
 
 
   const handleNextPage = () => {
-    setCurrentPage((prevPage) => prevPage + 1);
-    console.log("handleNextPage - currentPage: ",currentPage);
+    setCurrentPage((prevPage) => 
+      (prevPage === Math.floor(data.length / itemsPerPage))
+        ? prevPage
+        : prevPage+1 );
+    console.log("handleNextPage - currentPage: ",currentPage,", the floor: ",Math.floor(data.length / itemsPerPage));
   };
 
   const handlePrevPage = () => {
@@ -95,9 +101,11 @@ const BarChart = ({ data, labels, title, setShowLoadingIcon }) => {
     <div>
       <Bar data={chartData} options={optionsBarGraph} />
       <div className="inline-flex align-middle text-center">
-      <FaArrowLeft className="icon" onClick={handlePrevPage} disabled={currentPage === 0}/>
+      <FaArrowLeft className="icon" onClick={handlePrevPage} 
+        disabled={currentPage === 0}/>
       <div className="mx-[10px]">Page {currentPage+1} out of {1+Math.floor(data.length/itemsPerPage)}</div>
-      <FaArrowRight className="icon" onClick={handleNextPage} disabled={(currentPage+1) === (1+Math.floor(data.length/itemsPerPage))}/>
+      <FaArrowRight className="icon" onClick={handleNextPage} 
+        disabled={(currentPage+1) >= (Math.floor(data.length/itemsPerPage))}/>
       </div>
     </div>
   );

@@ -93,69 +93,91 @@ const ScatterChart = ({ dataBubble = undefined, title, mergePerYear=false, setSh
   console.log("~~~~ScatterChart . dataBubble: ", dataBubble);
   const minR = 2; const maxR = 20;
 
-  const [objBubble_andSize, setObjBubble_andSize] =
-    useState(mergePerYear
-      ? mergeDuplicatesByYear(dataBubble, minR, maxR)
-      : mergeDuplicates(dataBubble, minR, maxR));
-
-  const legendData = (!dataBubble.map(a => a.r).every(a => a === dataBubble[0].r))
-    ? [
-      { label: Math.min(...objBubble_andSize.resNormalSize.map(a => a.r)), radius: minR },
-      { label: Math.max(...objBubble_andSize.resNormalSize.map(a => a.r)), radius: maxR },
-    ]
-    : [{ label: Math.min(...objBubble_andSize.resNormalSize.map(a => a.r)), radius: minR },];
-
+  const [objBubble_andSize, setObjBubble_andSize] = useState(mergePerYear
+    ? mergeDuplicatesByYear(dataBubble, minR, maxR)
+    : mergeDuplicates(dataBubble, minR, maxR));
+  const [legendData, setLegendData] = useState([]);
   const [dataChart, setDataChart] = useState({
     datasets: [
       {
-        label: title,
-        data: objBubble_andSize.dataBubbleMerged,
-        backgroundColor: "rgba(255, 99, 132, 0.2)",
-        borderColor: "rgba(255, 99, 132, 1)",
-        borderWidth: 1,
+        label: title, data: [], backgroundColor: "rgba(255, 99, 132, 0.2)", borderColor: "rgba(255, 99, 132, 1)", borderWidth: 1,
       },
-    ],
-  });
+    ]
+  })
+  const [optionsChart, setOptionsChart] = useState({});
+  // For pagination
+  const [currentPage, setCurrentPage] = useState(0);
 
-  let maxY = Number(Math.max(...Array([...new Set(objBubble_andSize.resNormalSize.map((a) => a.x))])[0] ));
-  let minY = Number(Math.min(...Array([...new Set(objBubble_andSize.resNormalSize.map((a) => a.x))])[0]  ));
-  let diffY = maxY-minY;
-  let allY = Array.from( Array(diffY+1), (_,x)=> minY + x  ).map(a => `${a}`)
-  // console.log("scatter chart. issue with x axis: allY: ",allY,"\n or ",(objBubble_andSize.resNormalSize.map((a) => a.x)))
+  useEffect(() => {
+    console.log("# useEffect | objBubble_andSize: ",objBubble_andSize);
+    setObjBubble_andSize(mergePerYear
+      ? mergeDuplicatesByYear(dataBubble, minR, maxR)
+      : mergeDuplicates(dataBubble, minR, maxR)
+    );
+    console.log("# useEffect | AFTER SET objBubble_andSize: ",objBubble_andSize);
+    setLegendData((!dataBubble.map(a => a.r).every(a => a === dataBubble[0].r))
+      ? [
+        { label: Math.min(...objBubble_andSize.resNormalSize.map(a => a.r)), radius: minR },
+        { label: Math.max(...objBubble_andSize.resNormalSize.map(a => a.r)), radius: maxR },
+      ]
+      : [{ label: Math.min(...objBubble_andSize.resNormalSize.map(a => a.r)), radius: minR },]
+    )
+    setDataChart({
+      datasets: [
+        {
+          label: title,
+          data: objBubble_andSize.dataBubbleMerged,
+          backgroundColor: "rgba(255, 99, 132, 0.2)", borderColor: "rgba(255, 99, 132, 1)", borderWidth: 1,
+        },
+      ]
+    });
 
-  const [optionsChart, setOptionsChart] = useState({
-    scales: {
-      x: {
-        type: "category", // Use a category scale for text on the X-axis
-        labels: mergePerYear?allY:[...new Set(objBubble_andSize.resNormalSize.map((a) => a.x))],
+    let maxX = Number(Math.max(...Array([...new Set(objBubble_andSize.resNormalSize.map((a) => a.x))])[0]));
+    let minX = Number(Math.min(...Array([...new Set(objBubble_andSize.resNormalSize.map((a) => a.x))])[0]));
+    let diffX = maxX - minX;
+    let allX = Array.from(Array(diffX + 1), (_, x) => minX + x).map(a => `${a}`)
+    // console.log("scatter chart. issue with x axis: allY: ",allY,"\n or ",(objBubble_andSize.resNormalSize.map((a) => a.x)))
+
+    setOptionsChart({
+      scales: {
+        x: {
+          type: "category", // Use a category scale for text on the X-axis
+          labels: mergePerYear
+            ? allX
+            : [...new Set(objBubble_andSize.resNormalSize.map((a) => a.x))],
+        },
+        y: {
+          type: "category", // Use a category scale for text on the Y-axis
+          labels: [...new Set(objBubble_andSize.resNormalSize.map((a) => a.y))],
+        },
       },
-      y: {
-        type: "category", // Use a category scale for text on the Y-axis
-        labels: [...new Set(objBubble_andSize.resNormalSize.map((a) => a.y))],
-      },
-    },
-    plugins: {
-      tooltip: {
-        callbacks: {
-          label: function (context) {
-            const label = context.label;
-            const value = context.formattedValue;
-            return `[${objBubble_andSize.resNormalSize[context.dataIndex]?.x}, 
-            ${objBubble_andSize.resNormalSize[context.dataIndex]?.y}, 
-            ${objBubble_andSize.resNormalSize[context.dataIndex]?.r}]`;
+      plugins: {
+        tooltip: {
+          callbacks: {
+            label: function (context) {
+              const label = context.label;
+              const value = context.formattedValue;
+              return `[${objBubble_andSize.resNormalSize[context.dataIndex]?.x}, 
+              ${objBubble_andSize.resNormalSize[context.dataIndex]?.y}, 
+              ${objBubble_andSize.resNormalSize[context.dataIndex]?.r}]`;
+            },
           },
         },
       },
-    },
-    maintainAspectRatio: true, // chatgpt suggested false?
-    responsive: true,
-  });
-  console.log("dataChart: ",dataChart,", optionsChart: ",optionsChart);
+      maintainAspectRatio: true, // chatgpt suggested false?
+      responsive: true,
+    })
 
-  useEffect(() => {
+    const itemsPerPage = title === "Matches per artist and year" ? 100 : 50;
+    const startIndex = (currentPage) * itemsPerPage;
+    // const labels = [...new Set(dataBubble.map(a => a.y))];  
+    // const endIndex = Math.min(startIndex + itemsPerPage, labels.length);  
+    // const visibleLabels = labels.slice(startIndex, endIndex);
+    // const visibleData = data.slice(startIndex, endIndex);
 
+    console.log("dataChart: ", dataChart, ", optionsChart: ", optionsChart);
     setShowLoadingIcon(false);
-  }, [dataBubble, title, mergePerYear])
+  }, [dataBubble, title, mergePerYear, setShowLoadingIcon])
 
   return (
     <>
