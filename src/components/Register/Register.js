@@ -10,6 +10,9 @@ import '../../App.css'
 const baseUrl = "http://localhost:5000" // can (and should) used for development
 // const baseUrl = "https://fullstack-proto-jazzdap-backend.onrender.com"
 // const baseUrl= "https://jazzdap-backend.onrender.com"
+// for city university
+// const baseUrl = "https://jazzdap.city.ac.uk/api/"
+
 
 const USER_REGEX = /^[A-z][A-z0-9-_]{3,23}$/;
 const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/;

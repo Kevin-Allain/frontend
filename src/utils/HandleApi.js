@@ -9,6 +9,8 @@ import { setIsLoading } from '../App';
 const baseUrl = "http://localhost:5000" // can be used for development
 // const baseUrl = "https://fullstack-proto-jazzdap-backend.onrender.com"
 // const baseUrl= "https://jazzdap-backend.onrender.com"
+// for city university
+// const baseUrl = "https://jazzdap.city.ac.uk/api/"
 
 
 const getAllJazzDap = (setJazzDap) => {

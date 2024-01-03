@@ -39,6 +39,7 @@ import EmbeddedWorkflowInteraction from '../Workflow/EmbeddedWorkflowInteraction
 
 import MyTabbedInterface from './MyTabbedInterface'
 import GraphsResults from '../VisComponents/GraphsResults';
+import AutoComplete from './AutoComplete';
 
 // Trying to have better performances
 const MemoizedGraphsResults = React.memo(GraphsResults);
@@ -78,7 +79,7 @@ const MusicInterface = () => {
   const [listSearchRes, setListSearchRes] = useState([]);
 
   const [showExplanation, setShowExplanation] = useState(false);
-  const [percMatch, setPercMatch] = useState(0.5);
+  const [percMatch, setPercMatch] = useState(1);
   const [searchFilterArtist, setSearchFilterArtist] = useState('artistName');
   const textFilterArtistRef = useRef('');
   const textFilterTrackRef = useRef('');
@@ -494,10 +495,10 @@ const MusicInterface = () => {
             className="icon"
             onClick={() => setShowExplanation(!showExplanation)}
           />
-          <h1 className="title">How to Use the Music Interface</h1>
+          <h1 className="title">How to Use the Search Interface</h1>
           <div className="detailsExplanation">
             <p>
-              The Music Interface is designed to search for samples that match
+              The Search Interface is designed to search for samples that match
               the melodies you enter in our system. To do so, simply click on
               the piano keys for the notes you wish and submit your search.
             </p>
@@ -532,7 +533,7 @@ const MusicInterface = () => {
           </div>
         </div>
       )}
-      <Title firstLine="Music" secondLine="Interface" />
+      <Title firstLine="Search" secondLine="Interface" />
       {/* ==== Test Mp3 playing ==== */}
       {/* <div className="playMusic" onClick={(c) => { playMp3(); }} > Play Test Mp3 </div>
       <div className='playMusic' onClick={(c)=>{playToneSalamander();}}> Play from tone loaded </div> */}
@@ -571,6 +572,10 @@ const MusicInterface = () => {
             <option value={1}>100%</option>
           </select>
         </p>
+          
+          {/* This works, but we should focus on having other parameters first.
+        <AutoComplete title={"Fruits"} potentialInputs={["Apple", "Banan7a","Bana44na","Banan4a","Orange35", "Orange", "Grapes", "Cherry"]}/> */}
+        
         <p className="text-white">
           Show filters:
           <ToggleSwitch checked={isFilterMode} onChange={handleToggle} />

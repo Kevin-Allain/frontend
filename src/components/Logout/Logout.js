@@ -7,11 +7,7 @@ import {ImExit} from 'react-icons/im'
 import {getUserAnnotations } from '../../utils/HandleApi'
 import UserSystem from '../UserSystem/UserSystem'
 
-const baseUrl= "https://jazzdap-backend.onrender.com"
-// const baseUrl = "http://localhost:5000" // can be used for development
-// const baseUrl = axios.baseUrl;
 const LOGOUT_URL = 'logoutUser';
-
 
 export default function Logout() {
 	const { auth, setAuth } = useContext(AuthContext);
