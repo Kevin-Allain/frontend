@@ -41,6 +41,11 @@ import MyTabbedInterface from './MyTabbedInterface'
 import GraphsResults from '../VisComponents/GraphsResults';
 import AutoComplete from './AutoComplete';
 
+// For the filters
+import artistNames from "./artists_names.json"
+import recordings from "./recordings.json"
+import trackTitles from "./tracks_titles.json"
+
 // Trying to have better performances
 const MemoizedGraphsResults = React.memo(GraphsResults);
 
@@ -86,9 +91,15 @@ const MusicInterface = () => {
   const textFilterRecordingRef = useRef('');
 
   const [isFilterMode, setFilterMode] = useState(false);
-  const [textFilterArtist, setTextFilterArtist] = useState("");
+  // const [textFilterArtist, setTextFilterArtist] = useState("");
   const [textFilterTrack, setTextFilterTrack] = useState("");
   const [textFilterRecording, setTextFilterRecording] = useState("");
+
+
+  const [textFilterArtist, setTextFilterArtist] = useState('');
+  const arrArtistName = ["Artist1", "Artist2", "Artist3", /* ... */];
+  // const handleChangeFilterSearchArtist = (e) => { setTextFilterArtist(e.target.value); };
+
 
   // References for scrolling
   const lognumbersRefs = useRef([]);
@@ -586,7 +597,13 @@ const MusicInterface = () => {
               Leave input empty for parameters you don't want to filter.
             </p>
             <div className="text-white">
-              <p>Artist name:</p>
+              <AutoComplete
+                title="Artist Search"
+                potentialInputs={ artistNames }
+                inputValue={textFilterArtist}
+                onInputChange={handleChangeFilterSearchArtist}
+              />
+              {/* <p>Artist name:</p>
               <input
                 type="text"
                 className="inputMusicSearch mx-[0.5rem]" // could/should use a different className
@@ -596,8 +613,14 @@ const MusicInterface = () => {
                 required
                 value={textFilterArtist}
                 onChange={handleChangeFilterSearchArtist}
+              /> */}
+              <AutoComplete
+                title="Track Search"
+                potentialInputs={trackTitles}
+                inputValue={textFilterTrack}
+                onInputChange={handleChangeFilterSearchTrack}
               />
-              <p>Track name:</p>
+              {/* <p>Track name:</p>
               <input
                 type="text"
                 className="inputMusicSearch mx-[0.5rem]" // could/should use a different className
@@ -607,8 +630,14 @@ const MusicInterface = () => {
                 required
                 value={textFilterTrack}
                 onChange={handleChangeFilterSearchTrack}
+              /> */}
+              <AutoComplete
+                title="Recording Search"
+                potentialInputs={recordings}
+                inputValue={textFilterRecording}
+                onInputChange={handleChangeFilterSearchRecording}
               />
-              <p>Recording name:</p>
+              {/* <p>Recording name:</p>
               <input
                 type="text"
                 className="inputMusicSearch mx-[0.5rem]" // could/should use a different className
@@ -618,7 +647,7 @@ const MusicInterface = () => {
                 required
                 value={textFilterRecording}
                 onChange={handleChangeFilterSearchRecording}
-              />
+              /> */}
             </div>
           </>
         )}
