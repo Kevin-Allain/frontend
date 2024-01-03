@@ -80,8 +80,8 @@
 // export default AutoComplete;
 
 
-
 import React, { useState, useRef, useEffect } from 'react';
+import "./AutoComplete.css"
 
 const AutoComplete = ({ title, potentialInputs, inputValue, onInputChange }) => {
     const [filteredInputs, setFilteredInputs] = useState([]);
@@ -129,23 +129,24 @@ const AutoComplete = ({ title, potentialInputs, inputValue, onInputChange }) => 
                 ref={inputRef}
             />
             {isFocused && inputValue.length > 0 && filteredInputs.length > 0 && (
-                <div style={{
-                    color: "black",
-                    display: "inline-flex",
-                    border: '1px solid #ccc',
-                    background: '#fff',
-                    minWidth: '200px',
-                    maxWidth: '600px',
-                    maxHeight: '300px',
-                    'scroll-behavior': 'auto',
-                    overflow: 'scroll',
-                }}>
+                // <div style={{
+                //     color: "black",
+                //     display: "inline-flex",
+                //     border: '1px solid #ccc',
+                //     background: '#fff',
+                //     minWidth: '200px',
+                //     maxWidth: '600px',
+                //     maxHeight: '300px',
+                //     'scroll-behavior': 'auto',
+                //     overflow: 'scroll',
+                // }}>
+                <div className={`auto-complete-dropdown ${isFocused ? 'show' : ''}`}>
                     <ul>
                         {filteredInputs.map((item, index) => (
                             <li
                                 key={index}
                                 onClick={() => handleItemClick(item)}
-                                style={{ cursor: 'pointer' }}>
+                                style={{ cursor: 'pointer', color: "black" }}>
                                 {item}
                             </li>
                         ))}

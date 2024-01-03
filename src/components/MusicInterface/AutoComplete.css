@@ -1,0 +1,17 @@
+.auto-complete-dropdown {
+    color: black;
+    display: inline-flex;
+    border: 1px solid #ccc;
+    background: #fff;
+    min-width: 200px;
+    max-width: 600px;
+    max-height: 300px;
+    overflow: scroll;
+    opacity: 0;
+    transition: opacity 0.1s ease-in-out;
+    color:black;
+}
+
+.auto-complete-dropdown.show {
+    opacity: 1;
+}
