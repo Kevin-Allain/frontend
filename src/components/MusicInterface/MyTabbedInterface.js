@@ -43,7 +43,7 @@ const MyTabbedInterface = ({
     let a = infoMusicList.filter(a => a.lognumber === lognumber);
     if (a.length > 0) {
       a = a[0];
-      if (a.lognumber === lognumber && !lognumber.includes("BGR")) {
+      if (a.lognumber === lognumber ) { // && !lognumber.includes("BGR")
         let eventYear = a["Event Year"]==='', eventMonth = a["Event Month"]==='',eventDay = a["Event Day"]==='';
 
         prettyNamesLogNumber[lognumber] = (
@@ -52,7 +52,7 @@ const MyTabbedInterface = ({
           (eventMonth ? '' : ('/' + a["Event Month"])) +
           (eventDay ? '' : ('/' + a["Event Day"]))
         );
-
+        prettyNamesLogNumber[lognumber] = lognumber
       } else { prettyNamesLogNumber[lognumber] = lognumber }
     } else { prettyNamesLogNumber[lognumber] = lognumber }
   }
@@ -67,7 +67,7 @@ const MyTabbedInterface = ({
     if (curSR.track) {
       let curTrack = curSR.track;
       let trackInfoCode = curTrack.replace('-T', '_')
-      if (curTrack.includes('SJA') || curTrack.includes('BCC')) {
+      if (curTrack.includes('SJA') || curTrack.includes('BCC') || curTrack.includes('BGR')) {
         let selecInfo = infoMusicList.filter(a => a['SJA_ID'] === trackInfoCode)
         trackToTitles[curTrack] = selecInfo[0]['Track Title']
       }
@@ -178,7 +178,7 @@ const MyTabbedInterface = ({
                   }`}
                   onClick={() => handleRecordingClick(recording)}
                 >
-                  {prettyNamesLogNumber[recording].includes("03 N") || prettyNamesLogNumber[recording].includes("BGR")
+                  {prettyNamesLogNumber[recording].includes("03 N")  // || prettyNamesLogNumber[recording].includes("BGR")
                     ? prettyNamesLogNumber[recording] 
                     : (<>
                       {prettyNamesLogNumber[recording].substring(0,prettyNamesLogNumber[recording].lastIndexOf(" "))}
@@ -207,7 +207,7 @@ const MyTabbedInterface = ({
                     .map((a) => a.track)
                 ),
               ].map((a,ndx) =>
-                (a.includes("SJA") || a.includes("BCC")) ? (
+                (a.includes("SJA") || a.includes("BCC") || a.includes("BGR")) ? (
                   <>
                     <li
                       key={a+'_'+ndx}
@@ -250,7 +250,7 @@ const MyTabbedInterface = ({
           <div>
             <h2 className="text-lg font-semibold mb-4">
               {prettyNamesLogNumber[activeRecording]} -{" "}
-              {(activeTrack.includes("SJA") || activeTrack.includes("BCC"))
+              {(activeTrack.includes("SJA") || activeTrack.includes("BCC") || activeTrack.includes("BGR"))
                 ? trackToTitles[activeTrack]
                 : activeTrack}
             </h2>
