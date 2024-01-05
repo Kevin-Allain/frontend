@@ -31,9 +31,6 @@ const MyTabbedInterface = ({
   };
 
 
-  // About display for the MetadataAccordion
-
-
   // console.log("-- MyTabbedInterface. listLogNumbers: ", listLogNumbers, ", infoMusicList: ", infoMusicList, ", listSearchRes: ", listSearchRes,", listTracks: ",listTracks);
 
   let prettyNamesLogNumber = {};
@@ -45,19 +42,16 @@ const MyTabbedInterface = ({
       a = a[0];
       if (a.lognumber === lognumber ) { // && !lognumber.includes("BGR")
         let eventYear = a["Event Year"]==='', eventMonth = a["Event Month"]==='',eventDay = a["Event Day"]==='';
-
         prettyNamesLogNumber[lognumber] = (
           a["(E) Event Name"] +
           (eventYear ? '' : (' ' + a["Event Year"])) +
           (eventMonth ? '' : ('/' + a["Event Month"])) +
           (eventDay ? '' : ('/' + a["Event Day"]))
         );
-        prettyNamesLogNumber[lognumber] = lognumber
       } else { prettyNamesLogNumber[lognumber] = lognumber }
     } else { prettyNamesLogNumber[lognumber] = lognumber }
   }
   let uniqueListLogNumbers = [...new Set(listLogNumbers)];
-  // console.log("|| uniqueListLogNumbers: ", uniqueListLogNumbers, ", prettyNamesLogNumber: ", prettyNamesLogNumber);
   let tracksForEvent = [];
   let newStruct = [];
   let trackToTitles = {};
@@ -76,7 +70,6 @@ const MyTabbedInterface = ({
       console.log("MASSIVE ISSUE. curSR: ",curSR);
     }
   }
-  console.log("trackToTitles: ",trackToTitles);
   let filteredUniqueSearchResTracks = [];
   
   // ok until now
@@ -120,20 +113,17 @@ const MyTabbedInterface = ({
   // console.log("newStruct: ", newStruct, ", listTracks: ", listTracks);
 
   const handleRecordingClick = (recording) => {
-    console.log("~~ handleRecordingClick, recording: ", recording, " ---- listSearchRes: ", listSearchRes, ", listLogNumbers: ", listLogNumbers);
+    // console.log("~~ handleRecordingClick, recording: ", recording, " ---- listSearchRes: ", listSearchRes, ", listLogNumbers: ", listLogNumbers);
     setActiveRecording(recording);
-    console.log("activeRecording: ", activeRecording);
 
     filteredUniqueSearchResTracks =
       [...new Set(listSearchRes.filter(a => a.lognumber === recording).map(a => a.track))];
-    console.log("filteredUniqueSearchResTracks: ",filteredUniqueSearchResTracks);
     setActiveTrack(null); // Reset the active track when a new recording is selected
   };
 
   const handleTrackClick = (track) => {
-    console.log("~~ handleTrackClick, track: ",track,", typeof track: ",typeof track,", activeRecording: ",activeRecording);
+    // console.log("~~ handleTrackClick, track: ",track,", typeof track: ",typeof track,", activeRecording: ",activeRecording);
     setActiveTrack(track);
-    console.log("activeTrack: ", activeTrack);
     setBlockToggles();
   };
 
