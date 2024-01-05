@@ -303,10 +303,7 @@ const MusicInterface = () => {
 
   const findMatchRecording = (recording) => {
     console.log(
-      "~~~~ findMatchRecording | recording: ",
-      recording,
-      ", infoRecordingTrackList: ",
-      infoMusicList
+      "~~~~ findMatchRecording | recording: ", recording, ", infoRecordingTrackList: ", infoMusicList
     );
     // Not a great approach... but should work okay.
     if (recording.includes("SJA")) {

@@ -169,8 +169,10 @@ const GraphsResults = ({ infoMusicList, oldSearch, listSearchRes }) => {
 
   let mapMatchToYear_iso = {}; // WIP Christmas critical
   const extractInfo = (listItem) => {
+    console.log("extractInfo | listItem: ",listItem);
     const trackWithoutT = listItem.track.replace('-T', '_');
     const correspondingInfo = infoMusicList.find((info) => info.SJA_ID === trackWithoutT);
+    console.log("extractInfo | correspondingInfo: ", correspondingInfo);
     if (!correspondingInfo) { return null; }
     const eventYear = correspondingInfo["Event Year"];
     const eventMonth = correspondingInfo["Event Month"];
@@ -184,6 +186,7 @@ const GraphsResults = ({ infoMusicList, oldSearch, listSearchRes }) => {
   // Function to count occurrences for each unique combination of arrNotes and year
   const countOccurrences_notesYear = () => {
     const occurrences = {};
+    console.log("countOccurrences_notesYear | listSearchRes: ",listSearchRes)
     listSearchRes.forEach((listItem) => {
       const { arrNotes, year } = extractInfo(listItem);
       const key = `${arrNotes}/${year}`;

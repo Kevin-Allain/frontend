@@ -67,7 +67,7 @@ const MyTabbedInterface = ({
     if (curSR.track) {
       let curTrack = curSR.track;
       let trackInfoCode = curTrack.replace('-T', '_')
-      if (curTrack.includes('SJA')) {
+      if (curTrack.includes('SJA') || curTrack.includes('BCC')) {
         let selecInfo = infoMusicList.filter(a => a['SJA_ID'] === trackInfoCode)
         trackToTitles[curTrack] = selecInfo[0]['Track Title']
       }
@@ -207,7 +207,7 @@ const MyTabbedInterface = ({
                     .map((a) => a.track)
                 ),
               ].map((a,ndx) =>
-                a.includes("SJA") ? (
+                (a.includes("SJA") || a.includes("BCC")) ? (
                   <>
                     <li
                       key={a+'_'+ndx}
@@ -250,7 +250,7 @@ const MyTabbedInterface = ({
           <div>
             <h2 className="text-lg font-semibold mb-4">
               {prettyNamesLogNumber[activeRecording]} -{" "}
-              {activeTrack.includes("SJA")
+              {(activeTrack.includes("SJA") || activeTrack.includes("BCC"))
                 ? trackToTitles[activeTrack]
                 : activeTrack}
             </h2>
