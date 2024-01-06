@@ -97,6 +97,9 @@ const MusicInterface = () => {
   const [textFilterLocations, setTextFilterLocations] = useState("");
   const [textFilterProducers, setTextFilterProducers] = useState("");
 
+  const [startYear, setStartYear] = useState("");
+  const [endYear, setEndYear] = useState("");
+
   // References for scrolling
   const lognumbersRefs = useRef([]);
   const buttonListLogsNumbersRef = useRef(null);
@@ -368,6 +371,22 @@ const MusicInterface = () => {
     [setTextFilterProducers]
   );
 
+  const handleStartYearChange = useCallback(
+    (event) => {
+      const value = event.target.value;
+      console.log("value handleStartYearChange: ", value);
+      if (!isNaN(Number(value))) { setStartYear(value); }
+    },
+    [setStartYear]
+  );
+  const handleEndYearChange = useCallback(
+    (event) => {
+      const value = event.target.value;
+      console.log("value handleEndYearChange: ", value);
+      if (!isNaN(Number(value))) { setEndYear(value); }
+    },
+    [setEndYear]
+  );
 
   const handleClickTextSearchFuzzyLevenshtein = async (e) => {
     e.preventDefault();
@@ -386,7 +405,7 @@ const MusicInterface = () => {
         infoMusicList, 
         setInfoMusicList,
         textFilterArtist, textFilterTrack, textFilterRecording, // TODO set other filters
-        textFilterLocations, textFilterProducers, 
+        textFilterLocations, textFilterProducers, startYear, endYear,
       )
     }
   }  
@@ -647,6 +666,33 @@ const MusicInterface = () => {
               inputValue={textFilterProducers}
               onInputChange={handleChangeFilterSearchProducer}
               />
+              <div>
+                <p>Year Selection:</p>
+                <div className="flex-inline">
+                  <input
+                    type="text"
+                    className="inputMusicSearch mx-[0.5rem]"
+                    placeholder="Start Year (YYYY)"
+                    // ref={startYearRef}
+                    autoComplete="off"
+                    required
+                    value={startYear}
+                    onChange={handleStartYearChange}
+                  />
+                  <span className="mx-2">to</span>
+                  <input
+                    type="text"
+                    className="inputMusicSearch mx-[0.5rem]"
+                    placeholder="End Year (YYYY)"
+                    // ref={endYearRef}
+                    autoComplete="off"
+                    required
+                    value={endYear}
+                    onChange={handleEndYearChange}
+                  />
+                </div>
+              </div>
+         
             </div>
           </>
         )}

@@ -248,6 +248,7 @@ const getFuzzyLevenshtein = (
   textFilterRecording = '',
   textFilterLocations = '',
   textFilterProducers = '',
+  startYear='',endYear='',
 ) => {
   console.log("-- handleAPI / getFuzzyLevenshtein. stringNotes: ", stringNotes, ", percMatch: ", percMatch, " user: ", user, ", ~ baseUrl: ",baseUrl);
   setIsLoading(true);
@@ -266,6 +267,8 @@ const getFuzzyLevenshtein = (
           textFilterRecording: textFilterRecording,
           textFilterLocations: textFilterLocations,
           textFilterProducers: textFilterProducers,
+          startYear:startYear,
+          endYear:endYear,
         },
     })
     .then((d) => {
@@ -927,6 +930,7 @@ const createWorkflow = (
       })
     } else {
       console.log("objectType is not a sample. It is a ", objectsType[0]);
+
       if (objectsType[0] === 'search') {
         // If it's recording or track... it should be exactly the same, right?!
         let fullStr = objectsId[0];

@@ -172,7 +172,7 @@ const GraphsResults = ({ infoMusicList, oldSearch, listSearchRes }) => {
     console.log("extractInfo | listItem: ",listItem);
     const trackWithoutT = listItem.track.replace('-T', '_');
     const correspondingInfo = infoMusicList.find((info) => info.SJA_ID === trackWithoutT);
-    console.log("extractInfo | correspondingInfo: ", correspondingInfo);
+    // console.log("extractInfo | correspondingInfo: ", correspondingInfo);
     if (!correspondingInfo) { return null; }
     const eventYear = correspondingInfo["Event Year"];
     const eventMonth = correspondingInfo["Event Month"];

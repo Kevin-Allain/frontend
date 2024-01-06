@@ -20,7 +20,6 @@ const MyTabbedInterface = ({
   const [activeTrack, setActiveTrack] = useState(null);
   const [visibleTracks, setVisibleTracks] = useState({});
   const tracksContainerRef = useRef(null);
-
   
   const [expandedRecording, setExpandedRecording] = useState(false);
   const [expandedTrack, setExpandedTrack] = useState(false);
@@ -30,9 +29,7 @@ const MyTabbedInterface = ({
     setExpandedTrack(false);
   };
 
-
   // console.log("-- MyTabbedInterface. listLogNumbers: ", listLogNumbers, ", infoMusicList: ", infoMusicList, ", listSearchRes: ", listSearchRes,", listTracks: ",listTracks);
-
   let prettyNamesLogNumber = {};
   for (var i = 0; i < listLogNumbers.length; i++) {
     let lognumber = listLogNumbers[i];
