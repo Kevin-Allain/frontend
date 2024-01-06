@@ -45,6 +45,7 @@ import AutoComplete from './AutoComplete';
 import artistNames from "./artists_names.json"
 import recordings from "./recordings.json"
 import trackTitles from "./tracks_titles.json"
+import locations from "./locations.json"
 
 // Trying to have better performances
 const MemoizedGraphsResults = React.memo(GraphsResults);
@@ -89,14 +90,10 @@ const MusicInterface = () => {
   // const textFilterArtistRef = useRef(''); const textFilterTrackRef = useRef(''); const textFilterRecordingRef = useRef('');
 
   const [isFilterMode, setFilterMode] = useState(false);
-  // const [textFilterArtist, setTextFilterArtist] = useState("");
   const [textFilterTrack, setTextFilterTrack] = useState("");
   const [textFilterRecording, setTextFilterRecording] = useState("");
-
-
   const [textFilterArtist, setTextFilterArtist] = useState('');
-  const arrArtistName = ["Artist1", "Artist2", "Artist3", /* ... */];
-  // const handleChangeFilterSearchArtist = (e) => { setTextFilterArtist(e.target.value); };
+  const [textFilterLocations, setTextFilterLocations] = useState("");
 
 
   // References for scrolling
@@ -351,6 +348,15 @@ const MusicInterface = () => {
     },
     [setTextFilterRecording]
   );
+  
+  const handleChangeFilterSearchLocation = useCallback(
+    (event) => {
+      const value = event.target.value;
+      console.log("value handleChangeFilterSearchLocation: ", value);
+      setTextFilterLocations(value);
+    },
+    [setTextFilterLocations]
+  );
 
   const handleClickTextSearchFuzzyLevenshtein = async (e) => {
     e.preventDefault();
@@ -369,6 +375,7 @@ const MusicInterface = () => {
         infoMusicList, 
         setInfoMusicList,
         textFilterArtist, textFilterTrack, textFilterRecording, // TODO set other filters
+        textFilterLocations, 
       )
     }
   }  
@@ -605,51 +612,24 @@ const MusicInterface = () => {
                 inputValue={textFilterArtist}
                 onInputChange={handleChangeFilterSearchArtist}
               />
-              {/* <p>Artist name:</p>
-              <input
-                type="text"
-                className="inputMusicSearch mx-[0.5rem]" // could/should use a different className
-                placeholder=""
-                ref={textFilterArtistRef}
-                autoComplete="off"
-                required
-                value={textFilterArtist}
-                onChange={handleChangeFilterSearchArtist}
-              /> */}
               <AutoComplete
                 title="Track Search"
                 potentialInputs={trackTitles}
                 inputValue={textFilterTrack}
                 onInputChange={handleChangeFilterSearchTrack}
               />
-              {/* <p>Track name:</p>
-              <input
-                type="text"
-                className="inputMusicSearch mx-[0.5rem]" // could/should use a different className
-                placeholder=""
-                ref={textFilterTrackRef}
-                autoComplete="off"
-                required
-                value={textFilterTrack}
-                onChange={handleChangeFilterSearchTrack}
-              /> */}
               <AutoComplete
                 title="Recording Search"
                 potentialInputs={recordings}
                 inputValue={textFilterRecording}
                 onInputChange={handleChangeFilterSearchRecording}
               />
-              {/* <p>Recording name:</p>
-              <input
-                type="text"
-                className="inputMusicSearch mx-[0.5rem]" // could/should use a different className
-                placeholder=""
-                ref={textFilterRecordingRef}
-                autoComplete="off"
-                required
-                value={textFilterRecording}
-                onChange={handleChangeFilterSearchRecording}
-              /> */}
+              <AutoComplete
+                title="Location Search"
+                potentialInputs={locations}
+                inputValue={textFilterLocations}
+                onInputChange={handleChangeFilterSearchLocation}
+              />
             </div>
           </>
         )}

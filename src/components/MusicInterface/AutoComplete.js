@@ -3,6 +3,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import "./AutoComplete.css"
 
 const AutoComplete = ({ title, potentialInputs, inputValue, onInputChange }) => {
+    console.log("AutoComplete | ",{title, potentialInputs, inputValue, onInputChange})
     const [filteredInputs, setFilteredInputs] = useState([]);
     const [isFocused, setIsFocused] = useState(false);
     const inputRef = useRef(null);
@@ -26,6 +27,7 @@ const AutoComplete = ({ title, potentialInputs, inputValue, onInputChange }) => 
         onInputChange(e); // Call the provided onInputChange function
 
         const input = e.target.value;
+        console.log("input: ",input,", potentialInputs: ",potentialInputs);
         const filtered = potentialInputs.filter(item =>
             item.toLowerCase().startsWith(input.toLowerCase())
         );

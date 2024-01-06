@@ -234,9 +234,21 @@ const getMetadataFromAttribute = (attributeName, attributeValue) => {
     })
 }
 
-const getFuzzyLevenshtein = ( stringNotes = "", percMatch = 0.5, user = null, setListSearchRes = null, setListLogNumbers = null, setListTracks = null, infoMusicList=null,  setInfoMusicList=null, textFilterArtist = '', textFilterTrack = '' , textFilterRecording = '' ) => {
+const getFuzzyLevenshtein = (
+  stringNotes = "",
+  percMatch = 0.5,
+  user = null,
+  setListSearchRes = null,
+  setListLogNumbers = null,
+  setListTracks = null,
+  infoMusicList = null,
+  setInfoMusicList = null,
+  textFilterArtist = '',
+  textFilterTrack = '',
+  textFilterRecording = '',
+  textFilterLocations = '',
+) => {
   console.log("-- handleAPI / getFuzzyLevenshtein. stringNotes: ", stringNotes, ", percMatch: ", percMatch, " user: ", user, ", ~ baseUrl: ",baseUrl);
-  // console.log({textFilterArtist, textFilterTrack, textFilterRecording});
   setIsLoading(true);
   stringNotes += '';
   let numNotesInput = stringNotes.split('-').map(a=>Number(a));
@@ -244,7 +256,15 @@ const getFuzzyLevenshtein = ( stringNotes = "", percMatch = 0.5, user = null, se
   axios
     .get(`${baseUrl}/getFuzzyLevenshtein`, {
       params:
-        { stringNotes: stringNotes, percMatch: percMatch, user: user, textFilterArtist: textFilterArtist, textFilterTrack: textFilterTrack, textFilterRecording: textFilterRecording},
+        { 
+          stringNotes: stringNotes, 
+          percMatch: percMatch, 
+          user: user, 
+          textFilterArtist: textFilterArtist, 
+          textFilterTrack: textFilterTrack, 
+          textFilterRecording: textFilterRecording,
+          textFilterLocations: textFilterLocations,
+        },
     })
     .then((d) => {
       // console.log("#### Then of getFuzzyLevenshtein ####"); console.log("d: ", d); console.log("TIME AFTER QUERY: ", new Date());
