@@ -46,6 +46,7 @@ import artistNames from "./artists_names.json"
 import recordings from "./recordings.json"
 import trackTitles from "./tracks_titles.json"
 import locations from "./locations.json"
+import producers from "./producers.json"
 
 // Trying to have better performances
 const MemoizedGraphsResults = React.memo(GraphsResults);
@@ -94,7 +95,7 @@ const MusicInterface = () => {
   const [textFilterRecording, setTextFilterRecording] = useState("");
   const [textFilterArtist, setTextFilterArtist] = useState('');
   const [textFilterLocations, setTextFilterLocations] = useState("");
-
+  const [textFilterProducers, setTextFilterProducers] = useState("");
 
   // References for scrolling
   const lognumbersRefs = useRef([]);
@@ -358,6 +359,16 @@ const MusicInterface = () => {
     [setTextFilterLocations]
   );
 
+  const handleChangeFilterSearchProducer = useCallback(
+    (event) => {
+      const value = event.target.value;
+      console.log("value handleChangeFilterSearchProducer: ", value);
+      setTextFilterProducers(value);
+    },
+    [setTextFilterProducers]
+  );
+
+
   const handleClickTextSearchFuzzyLevenshtein = async (e) => {
     e.preventDefault();
     console.log("handleClickTextSearchFuzzyLevenshtein: ", new Date());    
@@ -375,7 +386,7 @@ const MusicInterface = () => {
         infoMusicList, 
         setInfoMusicList,
         textFilterArtist, textFilterTrack, textFilterRecording, // TODO set other filters
-        textFilterLocations, 
+        textFilterLocations, textFilterProducers, 
       )
     }
   }  
@@ -629,6 +640,12 @@ const MusicInterface = () => {
                 potentialInputs={locations}
                 inputValue={textFilterLocations}
                 onInputChange={handleChangeFilterSearchLocation}
+              />
+              <AutoComplete
+              title="Producer Search"
+              potentialInputs={producers}
+              inputValue={textFilterProducers}
+              onInputChange={handleChangeFilterSearchProducer}
               />
             </div>
           </>

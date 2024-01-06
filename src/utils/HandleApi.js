@@ -247,6 +247,7 @@ const getFuzzyLevenshtein = (
   textFilterTrack = '',
   textFilterRecording = '',
   textFilterLocations = '',
+  textFilterProducers = '',
 ) => {
   console.log("-- handleAPI / getFuzzyLevenshtein. stringNotes: ", stringNotes, ", percMatch: ", percMatch, " user: ", user, ", ~ baseUrl: ",baseUrl);
   setIsLoading(true);
@@ -264,6 +265,7 @@ const getFuzzyLevenshtein = (
           textFilterTrack: textFilterTrack, 
           textFilterRecording: textFilterRecording,
           textFilterLocations: textFilterLocations,
+          textFilterProducers: textFilterProducers,
         },
     })
     .then((d) => {

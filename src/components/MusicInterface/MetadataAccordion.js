@@ -81,6 +81,7 @@ const MetadataAccordion = ({
                       key === "(N) Named Artist(s)" ||
                       (key === "(E) Event Name") | (key === "(Y) Date") ||
                       key === "Label" ||
+                      key === "Producer" ||
                       key === "Location" ||
                       key === "AudioSource" ||
                       key === "Musicians (instruments)" ||
