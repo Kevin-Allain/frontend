@@ -11,6 +11,7 @@ import ScatterChart from "./ScatterChart";
 import HistogramChart from "./HistogramChart";
 import '../../App.css'
 import './GraphsResults.css'
+import SelectionDropdown from './SelectionDropdown';
 
 const arrayStrPitchesToNotes = (arrStrNotes) => { 
   if (typeof arrStrNotes !== "string"){
@@ -81,9 +82,9 @@ const GraphsResults = ({ infoMusicList, oldSearch, listSearchRes }) => {
     "Matches per recording",
     "Matches per track",
     "Matches per artist",
-    "Occurences per match",
+    "Matches per pattern",
     "Matches per artist and year",
-    "Occurences per match and year",
+    "Matches per pattern and year",
     // "Matches per recording and track", // TODO
     // "Occurences per recording and years" // TODO
     // "Occurences per tracks and years" // kind of lame, right?
@@ -169,7 +170,7 @@ const GraphsResults = ({ infoMusicList, oldSearch, listSearchRes }) => {
 
   let mapMatchToYear_iso = {}; // WIP Christmas critical
   const extractInfo = (listItem) => {
-    console.log("extractInfo | listItem: ",listItem);
+    // console.log("extractInfo | listItem: ",listItem);
     const trackWithoutT = listItem.track.replace('-T', '_');
     const correspondingInfo = infoMusicList.find((info) => info.SJA_ID === trackWithoutT);
     // console.log("extractInfo | correspondingInfo: ", correspondingInfo);
@@ -186,7 +187,7 @@ const GraphsResults = ({ infoMusicList, oldSearch, listSearchRes }) => {
   // Function to count occurrences for each unique combination of arrNotes and year
   const countOccurrences_notesYear = () => {
     const occurrences = {};
-    console.log("countOccurrences_notesYear | listSearchRes: ",listSearchRes)
+    // console.log("countOccurrences_notesYear | listSearchRes: ",listSearchRes)
     listSearchRes.forEach((listItem) => {
       const { arrNotes, year } = extractInfo(listItem);
       const key = `${arrNotes}/${year}`;
@@ -354,9 +355,6 @@ const GraphsResults = ({ infoMusicList, oldSearch, listSearchRes }) => {
       },
     ],
   });
-  const [optionsScatter, setOptionsScatter] = useState({ 
-    scales: { x: { beginAtZero: false }, y: { beginAtZero: false } }, 
-  });
 
   const [dataBubble, setDataBubble] = useState([]);
 
@@ -385,98 +383,44 @@ const GraphsResults = ({ infoMusicList, oldSearch, listSearchRes }) => {
         // The variables that should be changed: labelsXscatter, labelsYscatter, valsScatter
         // let filledUpDates = generateAllValuesYears(Object.keys(sortedIso), Object.values(sortedIso));
 
-        // TODO change and fix... (remove?)
-        setDataScatter({
-          datasets: [
-            {
-              label: `${selectedAttributeMix}`,
-              data: dataInput
-                .map((item, i) =>
-                  selectedAttributeMix !== "Release Year" 
-                    ? {
-                        x: Number(item[selectedAttributeMix]),
-                        y: Number(item[selectedAxisY]),
-                      }
-                    : null
-                )
-                .filter((a) => a)
-                .filter((a) => !isNaN(a.x) && !isNaN(a.y)),
-              backgroundColor: "rgb(255, 99, 132)",
-            },
-          ],
-        });
-        // TODO update here
-        setOptionsScatter({
-          scales: {
-            x: {
-              type: "linear",
-              position: "bottom",
-              min: 0,
-              max: 0,
-              ticks: { callback: function (value) { return Math.round(value); }, },
-            },
-            y: {
-              type: "linear",
-              position: "left",
-              min: 0, // TODO update
-              max: 0,
-              ticks: { callback: function (value) { return Math.round(value); }, },
-            },
-          },
-        });
-
         if (selectedAttributeMix === "Matches per artist and year"){
           setArrayDataBubble(sortedArray_track_artist_count_iso)
         }
-        if (selectedAttributeMix === "Occurences per match and year") {
+        if (selectedAttributeMix === "Matches per pattern and year") {
           setArrayDataBubble(mapMatchToYear_iso);
         }
-
-        // console.log("typegraph is scatter. sortedArray_track_artist_count_iso: ",sortedArray_track_artist_count_iso,", arrayDataBubble: ",arrayDataBubble);
 
       } else if (typeGraph === "histogram") {
         let filledUpDates = generateAllValuesYears(Object.keys(sortedIso), Object.values(sortedIso));
         if (selectedAttributeMix === "Matches per year"){setAxisLabelXBarGraph(Object.keys(filledUpDates))}
         if (selectedAttributeMix === "Matches per year"){ setAxisYBarGraph(Object.values(filledUpDates)) }
-        // setDataBarGraph({
-        //   labels: axisLabelXBarGraph.current,
-        //   datasets: [{ label: selectedAttributeMix, data: axisYBarGraph, backgroundColor: "rgba(75,192,192,0.2)", borderColor: "rgba(75,192,192,1)", borderWidth: 1 }],
-        // })
       } else if (typeGraph === "bar") {
         if (selectedAttributeMix === "Matches per track"){ setAxisLabelXBarGraph(Object.keys(trackNamesCount),"test") }
         if (selectedAttributeMix === "Matches per recording"){ setAxisLabelXBarGraph(Object.keys(recordingsCount)) }
-        if (selectedAttributeMix === "Occurences per match"){ setAxisLabelXBarGraph(Object.keys(sortedMelodyCount)) }
+        if (selectedAttributeMix === "Matches per pattern"){ setAxisLabelXBarGraph(Object.keys(sortedMelodyCount)) }
         if (selectedAttributeMix === "Matches per artist"){ setAxisLabelXBarGraph(Object.keys(melodyArtistsCount)) }
 
         // Work in progrress: adapt for this to be the data object in the datasets object, based on selectedAxisY        
         if (selectedAttributeMix === "Matches per track") { setAxisYBarGraph(Object.values(trackNamesCount)) }
         if (selectedAttributeMix === "Matches per recording") { setAxisYBarGraph(Object.values(recordingsCount)); }
-        if (selectedAttributeMix === "Occurences per match") { setAxisYBarGraph(Object.values(sortedMelodyCount)); }
+        if (selectedAttributeMix === "Matches per pattern") { setAxisYBarGraph(Object.values(sortedMelodyCount)); }
         if (selectedAttributeMix === "Matches per artist"){ setAxisYBarGraph(Object.values(melodyArtistsCount)) }
 
-        // setDataBarGraph({
-        //   labels: axisLabelXBarGraph.current,
-        //   datasets: [{ label: selectedAttributeMix, data: axisYBarGraph, backgroundColor: "rgba(75,192,192,0.2)", borderColor: "rgba(75,192,192,1)", borderWidth: 1 }],
-        // })
       } else {
         console.log(`Unexpected ${typeGraph}`);
       }
     };
-
     updateOptions();
   }, [selectedAttributeMix, selectedAxisY, infoMusicList, typeGraph]);
 
   // Set visualization type
   const handleChangeSelection = (value) => {
     setShowLoadingIcon(true);
-    (value === "Matches per recording"
-      || value === "Matches per track"
-      || value === "Occurences per match"
-      || value === "Matches per artist")? 
-        setTypeGraph("bar") 
-        : (value=== "Matches per year")? 
-          setTypeGraph("histogram")
-          : setTypeGraph("scatter");
+    (value === "Matches per recording" || value === "Matches per track" || value === "Matches per pattern" || value === "Matches per artist") ?
+      setTypeGraph("bar")
+      : (value === "Matches per year") ?
+        setTypeGraph("histogram")
+        : setTypeGraph("scatter");
     setSelectedAttributeMix(value);
   };
 
@@ -495,7 +439,12 @@ const GraphsResults = ({ infoMusicList, oldSearch, listSearchRes }) => {
       {showGraphs && (
         <>
           <p>The graph will adapt based on the attributes you select.</p>
-          <div className="mx-[0.5rem] inline-flex items-center">
+          <SelectionDropdown
+            attributeMix={attributeMix}
+            selectedAttributeMix={selectedAttributeMix}
+            onChange={handleChangeSelection}
+          />
+          {/* <div className="mx-[0.5rem] inline-flex items-center">
             <label>Information selection</label>
             <select
               className="mx-[0.5rem]"
@@ -509,7 +458,7 @@ const GraphsResults = ({ infoMusicList, oldSearch, listSearchRes }) => {
                 </option>
               ))}
             </select>
-          </div>
+          </div> */}
           {showLoadingIcon && <AiOutlineLoading className="spin"/>}
           <div className="chartArea">
             {(typeGraph === "bar" || typeGraph === "histogram") && (
@@ -524,7 +473,7 @@ const GraphsResults = ({ infoMusicList, oldSearch, listSearchRes }) => {
               <ScatterChart
                 dataBubble={
                   (arrayDataBubble.length===0)
-                  ? (selectedAttributeMix==="Occurences per match and year")
+                  ? (selectedAttributeMix==="Matches per pattern and year")
                     ? setArrayDataBubble(mapMatchToYear_iso)
                     : setArrayDataBubble(sortedArray_track_artist_count_iso)
                   :arrayDataBubble
@@ -537,7 +486,7 @@ const GraphsResults = ({ infoMusicList, oldSearch, listSearchRes }) => {
                     .filter((a) => a.x !== "--")
                 }
                 title={selectedAttributeMix}
-                // mergePerYear={selectedAttributeMix==="Occurences per match and year"?false:true} // Need to adapt based on another attribute
+                // mergePerYear={selectedAttributeMix==="Matches per pattern and year"?false:true} // Need to adapt based on another attribute
                 mergePerYear={true} // Need to adapt based on another attribute
                 setShowLoadingIcon={setShowLoadingIcon}
               />

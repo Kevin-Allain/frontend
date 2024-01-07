@@ -86,11 +86,11 @@ const mergeDuplicatesByYear = (data, minR = 5, maxR = 30) => {
   return objBubble_andSize;
 }
 
-// Might use a bubble chart... 
+// Using a bubble chart... 
 // https://react-chartjs-2.js.org/examples/bubble-chart
 // TODO can this still be used for a scatter chart? I suppose so...
 const ScatterChart = ({ dataBubble = undefined, title, mergePerYear=false, setShowLoadingIcon }) => {
-  console.log("~~~~ScatterChart ");
+  console.log("~~~~ ScatterChart ");
   // console.log(". dataBubble: ", dataBubble);
   const minR = 2; const maxR = 20;
 
@@ -169,13 +169,8 @@ const ScatterChart = ({ dataBubble = undefined, title, mergePerYear=false, setSh
       responsive: true,
     })
 
-    const itemsPerPage = title === "Matches per artist and year" ? 100 : 50;
-    const startIndex = (currentPage) * itemsPerPage;
-    // const labels = [...new Set(dataBubble.map(a => a.y))];  
-    // const endIndex = Math.min(startIndex + itemsPerPage, labels.length);  
-    // const visibleLabels = labels.slice(startIndex, endIndex);
-    // const visibleData = data.slice(startIndex, endIndex);
-
+    // const itemsPerPage = title === "Matches per artist and year" ? 100 : 50; // const startIndex = (currentPage) * itemsPerPage;
+    // const labels = [...new Set(dataBubble.map(a => a.y))]; // const endIndex = Math.min(startIndex + itemsPerPage, labels.length);  // const visibleLabels = labels.slice(startIndex, endIndex); // const visibleData = data.slice(startIndex, endIndex);
     console.log("dataChart: ", dataChart, ", optionsChart: ", optionsChart);
     setShowLoadingIcon(false);
   }, [dataBubble, title, mergePerYear, setShowLoadingIcon])

@@ -49,7 +49,7 @@ import locations from "./locations.json"
 import producers from "./producers.json"
 
 // Trying to have better performances
-const MemoizedGraphsResults = React.memo(GraphsResults);
+// const MemoizedGraphsResults = React.memo(GraphsResults);
 
 const PITCH_QUERY_REGEX = /^$|(^(?!.*--)(?!-)([0-9]{1,2}|1[01][0-9]|12[0-7])(-([0-9]{1,2}|1[01][0-9]|12[0-7]))*(-?)$)/;
 // Test attributes
@@ -106,122 +106,11 @@ const MusicInterface = () => {
   const tracksRefs = useRef([]);
 
   const handleToggle = () => {setFilterMode(!isFilterMode);};
-
-  // const handleChangeSearchFilterArtist = (event) => {
-  //   setSearchFilterArtist(event.target.value);
-  // }
-  // const scrollToButtonListLogsNumbers = () => {
-  //   const buttonListLogsNumbers = document.getElementById(
-  //     "buttonListLogsNumbers"
-  //   );
-  //   if (buttonListLogsNumbers) {
-  //     buttonListLogsNumbers.scrollIntoView({
-  //       behavior: "smooth",
-  //       block: "nearest",
-  //       inline: "start",
-  //     });
-  //   }
-  // };
-  // const scrollToButtonListTracksFollowing = (
-  //   e,
-  //   indexButton,
-  //   track,
-  //   direction = "next"
-  // ) => {
-  //   const prevTrack = listTracks[Math.max(0, indexButton - 1)];
-  //   const nextTrack = listTracks[Math.min(listTracks.length, indexButton + 1)];
-  //   const buttonTrack =
-  //     direction === "next"
-  //       ? document.getElementById(nextTrack)
-  //       : document.getElementById(prevTrack);
-  //   if (buttonTrack) {
-  //     // Temporarily set 'overflow' to 'visible' on .musicInterface to allow the scrolling
-  //     const outputMusicSearch = document.querySelector(".outputMusicSearch");
-  //     const originalOverflow = outputMusicSearch.style.overflow;
-  //     outputMusicSearch.style.overflow = "visible";
-
-  //     // Calculate the offset of the buttonTrack relative to the .musicInterface div
-  //     const outputMusicSearchRect = outputMusicSearch.getBoundingClientRect();
-  //     const buttonTrackRect = buttonTrack.getBoundingClientRect();
-  //     const relativeOffset = buttonTrackRect.top - outputMusicSearchRect.top;
-
-  //     // Calculate the desired scrollTop to ensure the element is visible in the .musicInterface div
-  //     const scrollTop = outputMusicSearch.scrollTop + relativeOffset;
-
-  //     // Perform the scroll on .outputMusicSearch
-  //     outputMusicSearch.scrollTo({ top: scrollTop, behavior: "smooth" });
-
-  //     // Reset 'overflow' back to its original value after the scrolling
-  //     outputMusicSearch.style.overflow = originalOverflow;
-  //     buttonTrack.scrollIntoView({
-  //       behavior: "smooth",
-  //       block: "start",
-  //       inline: "start",
-  //     });
-  //   }
-  // };
-  // const scrollToButtonListRecordingsFollowing = (
-  //   e,
-  //   recording,
-  //   direction = "next"
-  // ) => {
-  //   // console.log("scrollToButtonListRecordingsFollowing | e: ",e,", recording: ", recording,", direction: ",direction);
-  //   const curIndex = listLogNumbers.indexOf(recording);
-  //   const prevSelecIndex = Math.max(0, curIndex - 1);
-  //   const nextSelecIndex = Math.min(listLogNumbers.length, curIndex + 1);
-  //   const selecIndex = direction === "next" ? nextSelecIndex : prevSelecIndex;
-  //   // console.log("selecIndex: ",selecIndex," | lognumbersRefs: ",lognumbersRefs);
-
-  //   // Temporarily set 'overflow' to 'visible' on .musicInterface to allow the scrolling
-  //   const outputMusicSearch = document.querySelector(".outputMusicSearch");
-  //   const originalOverflow = outputMusicSearch.style.overflow;
-  //   outputMusicSearch.style.overflow = "visible";
-
-  //   // Calculate the offset of the buttonTrack relative to the .musicInterface div
-  //   const outputMusicSearchRect = outputMusicSearch.getBoundingClientRect();
-  //   const buttonTrackRect =
-  //     lognumbersRefs.current[curIndex].getBoundingClientRect();
-  //   const relativeOffset = buttonTrackRect.top - outputMusicSearchRect.top;
-
-  //   // Calculate the desired scrollTop to ensure the element is visible in the .musicInterface div
-  //   const scrollTop = outputMusicSearch.scrollTop + relativeOffset;
-
-  //   // Perform the scroll on .outputMusicSearch
-  //   outputMusicSearch.scrollTo({ top: scrollTop, behavior: "smooth" });
-
-  //   // Reset 'overflow' back to its original value after the scrolling
-  //   outputMusicSearch.style.overflow = originalOverflow;
-  //   lognumbersRefs.current[selecIndex].scrollIntoView({
-  //     behavior: "smooth",
-  //     block: "start",
-  //     inline: "start",
-  //   });
-  // };
-  // const handleScrollToRecording = (index) => {
-  //   lognumbersRefs.current[index].scrollIntoView({
-  //     behavior: "smooth",
-  //     block: "nearest",
-  //     inline: "center",
-  //   });
-  // };
-  // const handleScrollToTrack = (index) => {
-  //   tracksRefs.current[index].scrollIntoView({
-  //     behavior: "smooth",
-  //     block: "nearest",
-  //     inline: "center",
-  //   });
-  // };
-
-  const handleChangePercMatch = (event) => {
-    setPercMatch(event.target.value);
-  }
-
+  const handleChangePercMatch = (event) => { setPercMatch(event.target.value); }
 
   const calculate_fuzzy_score = (pitch_notes) => {
     let score = 0;
-    for (let i = 0; i < pitch_notes.length - 1; i++) {
-      score += pitch_notes[i] - pitch_notes[i + 1];
-    }
+    for (let i = 0; i < pitch_notes.length - 1; i++) { score += pitch_notes[i] - pitch_notes[i + 1]; }
     return score;
   };
   const map_to_fuzzy_score = (score) => {
@@ -235,6 +124,15 @@ const MusicInterface = () => {
     else if (score >= 5 && score <= 7) { return 3; } 
     else { return 4; }
   };
+
+// --#-- Attempt to reduce the number of times we render GraphsResults
+  // Memoize the values to prevent unnecessary re-renders of GraphsResults
+  const memoizedValues = useMemo(() => ({
+    infoMusicList,
+    oldSearch,
+    listSearchRes,
+  }), [infoMusicList, oldSearch, listSearchRes]);
+
 
 // ---- React functions
   useEffect(() => {
@@ -740,15 +638,9 @@ const MusicInterface = () => {
 
             {/* We should create a different type of component with some vis. */}
             {/* This is rendered twice?! */}
-            {/* {infoMusicList.length > 0 &&
-              (<GraphsResults infoMusicList={infoMusicList} oldSearch={oldSearch} listSearchRes={listSearchRes} />) } */}
-            {infoMusicList.length > 0 && (
-              <MemoizedGraphsResults
-                infoMusicList={infoMusicList}
-                oldSearch={oldSearch}
-                listSearchRes={listSearchRes}
-              />
-            )}
+            {infoMusicList.length > 0 &&
+              (<GraphsResults infoMusicList={infoMusicList} oldSearch={oldSearch} listSearchRes={listSearchRes} />) }
+            {/* {infoMusicList.length > 0 && ( <MemoizedGraphsResults infoMusicList={infoMusicList} oldSearch={oldSearch} listSearchRes={listSearchRes} /> )} */}
           {/* Is this rendered twice too?! */}
           {infoMusicList.length > 0 ? (
             <MyTabbedInterface
