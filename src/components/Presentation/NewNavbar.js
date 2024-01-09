@@ -5,51 +5,19 @@ import Login from "../Login/Login";
 
 import {ImCross} from 'react-icons/im'
 import logo from "../../assets/logo.png";
-function Navbar(props
-  // : Props
-) {
-
+function NewNavbar(props) {
   const [showDiv, setShowDiv] = useState(false);
   const { auth, setAuth } = useContext(AuthContext);
 
   return (
-    <div
-      className=" fixed top-0 z-10 flex w-full items-center justify-between bg-primary  px-2 py-2  text-xs  text-offWhite	 drop-shadow-lg md:px-4 lg:px-global lg:text-lg navbar
-"
-    >
+    <div className=" fixed top-0 z-10 flex w-full items-center justify-between bg-primary  px-2 py-2  text-xs  text-offWhite	 drop-shadow-lg md:px-4 lg:px-global lg:text-lg navbar" >
       <img
         onClick={props.onLanding}
         src={logo}
         alt="Logo"
         className="w-16  cursor-pointer hover:brightness-125   md:w-24	  lg:w-28"
       />
-      <div className="flex  justify-center gap-2  lg:gap-5">
-        <a
-          className=" cursor-pointer hover:text-accentLight"
-          onClick={props.onAbout}
-        >
-          About
-        </a>
-        <a
-          className=" cursor-pointer hover:text-accentLight"
-          onClick={props.onFunding}
-        >
-          Funding
-        </a>
-        <a
-          className=" cursor-pointer hover:text-accentLight"
-          onClick={props.onInvest}
-        >
-          Investigators
-        </a>
-        <a
-          className=" cursor-pointer hover:text-accentLight"
-          onClick={props.onPartner}
-        >
-          Partners
-        </a>
-
-      </div>
+      <div className="flex  justify-center gap-2  lg:gap-5"> </div>
       {/* Inclusion of login/register elements here... */}
       {(localStorage?.username === undefined) ?
         <div 
@@ -81,4 +49,4 @@ function Navbar(props
   );
 }
 
-export default Navbar;
+export default NewNavbar;

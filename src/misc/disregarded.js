@@ -1294,3 +1294,33 @@ function calcLevenshteinDistance_str(s1, s2) {
 //             .catch(error => { reject(error); });
 //     });
 // }
+
+
+
+// back in CombinedDataService.js
+  
+  // let justFirstIds = await TrackModel
+  //   .find({ "_id": { "$in": [...allFirstIds] } })
+  // console.log("justFirstIds.length: ",justFirstIds.length);
+  // console.log("justFirstIds[0]: ",justFirstIds[0]);
+  // console.log("time: ",new Date());
+  // // Technically but takes really long!!! About 50 seconds!
+  // // Only works on local database?! WTH 4 mminutes!!!
+  // let trackDocFromFirstIds = await TrackModel.find({ '_id': { $in: justFirstIds } })
+  // .then(data => {
+  //   console.log("inside the then. time: ",new Date());
+  //   // For every data, get the elements that share its track attribute,
+  //   // and have m_id between its value and m_id+range
+  //   const promises = data.map(item => {
+  //     return TrackModel.find({
+  //       track: item.track,
+  //       m_id: { $gte: item.m_id, $lte: item.m_id + distance }
+  //     })
+  //     .then(result => ({ status: 'fulfilled', result }))
+  //     .catch(error => ({ status: 'rejected', error }));
+  //   });
+  //   // Use Promise.all to wait for all queries to complete
+  //   return Promise.all(promises);
+  // })
+  // console.log("trackDocFromFirstIds length: ",trackDocFromFirstIds.length)
+  // console.log("time after the requests: ",new Date());

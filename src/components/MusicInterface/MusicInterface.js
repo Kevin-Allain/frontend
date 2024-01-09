@@ -39,6 +39,18 @@ import EmbeddedWorkflowInteraction from '../Workflow/EmbeddedWorkflowInteraction
 
 import MyTabbedInterface from './MyTabbedInterface'
 import GraphsResults from '../VisComponents/GraphsResults';
+import GraphsResults2 from '../VisComponents/GraphsResults2';
+import AutoComplete from './AutoComplete';
+
+// For the filters
+import artistNames from "./artists_names.json"
+import recordings from "./recordings.json"
+import trackTitles from "./tracks_titles.json"
+import locations from "./locations.json"
+import producers from "./producers.json"
+
+// Trying to have better performances
+// const MemoizedGraphsResults = React.memo(GraphsResults);
 
 const PITCH_QUERY_REGEX = /^$|(^(?!.*--)(?!-)([0-9]{1,2}|1[01][0-9]|12[0-7])(-([0-9]{1,2}|1[01][0-9]|12[0-7]))*(-?)$)/;
 // Test attributes
@@ -53,6 +65,7 @@ const durations = [0.5, 1, 1, 1, 2, 3, 1, 1, 4, 5, 2, 1, 1, 1, 0.5, 1.82];
   }).toDestination();
 
 const MusicInterface = () => {
+  console.log("~~~~ MusicInterface");
   const synth2 = useRef(new Tone.Synth());
   synth2.current.oscillator.type = "sine";
   synth2.current.toDestination();
@@ -74,145 +87,31 @@ const MusicInterface = () => {
   const [listSearchRes, setListSearchRes] = useState([]);
 
   const [showExplanation, setShowExplanation] = useState(false);
-  const [percMatch, setPercMatch] = useState(0.5);
+  const [percMatch, setPercMatch] = useState(1);
   const [searchFilterArtist, setSearchFilterArtist] = useState('artistName');
-  const textFilterArtistRef = useRef('');
-  const textFilterTrackRef = useRef('');
-  const textFilterRecordingRef = useRef('');
+  // const textFilterArtistRef = useRef(''); const textFilterTrackRef = useRef(''); const textFilterRecordingRef = useRef('');
 
-  const [isFilterMode, setFilterMode] = useState(false);
-  const [textFilterArtist, setTextFilterArtist] = useState("");
+  const [isFilterMode, setFilterMode] = useState(true);
   const [textFilterTrack, setTextFilterTrack] = useState("");
   const [textFilterRecording, setTextFilterRecording] = useState("");
+  const [textFilterArtist, setTextFilterArtist] = useState('');
+  const [textFilterLocations, setTextFilterLocations] = useState("");
+  const [textFilterProducers, setTextFilterProducers] = useState("");
+
+  const [startYear, setStartYear] = useState("");
+  const [endYear, setEndYear] = useState("");
 
   // References for scrolling
   const lognumbersRefs = useRef([]);
   const buttonListLogsNumbersRef = useRef(null);
   const tracksRefs = useRef([]);
 
-
-  const handleToggle = () => {
-    setFilterMode(!isFilterMode);
-    // Perform actions based on the toggle state (isFilterMode)
-  };
-
-  const handleChangeSearchFilterArtist = (event) => {
-    setSearchFilterArtist(event.target.value);
-  }
-
-  const scrollToButtonListLogsNumbers = () => {
-    const buttonListLogsNumbers = document.getElementById(
-      "buttonListLogsNumbers"
-    );
-    if (buttonListLogsNumbers) {
-      buttonListLogsNumbers.scrollIntoView({
-        behavior: "smooth",
-        block: "nearest",
-        inline: "start",
-      });
-    }
-  };
-
-  const scrollToButtonListTracksFollowing = (
-    e,
-    indexButton,
-    track,
-    direction = "next"
-  ) => {
-    const prevTrack = listTracks[Math.max(0, indexButton - 1)];
-    const nextTrack = listTracks[Math.min(listTracks.length, indexButton + 1)];
-    const buttonTrack =
-      direction === "next"
-        ? document.getElementById(nextTrack)
-        : document.getElementById(prevTrack);
-    if (buttonTrack) {
-      // Temporarily set 'overflow' to 'visible' on .musicInterface to allow the scrolling
-      const outputMusicSearch = document.querySelector(".outputMusicSearch");
-      const originalOverflow = outputMusicSearch.style.overflow;
-      outputMusicSearch.style.overflow = "visible";
-
-      // Calculate the offset of the buttonTrack relative to the .musicInterface div
-      const outputMusicSearchRect = outputMusicSearch.getBoundingClientRect();
-      const buttonTrackRect = buttonTrack.getBoundingClientRect();
-      const relativeOffset = buttonTrackRect.top - outputMusicSearchRect.top;
-
-      // Calculate the desired scrollTop to ensure the element is visible in the .musicInterface div
-      const scrollTop = outputMusicSearch.scrollTop + relativeOffset;
-
-      // Perform the scroll on .outputMusicSearch
-      outputMusicSearch.scrollTo({ top: scrollTop, behavior: "smooth" });
-
-      // Reset 'overflow' back to its original value after the scrolling
-      outputMusicSearch.style.overflow = originalOverflow;
-      buttonTrack.scrollIntoView({
-        behavior: "smooth",
-        block: "start",
-        inline: "start",
-      });
-    }
-  };
-  const scrollToButtonListRecordingsFollowing = (
-    e,
-    recording,
-    direction = "next"
-  ) => {
-    // console.log("scrollToButtonListRecordingsFollowing | e: ",e,", recording: ", recording,", direction: ",direction);
-    const curIndex = listLogNumbers.indexOf(recording);
-    const prevSelecIndex = Math.max(0, curIndex - 1);
-    const nextSelecIndex = Math.min(listLogNumbers.length, curIndex + 1);
-    const selecIndex = direction === "next" ? nextSelecIndex : prevSelecIndex;
-    // console.log("selecIndex: ",selecIndex," | lognumbersRefs: ",lognumbersRefs);
-
-    // Temporarily set 'overflow' to 'visible' on .musicInterface to allow the scrolling
-    const outputMusicSearch = document.querySelector(".outputMusicSearch");
-    const originalOverflow = outputMusicSearch.style.overflow;
-    outputMusicSearch.style.overflow = "visible";
-
-    // Calculate the offset of the buttonTrack relative to the .musicInterface div
-    const outputMusicSearchRect = outputMusicSearch.getBoundingClientRect();
-    const buttonTrackRect =
-      lognumbersRefs.current[curIndex].getBoundingClientRect();
-    const relativeOffset = buttonTrackRect.top - outputMusicSearchRect.top;
-
-    // Calculate the desired scrollTop to ensure the element is visible in the .musicInterface div
-    const scrollTop = outputMusicSearch.scrollTop + relativeOffset;
-
-    // Perform the scroll on .outputMusicSearch
-    outputMusicSearch.scrollTo({ top: scrollTop, behavior: "smooth" });
-
-    // Reset 'overflow' back to its original value after the scrolling
-    outputMusicSearch.style.overflow = originalOverflow;
-    lognumbersRefs.current[selecIndex].scrollIntoView({
-      behavior: "smooth",
-      block: "start",
-      inline: "start",
-    });
-  };
-  const handleScrollToRecording = (index) => {
-    lognumbersRefs.current[index].scrollIntoView({
-      behavior: "smooth",
-      block: "nearest",
-      inline: "center",
-    });
-  };
-  const handleScrollToTrack = (index) => {
-    tracksRefs.current[index].scrollIntoView({
-      behavior: "smooth",
-      block: "nearest",
-      inline: "center",
-    });
-  };
-
-  const handleChangePercMatch = (event) => {
-    setPercMatch(event.target.value);
-  }
-
+  const handleToggle = () => {setFilterMode(!isFilterMode);};
+  const handleChangePercMatch = (event) => { setPercMatch(event.target.value); }
 
   const calculate_fuzzy_score = (pitch_notes) => {
     let score = 0;
-    for (let i = 0; i < pitch_notes.length - 1; i++) {
-      score += pitch_notes[i] - pitch_notes[i + 1];
-    }
+    for (let i = 0; i < pitch_notes.length - 1; i++) { score += pitch_notes[i] - pitch_notes[i + 1]; }
     return score;
   };
   const map_to_fuzzy_score = (score) => {
@@ -226,6 +125,15 @@ const MusicInterface = () => {
     else if (score >= 5 && score <= 7) { return 3; } 
     else { return 4; }
   };
+
+// --#-- Attempt to reduce the number of times we render GraphsResults
+  // Memoize the values to prevent unnecessary re-renders of GraphsResults
+  const memoizedValues = useMemo(() => ({
+    infoMusicList,
+    oldSearch,
+    listSearchRes,
+  }), [infoMusicList, oldSearch, listSearchRes]);
+
 
 // ---- React functions
   useEffect(() => {
@@ -293,10 +201,7 @@ const MusicInterface = () => {
 
   const findMatchRecording = (recording) => {
     console.log(
-      "~~~~ findMatchRecording | recording: ",
-      recording,
-      ", infoRecordingTrackList: ",
-      infoMusicList
+      "~~~~ findMatchRecording | recording: ", recording, ", infoRecordingTrackList: ", infoMusicList
     );
     // Not a great approach... but should work okay.
     if (recording.includes("SJA")) {
@@ -346,8 +251,41 @@ const MusicInterface = () => {
     },
     [setTextFilterRecording]
   );
+  
+  const handleChangeFilterSearchLocation = useCallback(
+    (event) => {
+      const value = event.target.value;
+      console.log("value handleChangeFilterSearchLocation: ", value);
+      setTextFilterLocations(value);
+    },
+    [setTextFilterLocations]
+  );
 
-  // const handleClickTextSearch = useCallback( async (e) => { e.preventDefault(); if (textSearch !== "") { findMatchLevenshteinDistance(textSearch); } }, [textSearch, findMatchLevenshteinDistance]  );
+  const handleChangeFilterSearchProducer = useCallback(
+    (event) => {
+      const value = event.target.value;
+      console.log("value handleChangeFilterSearchProducer: ", value);
+      setTextFilterProducers(value);
+    },
+    [setTextFilterProducers]
+  );
+
+  const handleStartYearChange = useCallback(
+    (event) => {
+      const value = event.target.value;
+      console.log("value handleStartYearChange: ", value);
+      if (!isNaN(Number(value))) { setStartYear(value); }
+    },
+    [setStartYear]
+  );
+  const handleEndYearChange = useCallback(
+    (event) => {
+      const value = event.target.value;
+      console.log("value handleEndYearChange: ", value);
+      if (!isNaN(Number(value))) { setEndYear(value); }
+    },
+    [setEndYear]
+  );
 
   const handleClickTextSearchFuzzyLevenshtein = async (e) => {
     e.preventDefault();
@@ -365,10 +303,18 @@ const MusicInterface = () => {
         setListTracks,
         infoMusicList, 
         setInfoMusicList,
-        textFilterArtist, textFilterTrack, textFilterRecording
+        textFilterArtist, textFilterTrack, textFilterRecording, // TODO set other filters
+        textFilterLocations, textFilterProducers, startYear, endYear,
       )
     }
   }  
+// - Location
+// - More filters (year)
+// - Where it comes from (collection)
+// - Instrument?
+// - Producer
+// - (A/R/D)  Event type
+
 
   // ######## TEST FOR PERFORMANCES ########
   const handleClickTextSearchTEST_getListFuzzyDist = async (e) => {
@@ -498,10 +444,10 @@ const MusicInterface = () => {
             className="icon"
             onClick={() => setShowExplanation(!showExplanation)}
           />
-          <h1 className="title">How to Use the Music Interface</h1>
+          <h1 className="title">How to Use the Search Interface</h1>
           <div className="detailsExplanation">
             <p>
-              The Music Interface is designed to search for samples that match
+              The Search Interface is designed to search for samples that match
               the melodies you enter in our system. To do so, simply click on
               the piano keys for the notes you wish and submit your search.
             </p>
@@ -536,7 +482,7 @@ const MusicInterface = () => {
           </div>
         </div>
       )}
-      <Title firstLine="Music" secondLine="Interface" />
+      <Title firstLine="Search" secondLine="Interface" />
       {/* ==== Test Mp3 playing ==== */}
       {/* <div className="playMusic" onClick={(c) => { playMp3(); }} > Play Test Mp3 </div>
       <div className='playMusic' onClick={(c)=>{playToneSalamander();}}> Play from tone loaded </div> */}
@@ -548,7 +494,7 @@ const MusicInterface = () => {
       <div className="topTextSearch">
         <div className="disclaimerSearchPitch">
           Play the piano keys or enter a query based on pitch notes (from 0 to
-          127) separated with - characters.
+          127) separated with - characters. Enter between 4 and 10 notes.
         </div>
         <input
           type="text"
@@ -567,63 +513,89 @@ const MusicInterface = () => {
             value={percMatch}
             onChange={handleChangePercMatch}
           >
-            <option value={0.1}>10%</option> <option value={0.2}>20%</option>{" "}
-            <option value={0.3}>30%</option> <option value={0.4}>40%</option>{" "}
+            {/* <option value={0.1}>10%</option> <option value={0.2}>20%</option>{" "}
+            <option value={0.3}>30%</option> <option value={0.4}>40%</option>{" "} */}
             <option value={0.5}>50%</option>
             <option value={0.6}>60%</option> <option value={0.7}>70%</option>{" "}
             <option value={0.8}>80%</option> <option value={0.9}>90%</option>{" "}
             <option value={1}>100%</option>
           </select>
         </p>
-        <p className="text-white">
+          
+          {/* This works, but we should focus on having other parameters first.
+        <AutoComplete title={"Fruits"} potentialInputs={["Apple", "Banan7a","Bana44na","Banan4a","Orange35", "Orange", "Grapes", "Cherry"]}/> */}
+        
+        {/* <p className="text-white">
           Show filters:
           <ToggleSwitch checked={isFilterMode} onChange={handleToggle} />
-        </p>
+        </p> */}
         {isFilterMode && (
           <>
             <p className="text-white">
               Leave input empty for parameters you don't want to filter.
             </p>
             <div className="text-white">
-              <p>Artist name:</p>
-              <input
-                type="text"
-                className="inputMusicSearch mx-[0.5rem]" // could/should use a different className
-                placeholder=""
-                ref={textFilterArtistRef}
-                autoComplete="off"
-                required
-                value={textFilterArtist}
-                onChange={handleChangeFilterSearchArtist}
+              <AutoComplete
+                title="Artist Search"
+                potentialInputs={ artistNames }
+                inputValue={textFilterArtist}
+                onInputChange={handleChangeFilterSearchArtist}
               />
-              <p>Track name:</p>
-              <input
-                type="text"
-                className="inputMusicSearch mx-[0.5rem]" // could/should use a different className
-                placeholder=""
-                ref={textFilterTrackRef}
-                autoComplete="off"
-                required
-                value={textFilterTrack}
-                onChange={handleChangeFilterSearchTrack}
+              <AutoComplete
+                title="Track Search"
+                potentialInputs={trackTitles}
+                inputValue={textFilterTrack}
+                onInputChange={handleChangeFilterSearchTrack}
               />
-              <p>Recording name:</p>
-              <input
-                type="text"
-                className="inputMusicSearch mx-[0.5rem]" // could/should use a different className
-                placeholder=""
-                ref={textFilterRecordingRef}
-                autoComplete="off"
-                required
-                value={textFilterRecording}
-                onChange={handleChangeFilterSearchRecording}
+              <AutoComplete
+                title="Recording Search"
+                potentialInputs={recordings}
+                inputValue={textFilterRecording}
+                onInputChange={handleChangeFilterSearchRecording}
               />
+              <AutoComplete
+                title="Location Search"
+                potentialInputs={locations}
+                inputValue={textFilterLocations}
+                onInputChange={handleChangeFilterSearchLocation}
+              />
+              <AutoComplete
+              title="Producer Search"
+              potentialInputs={producers}
+              inputValue={textFilterProducers}
+              onInputChange={handleChangeFilterSearchProducer}
+              />
+              <div>
+                <p>Year Selection:</p>
+                <div className="flex-inline">
+                  <input
+                    type="text"
+                    className="inputMusicSearch mx-[0.5rem]"
+                    placeholder="Start Year (YYYY)"
+                    // ref={startYearRef}
+                    autoComplete="off"
+                    required
+                    value={startYear}
+                    onChange={handleStartYearChange}
+                  />
+                  <span className="mx-2">to</span>
+                  <input
+                    type="text"
+                    className="inputMusicSearch mx-[0.5rem]"
+                    placeholder="End Year (YYYY)"
+                    // ref={endYearRef}
+                    autoComplete="off"
+                    required
+                    value={endYear}
+                    onChange={handleEndYearChange}
+                  />
+                </div>
+              </div>
+         
             </div>
           </>
         )}
-        <button onClick={handleClickTextSearchFuzzyLevenshtein}>
-          Submit search
-        </button>
+        <button onClick={handleClickTextSearchFuzzyLevenshtein}> Submit search </button>
         {("" + textSearch).length > 0 && (
           <div className="bg-slate-200 text-center mx-64 opacity-75 max-w-80%">
             Notes: ({notesTranslate})
@@ -641,41 +613,38 @@ const MusicInterface = () => {
           <p className="text-xl">List of results for your search:</p>
           <h4>
             {oldSearch} (
-              {("" + oldSearch).indexOf("-") === -1
-                ? ("" + MIDItoNote["" + oldSearch]).replaceAll("s", "")
-                : ("" + oldSearch)
-                  .split("-")
-                  .map((a, i) =>
-                    i === ("" + oldSearch).split("-").length - 1
-                      ? MIDItoNote[a].replaceAll("s", "")
-                      : (MIDItoNote[a] + "-").replaceAll("s", "")
-                  )}
+            {("" + oldSearch).indexOf("-") === -1
+              ? ("" + MIDItoNote["" + oldSearch]).replaceAll("s", "")
+              : ("" + oldSearch)
+                .split("-")
+                .map((a, i) =>
+                  i === ("" + oldSearch).split("-").length - 1
+                    ? MIDItoNote[a].replaceAll("s", "")
+                    : (MIDItoNote[a] + "-").replaceAll("s", "")
+                )}
             )
           </h4>
 
           <div className="text-left">
             <AnnotationSystem type={"search"} info={oldSearch} />
             {/* TODO update the workflow system so that it can save searches!!! Working on it from 2023.11.14. */}
-            <EmbeddedWorkflowInteraction 
-              idCaller={oldSearch+"_fArtist("+textFilterArtist+")_fRecording("+textFilterRecording+")_fTrack("+textFilterTrack+")_fPerc("+percMatch+")"} 
-              typeCaller={"search"} 
+            <EmbeddedWorkflowInteraction
+              idCaller={oldSearch + "_fArtist(" + textFilterArtist + ")_fRecording(" + textFilterRecording + ")_fTrack(" + textFilterTrack + ")_fPerc(" + percMatch + ")"}
+              typeCaller={"search"}
               listLogNumbers={listLogNumbers}
               infoMusicList={infoMusicList}
               listTracks={listTracks}
             />
           </div>
 
-          {/* We should create a different type of component with some vis. */}
-          {infoMusicList.length > 0 ? (
-            <>
-              {/* There are results: {infoMusicList.length}. <br />
-              Albums:{" "}
-              {Array.from([...new Set(infoMusicList.map((a) => a["(E) Event Name"]))]).map( a => <>{a}<br/></> )} */}
-              <GraphsResults infoMusicList={infoMusicList} oldSearch={oldSearch} listSearchRes={listSearchRes}/>
-            </>
-          ) : (
-            <></>
-          )}
+            {/* We should create a different type of component with some vis. */}
+            {/* This is rendered twice?! */}
+            {infoMusicList.length > 0 &&
+              (<GraphsResults infoMusicList={infoMusicList} oldSearch={oldSearch} listSearchRes={listSearchRes} />) 
+              // <GraphsResults2 infoMusicList={infoMusicList} oldSearch={oldSearch} listSearchRes={listSearchRes} />
+            }
+            {/* {infoMusicList.length > 0 && ( <MemoizedGraphsResults infoMusicList={infoMusicList} oldSearch={oldSearch} listSearchRes={listSearchRes} /> )} */}
+          {/* Is this rendered twice too?! */}
           {infoMusicList.length > 0 ? (
             <MyTabbedInterface
               listSearchRes={listSearchRes}

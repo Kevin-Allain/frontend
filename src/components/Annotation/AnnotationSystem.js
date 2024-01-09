@@ -14,15 +14,12 @@ import "./AnnotationSystem.css"
 // TODO assess how we want to convey information about the object that uses the annotation system. 
 // We need to standardize (maybe use a different structure?)
 const AnnotationSystem = ({ type, info,idCaller = null, index=0, recordingCode=null, trackCode=null,metaObjId=null  }) => {
-  console.log("-- AnnotationSystem -- ", { type, info, idCaller, index, recordingCode, trackCode,metaObjId});
+  console.log("-- AnnotationSystem -- ",type," ", { type, info, idCaller, index, recordingCode, trackCode,metaObjId});
   const [textInputAnnotation, setTextInputAnnotation] = useState("");
   const [isUpdating, setIsUpdating] = useState(false);
   const [annotationId, setAnnotationId] = useState("");
-
   const [showInputAnnotation, setShowInputAnnotation] = useState(false);
-
   const [listAnnotations, setListAnnotations] = useState([]);
-
   const [selectedPrivacyOption, setSelectedPrivacyOption] = useState('public');
 
   useEffect(() => {

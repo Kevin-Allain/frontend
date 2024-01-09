@@ -6,9 +6,9 @@ import { setIsLoading } from '../App';
  * Functions name match those done in Controllers.
  */
 
-// const baseUrl = "http://localhost:5000" // can be used for development
+const baseUrl = "http://localhost:5000" // can be used for development
 // const baseUrl = "https://fullstack-proto-jazzdap-backend.onrender.com"
-const baseUrl= "https://jazzdap-backend.onrender.com"
+// const baseUrl= "https://jazzdap-backend.onrender.com"
 
 
 const getAllJazzDap = (setJazzDap) => {
@@ -232,10 +232,23 @@ const getMetadataFromAttribute = (attributeName, attributeValue) => {
     })
 }
 
-const getFuzzyLevenshtein = ( stringNotes = "", percMatch = 0.5, user = null, setListSearchRes = null, setListLogNumbers = null, setListTracks = null, infoMusicList=null,  setInfoMusicList=null, textFilterArtist = '', textFilterTrack = '' , textFilterRecording = '' ) => {
-  console.log("-- handleAPI / getFuzzyLevenshtein. stringNotes: ", stringNotes, ", percMatch: ", percMatch, " user: ", user);
-  console.log("~~~~ baseUrl: ",baseUrl," ~~~~");
-  console.log({textFilterArtist, textFilterTrack, textFilterRecording});
+const getFuzzyLevenshtein = (
+  stringNotes = "",
+  percMatch = 0.5,
+  user = null,
+  setListSearchRes = null,
+  setListLogNumbers = null,
+  setListTracks = null,
+  infoMusicList = null,
+  setInfoMusicList = null,
+  textFilterArtist = '',
+  textFilterTrack = '',
+  textFilterRecording = '',
+  textFilterLocations = '',
+  textFilterProducers = '',
+  startYear='',endYear='',
+) => {
+  console.log("-- handleAPI / getFuzzyLevenshtein. stringNotes: ", stringNotes, ", percMatch: ", percMatch, " user: ", user, ", ~ baseUrl: ",baseUrl);
   setIsLoading(true);
   stringNotes += '';
   let numNotesInput = stringNotes.split('-').map(a=>Number(a));
@@ -243,19 +256,26 @@ const getFuzzyLevenshtein = ( stringNotes = "", percMatch = 0.5, user = null, se
   axios
     .get(`${baseUrl}/getFuzzyLevenshtein`, {
       params:
-        { stringNotes: stringNotes, percMatch: percMatch, user: user, textFilterArtist: textFilterArtist, textFilterTrack: textFilterTrack, textFilterRecording: textFilterRecording},
+        { 
+          stringNotes: stringNotes, 
+          percMatch: percMatch, 
+          user: user, 
+          textFilterArtist: textFilterArtist, 
+          textFilterTrack: textFilterTrack, 
+          textFilterRecording: textFilterRecording,
+          textFilterLocations: textFilterLocations,
+          textFilterProducers: textFilterProducers,
+          startYear:startYear,
+          endYear:endYear,
+        },
     })
     .then((d) => {
-      console.log("#### Then of getFuzzyLevenshtein ####"); console.log("d: ", d); console.log("TIME AFTER QUERY: ", new Date());
-      // So now... what to do. Make something similar to the previous function? Fastest coding approach I suppose.
-      // But... do we return all the info? We should try to have it organized in the same way.
+      // console.log("#### Then of getFuzzyLevenshtein ####"); console.log("d: ", d); console.log("TIME AFTER QUERY: ", new Date());
       const resData = d.data;
       const allTrack = [...new Set(d.data.map(a => a.track))];
       const allLogNumber = [...new Set(d.data.map(a => a.lognumber))];
-      console.log("~~#~~ allTrack: ", allTrack, ", allLogNumber: ", allLogNumber);
-
+      // console.log("~~#~~ allTrack: ", allTrack, ", allLogNumber: ", allLogNumber);
       let sortedTracks = allTrack.sort();
-
       // Tricky to split the data into sections... might have to do it from previous step actually!
       // split according to track
       let dataSplitByTrack = {};
@@ -264,8 +284,7 @@ const getFuzzyLevenshtein = ( stringNotes = "", percMatch = 0.5, user = null, se
         dataSplitByTrack[allTrack[i]] = {}
         dataSplitByTrack[allTrack[i]].data = filteredByTrack;
       }
-      console.log("dataSplitByTrack: ", dataSplitByTrack);
-
+  
       for (let i in dataSplitByTrack) {
         // sort notes
         dataSplitByTrack[i].data =
@@ -289,11 +308,10 @@ const getFuzzyLevenshtein = ( stringNotes = "", percMatch = 0.5, user = null, se
         otherTracks.push(dataSplitByTrack[key].data[0].track);
       }
       otherLogsNumbers = [...new Set(otherLogsNumbers)]
-      console.log("lognumbers present in res: ", otherLogsNumbers);
-      console.log("tracks present in res: ", otherTracks);
+      // console.log("lognumbers present in res: ", otherLogsNumbers);
+      // console.log("tracks present in res: ", otherTracks);
       const sortedLogNumbers = allLogNumber.sort();
-      console.log("sortedLogNumbers: ", sortedLogNumbers);
-      // -- Worked in terminal
+
       let altDataStruct = [];
       for ( var i in resData ) {
         altDataStruct.push({
@@ -306,9 +324,9 @@ const getFuzzyLevenshtein = ( stringNotes = "", percMatch = 0.5, user = null, se
             arrTime: resData[i].onsets
         })
       }
-      console.log("altDataStruct: ",altDataStruct);
+      // console.log("altDataStruct: ",altDataStruct);
       // --
-      console.log("sortedTracks: ", sortedTracks);      
+
       let notesAggregByTrack = altDataStruct;
       setListLogNumbers(sortedLogNumbers);
       setListTracks(sortedTracks);
@@ -535,8 +553,6 @@ const updateAnnotation = (
   axios
     .post(`${baseUrl}/updateAnnotation`, { _id: annotationId, annotationInput, userId })
     .then((data) => {
-      console.log("data: ", data);
-      console.log("data[0]: ", data[0]);
       setAnnotationInput("");
       setIsUpdating(false);
       // getAllJazzDap(setJazzDap);
@@ -549,6 +565,14 @@ const updateAnnotation = (
       // setIsLoading(false);
     })
     .catch(err => console.log(err))
+}
+
+const testMetadata = () => {
+  axios.get(`${baseUrl}/testMetadata`,{})
+  .then(({ data }) => {
+    console.log("data: ", data);
+  })
+  .catch((err) => console.log(err));
 }
 
 // TODO still wrong: if type is recording, we should not base it based on the idCaller, but on the lognumber... or lognumber of object with the idCaller!
@@ -571,7 +595,7 @@ const getAnnotations = (
         },
       })
       .then(({ data }) => {
-        console.log("data: ", data);
+        // console.log("data: ", data);
         setListAnnotations(data);
       })
       .catch((err) => console.log(err));
@@ -595,7 +619,7 @@ const getAnnotations = (
             },
           })
           .then(({ data }) => {
-            console.log("data: ", data);
+            // console.log("data: ", data);
             setListAnnotations(data);
           })
           .catch((err) => console.log(err));
@@ -609,7 +633,7 @@ const getAnnotations = (
       },
     })
     .then(({ data }) => {
-      console.log("data: ", data);
+      // console.log("data: ", data);
       setListAnnotations(data);
     })
     .catch((err) => console.log(err));
@@ -693,8 +717,7 @@ const updateComment = (
   axios
     .post(`${baseUrl}/updateComment`, { _id: commentId, commentInput, userId, annotationId })
     .then((data) => {
-      console.log("data: ", data);
-      console.log("data[0]: ", data[0]);
+      // console.log("data: ", data);
       setCommentInput("");
       setIsUpdating(false);
       // getAllJazzDap(setJazzDap);
@@ -729,7 +752,7 @@ const getComments = (
       }
     })
     .then(({ data }) => {
-      console.log('data: ', data);
+      // console.log('data: ', data);
       setListComments(data);
     })
     .catch(err => console.log(err))
@@ -743,7 +766,7 @@ const getCommentsOfAnnotation = ( setListComments, user = null, annotationId=nul
       params: { annotationId: annotationId }
     })
     .then(({ data }) => {
-      console.log('data: ', data);
+      // console.log('data: ', data);
       setListComments(data);
     })
     .catch(err => console.log(err))
@@ -780,7 +803,7 @@ const getUserAnnotations = (setListAnnotations, user) => {
       }
     })
     .then(({ data }) => {
-      console.log('data: ', data);
+      // console.log('data: ', data);
       setListAnnotations(data);
     })
     .catch(err => console.log(err))
@@ -789,7 +812,7 @@ const getUserAnnotations = (setListAnnotations, user) => {
 /** Workflows */
 
 const getWorkflowsInfo = (dispatch, setWorkflows, { title = null, time = null, user = null } = {}) => {
-  console.log("handleApi getWorkflowsInfo.", { title, time, user });
+  // console.log("handleApi getWorkflowsInfo.", { title, time, user });
   axios
     .get(`${baseUrl}/getWorkflowsInfo`, {
       params:
@@ -800,7 +823,7 @@ const getWorkflowsInfo = (dispatch, setWorkflows, { title = null, time = null, u
       }
     })
     .then(({ data }) => {
-      console.log('getWorkflowsInfo data: ', data);
+      // console.log('getWorkflowsInfo data: ', data);
       dispatch(setWorkflows(data))
     })
     .catch(err => console.log(err))
@@ -905,6 +928,7 @@ const createWorkflow = (
       })
     } else {
       console.log("objectType is not a sample. It is a ", objectsType[0]);
+
       if (objectsType[0] === 'search') {
         // If it's recording or track... it should be exactly the same, right?!
         let fullStr = objectsId[0];
@@ -1268,6 +1292,7 @@ export {
   getAllJazzDap, addJazzDap, updateJazzDap, deleteJazzDap,
   getMusicMIDI, getSampleMIDI, getMatchLevenshteinDistance,
   getTrackMetadata, getTracksMetadata,
+  testMetadata,
   getMetadataFromAttribute, 
   getTrackMetaFromNoteId,
   addAnnotation, getAnnotations, deleteAnnotation, updateAnnotation,

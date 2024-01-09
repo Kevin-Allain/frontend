@@ -30,8 +30,10 @@ const MetadataAccordion = ({
       infoMusicList
         .filter((a) => a.lognumber === recording)
         .filter((a) => a["SJA_ID"] === track.replace("-T", "_"))
-    )[0][1]?._id);
+    )[0]?.[1]?._id);
 
+    if (typeof metaObjId === 'undefined'){setMetaObjId([])}
+    console.log("|| metaObjId: ",metaObjId);
 
     useEffect(() => {
       setMongoObjId(content);
@@ -40,8 +42,9 @@ const MetadataAccordion = ({
           infoMusicList
             .filter((a) => a.lognumber === recording)
             .filter((a) => a["SJA_ID"] === track.replace("-T", "_"))
-        )[0][1]?._id
+        )[0]?.[1]?._id
       );
+      if (typeof metaObjId === 'undefined'){setMetaObjId([])}
       console.log("useEffect MetadataAccordion. track: ",track,", mongoObjId: ",mongoObjId,", metaObjId: ",metaObjId);
     }, [content, recording, track, infoMusicList, mongoObjId, metaObjId]);
 
@@ -49,17 +52,9 @@ const MetadataAccordion = ({
     // TODO doubt about this...
     useEffect(() => {
       console.log("useEffect MetadataAccordion ~ ",{setBlockToggles, setExpandedRecording, setExpandedTrack});
-      // // Use the 'setBlockToggles' callback function when needed
-      // // Example: Call it when some event happens in the child component
-      // setBlockToggles();
-      // // Update 'expandedRecording' and 'expandedTrack' from within MetadataAccordion
-      // // Example: Call it when some event happens in the child component
-      // setExpandedRecording(true);
-      // setExpandedTrack(true);
-    }, [setBlockToggles, setExpandedRecording, setExpandedTrack]);
-  
+    }, [setBlockToggles, setExpandedRecording, setExpandedTrack]);  
 
-    console.log("mongoObjId: ",mongoObjId,", content: ",content,", metaObjId: ",metaObjId); // TODO wrong!!! Doesn't adapt. Might need to use content directly
+    console.log("> mongoObjId: ",mongoObjId,", content: ",content,", metaObjId: ",metaObjId); // TODO wrong!!! Doesn't adapt. Might need to use content directly
 
     return (
       <div className="metadata-accordion ">
@@ -81,18 +76,19 @@ const MetadataAccordion = ({
                   {Object.entries(
                     infoMusicList.filter((a) => a.lognumber === recording)[0]
                   ).map(([key, value]) =>
-                    key && value.length !== 0 &&
+                    key && value && value!= null && value.length !== 0 &&
                     (key === "(A/R/D) Event Type" ||
                       key === "(N) Named Artist(s)" ||
                       (key === "(E) Event Name") | (key === "(Y) Date") ||
                       key === "Label" ||
+                      key === "Producer" ||
+                      key === "Location" ||
                       key === "AudioSource" ||
                       key === "Musicians (instruments)" ||
                       key === "Composition" ||
                       key === "Composer(s)" ||
                       key === "Observations") ? (
                       <p key={key}>
-                        {" "}
                         {key === "(Y) Date" ? "Recording Date" : key}:{" "}
                         {key === "(Y) Date"
                           ? `${value.substr(5, 4)}/${value.substr(
@@ -100,7 +96,6 @@ const MetadataAccordion = ({
                               2
                             )}/${value.substr(1, 2)}`
                           : value}
-                        {/* {key}:{value} */}
                       </p>
                     ) : (
                       <></>
@@ -150,7 +145,8 @@ const MetadataAccordion = ({
                     .length === 0 ? (
                   <>
                     <div className="text-left">
-                      No metadata about the track (or a BGR. Track: {track})
+                      No metadata about the track.
+                      {/* (or a BGR. Track: {track}) */}
                     </div>
                     <br />
                   </>

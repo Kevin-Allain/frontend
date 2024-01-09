@@ -8,9 +8,12 @@ import "../../App.css"
 // import './Login.css';
 // import axios from '../../api/axios'
 
-// const baseUrl = "http://localhost:5000" // can be used for development
-const baseUrl= "https://jazzdap-backend.onrender.com"
+const baseUrl = "http://localhost:5000" // can be used for development
+// const baseUrl= "https://jazzdap-backend.onrender.com"
 // const baseUrl = axios.baseUrl;
+// for city university 
+// const baseUrl = "https://jazzdap.city.ac.uk/api/"
+
 const REGISTER_URL = 'loginUser';
 
 
@@ -40,6 +43,7 @@ export default function Login({ setToken }) {
     const handleSubmit = async e => {
         e.preventDefault();
         console.log("---- handleSubmit. username: ",username,", password: ",password);
+        console.log(`baseUrl: ${baseUrl}/${REGISTER_URL}`);
         setShowLoadingIcon(true);
         try {
             const response = await
@@ -67,11 +71,8 @@ export default function Login({ setToken }) {
                         axios.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`;
                         setShowLoadingIcon(false);
                     })
-                    .catch(err => {
-                        console.log(`catch err: ${err}`);
-                        setSuccess(false);
-                    })
-            // console.log("response?.data: ",response?.data); // undefined // const accessToken = response?.data?.accessToken; const roles = response?.data?.roles;
+                    .catch(err => { console.log(`catch err: ${err}`); setSuccess(false); })
+            console.log("response?.data: ",response?.data);
 
         } catch (err) {
             console.log("err: ", err);

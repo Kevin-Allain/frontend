@@ -20,7 +20,6 @@ const MyTabbedInterface = ({
   const [activeTrack, setActiveTrack] = useState(null);
   const [visibleTracks, setVisibleTracks] = useState({});
   const tracksContainerRef = useRef(null);
-
   
   const [expandedRecording, setExpandedRecording] = useState(false);
   const [expandedTrack, setExpandedTrack] = useState(false);
@@ -30,12 +29,7 @@ const MyTabbedInterface = ({
     setExpandedTrack(false);
   };
 
-
-  // About display for the MetadataAccordion
-
-
   // console.log("-- MyTabbedInterface. listLogNumbers: ", listLogNumbers, ", infoMusicList: ", infoMusicList, ", listSearchRes: ", listSearchRes,", listTracks: ",listTracks);
-
   let prettyNamesLogNumber = {};
   for (var i = 0; i < listLogNumbers.length; i++) {
     let lognumber = listLogNumbers[i];
@@ -43,21 +37,18 @@ const MyTabbedInterface = ({
     let a = infoMusicList.filter(a => a.lognumber === lognumber);
     if (a.length > 0) {
       a = a[0];
-      if (a.lognumber === lognumber && !lognumber.includes("BGR")) {
+      if (a.lognumber === lognumber ) { // && !lognumber.includes("BGR")
         let eventYear = a["Event Year"]==='', eventMonth = a["Event Month"]==='',eventDay = a["Event Day"]==='';
-
         prettyNamesLogNumber[lognumber] = (
           a["(E) Event Name"] +
           (eventYear ? '' : (' ' + a["Event Year"])) +
           (eventMonth ? '' : ('/' + a["Event Month"])) +
           (eventDay ? '' : ('/' + a["Event Day"]))
         );
-
       } else { prettyNamesLogNumber[lognumber] = lognumber }
     } else { prettyNamesLogNumber[lognumber] = lognumber }
   }
   let uniqueListLogNumbers = [...new Set(listLogNumbers)];
-  // console.log("|| uniqueListLogNumbers: ", uniqueListLogNumbers, ", prettyNamesLogNumber: ", prettyNamesLogNumber);
   let tracksForEvent = [];
   let newStruct = [];
   let trackToTitles = {};
@@ -67,7 +58,7 @@ const MyTabbedInterface = ({
     if (curSR.track) {
       let curTrack = curSR.track;
       let trackInfoCode = curTrack.replace('-T', '_')
-      if (curTrack.includes('SJA')) {
+      if (curTrack.includes('SJA') || curTrack.includes('BCC') || curTrack.includes('BGR')) {
         let selecInfo = infoMusicList.filter(a => a['SJA_ID'] === trackInfoCode)
         trackToTitles[curTrack] = selecInfo[0]['Track Title']
       }
@@ -76,7 +67,6 @@ const MyTabbedInterface = ({
       console.log("MASSIVE ISSUE. curSR: ",curSR);
     }
   }
-  console.log("trackToTitles: ",trackToTitles);
   let filteredUniqueSearchResTracks = [];
   
   // ok until now
@@ -120,20 +110,17 @@ const MyTabbedInterface = ({
   // console.log("newStruct: ", newStruct, ", listTracks: ", listTracks);
 
   const handleRecordingClick = (recording) => {
-    console.log("~~ handleRecordingClick, recording: ", recording, " ---- listSearchRes: ", listSearchRes, ", listLogNumbers: ", listLogNumbers);
+    // console.log("~~ handleRecordingClick, recording: ", recording, " ---- listSearchRes: ", listSearchRes, ", listLogNumbers: ", listLogNumbers);
     setActiveRecording(recording);
-    console.log("activeRecording: ", activeRecording);
 
     filteredUniqueSearchResTracks =
       [...new Set(listSearchRes.filter(a => a.lognumber === recording).map(a => a.track))];
-    console.log("filteredUniqueSearchResTracks: ",filteredUniqueSearchResTracks);
     setActiveTrack(null); // Reset the active track when a new recording is selected
   };
 
   const handleTrackClick = (track) => {
-    console.log("~~ handleTrackClick, track: ",track,", typeof track: ",typeof track,", activeRecording: ",activeRecording);
+    // console.log("~~ handleTrackClick, track: ",track,", typeof track: ",typeof track,", activeRecording: ",activeRecording);
     setActiveTrack(track);
-    console.log("activeTrack: ", activeTrack);
     setBlockToggles();
   };
 
@@ -178,7 +165,7 @@ const MyTabbedInterface = ({
                   }`}
                   onClick={() => handleRecordingClick(recording)}
                 >
-                  {prettyNamesLogNumber[recording].includes("03 N") || prettyNamesLogNumber[recording].includes("BGR")
+                  {prettyNamesLogNumber[recording].includes("03 N")  // || prettyNamesLogNumber[recording].includes("BGR")
                     ? prettyNamesLogNumber[recording] 
                     : (<>
                       {prettyNamesLogNumber[recording].substring(0,prettyNamesLogNumber[recording].lastIndexOf(" "))}
@@ -207,7 +194,7 @@ const MyTabbedInterface = ({
                     .map((a) => a.track)
                 ),
               ].map((a,ndx) =>
-                a.includes("SJA") ? (
+                (a.includes("SJA") || a.includes("BCC") || a.includes("BGR")) ? (
                   <>
                     <li
                       key={a+'_'+ndx}
@@ -250,7 +237,7 @@ const MyTabbedInterface = ({
           <div>
             <h2 className="text-lg font-semibold mb-4">
               {prettyNamesLogNumber[activeRecording]} -{" "}
-              {activeTrack.includes("SJA")
+              {(activeTrack.includes("SJA") || activeTrack.includes("BCC") || activeTrack.includes("BGR"))
                 ? trackToTitles[activeTrack]
                 : activeTrack}
             </h2>
