@@ -19,7 +19,6 @@ const arrayStrPitchesToNotes = (arrStrNotes) => {
   }
   return arrStrNotes.split("-").map((a, i) => MIDItoNote[a].replaceAll("s", "")).join('-'); 
 }
-
 // Making the assumption labels is thus: ["1963-12-20",...] and data: [4,...]
 const generateAllValuesYears = (labels,data) => {
   let result = {};
@@ -51,10 +50,17 @@ const generateAllValuesYears = (labels,data) => {
   return result;
 };
 
+ChartJS.register(LinearScale, CategoryScale, PointElement, BarElement, LineElement, Tooltip, Legend);
+
+
 const GraphsResults = ({ infoMusicList, oldSearch, listSearchRes }) => {
   console.log("~~ GraphsResults - infoMusicList: ", infoMusicList, ", oldSearch: ", oldSearch, ", listSearchRes: ", listSearchRes);
   const [showGraphs, setShowGraphs] = useState(false);
+  const [showLoadingIcon, setShowLoadingIcon] = useState(false);  
   const handleToggle = () => { setShowGraphs(!showGraphs); };
+
+  const [dataInput, setDataInput] = useState(infoMusicList);
+
   // Set up date in javascript format
   for (let a in infoMusicList) {
     infoMusicList[a].dateEvent = infoMusicList[a]['Event Year']
@@ -62,35 +68,15 @@ const GraphsResults = ({ infoMusicList, oldSearch, listSearchRes }) => {
       : null
   }
 
-  const dataInput = infoMusicList;
-  ChartJS.register(LinearScale, CategoryScale, PointElement, BarElement, LineElement, Tooltip, Legend);
-
-  // ---- Using a reference example
-  // Inspiration with useRef
-  // https://codesandbox.io/s/example-chartjs-and-useref-wlq78?file=/src/Components/ExampleChart.jsx:209-229
-  // We should: Set the selection of attributeMix in this component.
-  // Then: pass the data to components that will have the graph drawn.
-
   // Shared parameters
   const [typeGraph, setTypeGraph] = useState("bar");
   const [selectedAttributeMix, setSelectedAttributeMix] = useState("Matches per recording");
   const [selectedAxisY, setSelectedAxisY] = useState("Release Month");
-
   // attributeMix can relate to a single attribute. What matters is we set the selection for the axes
-  const attributeMix = [ 
-    "Matches per year",
-    "Matches per recording",
-    "Matches per track",
-    "Matches per artist",
-    "Matches per pattern",
-    "Matches per artist and year",
-    "Matches per pattern and year",
-    // "Matches per recording and track", // TODO
-    // "Occurences per recording and years" // TODO
-    // "Occurences per tracks and years" // kind of lame, right?
+  const attributeMix = [
+    "Matches per year", "Matches per recording", "Matches per track", "Matches per artist", "Matches per pattern", "Matches per artist and year", "Matches per pattern and year", // "Matches per recording and track", // "Occurences per recording and years" // "Occurences per tracks and years" // kind of lame, right?
   ];
 
-  const [showLoadingIcon, setShowLoadingIcon] = useState(false);
 
   // Derived parameters (might require making calls to the database)
   const [numMelodies, setMumMelodies] = useState(listSearchRes.length);
@@ -213,17 +199,12 @@ const GraphsResults = ({ infoMusicList, oldSearch, listSearchRes }) => {
     Object.entries(strCountOccurences_notesYear).filter(([key, value]) => {
       const [notes, datePart] = key.split('/');
       const yearPart = datePart.split('-')[0];  
-      // Filter out pairs where the length of the characters for years is different than 4
       return yearPart.length === 4;
     })
   );
 
   mapMatchToYear_iso = transformToObjectsArray(filteredMapCleanYear);
   mapMatchToYear_iso = sortByY(mapMatchToYear_iso);
-
-  // TODO 2023-12-22 Set this data for another view
-  // TODO base type of graph based on number of elements or something...! 
-  // We want to be able to compare ensembles
 
   const mapTrackTo_recording_count = {};
   [...new Set(listSearchRes.map(element => element.track.replace(/-T/g, '_')))]
@@ -241,13 +222,10 @@ const GraphsResults = ({ infoMusicList, oldSearch, listSearchRes }) => {
         tracksCount[b]
     }
     )
-  // let sortedArray_track_recording_count = {} 
-
   const recordingsCount = {}
   for (let i in mapRecordingToName) { 
     recordingsCount[mapRecordingToName[i]] = recordingsCount[mapRecordingToName[i]]? recordingsCount[mapRecordingToName[i]]+lognumbersCount[i] : lognumbersCount[i];
   }
-  
   // recordingsCount is OK
   const trackNamesCount = {};
   for (let i in mapTrackToName) { 
@@ -260,7 +238,6 @@ const GraphsResults = ({ infoMusicList, oldSearch, listSearchRes }) => {
   uniqueMelodiesStr.map(
     b => mapMelodyToCount[b] = listSearchRes.map(a => a.arrNotes.join('-')).filter(a => a === b).length
   );
-  
   // mapMelodyToCount is OK
   const melodyArtistsCount = {};
   const melodyCountPerArtistAndYearTime ={}
@@ -270,9 +247,7 @@ const GraphsResults = ({ infoMusicList, oldSearch, listSearchRes }) => {
       : tracksCount[i];//tracksCount[i.substring(0, i.lastIndexOf("_")) +"-T" +i.substring(i.lastIndexOf("_") + 1)];
   }
   // trackArtistsCount is OK
-  // console.log("- melodyArtistsCount: ",melodyArtistsCount, "count: ", Object.values(melodyArtistsCount).reduce((partialSum, a) => partialSum + a, 0));
 
-  // TODO Christmas Critical fix this...! Mediocre parameters
   // Current version is based on cases with only 1 occurence being filtered out if they represent less than 80%. Not very stable. A hard limit could be added.
   // if 1 represents a high number of the results... then just go with it...
   // if there is a low number of melodies (proper number to be determined), we don't filter
@@ -308,7 +283,6 @@ const GraphsResults = ({ infoMusicList, oldSearch, listSearchRes }) => {
   }
   console.log("- sortedMelodyCount: ", sortedMelodyCount,", length: ",Object.keys(sortedMelodyCount).length);
 
-
   const datesCount = {};
   let mapRecordingToDate = {};
   [...new Set(listSearchRes.map(element => element.lognumber))]
@@ -331,7 +305,6 @@ const GraphsResults = ({ infoMusicList, oldSearch, listSearchRes }) => {
     valuesTime = Object.values(datesCount)
     for (let i in keysTime) { objIso[keysTime[i]] = valuesTime[i] }
   }
-
   let sortedIso = {}
   for (let i in Object.keys(objIso).sort()){
       sortedIso[Object.keys(objIso).sort()[i]] = objIso[Object.keys(objIso).sort()[i]]
@@ -344,33 +317,19 @@ const GraphsResults = ({ infoMusicList, oldSearch, listSearchRes }) => {
     datasets: [
       {
         label: `${selectedAttributeMix} and ${selectedAxisY}`,
-        data: dataInput
+        data: infoMusicList
           .map((item, i) => selectedAttributeMix !== "Release Year" || ((selectedAttributeMix === "Release Year" || selectedAttributeMix === "Release Month") && Number(item[selectedAttributeMix]) !== 0) ||
             ((selectedAxisY === "Release Year" || selectedAxisY === "Release Month") && Number(item[selectedAttributeMix]) !== 0)
-              ? { x: Number(item[selectedAttributeMix]), y: Number(item[selectedAxisY]), } : null
-          )
-          .filter((a) => a)
-          .filter((a) => !isNaN(a.x) && !isNaN(a.y)),
+            ? { x: Number(item[selectedAttributeMix]), y: Number(item[selectedAxisY]), } : null
+          ).filter((a) => a).filter((a) => !isNaN(a.x) && !isNaN(a.y)),
         backgroundColor: "rgb(255, 99, 132)",
       },
     ],
   });
 
-  const [dataBubble, setDataBubble] = useState([]);
-
-  const [labelsXscatter, setLabelsXscatter] = useState([]);
-  const [labelsYscatter, setLabelsYscatter] = useState([]);
-  const [valsScatter, setValscatter] = useState([]);
-  // -- BarGraph
   // Sample data
   const [axisLabelXBarGraph, setAxisLabelXBarGraph] = useState([]);
   const [axisYBarGraph, setAxisYBarGraph] = useState([]);
-
-  // Chart data
-  const[dataBarGraph, setDataBarGraph] = useState({
-    labels: axisLabelXBarGraph,
-    datasets: [ { label: "Sample Bar Chart", data: axisYBarGraph, backgroundColor: "rgba(75,192,192,0.2)", borderColor: "rgba(75,192,192,1)", borderWidth: 1, }, ],
-  });
   const [arrayDataBubble, setArrayDataBubble] = useState([]);
   // ----
 
@@ -378,50 +337,52 @@ const GraphsResults = ({ infoMusicList, oldSearch, listSearchRes }) => {
     // This is called each time there is a call to change selectedAttributeMix or selectedAxisY
     const updateOptions = () => {
       console.log("-- updateOptions | typeGraph: ",typeGraph,", arrayDataBubble: ",arrayDataBubble,", selectedAttributeMix: ",selectedAttributeMix);
-
       if (typeGraph === "scatter") {
-        // The variables that should be changed: labelsXscatter, labelsYscatter, valsScatter
-        // let filledUpDates = generateAllValuesYears(Object.keys(sortedIso), Object.values(sortedIso));
-
-        if (selectedAttributeMix === "Matches per artist and year"){
-          setArrayDataBubble(sortedArray_track_artist_count_iso)
-        }
-        if (selectedAttributeMix === "Matches per pattern and year") {
-          setArrayDataBubble(mapMatchToYear_iso);
-        }
-
+        if (selectedAttributeMix === "Matches per artist and year"){ setArrayDataBubble(sortedArray_track_artist_count_iso) }
+        if (selectedAttributeMix === "Matches per pattern and year") { setArrayDataBubble(mapMatchToYear_iso); }
       } else if (typeGraph === "histogram") {
         let filledUpDates = generateAllValuesYears(Object.keys(sortedIso), Object.values(sortedIso));
         if (selectedAttributeMix === "Matches per year"){setAxisLabelXBarGraph(Object.keys(filledUpDates))}
         if (selectedAttributeMix === "Matches per year"){ setAxisYBarGraph(Object.values(filledUpDates)) }
       } else if (typeGraph === "bar") {
-        if (selectedAttributeMix === "Matches per track"){ setAxisLabelXBarGraph(Object.keys(trackNamesCount),"test") }
-        if (selectedAttributeMix === "Matches per recording"){ setAxisLabelXBarGraph(Object.keys(recordingsCount)) }
-        if (selectedAttributeMix === "Matches per pattern"){ setAxisLabelXBarGraph(Object.keys(sortedMelodyCount)) }
-        if (selectedAttributeMix === "Matches per artist"){ setAxisLabelXBarGraph(Object.keys(melodyArtistsCount)) }
-
-        // Work in progrress: adapt for this to be the data object in the datasets object, based on selectedAxisY        
-        if (selectedAttributeMix === "Matches per track") { setAxisYBarGraph(Object.values(trackNamesCount)) }
-        if (selectedAttributeMix === "Matches per recording") { setAxisYBarGraph(Object.values(recordingsCount)); }
-        if (selectedAttributeMix === "Matches per pattern") { setAxisYBarGraph(Object.values(sortedMelodyCount)); }
-        if (selectedAttributeMix === "Matches per artist"){ setAxisYBarGraph(Object.values(melodyArtistsCount)) }
-
+        if (selectedAttributeMix === "Matches per track"){ 
+          setAxisLabelXBarGraph(Object.keys(trackNamesCount));
+          setAxisYBarGraph(Object.values(trackNamesCount))
+        }
+        if (selectedAttributeMix === "Matches per recording"){ 
+          setAxisLabelXBarGraph(Object.keys(recordingsCount));
+          setAxisYBarGraph(Object.values(recordingsCount));
+        }
+        if (selectedAttributeMix === "Matches per pattern"){ 
+          setAxisLabelXBarGraph(Object.keys(sortedMelodyCount));
+          setAxisYBarGraph(Object.values(sortedMelodyCount));
+        }
+        if (selectedAttributeMix === "Matches per artist"){ 
+          setAxisLabelXBarGraph(Object.keys(melodyArtistsCount));
+          setAxisYBarGraph(Object.values(melodyArtistsCount));
+         }
+        // if (selectedAttributeMix === "Matches per track") { setAxisYBarGraph(Object.values(trackNamesCount)) }
+        // if (selectedAttributeMix === "Matches per recording") { setAxisYBarGraph(Object.values(recordingsCount)); }
+        // if (selectedAttributeMix === "Matches per pattern") { setAxisYBarGraph(Object.values(sortedMelodyCount)); }
+        // if (selectedAttributeMix === "Matches per artist"){ setAxisYBarGraph(Object.values(melodyArtistsCount)) }
       } else {
         console.log(`Unexpected ${typeGraph}`);
       }
     };
     updateOptions();
-  }, [selectedAttributeMix, selectedAxisY, infoMusicList, typeGraph]);
+  }, [infoMusicList, typeGraph]); // selectedAttributeMix // selectedAxisY
 
   // Set visualization type
   const handleChangeSelection = (value) => {
+    console.log("-- handleChangeSelection -- selectedAttributeMix: ",selectedAttributeMix);
     setShowLoadingIcon(true);
-    (value === "Matches per recording" || value === "Matches per track" || value === "Matches per pattern" || value === "Matches per artist") ?
-      setTypeGraph("bar")
-      : (value === "Matches per year") ?
-        setTypeGraph("histogram")
+    (value === "Matches per recording" || value === "Matches per track" || value === "Matches per pattern" || value === "Matches per artist")
+      ? setTypeGraph("bar")
+      : (value === "Matches per year")
+        ? setTypeGraph("histogram")
         : setTypeGraph("scatter");
     setSelectedAttributeMix(value);
+    console.log("-- end of handleChangeSelection -- selectedAttributeMix: ",selectedAttributeMix);
   };
 
   return (
@@ -444,52 +405,40 @@ const GraphsResults = ({ infoMusicList, oldSearch, listSearchRes }) => {
             selectedAttributeMix={selectedAttributeMix}
             onChange={handleChangeSelection}
           />
-          {/* <div className="mx-[0.5rem] inline-flex items-center">
-            <label>Information selection</label>
-            <select
-              className="mx-[0.5rem]"
-              onChange={(e) => handleChangeSelection(e.target.value)}
-              value={selectedAttributeMix}
-            >
-              {attributeMix.map((option) => (
-                <option key={option} value={option}>
-                  {" "}
-                  {option}{" "}
-                </option>
-              ))}
-            </select>
-          </div> */}
           {showLoadingIcon && <AiOutlineLoading className="spin"/>}
           <div className="chartArea">
             {(typeGraph === "bar" || typeGraph === "histogram") && (
+              <>Type is Bar, selectedAttributeMix: {selectedAttributeMix} <br/>
               <BarChart
                 data={axisYBarGraph}
                 labels={axisLabelXBarGraph}
                 title={selectedAttributeMix}
                 setShowLoadingIcon={setShowLoadingIcon}
               />
+              </>
             )}
             {typeGraph === "scatter" && (
-              <ScatterChart
-                dataBubble={
-                  (arrayDataBubble.length===0)
-                  ? (selectedAttributeMix==="Matches per pattern and year")
-                    ? setArrayDataBubble(mapMatchToYear_iso)
-                    : setArrayDataBubble(sortedArray_track_artist_count_iso)
-                  :arrayDataBubble
-                    .map((a) =>
-                      a.iso !== null
-                        ? { x: a.x, y: a.y, r: a.count }
-                        : null
-                    )
-                    .filter((a) => a !== null)
-                    .filter((a) => a.x !== "--")
+              <>Type is Scatter, selectedAttributeMix: {selectedAttributeMix} <br />
+                Keys: {Object.keys(arrayDataBubble[0]).toString()} <br />
+                Values: {Object.values(arrayDataBubble[0]).toString()} <br />
+                {(arrayDataBubble.length === 0)
+                  ? <><hr />No data in arrayDataBubble<hr /></>
+                  : <ScatterChart
+                    dataBubble={
+                      arrayDataBubble
+                        .map((a) => (a.iso !== null)
+                          ? { x: a.x, y: a.y, r: a.count }
+                          : null)
+                        .filter((a) => a !== null)
+                        .filter((a) => a.x !== "--")
+                    }
+                    title={selectedAttributeMix}
+                    // mergePerYear={selectedAttributeMix==="Matches per pattern and year"?false:true} // Need to adapt based on another attribute
+                    mergePerYear={true}
+                    setShowLoadingIcon={setShowLoadingIcon}
+                  />
                 }
-                title={selectedAttributeMix}
-                // mergePerYear={selectedAttributeMix==="Matches per pattern and year"?false:true} // Need to adapt based on another attribute
-                mergePerYear={true} // Need to adapt based on another attribute
-                setShowLoadingIcon={setShowLoadingIcon}
-              />
+              </>
             )}
           </div>
         </>

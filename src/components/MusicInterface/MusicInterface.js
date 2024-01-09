@@ -39,6 +39,7 @@ import EmbeddedWorkflowInteraction from '../Workflow/EmbeddedWorkflowInteraction
 
 import MyTabbedInterface from './MyTabbedInterface'
 import GraphsResults from '../VisComponents/GraphsResults';
+import GraphsResults2 from '../VisComponents/GraphsResults2';
 import AutoComplete from './AutoComplete';
 
 // For the filters
@@ -90,7 +91,7 @@ const MusicInterface = () => {
   const [searchFilterArtist, setSearchFilterArtist] = useState('artistName');
   // const textFilterArtistRef = useRef(''); const textFilterTrackRef = useRef(''); const textFilterRecordingRef = useRef('');
 
-  const [isFilterMode, setFilterMode] = useState(false);
+  const [isFilterMode, setFilterMode] = useState(true);
   const [textFilterTrack, setTextFilterTrack] = useState("");
   const [textFilterRecording, setTextFilterRecording] = useState("");
   const [textFilterArtist, setTextFilterArtist] = useState('');
@@ -524,10 +525,10 @@ const MusicInterface = () => {
           {/* This works, but we should focus on having other parameters first.
         <AutoComplete title={"Fruits"} potentialInputs={["Apple", "Banan7a","Bana44na","Banan4a","Orange35", "Orange", "Grapes", "Cherry"]}/> */}
         
-        <p className="text-white">
+        {/* <p className="text-white">
           Show filters:
           <ToggleSwitch checked={isFilterMode} onChange={handleToggle} />
-        </p>
+        </p> */}
         {isFilterMode && (
           <>
             <p className="text-white">
@@ -639,7 +640,9 @@ const MusicInterface = () => {
             {/* We should create a different type of component with some vis. */}
             {/* This is rendered twice?! */}
             {infoMusicList.length > 0 &&
-              (<GraphsResults infoMusicList={infoMusicList} oldSearch={oldSearch} listSearchRes={listSearchRes} />) }
+              (<GraphsResults infoMusicList={infoMusicList} oldSearch={oldSearch} listSearchRes={listSearchRes} />) 
+              // <GraphsResults2 infoMusicList={infoMusicList} oldSearch={oldSearch} listSearchRes={listSearchRes} />
+            }
             {/* {infoMusicList.length > 0 && ( <MemoizedGraphsResults infoMusicList={infoMusicList} oldSearch={oldSearch} listSearchRes={listSearchRes} /> )} */}
           {/* Is this rendered twice too?! */}
           {infoMusicList.length > 0 ? (
