@@ -494,7 +494,7 @@ const MusicInterface = () => {
       <div className="topTextSearch">
         <div className="disclaimerSearchPitch">
           Play the piano keys or enter a query based on pitch notes (from 0 to
-          127) separated with - characters. Enter between 4 and 10 notes.
+          127) separated with - characters. Enter between 5 and 10 notes.
         </div>
         <input
           type="text"
