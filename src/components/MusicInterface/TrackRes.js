@@ -60,7 +60,7 @@ const TrackRes = ({
             {currentItems.map((item, i) => (
               <div className="border-4 border-solid rounded">
                 <div className="text-left mx-[1rem] my-[0.25rem] ">
-                  Sample {startIndex+i}{" "}
+                  Match {startIndex+i}{" "}
                 </div>
                 <SampleRes
                   text={i + "-" + item.track}

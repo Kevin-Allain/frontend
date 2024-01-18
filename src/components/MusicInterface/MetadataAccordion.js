@@ -58,7 +58,6 @@ const MetadataAccordion = ({
 
     return (
       <div className="metadata-accordion ">
-      <div> content: {content}, recording: {recording}, track: {track},  mongoObjId: {mongoObjId}, metaObjId: {metaObjId} </div>
         <div className="metadata-header flex" onClick={toggleAccordionRecording} >
           <div className="metadata-title font-semibold"> Recording Interaction and Metadata </div>
           {expandedRecording ? ( <FaAngleUp className="metadata-icon" /> ) : ( <FaAngleDown className="metadata-icon" /> )}
