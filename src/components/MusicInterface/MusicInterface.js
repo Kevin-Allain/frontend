@@ -72,7 +72,7 @@ const MusicInterface = () => {
 
   const [playingMp3, setPlayingMp3] = useState(false);
   const [iconPlayMp3, setIconPlayMp3] = useState( <AiFillPlayCircle className="icon"></AiFillPlayCircle> );
-  // const [audioMp3, setAudioMp3] = useState( new Audio( "https://www.learningcontainer.com/wp-content/uploads/2020/02/Kalimba.mp3" ) );
+  const [audioMp3, setAudioMp3] = useState( new Audio( "https://www.learningcontainer.com/wp-content/uploads/2020/02/Kalimba.mp3" ) );
 
   const [notesTranslate, setNotesTranslate] = useState("");
   const [showNotesTranslate, setShowNotesTranslate] = useState(false);
