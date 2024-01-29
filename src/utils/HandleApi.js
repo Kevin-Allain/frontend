@@ -6,8 +6,8 @@ import { setIsLoading } from '../App';
  * Functions name match those done in Controllers.
  */
 
-const baseUrl = "https://jazzdap.city.ac.uk/api/" // can be used for development
-//const baseUrl = "http://localhost:5000" // can be used for development
+// const baseUrl = "https://jazzdap.city.ac.uk/api/" // can be used for development
+const baseUrl = "http://localhost:5000" // can be used for development
 // const baseUrl = "https://fullstack-proto-jazzdap-backend.onrender.com"
 // const baseUrl= "https://jazzdap-backend.onrender.com"
 
@@ -1288,6 +1288,13 @@ const createSearchMap = async (query, filterArtist = '', filterRecording = '', f
     .catch(err => console.log(err))
 }
 
+const getSliceMp3 = async (file = '', start = 0, end = 0) => {
+  console.log("handleAPI getSliceMp3", { file, start, end });
+  axios.get(`${baseUrl}/getSliceMp3`, {params: { file, start, end}})
+    .then((data) => {
+      console.log("then of getSliceMp3. data: ", data);
+    })
+}
 
 export {
   getAllJazzDap, addJazzDap, updateJazzDap, deleteJazzDap,
@@ -1305,5 +1312,6 @@ export {
   getDatabaseContent,
   getListFuzzyScores, getAllFuzzyScores, getListFuzzyDist,
   getFuzzyLevenshtein,
-  getSearchMap, createSearchMap
+  getSearchMap, createSearchMap,
+  getSliceMp3
 }

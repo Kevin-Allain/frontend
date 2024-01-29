@@ -35,6 +35,7 @@ import { BsInfoCircleFill } from 'react-icons/bs'
 import TrackRes from './TrackRes';
 import PianoRoll from '../VisComponents/PianoRoll';
 import Title from '../Presentation/Title';
+import AudioSlicer from './AudioSlicer';
 import EmbeddedWorkflowInteraction from '../Workflow/EmbeddedWorkflowInteraction'
 
 import MyTabbedInterface from './MyTabbedInterface'
@@ -333,25 +334,25 @@ const MusicInterface = () => {
   };
 
 
-  // function playMp3() {
-  //   if (playingMp3) { audioMp3.pause(); setIconPlayMp3(<AiFillPlayCircle className="icon"></AiFillPlayCircle>); } else { audioMp3.play(); setIconPlayMp3(<AiFillPauseCircle className="icon"></AiFillPauseCircle>); }
-  //   setPlayingMp3(!playingMp3);
-  // }
-  // function playToneSalamander() {
-  //   const now = Tone.now();
-  //   Tone.loaded().then(() => {
-  //     for (var i = 0; i < 3; i++) {
-  //       sampler.triggerAttackRelease( 
-  //         [ `E${i + 4}`, `F${i + 4}`, `C${i + 4}`, `G${i + 4}`, `B${i + 4}`, `A${i + 4}`, `A#${i + 4}`, ],
-  //         1,
-  //         now + i
-  //       );}
-  //   });
-  // }
-  // function resetMp3() {
-  //   if (playingMp3) { audioMp3.pause(); setIconPlayMp3(<AiFillPlayCircle></AiFillPlayCircle>); setPlayingMp3(!playingMp3); }
-  //   setAudioMp3( new Audio("https://www.learningcontainer.com/wp-content/uploads/2020/02/Kalimba.mp3") );
-  // }
+  function playMp3() {
+    if (playingMp3) { audioMp3.pause(); setIconPlayMp3(<AiFillPlayCircle className="icon"></AiFillPlayCircle>); } else { audioMp3.play(); setIconPlayMp3(<AiFillPauseCircle className="icon"></AiFillPauseCircle>); }
+    setPlayingMp3(!playingMp3);
+  }
+  function playToneSalamander() {
+    const now = Tone.now();
+    Tone.loaded().then(() => {
+      for (var i = 0; i < 3; i++) {
+        sampler.triggerAttackRelease( 
+          [ `E${i + 4}`, `F${i + 4}`, `C${i + 4}`, `G${i + 4}`, `B${i + 4}`, `A${i + 4}`, `A#${i + 4}`, ],
+          1,
+          now + i
+        );}
+    });
+  }
+  function resetMp3() {
+    if (playingMp3) { audioMp3.pause(); setIconPlayMp3(<AiFillPlayCircle></AiFillPlayCircle>); setPlayingMp3(!playingMp3); }
+    setAudioMp3( new Audio("https://www.learningcontainer.com/wp-content/uploads/2020/02/Kalimba.mp3") );
+  }
 
   function handleKeyPress(keyName) {
     setTextSearch((prevText) =>
@@ -484,8 +485,10 @@ const MusicInterface = () => {
       )}
       <Title firstLine="Search" secondLine="Interface" />
       {/* ==== Test Mp3 playing ==== */}
-      {/* <div className="playMusic" onClick={(c) => { playMp3(); }} > Play Test Mp3 </div>
-      <div className='playMusic' onClick={(c)=>{playToneSalamander();}}> Play from tone loaded </div> */}
+      <div className="playMusic" onClick={(c) => { playMp3(); }} > Play Test Mp3 </div>
+      <div className='playMusic' onClick={(c)=>{playToneSalamander();}}> Play from tone loaded </div>
+      {/* ==== Test Mp3 sliced ==== */}
+      <AudioSlicer/>
       {/* ==== Test Piano Roll === */}
       {/* <div className='pianoArea'> <h1>Piano Roll</h1> <PianoRoll notes={notes} occurrences={occurrences} durations={durations} width={600} height={200} /> </div> */}
       {/* ==== PIANO INPUT ==== */}
