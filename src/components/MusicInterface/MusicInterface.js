@@ -485,8 +485,8 @@ const MusicInterface = () => {
       )}
       <Title firstLine="Search" secondLine="Interface" />
       {/* ==== Test Mp3 playing ==== */}
-      <div className="playMusic" onClick={(c) => { playMp3(); }} > Play Test Mp3 </div>
-      <div className='playMusic' onClick={(c)=>{playToneSalamander();}}> Play from tone loaded </div>
+      {/* <div className="playMusic" onClick={(c) => { playMp3(); }} > Play Test Mp3 </div>
+      <div className='playMusic' onClick={(c)=>{playToneSalamander();}}> Play from tone loaded </div> */}
       {/* ==== Test Mp3 sliced ==== */}
       <AudioSlicer/>
       {/* ==== Test Piano Roll === */}
