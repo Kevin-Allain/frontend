@@ -2,19 +2,24 @@ import React, { useState, useEffect } from 'react';
 import { getSliceMp3 } from "../../utils/HandleApi";
 import { AiFillPlayCircle, AiFillPauseCircle, AiOutlineArrowRight, AiOutlineLoading } from 'react-icons/ai'
 
-const AudioSlicer = () => {
-    const [fileName, setFileName] = useState('');
+const AudioSlicer = (prop) => {
+    const [fileName, setFileName] = useState(prop.audioFile);
+    console.log("prop.audioFile: ",prop.audioFile,", fileName: ",fileName);
     const [start, setStart] = useState(0);
     const [end, setEnd] = useState(3);
     const [audioSrc, setAudioSrc] = useState(null);
-    const [audioUrl, setAudioUrl] = useState('https://jazzdap.city.ac.uk/public/sliced_audio_0_3.mp3');
+    const [audioUrl, setAudioUrl] = useState((fileName === '')
+        ? (`https://jazzdap.city.ac.uk/public/sliced_audio_${start}_${end}.mp3`)
+        : (`https://jazzdap.city.ac.uk/public/${fileName}_${start}_${end}.mp3`));
     const [fileExists, setFileExists] = useState(true);
 
-
     const [playingMp3, setPlayingMp3] = useState(false);
-    const [iconPlayMp3, setIconPlayMp3] = useState(<AiFillPlayCircle className="icon"/>);
+    const [iconPlayMp3, setIconPlayMp3] = useState(<AiFillPlayCircle className="icon" />);
     const [audioMp3, setAudioMp3] = useState(
-        new Audio( `https://jazzdap.city.ac.uk/public/sliced_audio_${start}_${end}.mp3`)
+        new Audio((fileName === '')
+            ? (`https://jazzdap.city.ac.uk/public/sliced_audio_${start}_${end}.mp3`).replace(/ /g, "%20")
+            : (`https://jazzdap.city.ac.uk/public/${fileName}_${start}_${end}.mp3`).replace(/ /g, "%20")
+        )
     );
 
     const handleSliceButtonClick = async () => {
@@ -31,31 +36,26 @@ const AudioSlicer = () => {
         }
     };
 
-    const playMp3 = (start, end) => {
+    const playMp3 = (filename='',start, end) => {
         console.log("playMp3 | ", { start, end });
         try {
             setStart(start); setEnd(end);
-            setAudioMp3(new Audio(`https://jazzdap.city.ac.uk/public/sliced_audio_${start}_${end}.mp3`));
+            let audioStr = (fileName == '')
+                ? `https://jazzdap.city.ac.uk/public/sliced_audio_${start}_${end}.mp3`
+                : `https://jazzdap.city.ac.uk/public/${fileName}_${start}_${end}.mp3`
+            setAudioMp3(new Audio(audioStr.replace(/ /g, "%20")));
             console.log("audioMp3: ", audioMp3);
-            if (playingMp3) {
-                audioMp3.pause();
-                setIconPlayMp3(<AiFillPlayCircle className="icon" />);
-            } else {
-                audioMp3.play();
-                setIconPlayMp3(<AiFillPauseCircle className="icon" />);
-            }
+            // No need to worry about this yet
+            // if (playingMp3) { audioMp3.pause(); setIconPlayMp3(<AiFillPlayCircle className="icon" />);
+            // } else { audioMp3.play(); setIconPlayMp3(<AiFillPauseCircle className="icon" />); }
+            audioMp3.play();
+            setIconPlayMp3(<AiFillPauseCircle className="icon" />);
             setPlayingMp3(!playingMp3);
         } catch (error) {
             alert("File not found")
         }
     }
-    const resetMp3 = () => {
-        if (playingMp3) {
-            audioMp3.pause();
-            setIconPlayMp3(<AiFillPlayCircle></AiFillPlayCircle>); setPlayingMp3(!playingMp3);
-        }
-        // setAudioMp3(new Audio("https://www.learningcontainer.com/wp-content/uploads/2020/02/Kalimba.mp3"));
-    }
+    // const resetMp3 = () => { if (playingMp3) { audioMp3.pause(); setIconPlayMp3(<AiFillPlayCircle></AiFillPlayCircle>); setPlayingMp3(!playingMp3); } }
 
     useEffect(() => {
         const checkFileExists = async () => {
@@ -78,10 +78,10 @@ const AudioSlicer = () => {
 
     return (
         <div style={{"color":"white"}}>
-            <h1>Test slicer</h1>
+            <p>Test slicer</p>
             <label>
                 File name:
-                <input type="string" style={{"color":"black"}} value={fileName} onChange={(e)=> setFileName(e.target.value)} />
+                <input type="string" style={{"color":"black"}} value={fileName.toString()} onChange={(e)=> setFileName(e.target.value)} />
             </label>
             <label>
                 Start Time:
@@ -96,16 +96,16 @@ const AudioSlicer = () => {
                 <div> <p>Preview Sliced Audio:</p> <audio controls> <source src={audioSrc} type="audio/mp3" /> Your browser does not support the audio tag. </audio> </div> )} */}
             <br />
             <div>
-                <h1>Preview Sliced Audio</h1>
-                <div
-                    className="playMusic"
-                    onClick={(c) => { playMp3(0, 3); }}
-                > Play Test sliced Mp3 (0 to 3) </div>
-                <div
-                    className="playMusic"
-                    onClick={(c) => { playMp3(start, end); }}
-                > Play Test sliced Mp3 (start and end: ${start} and ${end})
-                </div>
+                <AiFillPlayCircle
+                    className="icon"
+                    style={{ color: 'red' }}
+                    onClick={(c) => { playMp3('', start, end); }}
+                />
+                {/* <div className="playMusic" onClick={(c) => { playMp3(start, end); }} > Play Test sliced Mp3 (start and end: ${start} and ${end}) </div> */}
+                <AiFillPlayCircle
+                    className="icon"
+                    onClick={(c) => { playMp3(fileName, start, end); }}
+                />
                 {/* {fileExists ? ( <audio controls> <source src={audioUrl} type="audio/mp3" /> Your browser does not support the audio tag. </audio> ) : ( <p>File does not exist.</p> )} */}
             </div>
         </div>

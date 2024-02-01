@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { FiPlayCircle } from 'react-icons/fi'
 import MusicInfo from "./MusicInfo"
+import AudioSlicer from "./AudioSlicer"
 import AnnotationSystem from '../Annotation/AnnotationSystem';
 import EmbeddedWorkflowInteraction from '../Workflow/EmbeddedWorkflowInteraction';
 import PianoRoll from '../VisComponents/PianoRoll';
@@ -50,18 +51,13 @@ const SampleRes = ({
             {/* <div className='contentSample'> </div> */}
             <div className='pianoArea'>
                 <PianoRoll
-                    notes={notes}
-                    occurrences={times}
-                    durations={durations}
-                    width={600}
-                    height={200}
+                    notes={notes} occurrences={times} durations={durations} width={600} height={200}
                 />
             </div>
-            {/* <table>
-                <thead> <tr> <th>Recording</th> <th>Sample Duration</th> <th>Notes</th> <th>Times</th> <th>Durations</th> <th>Distance (difference to query)</th> </tr> </thead>
-                <tbody> <tr> <th>{lognumber}</th> <th>{Number(length.toFixed(2))}</th> <th>{notes}</th> <th>{times}</th> <th>{durations}</th> <th>{distance}</th> </tr> </tbody>
-            </table> */}
-            
+            <p>Notes: {notes.split('-').map(a=>MIDItoNote[a].replace(/s/g, "")).toString().replace(/,/g, "-")}</p>
+            <p>Text: {text}</p>
+            <AudioSlicer audioFile={'08 The Entertainer'}/>
+            {/* <table> <thead> <tr> <th>Recording</th> <th>Sample Duration</th> <th>Notes</th> <th>Times</th> <th>Durations</th> <th>Distance (difference to query)</th> </tr> </thead> <tbody> <tr> <th>{lognumber}</th> <th>{Number(length.toFixed(2))}</th> <th>{notes}</th> <th>{times}</th> <th>{durations}</th> <th>{distance}</th> </tr> </tbody> </table> */}            
             {/* <PianoRoll notes={notes.split("-").map(Number)} occurrences={times.split("-").map(Number)} durations={durations.split("-").map(Number)} width={600} height={150} /> */}
 
             {/* {notes && console.log(notes.split("-").map(Number))} */}
