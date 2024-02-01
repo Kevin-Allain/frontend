@@ -43,6 +43,8 @@ const SampleRes = ({
     funcPlayMIDI, 
     // getMusicInfo, infoMusicList, 
  }) => {
+
+    const sja_id = text.split('-')[1]+'_'+text.split('-')[2].replace('T','');
     
     return (
         <div className="sampleres" key={key}>
@@ -56,7 +58,9 @@ const SampleRes = ({
             </div>
             <p>Notes: {notes.split('-').map(a=>MIDItoNote[a].replace(/s/g, "")).toString().replace(/,/g, "-")}</p>
             <p>Text: {text}</p>
-            <AudioSlicer audioFile={'08 The Entertainer'}/>
+            <p>SJA_ID: {sja_id}</p>
+            {/* I figure we should already know if there is an existing file... To avoid making too many searches? */}
+            <AudioSlicer sja_id={sja_id}/>
             {/* <table> <thead> <tr> <th>Recording</th> <th>Sample Duration</th> <th>Notes</th> <th>Times</th> <th>Durations</th> <th>Distance (difference to query)</th> </tr> </thead> <tbody> <tr> <th>{lognumber}</th> <th>{Number(length.toFixed(2))}</th> <th>{notes}</th> <th>{times}</th> <th>{durations}</th> <th>{distance}</th> </tr> </tbody> </table> */}            
             {/* <PianoRoll notes={notes.split("-").map(Number)} occurrences={times.split("-").map(Number)} durations={durations.split("-").map(Number)} width={600} height={150} /> */}
 

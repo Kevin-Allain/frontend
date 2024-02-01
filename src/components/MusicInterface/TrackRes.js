@@ -6,7 +6,8 @@ import {
     addAnnotation,
     updateAnnotation,
     getAnnotations,
-    deleteAnnotation
+    deleteAnnotation,
+    doesMp3exist
 } from "../../utils/HandleApi";
 import AnnotationSystem from '../Annotation/AnnotationSystem';
 import EmbeddedWorkflowInteraction from '../Workflow/EmbeddedWorkflowInteraction';
@@ -24,6 +25,10 @@ const TrackRes = ({
     testPerformances = false
 }) => {
     console.log("TrackRes - ",{ text, infoMusicList, listSearchRes, formatAndPlay, getMusicInfo, setInfoMusicList, testPerformances     })
+
+    const sja_id = text.split('-')[1]+'_'+text.split('-')[2].replace('T','');
+
+    const mp3Exists = doesMp3exist(sja_id);
 
     const [startIndex, setStartIndex] = useState(0);
     const itemsPerPage = 20;

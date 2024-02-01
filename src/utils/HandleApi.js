@@ -1296,6 +1296,10 @@ const getSliceMp3 = async (file = '', start = 0, end = 0) => {
     })
 }
 
+const doesMp3exist = async(sja_id) => {
+  // TODO
+}
+
 export {
   getAllJazzDap, addJazzDap, updateJazzDap, deleteJazzDap,
   getMusicMIDI, getSampleMIDI, getMatchLevenshteinDistance,
@@ -1313,5 +1317,6 @@ export {
   getListFuzzyScores, getAllFuzzyScores, getListFuzzyDist,
   getFuzzyLevenshtein,
   getSearchMap, createSearchMap,
-  getSliceMp3
+  getSliceMp3,
+  doesMp3exist
 }

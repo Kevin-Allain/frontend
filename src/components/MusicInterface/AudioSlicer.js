@@ -2,9 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { getSliceMp3 } from "../../utils/HandleApi";
 import { AiFillPlayCircle, AiFillPauseCircle, AiOutlineArrowRight, AiOutlineLoading } from 'react-icons/ai'
 
-const AudioSlicer = (prop) => {
-    const [fileName, setFileName] = useState(prop.audioFile);
-    console.log("prop.audioFile: ",prop.audioFile,", fileName: ",fileName);
+const AudioSlicer = (props) => {
+    const sja_id = props.sja_id;
+    const [fileName, setFileName] = 'sliced_audio'; // TODO this is only about test. Should be removed later
+    console.log("prop.audioFile: ",props.audioFile,", fileName: ",fileName);
     const [start, setStart] = useState(0);
     const [end, setEnd] = useState(3);
     const [audioSrc, setAudioSrc] = useState(null);
@@ -81,7 +82,7 @@ const AudioSlicer = (prop) => {
             <p>Test slicer</p>
             <label>
                 File name:
-                <input type="string" style={{"color":"black"}} value={fileName.toString()} onChange={(e)=> setFileName(e.target.value)} />
+                <input type="string" style={{ "color": "black" }} value={typeof fileName === 'object' ? fileName.toString() : fileName} onChange={(e) => setFileName(e.target.value)} />
             </label>
             <label>
                 Start Time:
