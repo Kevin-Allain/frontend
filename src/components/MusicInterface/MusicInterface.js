@@ -488,7 +488,8 @@ const MusicInterface = () => {
       {/* <div className="playMusic" onClick={(c) => { playMp3(); }} > Play Test Mp3 </div>
       <div className='playMusic' onClick={(c)=>{playToneSalamander();}}> Play from tone loaded </div> */}
       {/* ==== Test Mp3 sliced ==== */}
-      <AudioSlicer sja_id={"hcuiehuicehiceTEST"}/>
+      {/* <AudioSlicer sja_id={"hcuiehuicehiceTEST"}/> */}
+      
       {/* ==== Test Piano Roll === */}
       {/* <div className='pianoArea'> <h1>Piano Roll</h1> <PianoRoll notes={notes} occurrences={occurrences} durations={durations} width={600} height={200} /> </div> */}
       {/* ==== PIANO INPUT ==== */}

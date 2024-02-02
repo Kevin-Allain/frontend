@@ -12,7 +12,7 @@ const PianoRoll = ({ notes, occurrences, durations, width, height }) => {
     if (typeof notes === 'string') { notes = notes.split('-').map(a => Number(a)) };
     if (typeof occurrences === 'string') { occurrences = occurrences.split('-').map(a => Number(a)) };
     if (typeof durations === 'string') { durations = durations.split('-').map(a => Number(a)) };
-    // console.log("Piano Roll: ", { notes, occurrences, durations, width, height }, typeof (notes), typeof occurrences, typeof durations, typeof width, typeof height);
+    console.log("Piano Roll: ", { notes, occurrences, durations, width, height }, typeof (notes), typeof occurrences, typeof durations, typeof width, typeof height);
 
     const svg = d3.select(svgRef.current);
     svg.selectAll("*").remove(); // Clear the SVG by removing all elements

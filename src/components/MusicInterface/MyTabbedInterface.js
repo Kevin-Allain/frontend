@@ -188,40 +188,19 @@ const MyTabbedInterface = ({
             <>
               {/* {listSearchRes.filter(a=> a.lognumber === activeRecording).map(a => a.track)}  */}
               {[
-                ...new Set(
-                  listSearchRes
+                ...new Set( listSearchRes
                     .filter((a) => a.lognumber === activeRecording)
                     .map((a) => a.track)
                 ),
               ].map((a,ndx) =>
                 (a.includes("SJA") || a.includes("BCC") || a.includes("BGR")) ? (
-                  <>
-                    <li
-                      key={a+'_'+ndx}
-                      className={`cursor-pointer mb-2 ${a} ${
-                        activeTrack === a ? "text-orange-500" : ""
-                      }`}
+                  <> <li key={a+'_'+ndx} className={`cursor-pointer mb-2 ${a} ${activeTrack === a ? "text-orange-500" : ""}`}
                       onClick={() => handleTrackClick(a)}
-                    >
-                      {" "}
-                      {trackToTitles[a]}
-                    </li>
-                    <hr />
-                  </>
+                    > {" "} {trackToTitles[a]} </li> <hr /> </>
                 ) : (
-                  <>
-                    <li
-                      key={a+'_'+ndx}
-                      className={`cursor-pointer mb-2 ${a} ${
-                        activeTrack === a ? "text-orange-500" : ""
-                      }`}
+                  <> <li key={a+'_'+ndx} className={`cursor-pointer mb-2 ${a} ${ activeTrack === a ? "text-orange-500" : ""}`}
                       onClick={() => handleTrackClick(a)}
-                    >
-                      {" "}
-                      {a}
-                    </li>
-                    <hr />
-                  </>
+                    > {" "} {a} </li> <hr /> </>
                 )
               )}
             </>

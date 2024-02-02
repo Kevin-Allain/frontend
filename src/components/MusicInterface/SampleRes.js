@@ -41,26 +41,52 @@ const SampleRes = ({
     distance, 
     idDBNotes,
     funcPlayMIDI, 
+    mp3Exists
     // getMusicInfo, infoMusicList, 
  }) => {
-
+    console.log("SampleRes - mp3Exists: ",mp3Exists);
     const sja_id = text.split('-')[1]+'_'+text.split('-')[2].replace('T','');
-    
+    console.log("SampleRes - sja_id: ",sja_id);
+
+    let arrTimes = [];
+    if (typeof times === 'string') { arrTimes = times.split('-').map(a => Number(a)) };
+    let arrDurations = [];
+    if (typeof durations === 'string') { arrDurations = durations.split('-').map(a => Number(a)) };
+
+
     return (
         <div className="sampleres" key={key}>
             {/* <div className="text"> <h2>Song: {text.substr(text.indexOf("-") + 1)} </h2> </div> <AnnotationSystem type={"track"} info={text.substr(text.indexOf("-") + 1)} /> */}
             {/* ==== Piano Roll === */}
             {/* <div className='contentSample'> </div> */}
+            {/* Should only be called when the user clicks on a button in practice...*/}
             <div className='pianoArea'>
                 <PianoRoll
-                    notes={notes} occurrences={times} durations={durations} width={600} height={200}
+                    notes={notes} 
+                    occurrences={times} 
+                    durations={durations} 
+                    width={600} 
+                    height={200}
                 />
             </div>
             <p>Notes: {notes.split('-').map(a=>MIDItoNote[a].replace(/s/g, "")).toString().replace(/,/g, "-")}</p>
             <p>Text: {text}</p>
             <p>SJA_ID: {sja_id}</p>
-            {/* I figure we should already know if there is an existing file... To avoid making too many searches? */}
-            <AudioSlicer sja_id={sja_id}/>
+            <p>Start: {arrTimes[0]} / End: {arrTimes.at(-1)+arrDurations.at(-1)}</p>
+            <p>Changed Start: {Math.floor(Number(arrTimes[0]))} / Changed End: {Math.ceil(Number(arrTimes.at(-1)+arrDurations.at(-1)))}</p>
+
+            {/* For testing */}
+            {/* <AudioSlicer sja_id={sja_id} test={true}/> */}
+            {/* TODO How it should be (and hopefully work) */}
+            {mp3Exists && 
+                <AudioSlicer 
+                    sja_id = {sja_id} 
+                    first_second = {Math.floor(Number(arrTimes[0]))}
+                    last_second = {Math.ceil(Number(arrTimes.at(-1)+arrDurations.at(-1)))}
+                    test = {false}
+                />
+            }
+
             {/* <table> <thead> <tr> <th>Recording</th> <th>Sample Duration</th> <th>Notes</th> <th>Times</th> <th>Durations</th> <th>Distance (difference to query)</th> </tr> </thead> <tbody> <tr> <th>{lognumber}</th> <th>{Number(length.toFixed(2))}</th> <th>{notes}</th> <th>{times}</th> <th>{durations}</th> <th>{distance}</th> </tr> </tbody> </table> */}            
             {/* <PianoRoll notes={notes.split("-").map(Number)} occurrences={times.split("-").map(Number)} durations={durations.split("-").map(Number)} width={600} height={150} /> */}
 

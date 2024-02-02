@@ -1288,20 +1288,22 @@ const createSearchMap = async (query, filterArtist = '', filterRecording = '', f
     .catch(err => console.log(err))
 }
 
-const getSliceMp3 = async (file = '', start = 0, end = 0) => {
+const getSliceMp3 = async (file = '', start = 0, end = 0, setSlicedMp3file) => {
   console.log("handleAPI getSliceMp3", { file, start, end });
   axios.get(`${baseUrl}/getSliceMp3`, {params: { file, start, end}})
-    .then((data) => {
-      console.log("then of getSliceMp3. data: ", data);
+    .then((d) => {
+      console.log("then of getSliceMp3. d: ", d);
+      setSlicedMp3file(d.data.slicedAudio);
     })
 }
 
 // TODO Maybe add a setter for a binary value to be passed to the elements that would later query fpr getSlicesMp3?
-const doesMp3exist = async(sja_id) => {
+const doesMp3exist = async(sja_id, setMp3Exists) => {
   console.log("handleAPI doesMp3exist", { sja_id });
   axios.get(`${baseUrl}/doesMp3exist`, {params: { sja_id}})
-  .then((data) => {
-    console.log("then of doesMp3exist. data: ", data);
+  .then((d) => {
+    console.log("then of doesMp3exist. d.data: ", d.data);
+    setMp3Exists(d.data.exists);
   })
 }
 
