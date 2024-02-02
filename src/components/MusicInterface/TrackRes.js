@@ -26,8 +26,8 @@ const TrackRes = ({
 }) => {
     console.log("TrackRes - ",{ text, infoMusicList, listSearchRes, formatAndPlay, getMusicInfo, setInfoMusicList, testPerformances     })
 
-    const sja_id = text.split('-')[1]+'_'+text.split('-')[2].replace('T','');
-
+    const sja_id = text.split('-')[0]+'_'+text.split('-')[1].replace('T','');
+    console.log("sja_id: ",sja_id);
     const mp3Exists = doesMp3exist(sja_id);
 
     const [startIndex, setStartIndex] = useState(0);

@@ -1296,8 +1296,13 @@ const getSliceMp3 = async (file = '', start = 0, end = 0) => {
     })
 }
 
+// TODO Maybe add a setter for a binary value to be passed to the elements that would later query fpr getSlicesMp3?
 const doesMp3exist = async(sja_id) => {
-  // TODO
+  console.log("handleAPI doesMp3exist", { sja_id });
+  axios.get(`${baseUrl}/doesMp3exist`, {params: { sja_id}})
+  .then((data) => {
+    console.log("then of doesMp3exist. data: ", data);
+  })
 }
 
 export {
