@@ -6,8 +6,8 @@ import { setIsLoading } from '../App';
  * Functions name match those done in Controllers.
  */
 
-// const baseUrl = "https://jazzdap.city.ac.uk/api/" // can be used for development
-const baseUrl = "http://localhost:5000" // can be used for development
+const baseUrl = "https://jazzdap.city.ac.uk/api/" // can be used for development
+// const baseUrl = "http://localhost:5000" // can be used for development
 // const baseUrl = "https://fullstack-proto-jazzdap-backend.onrender.com"
 // const baseUrl= "https://jazzdap-backend.onrender.com"
 
@@ -1288,12 +1288,22 @@ const createSearchMap = async (query, filterArtist = '', filterRecording = '', f
     .catch(err => console.log(err))
 }
 
-const getSliceMp3 = async (file = '', start = 0, end = 0, setSlicedMp3file) => {
+const getSliceMp3 = async (file = '', start = 0, end = 0, sja_code_audioUrl,setAudioUrl=null) => {
   console.log("handleAPI getSliceMp3", { file, start, end });
   axios.get(`${baseUrl}/getSliceMp3`, {params: { file, start, end}})
     .then((d) => {
       console.log("then of getSliceMp3. d: ", d);
-      setSlicedMp3file(d.data.slicedAudio);
+      if (setAudioUrl!== null){
+        if(d.data.slicedAudio.includes('/mp3/')){
+          console.log(" --> d.data.slicedAudio (includes /mp3/): ",d.data.slicedAudio);
+          setAudioUrl('https://jazzdap.city.ac.uk/public/'+d.data.slicedAudio.split('/').at(-1));
+        } else {
+          setAudioUrl(d.data.slicedAudio);
+        }
+      } else {
+        console.log("should never happen...");
+        return (d.data.slicedAudio);
+      }
     })
 }
 
