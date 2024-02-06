@@ -181,7 +181,7 @@ const MyTabbedInterface = ({
                           .map((a) => a.track)
                       ),
                     ].map((track_id,ndx) =>                      
-                      <div key={track_id+'_'+ndx} className={` mx-[4rem] cursor-pointer ${track_id} text-left}`} 
+                      <div key={track_id+'_'+ndx} className={` mx-[2rem] cursor-pointer ${track_id} text-left}`} 
                       // onClick={() => handleTrackClick(a)} 
                       > 
                             {/* Kind of sucks... We should have a button for display of information for recording (honestly who cares about track metadata, there's none) */}
