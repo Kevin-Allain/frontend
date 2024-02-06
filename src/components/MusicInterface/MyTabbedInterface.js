@@ -130,10 +130,12 @@ const MyTabbedInterface = ({
   
 
   return (
-    <div className="flex h-[40rem] bg-gray-100">
+    <div className="inline h-[45rem] bg-gray-100">
       {/* Sidebar with recording tabs */}
-      <div className="w-1/8 p-4 overflow-y-auto custom-scrollbar">
-        <h2 className="text-lg font-semibold mb-4">Recordings</h2>
+      {/* <div className="w-1/8 p-4 overflow-y-auto custom-scrollbar"> */}
+      <div className="overflow-y-auto custom-scrollbar">
+        {/* <h2 className="text-lg font-semibold mb-4">Recordings</h2> */}
+        {/* <h2 className="text-lg font-semibold ">Recordings</h2> */}
         <ul>
           {listLogNumbers &&
             listLogNumbers
@@ -158,35 +160,63 @@ const MyTabbedInterface = ({
                 }
               })
               .map((recording,ndx) => (
-                <li
-                  key={recording+'_'+ndx}
-                  className={`text-sm cursor-pointer mb-2 ${recording} ${
-                    activeRecording === recording ? "text-orange-500" : ""
-                  }`}
-                  onClick={() => handleRecordingClick(recording)}
-                >
-                  {prettyNamesLogNumber[recording].includes("03 N")  // || prettyNamesLogNumber[recording].includes("BGR")
+                <>
+                <h2 className="font-semibold text-left mx-[0.5rem]" key={recording+'_'+ndx}>Recording: { prettyNamesLogNumber[recording].includes("03 N")
                     ? prettyNamesLogNumber[recording] 
                     : (<>
-                      {prettyNamesLogNumber[recording].substring(0,prettyNamesLogNumber[recording].lastIndexOf(" "))}
-                      <br/>
+                      {prettyNamesLogNumber[recording].substring(0,prettyNamesLogNumber[recording].lastIndexOf(" "))}{" "}
                       {prettyNamesLogNumber[recording].substring(prettyNamesLogNumber[recording].lastIndexOf(" "),prettyNamesLogNumber[recording].length)}
-                      </>)
-                  }
+                      </>) } 
+                  </h2>
+                  {/* Addition: have the Tracks listed underneath the Recordings */}
                   <hr />
-                </li>
+                  <>
+                  <div className="text-left mx-[2rem]">
+                    <p className="font-semibold">Track(s)</p>
+                    {/* {listSearchRes.filter(a=> a.lognumber === activeRecording).map(a => a.track)}  */}
+                    {/* This should be changed to a table structure I think... */}
+                    {[
+                      ...new Set( listSearchRes
+                          .filter((a) => a.lognumber === recording)
+                          .map((a) => a.track)
+                      ),
+                    ].map((track_id,ndx) =>                      
+                      <div key={track_id+'_'+ndx} className={` mx-[4rem] cursor-pointer ${track_id} text-left}`} 
+                      // onClick={() => handleTrackClick(a)} 
+                      > 
+                            {/* Kind of sucks... We should have a button for display of information for recording (honestly who cares about track metadata, there's none) */}
+                            {/* <MetadataAccordion
+                              content={listSearchRes.filter( (b) => b.track === track_id )[0].arrIdNotes[0]} 
+                              recording={recording}
+                              track={track_id}
+                              findMatchRecording={findMatchRecording}
+                              infoMusicList={infoMusicList}
+                              structData={ newStruct[ newStruct.findIndex( (c) => c.recordingName === recording ) ] }
+                              setBlockToggles={setBlockToggles}
+                              expandedRecording={expandedRecording}
+                              setExpandedRecording={setExpandedRecording}
+                              expandedTrack={expandedTrack}
+                              setExpandedTrack={setExpandedTrack}
+                            /> */}
+                            {trackToTitles[track_id]} 
+                      </div>
+                    )}
+                    </div>
+                  </>                  
+
+                  <hr />
+                
+                </>
               ))}
         </ul>
       </div>
 
       {/* Sidebar with track tabs */}
-      <div className="w-1/8 p-4 overflow-y-auto custom-scrollbar">
+      {/* <div className="w-1/8 p-4 overflow-y-auto custom-scrollbar">
         <h2 className="text-lg font-semibold mb-4">Tracks</h2>
-        {/* <> {"listTracks.length: "+listTracks.length+", listTracks[0]: "+listTracks[0]} </> */}
         <ul>
           {activeRecording ? (
             <>
-              {/* {listSearchRes.filter(a=> a.lognumber === activeRecording).map(a => a.track)}  */}
               {[
                 ...new Set( listSearchRes
                     .filter((a) => a.lognumber === activeRecording)
@@ -208,10 +238,10 @@ const MyTabbedInterface = ({
             <></>
           )}
         </ul>
-      </div>
+      </div> */}
 
       {/* Content based on active recording and track */}
-      <div className="w-3/4 p-4 overflow-y-auto custom-scrollbar">
+      {/* <div className="w-3/4 p-4 overflow-y-auto custom-scrollbar">
         {activeRecording && activeTrack && (
           <div>
             <h2 className="text-lg font-semibold mb-4">
@@ -220,7 +250,6 @@ const MyTabbedInterface = ({
                 ? trackToTitles[activeTrack]
                 : activeTrack}
             </h2>
-            {/* Accordion for Recording AND Track */}
             <div className="border rounded border-2 mb-[0.5rem]">
               <MetadataAccordion
                 content={listSearchRes.filter(
@@ -244,8 +273,6 @@ const MyTabbedInterface = ({
                 setExpandedTrack={setExpandedTrack}
               />
             </div>
-            {/* We should change TrackRes I think... */}
-            {/* {activeTrack} and its TrackRes: */}
             <TrackRes
               key={"Track_" + activeTrack}
               text={activeTrack}
@@ -260,7 +287,7 @@ const MyTabbedInterface = ({
             />
           </div>
         )}
-      </div>
+      </div> */}
     </div>
   );
 };
