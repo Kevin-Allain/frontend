@@ -5,6 +5,10 @@ import "./MyTabbedInterface.css";
 import { AiOutlineLoading } from "react-icons/ai";
 import TrackRes from "./TrackRes"; // You should adjust the import path
 import MetadataAccordion from "./MetadataAccordion";
+import MIDItoNote from "./MIDItoNote.json"
+import {BsFillInfoCircleFill} from 'react-icons/bs'
+import { FaAngleDown, FaAngleUp } from "react-icons/fa";
+import { BsGraphUp } from "react-icons/bs";
 
 const MyTabbedInterface = ({
   listLogNumbers,
@@ -48,6 +52,7 @@ const MyTabbedInterface = ({
       } else { prettyNamesLogNumber[lognumber] = lognumber }
     } else { prettyNamesLogNumber[lognumber] = lognumber }
   }
+
   let uniqueListLogNumbers = [...new Set(listLogNumbers)];
   let tracksForEvent = [];
   let newStruct = [];
@@ -129,11 +134,59 @@ const MyTabbedInterface = ({
   }, [activeTrack]);
   
 
+  // TODO work in progress: create one object to set table of the outputs: one line for each match
+  console.log("-- prettyNamesLogNumber: ", prettyNamesLogNumber, ", infoMusicList: ", infoMusicList, ", listSearchRes: ", listSearchRes);
+  const aggregateMatch = [];
+  for (let i in infoMusicList) {
+    let matchingTracks = Object.assign({}, listSearchRes.filter(a => a.lognumber === infoMusicList[i].lognumber)[0]); // Get the first matching track
+    matchingTracks["prettyName"] = prettyNamesLogNumber[infoMusicList[i].lognumber];
+    let keys = Object.keys(infoMusicList[i]);
+    for (let k in keys) {
+      matchingTracks[keys[k]] = infoMusicList[i][keys[k]];
+    }
+    aggregateMatch.push(matchingTracks);
+  }
+  console.log("~ aggregateMatch: ", aggregateMatch);
+
   return (
     <div className="inline h-[45rem] bg-gray-100">
       {/* Sidebar with recording tabs */}
       {/* <div className="w-1/8 p-4 overflow-y-auto custom-scrollbar"> */}
       <div className="overflow-y-auto custom-scrollbar">
+      <table>
+      <thead>
+        <tr>
+          {/* <th>Log Number</th> */}
+          <th>Artist(s)</th>
+          <th>Recording</th>
+          <th>Track Title</th>
+          <th>Release Year</th>
+          <th>Pattern</th>
+          {/* Add more headers as needed */}
+          <th>Details <BsFillInfoCircleFill/></th> {/*TODO generate a full list of details when user clicks*/}
+          {/* <th>Graphs <BsGraphUp/></th> */} {/** Maybe not relevant here */}
+        </tr>
+      </thead>
+      <tbody>
+        {aggregateMatch.map((item, index) => (
+          <tr key={index}>
+            {/* <td>{item.lognumber}</td> */}
+            <td>{item['(N) Named Artist(s)']}</td>
+            <td>{item['(E) Event Name']}</td>
+            <td>{item['Track Title']}</td>
+            <td>{item['Release Year']}</td>
+            <td>{item.arrNotes
+                .map((a, i) => MIDItoNote[a].replaceAll("s", ""))
+                .toString().replaceAll(",", "-")}
+            </td>
+            <td><FaAngleDown/></td>{/* TODO for Details */}
+            {/* TODO for Graphs? */}
+            {/* <td><FaAngleDown/></td> */}
+          </tr>
+        ))}
+      </tbody>
+    </table>
+
         {/* <h2 className="text-lg font-semibold mb-4">Recordings</h2> */}
         {/* <h2 className="text-lg font-semibold ">Recordings</h2> */}
         <ul>
@@ -169,7 +222,6 @@ const MyTabbedInterface = ({
                       </>) } 
                   </h2>
                   {/* Addition: have the Tracks listed underneath the Recordings */}
-                  <hr />
                   <>
                   <div className="text-left mx-[2rem]">
                     <p className="font-semibold">Track(s)</p>
@@ -210,6 +262,8 @@ const MyTabbedInterface = ({
               ))}
         </ul>
       </div>
+
+
 
       {/* Sidebar with track tabs */}
       {/* <div className="w-1/8 p-4 overflow-y-auto custom-scrollbar">
