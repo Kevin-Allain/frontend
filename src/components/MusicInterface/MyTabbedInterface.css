@@ -25,3 +25,35 @@
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
     background: rgb(211, 162, 115); /* Change color on hover */
 }
+
+.additional-info {
+    position: absolute;
+    background-color: rgb(255 255 255 / 90%);
+    border: 1px solid #fff;
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0px -7px 10px rgb(0 0 0);
+  }
+    
+  /* Triangle pointing towards the clicked row */
+  .additional-info::before {
+    content: '';
+    position: absolute;
+    top: -10px; /* Adjust based on the size of the triangle */
+    left: 50%;
+    transform: translateX(-50%);
+    border-style: solid;
+    border-width: 0 10px 10px 10px;
+    border-color: transparent transparent #ccc transparent;
+  }
+  
+  /* .clickableCell {
+    transition: border-color 0.1s ease;
+  }
+  
+  .clickableCell:hover {
+    border: solid;
+    border-color: rgba(255, 166, 0, 0.692);
+    border-width: 0.75mm;
+  } */
+  

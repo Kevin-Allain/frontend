@@ -9,6 +9,12 @@ import MIDItoNote from "./MIDItoNote.json"
 import {BsFillInfoCircleFill} from 'react-icons/bs'
 import { FaAngleDown, FaAngleUp } from "react-icons/fa";
 import { BsGraphUp } from "react-icons/bs";
+import { MdPiano } from "react-icons/md";
+import { FiPlayCircle } from 'react-icons/fi'
+import { FaMusic } from "react-icons/fa";
+import { BiHide } from "react-icons/bi";
+import TableRow from "./TableRow";
+import AdditionalInfo from "./AdditionalInfo";
 
 const MyTabbedInterface = ({
   listLogNumbers,
@@ -129,6 +135,27 @@ const MyTabbedInterface = ({
     setBlockToggles();
   };
 
+  const handleClickPlayMp3 = (a) => {
+    console.log("handleClickPlayMp3 - a: ",a);
+    // TODO
+  }
+  const handleClickShowDetails = (ndx) => {
+    console.log("handleClickShowDetails - ndx: ",ndx);
+    const newArray = new Array(aggregateMatch.length).fill(false);
+    newArray[ndx] = !showDetails[ndx];
+    // set state
+    setShowDetails(newArray);
+  }
+
+  const handleClickShowPianoRoll = (ndx) => {
+    console.log("handleClickShowPianoRoll - ndx: ",ndx);
+    const newArray = new Array(aggregateMatch.length).fill(false);
+    newArray[ndx] = !showPianoRoll[ndx];
+    // set state
+    setShowPianoRoll(newArray);
+  }
+
+
   useEffect(() => {
     console.log("MyTabbedInterface # useEffect - activeTrack: ", activeTrack);
   }, [activeTrack]);
@@ -144,52 +171,108 @@ const MyTabbedInterface = ({
     for (let k in keys) {
       matchingTracks[keys[k]] = infoMusicList[i][keys[k]];
     }
+    // for showing details
+    matchingTracks['showDetails'] = false;
     aggregateMatch.push(matchingTracks);
   }
   console.log("~ aggregateMatch: ", aggregateMatch);
+  const [showDetails, setShowDetails] = useState(new Array(aggregateMatch.length).fill(false));
+  const [prevSelectedIndex, setPrevSelectedIndex] = useState(null);
+  const [showPianoRoll, setShowPianoRoll] = useState(new Array(aggregateMatch.length).fill(false));
+
+  const [clickedCell, setClickedCell] = useState(null);
+  const handleCellClick = (event, rowIndex, columnIndex) => {
+    console.log("handleCellClick | ",{event, rowIndex, columnIndex});
+    const rect = event.target.getBoundingClientRect();
+    console.log("rect: ",rect);
+    const position = { top: rect.bottom + window.scrollY + 10, left: rect.left + window.scrollX + rect.width / 2 };
+    console.log("position: ",position)
+    setClickedCell({ rowIndex, columnIndex, position });
+  };
+
+  const handleHideInfo = () => {
+    setClickedCell(null);
+  };
 
   return (
+    <>    
     <div className="inline h-[45rem] bg-gray-100">
       {/* Sidebar with recording tabs */}
       {/* <div className="w-1/8 p-4 overflow-y-auto custom-scrollbar"> */}
       <div className="overflow-y-auto custom-scrollbar">
-      <table>
-      <thead>
-        <tr>
-          {/* <th>Log Number</th> */}
-          <th>Artist(s)</th>
-          <th>Recording</th>
-          <th>Track Title</th>
-          <th>Release Year</th>
-          <th>Pattern</th>
-          {/* Add more headers as needed */}
-          <th>Details <BsFillInfoCircleFill/></th> {/*TODO generate a full list of details when user clicks*/}
-          {/* <th>Graphs <BsGraphUp/></th> */} {/** Maybe not relevant here */}
-        </tr>
-      </thead>
-      <tbody>
-        {aggregateMatch.map((item, index) => (
-          <tr key={index}>
-            {/* <td>{item.lognumber}</td> */}
-            <td>{item['(N) Named Artist(s)']}</td>
-            <td>{item['(E) Event Name']}</td>
-            <td>{item['Track Title']}</td>
-            <td>{item['Release Year']}</td>
-            <td>{item.arrNotes
-                .map((a, i) => MIDItoNote[a].replaceAll("s", ""))
-                .toString().replaceAll(",", "-")}
-            </td>
-            <td><FaAngleDown/></td>{/* TODO for Details */}
-            {/* TODO for Graphs? */}
-            {/* <td><FaAngleDown/></td> */}
-          </tr>
-        ))}
-      </tbody>
-    </table>
+        <table>
+          <thead>
+            <tr>
+              <th>Artist(s)</th>
+              <th>Recording</th>
+              <th>Track Title</th>
+              <th>Release Year</th>
+              <th>Pattern</th>
+              <th>Details <BsFillInfoCircleFill /></th>
+              <th>Piano Roll</th>
+              <th>Play Mp3</th>
+              <th>Play MIDI</th>
+            </tr>
+          </thead>
+          <tbody>
+            {aggregateMatch.map((item, index) => (
+              <tr key={index} className={index%2===0 ? 'bg-stone-300' : null}
+              >
+                <td>
+                  {item['(N) Named Artist(s)']}
+                </td>
+                <td 
+                  className="icon clickableCell" 
+                  key={index} 
+                  onClick={(event) => handleCellClick(event, index, 1)}
+                >
+                  {item['(E) Event Name']}
+                </td>
+                <td>{item['Track Title']}</td>
+                <td>{item['Release Year']}</td>
+                <td>{item.arrNotes
+                  .map((a, i) => MIDItoNote[a].replaceAll("s", ""))
+                  .toString().replaceAll(",", "-")}
+                </td>
+                <td> TODO for Details
+                  {showDetails[index]
+                    ? <FaAngleUp className="icon" onClick={() => handleClickShowDetails(index)} />
+                    : <FaAngleDown className="icon" onClick={() => handleClickShowDetails(index)} />
+                  }
+                </td>
+                <td className="clickableCell"> TODO set function to toggle piano roll
+                  {showPianoRoll[index]
+                    ? <BiHide className="icon" onClick={() => handleClickShowPianoRoll(index)} />
+                    : <MdPiano className="icon" onClick={() => handleClickShowPianoRoll(index)} />
+                  }
+                </td>
+                <td className="icon clickableCell" onClick={() => handleClickPlayMp3(item['Audio Filename (Internal backup)'])} > <FaMusic /> </td>
+                <td className="icon clickableCell"><FiPlayCircle /></td>              
+              </tr>              
+              // <TableRow
+              //   key={index}
+              //   item={item}
+              //   showDetails={showDetails}
+              //   setShowDetails={setShowDetails}
+              //   prevSelectedIndex={prevSelectedIndex}
+              //   setPrevSelectedIndex={setPrevSelectedIndex}        
+              // />
+            ))}
+          </tbody>
+        </table>
 
-        {/* <h2 className="text-lg font-semibold mb-4">Recordings</h2> */}
-        {/* <h2 className="text-lg font-semibold ">Recordings</h2> */}
-        <ul>
+          {clickedCell && (
+            <AdditionalInfo
+              rowData={infoMusicList[clickedCell.rowIndex]}
+              position={clickedCell.position}
+              onHide={handleHideInfo}
+            />
+          )}
+
+
+          {/* <h2 className="text-lg font-semibold mb-4">Recordings</h2> */}
+          {/* <h2 className="text-lg font-semibold ">Recordings</h2> */}
+          {/* <ul>
           {listLogNumbers &&
             listLogNumbers
               .sort((a, b) => {
@@ -215,52 +298,35 @@ const MyTabbedInterface = ({
               .map((recording,ndx) => (
                 <>
                 <h2 className="font-semibold text-left mx-[0.5rem]" key={recording+'_'+ndx}>Recording: { prettyNamesLogNumber[recording].includes("03 N")
-                    ? prettyNamesLogNumber[recording] 
+                    ? prettyNamesLogNumber[recording]
                     : (<>
                       {prettyNamesLogNumber[recording].substring(0,prettyNamesLogNumber[recording].lastIndexOf(" "))}{" "}
                       {prettyNamesLogNumber[recording].substring(prettyNamesLogNumber[recording].lastIndexOf(" "),prettyNamesLogNumber[recording].length)}
-                      </>) } 
+                      </>) }
                   </h2>
-                  {/* Addition: have the Tracks listed underneath the Recordings */}
                   <>
                   <div className="text-left mx-[2rem]">
                     <p className="font-semibold">Track(s)</p>
-                    {/* {listSearchRes.filter(a=> a.lognumber === activeRecording).map(a => a.track)}  */}
-                    {/* This should be changed to a table structure I think... */}
                     {[
                       ...new Set( listSearchRes
                           .filter((a) => a.lognumber === recording)
                           .map((a) => a.track)
                       ),
-                    ].map((track_id,ndx) =>                      
-                      <div key={track_id+'_'+ndx} className={` mx-[2rem] cursor-pointer ${track_id} text-left}`} 
-                      // onClick={() => handleTrackClick(a)} 
-                      > 
-                            {/* Kind of sucks... We should have a button for display of information for recording (honestly who cares about track metadata, there's none) */}
-                            {/* <MetadataAccordion
-                              content={listSearchRes.filter( (b) => b.track === track_id )[0].arrIdNotes[0]} 
-                              recording={recording}
-                              track={track_id}
-                              findMatchRecording={findMatchRecording}
-                              infoMusicList={infoMusicList}
-                              structData={ newStruct[ newStruct.findIndex( (c) => c.recordingName === recording ) ] }
-                              setBlockToggles={setBlockToggles}
-                              expandedRecording={expandedRecording}
-                              setExpandedRecording={setExpandedRecording}
-                              expandedTrack={expandedTrack}
-                              setExpandedTrack={setExpandedTrack}
-                            /> */}
-                            {trackToTitles[track_id]} 
+                    ].map((track_id,ndx) =>
+                      <div key={track_id+'_'+ndx} className={` mx-[2rem] cursor-pointer ${track_id} text-left}`}
+                      // onClick={() => handleTrackClick(a)}
+                      >
+                            {trackToTitles[track_id]}
                       </div>
                     )}
                     </div>
-                  </>                  
+                  </>
 
                   <hr />
-                
+
                 </>
               ))}
-        </ul>
+        </ul> */}
       </div>
 
 
@@ -343,6 +409,7 @@ const MyTabbedInterface = ({
         )}
       </div> */}
     </div>
+    </>
   );
 };
 
