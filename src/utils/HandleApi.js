@@ -11,6 +11,15 @@ const baseUrl = "https://jazzdap.city.ac.uk/api/" // can be used for development
 // const baseUrl = "https://fullstack-proto-jazzdap-backend.onrender.com"
 // const baseUrl= "https://jazzdap-backend.onrender.com"
 
+const testHelloWorld = (setDataTest) => {
+  axios
+    .get(baseUrl)
+    .then(({ d }) => {
+      console.log("-- handleAPI. testHelloWorld | d: ", d);
+      setDataTest(d?d:"hello?");
+    })
+    .catch(err => console.error(err))
+}
 
 const getAllJazzDap = (setJazzDap) => {
   console.log("---- HandleApi / getAllJazzDap", new Date());
@@ -1307,7 +1316,6 @@ const getSliceMp3 = async (file = '', start = 0, end = 0, sja_code_audioUrl,setA
     })
 }
 
-// TODO Maybe add a setter for a binary value to be passed to the elements that would later query fpr getSlicesMp3?
 const doesMp3exist = async(sja_id, setMp3Exists) => {
   console.log("handleAPI doesMp3exist", { sja_id });
   axios.get(`${baseUrl}/doesMp3exist`, {params: { sja_id}})
@@ -1317,7 +1325,19 @@ const doesMp3exist = async(sja_id, setMp3Exists) => {
   })
 }
 
+// TODO do in the backend
+const doMp3exist = async(sja_ids, setMp3Exist) => {
+  console.log("handleAPI doMp3exist", { sja_ids });
+  axios.get(`${baseUrl}/doMp3exist`, {params: { sja_ids}})
+  .then((d) => {
+    console.log("then of doMp3exist. d.data: ", d.data);
+    setMp3Exist(d.data.exist);
+  })
+}
+
+
 export {
+  testHelloWorld,
   getAllJazzDap, addJazzDap, updateJazzDap, deleteJazzDap,
   getMusicMIDI, getSampleMIDI, getMatchLevenshteinDistance,
   getTrackMetadata, getTracksMetadata,
@@ -1335,5 +1355,6 @@ export {
   getFuzzyLevenshtein,
   getSearchMap, createSearchMap,
   getSliceMp3,
-  doesMp3exist
+  doesMp3exist,
+  doMp3exist
 }

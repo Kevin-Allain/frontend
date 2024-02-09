@@ -7,7 +7,6 @@ import {
   AiOutlineLoading,
 } from "react-icons/ai";
 
-// At home, could be tested with At Home WithAlex Welsh And His Band 1967/11/15 - It Don't Mean A Thing, SJA_AC_A0004_N0020_E0016_Y15111967_01
 const AudioSlicer = (props) => {
   const { sja_id, first_second, last_second, test } = props;
   console.log("sja_id: ",sja_id,", first_second: ",first_second,", last_second: ",last_second);
@@ -49,7 +48,6 @@ const AudioSlicer = (props) => {
   return (
     <div style={{ color: "white" }}>
       {/* TODO remove to clean later */}
-      <hr />
       <p> {fileName} | {start}-{end} </p>
       <div>
       {slicerCalled === null ? (

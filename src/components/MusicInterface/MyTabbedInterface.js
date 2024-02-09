@@ -15,6 +15,15 @@ import { FaMusic } from "react-icons/fa";
 import { BiHide } from "react-icons/bi";
 import TableRow from "./TableRow";
 import AdditionalInfo from "./AdditionalInfo";
+import {
+  testHelloWorld,
+  doesMp3exist
+} from "../../utils/HandleApi";
+import PianoRoll from "../VisComponents/PianoRoll";
+import * as Tone from "tone";
+// TODO consider how these should be used with the table
+import AnnotationSystem from "../Annotation/AnnotationSystem";
+import EmbeddedWorkflowInteraction from "../Workflow/EmbeddedWorkflowInteraction";
 
 const MyTabbedInterface = ({
   listLogNumbers,
@@ -30,20 +39,33 @@ const MyTabbedInterface = ({
   const [activeTrack, setActiveTrack] = useState(null);
   const [visibleTracks, setVisibleTracks] = useState({});
   const tracksContainerRef = useRef(null);
-  
   const [expandedRecording, setExpandedRecording] = useState(false);
   const [expandedTrack, setExpandedTrack] = useState(false);
 
-  const setBlockToggles = () => {
-    setExpandedRecording(false);
-    setExpandedTrack(false);
+  const sampler = new Tone.Sampler({
+    urls: { C4: "C4.mp3", "D#4": "Ds4.mp3", "F#4": "Fs4.mp3", A4: "A4.mp3" }, release: 1, baseUrl: "https://tonejs.github.io/audio/salamander/",
+  }).toDestination();
+
+  const handlePlayMIDINotes = (notes, durations, times) => {
+    console.log("handlePlayMIDINotes");
+    const now = Tone.now();
+    // console.log("handlePlayNotes notes: ", notes, ", durations: ", durations,", times: ",times);
+    if (typeof notes === "undefined") {
+      return;
+    }
+    let arrNotes = (typeof notes === 'string')? notes.split("-") : notes;
+    let arrDur = (typeof durations === 'string')? durations.split("-") : durations;
+    let arrTimes = (typeof times === 'string')? times.split("-").map((a) => Number(a)) : times;
+    const firstTime = arrTimes[0];
+    const adjustedTimes = arrTimes.map((a) => now + a - firstTime);
+    for (let i = 0; i < arrNotes.length; i++) {
+      sampler.triggerAttackRelease( [MIDItoNote[arrNotes[i]]], arrDur[i], adjustedTimes[i] );
+    }
   };
 
-  // console.log("-- MyTabbedInterface. listLogNumbers: ", listLogNumbers, ", infoMusicList: ", infoMusicList, ", listSearchRes: ", listSearchRes,", listTracks: ",listTracks);
   let prettyNamesLogNumber = {};
   for (var i = 0; i < listLogNumbers.length; i++) {
     let lognumber = listLogNumbers[i];
-    // console.log("lognumber: ", lognumber);
     let a = infoMusicList.filter(a => a.lognumber === lognumber);
     if (a.length > 0) {
       a = a[0];
@@ -59,7 +81,6 @@ const MyTabbedInterface = ({
     } else { prettyNamesLogNumber[lognumber] = lognumber }
   }
 
-  let uniqueListLogNumbers = [...new Set(listLogNumbers)];
   let tracksForEvent = [];
   let newStruct = [];
   let trackToTitles = {};
@@ -80,8 +101,6 @@ const MyTabbedInterface = ({
   }
   let filteredUniqueSearchResTracks = [];
   
-  // ok until now
-
   const mergedData = {};
   infoMusicList.forEach((item) => {
     const eventName = item["(E) Event Name"];
@@ -99,78 +118,106 @@ const MyTabbedInterface = ({
       mergedData[lognumber].tracks[nextTrackNumber].push(item);
     }
   });
-  // const result = Object.values(mergedData);
-  // console.log("result: ", result);
 
   let keysEvents = Object.keys(mergedData);
   for (var d in mergedData) {
-    const tracks = mergedData[d].tracks.filter(
-      (a) => typeof a !== "undefined"
-    );
+    const tracks = mergedData[d].tracks.filter((a) => typeof a !== "undefined");
     // Use concat to flatten the second level arrays
     const flattenedTracks = [].concat(...tracks);
     tracksForEvent.push(flattenedTracks);
   }
-  keysEvents.map((a, i) =>
-    newStruct.push({ recordingName: a, content: tracksForEvent[i] })
-  );
+  keysEvents.map((a, i) => newStruct.push({ recordingName: a, content: tracksForEvent[i] }) );
   // Sort newStruct (here according to recording)
-  newStruct = newStruct.sort((a, b) =>
-    a.recording > b.recording ? 1 : b.recording > a.recording ? -1 : 0
-  );
-  // console.log("newStruct: ", newStruct, ", listTracks: ", listTracks);
+  newStruct = newStruct.sort((a, b) => a.recording > b.recording ? 1 : b.recording > a.recording ? -1 : 0 );
 
   const handleRecordingClick = (recording) => {
     // console.log("~~ handleRecordingClick, recording: ", recording, " ---- listSearchRes: ", listSearchRes, ", listLogNumbers: ", listLogNumbers);
     setActiveRecording(recording);
-
     filteredUniqueSearchResTracks =
       [...new Set(listSearchRes.filter(a => a.lognumber === recording).map(a => a.track))];
-    setActiveTrack(null); // Reset the active track when a new recording is selected
   };
 
   const handleTrackClick = (track) => {
+    // TODO
     // console.log("~~ handleTrackClick, track: ",track,", typeof track: ",typeof track,", activeRecording: ",activeRecording);
-    setActiveTrack(track);
-    setBlockToggles();
   };
 
   const handleClickPlayMp3 = (a) => {
     console.log("handleClickPlayMp3 - a: ",a);
     // TODO
   }
-  const handleClickShowDetails = (ndx) => {
-    console.log("handleClickShowDetails - ndx: ",ndx);
-    const newArray = new Array(aggregateMatch.length).fill(false);
-    newArray[ndx] = !showDetails[ndx];
-    // set state
-    setShowDetails(newArray);
+  const handleClickPlayMIDI = item => {
+    console.log("handleClickPlayMIDI - item: ",item);
+    handlePlayMIDINotes(item.arrNotes,item.arrDurations,item.arrTime);
   }
 
-  const handleClickShowPianoRoll = (ndx) => {
-    console.log("handleClickShowPianoRoll - ndx: ",ndx);
-    const newArray = new Array(aggregateMatch.length).fill(false);
-    newArray[ndx] = !showPianoRoll[ndx];
-    // set state
-    setShowPianoRoll(newArray);
+  const handleClickShowDetails = (item) => {
+    console.log("handleClickShowDetails - item: ",item);
+    console.log(Object.entries(item));
+    setContentExpandedRow(
+      <>
+      <u>Info:</u><br/>
+        {Object.entries(item)
+          .map(
+            ([key, value]) => 
+              key && value && value != null && value.length !== 0 && 
+                (key === "(A/R/D) Event Type" 
+                || key === "(N) Named Artist(s)" 
+                || key === "(E) Event Name"
+                || key === "(Y) Date"
+                || key === "Label"
+                || key === "Producer"
+                || key === "Location"
+                || key === "AudioSource"
+                || key === "Musicians (instruments)"
+                || key === "Composition"
+                || key === "Composer(s)"
+                || key === "Observations"
+                || key === "Track Title"
+                || key === "Track #"
+                || key === "Duration"
+                ) 
+              ? ( <p className={"mx-[1em]"} key={key}> 
+                  {key === "(Y) Date" 
+                    ? "Recording Date" 
+                    : key.replace("(A/R/D)","").replace("(E) Event Name","Recording").replace("(N) Named Artist(s)","Artist(s)")}
+                    {": "}
+                    {key === "(Y) Date" ? `${value.substr(5, 4)}/${value.substr(3, 2)}/${value.substr( 1, 2 )}` : value}
+                </p> ) 
+              : ( <></> )
+        )}
+      </>
+    );
+  }
+  const handleClickShowPianoRoll = (item) => {
+    console.log("handleClickShowPianoRoll - item: ",item);         
+    setContentExpandedRow(
+      <>
+        <PianoRoll
+          notes={item.arrNotes}
+          occurrences={item.arrTime}
+          durations={item.arrDurations}
+          width={600}
+          height={200}
+        />
+        {/* <AnnotationSystem type={"sample"}
+          info={ text.substr(text.indexOf("-") + 1) + "_" + notes + "_" + Number(text.split("-")[0]) }
+          index={Number(text.split("-")[0])}
+        />
+        {typeof localStorage.token !== "undefined" && (
+          <EmbeddedWorkflowInteraction typeCaller={"sample"} idCaller={idDBNotes[0]} indexRange={idDBNotes.length} />
+        )} */}
+      </>
+    );
   }
 
-
-  useEffect(() => {
-    console.log("MyTabbedInterface # useEffect - activeTrack: ", activeTrack);
-  }, [activeTrack]);
-  
-
-  // TODO work in progress: create one object to set table of the outputs: one line for each match
   console.log("-- prettyNamesLogNumber: ", prettyNamesLogNumber, ", infoMusicList: ", infoMusicList, ", listSearchRes: ", listSearchRes);
   const aggregateMatch = [];
   for (let i in infoMusicList) {
     let matchingTracks = Object.assign({}, listSearchRes.filter(a => a.lognumber === infoMusicList[i].lognumber)[0]); // Get the first matching track
     matchingTracks["prettyName"] = prettyNamesLogNumber[infoMusicList[i].lognumber];
     let keys = Object.keys(infoMusicList[i]);
-    for (let k in keys) {
-      matchingTracks[keys[k]] = infoMusicList[i][keys[k]];
-    }
+    for (let k in keys) { matchingTracks[keys[k]] = infoMusicList[i][keys[k]]; }
     // for showing details
     matchingTracks['showDetails'] = false;
     aggregateMatch.push(matchingTracks);
@@ -190,9 +237,68 @@ const MyTabbedInterface = ({
     setClickedCell({ rowIndex, columnIndex, position });
   };
 
-  const handleHideInfo = () => {
-    setClickedCell(null);
+  // const handleHideInfo = () => { setClickedCell(null); };
+  const [expandedRow, setExpandedRow] = useState(new Array(aggregateMatch.length).fill(false));
+  const [contentExpandedRow, setContentExpandedRow] = useState(<>Test expanded row</>);
+  const [datatTest, setDataTest] = useState("");
+  const handleExpand = async (index, columnName = "", item = null) => {
+    console.log("handleExpand: ", { index, columnName, item });
+    if (item === null) {
+      console.error("For handleExpand: The item is null");
+    } else {
+      // Based on the cell clicked, we adapt the content of the new row.
+      if (columnName === "Play Mp3") {
+        handleClickPlayMp3(item["Audio Filename (Internal backup)"]);
+      } else if (columnName === "Play MIDI") {
+        handleClickPlayMIDI(item);
+      } else {
+        // If the user clicks on the same cell, we should close it
+        if (columnName === "Piano Roll") {
+          handleClickShowPianoRoll(item);
+        } if (columnName === "Details"){
+          handleClickShowDetails(item);
+        } else {
+          console.log("Default case. Should not happen.");
+          setExpandedRow(new Array(aggregateMatch.length).fill(false)); // reset all expanded rows to false
+          try {
+            // Fetch information
+            const additionalInfo = await testHelloWorld(setDataTest); // won't work unless we update the back-end and VPN is off.
+            console.log("datatTest: ", datatTest);
+            setExpandedRow((prevState) => ({ ...prevState, [index]: true }));
+          } catch (error) {
+            console.error("Error fetching additional information:", error);
+          }
+        }
+        setExpandedRow(new Array(aggregateMatch.length).fill(false)); // all to false
+        setExpandedRow((prevState) => ({ ...prevState, [index]: true })); // true for index we clicked on
+      }
+    }
   };
+
+
+  const [mp3Exist, setMp3Exist] = useState({})
+  useEffect(() => {
+    console.log("in useEffect, aggregateMatch: ",aggregateMatch);
+
+    let track_ids = aggregateMatch.map(a=>a.track);
+    const sja_ids = track_ids.map( text => text.split('-')[0]+'_'+text.split('-')[1].replace('T','') );
+    console.log("sja_ids: ",sja_ids);
+
+    // I suppose a loop here would be awful. Maybe to do on the back-end...
+    const fetchData = async () => {
+      try {
+        const result = await doesMp3exist(sja_ids[0], setMp3Exist);
+        console.log("result: ",result,", mp3Exists: ",mp3Exist);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+        setMp3Exist(false); // Set mp3Exists to false in case of an error
+      }
+    };
+
+    fetchData();
+  }, [aggregateMatch,mp3Exist]);
+
+
 
   return (
     <>    
@@ -208,206 +314,65 @@ const MyTabbedInterface = ({
               <th>Track Title</th>
               <th>Release Year</th>
               <th>Pattern</th>
-              <th>Details <BsFillInfoCircleFill /></th>
+              <th>Details</th>
               <th>Piano Roll</th>
               <th>Play Mp3</th>
               <th>Play MIDI</th>
             </tr>
           </thead>
+          {/* TODO set functionalities for all columns later?! */}
           <tbody>
+            {/* <tr> <td>TEXT NOTE 1</td> <td>TEXT NOTE 2</td> <td>TEXT NOTE 3</td> <td>TEXT NOTE 4</td> <td>TEXT NOTE 5</td> <td>TEXT NOTE 6 blablablablablablabla blablablablablabla</td> <td>TEXT NOTE 7 blablablablablablabla blablablablablabla</td> <td>TEXT NOTE 8 blablablablablablabla blablablablablabla</td> <td>TEXT NOTE 9 blablablablablablabla blablablablablabla</td> </tr> */}
             {aggregateMatch.map((item, index) => (
-              <tr key={index} className={index%2===0 ? 'bg-stone-300' : null}
-              >
+              <>
+              <tr key={index} className={index%2===0 ? 'bg-stone-300' : null}>
                 <td>
                   {item['(N) Named Artist(s)']}
                 </td>
-                <td 
-                  className="icon clickableCell" 
-                  key={index} 
-                  onClick={(event) => handleCellClick(event, index, 1)}
-                >
+                <td className="icon clickableCell"  onClick={() => handleExpand(index,'(E) Event Name',item)}>
                   {item['(E) Event Name']}
                 </td>
-                <td>{item['Track Title']}</td>
+                <td className="icon clickableCell"  onClick={() => handleExpand(index,'Track Title',item)}>
+                  {item['Track Title']}
+                </td>
                 <td>{item['Release Year']}</td>
-                <td>{item.arrNotes
-                  .map((a, i) => MIDItoNote[a].replaceAll("s", ""))
-                  .toString().replaceAll(",", "-")}
+                <td>{item.arrNotes.map((a, i) => MIDItoNote[a].replaceAll("s", "")).toString().replaceAll(",", "-")}</td>
+                <td className="icon clickableCell"  onClick={() => handleExpand(index,'Details',item)}> 
+                  {/* {showDetails[index] ? <FaAngleUp/> : <FaAngleDown /> } */}
+                  <BsFillInfoCircleFill/>
                 </td>
-                <td> TODO for Details
-                  {showDetails[index]
-                    ? <FaAngleUp className="icon" onClick={() => handleClickShowDetails(index)} />
-                    : <FaAngleDown className="icon" onClick={() => handleClickShowDetails(index)} />
-                  }
+                <td className="icon clickableCell"  onClick={() => handleExpand(index,'Piano Roll',item)}> 
+                  {showPianoRoll[index] ? <BiHide/> : <MdPiano/> }
                 </td>
-                <td className="clickableCell"> TODO set function to toggle piano roll
-                  {showPianoRoll[index]
-                    ? <BiHide className="icon" onClick={() => handleClickShowPianoRoll(index)} />
-                    : <MdPiano className="icon" onClick={() => handleClickShowPianoRoll(index)} />
-                  }
+                <td className="icon clickableCell"  onClick={() => handleExpand(index,'Play Mp3',item)}>
+                  <FaMusic />
                 </td>
-                <td className="icon clickableCell" onClick={() => handleClickPlayMp3(item['Audio Filename (Internal backup)'])} > <FaMusic /> </td>
-                <td className="icon clickableCell"><FiPlayCircle /></td>              
-              </tr>              
-              // <TableRow
-              //   key={index}
-              //   item={item}
-              //   showDetails={showDetails}
-              //   setShowDetails={setShowDetails}
-              //   prevSelectedIndex={prevSelectedIndex}
-              //   setPrevSelectedIndex={setPrevSelectedIndex}        
-              // />
-            ))}
+                <td className="icon clickableCell"  onClick={() => handleExpand(index,'Play MIDI',item)}>
+                  <FiPlayCircle />
+                </td>              
+              </tr>
+              {/* <TableRow key={index} item={item} showDetails={showDetails} setShowDetails={setShowDetails} prevSelectedIndex={prevSelectedIndex} setPrevSelectedIndex={setPrevSelectedIndex} /> */}
+              {expandedRow[index] && (
+                <tr className={index%2===0 ? 'bg-stone-300' : null}>
+                  <td colSpan="9" className={'border-dotted border-black'}>
+                    {/* {expandedRow[index]} STUFF bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla  */}
+                    {contentExpandedRow}
+                  </td>
+                </tr>)}
+              </>
+              )
+            )}
           </tbody>
         </table>
-
-          {clickedCell && (
+        {/* Approach with a different div proved difficult as the positionning is off! Considering alternatives for now.*/}
+          {/* {clickedCell && (
             <AdditionalInfo
               rowData={infoMusicList[clickedCell.rowIndex]}
               position={clickedCell.position}
               onHide={handleHideInfo}
             />
-          )}
-
-
-          {/* <h2 className="text-lg font-semibold mb-4">Recordings</h2> */}
-          {/* <h2 className="text-lg font-semibold ">Recordings</h2> */}
-          {/* <ul>
-          {listLogNumbers &&
-            listLogNumbers
-              .sort((a, b) => {
-                // Split the strings into parts: artist, event, and date
-                const partsA = a.split("_");
-                const partsB = b.split("_");
-                // Check if there are at least two parts (event and date) in both strings
-                if (partsA.length >= 2 && partsB.length >= 2) {
-                  // Compare the event parts
-                  const eventComparison = partsA[1].localeCompare(partsB[1]);
-                  // If the events are the same, compare the date parts
-                  if (eventComparison === 0) {
-                    const dateA = new Date(partsA[2]);
-                    const dateB = new Date(partsB[2]);
-                    return dateA - dateB;
-                  }
-                  return eventComparison;
-                } else {
-                  // If one of the strings doesn't have an underscore, compare the full strings
-                  return a.localeCompare(b);
-                }
-              })
-              .map((recording,ndx) => (
-                <>
-                <h2 className="font-semibold text-left mx-[0.5rem]" key={recording+'_'+ndx}>Recording: { prettyNamesLogNumber[recording].includes("03 N")
-                    ? prettyNamesLogNumber[recording]
-                    : (<>
-                      {prettyNamesLogNumber[recording].substring(0,prettyNamesLogNumber[recording].lastIndexOf(" "))}{" "}
-                      {prettyNamesLogNumber[recording].substring(prettyNamesLogNumber[recording].lastIndexOf(" "),prettyNamesLogNumber[recording].length)}
-                      </>) }
-                  </h2>
-                  <>
-                  <div className="text-left mx-[2rem]">
-                    <p className="font-semibold">Track(s)</p>
-                    {[
-                      ...new Set( listSearchRes
-                          .filter((a) => a.lognumber === recording)
-                          .map((a) => a.track)
-                      ),
-                    ].map((track_id,ndx) =>
-                      <div key={track_id+'_'+ndx} className={` mx-[2rem] cursor-pointer ${track_id} text-left}`}
-                      // onClick={() => handleTrackClick(a)}
-                      >
-                            {trackToTitles[track_id]}
-                      </div>
-                    )}
-                    </div>
-                  </>
-
-                  <hr />
-
-                </>
-              ))}
-        </ul> */}
+          )} */}
       </div>
-
-
-
-      {/* Sidebar with track tabs */}
-      {/* <div className="w-1/8 p-4 overflow-y-auto custom-scrollbar">
-        <h2 className="text-lg font-semibold mb-4">Tracks</h2>
-        <ul>
-          {activeRecording ? (
-            <>
-              {[
-                ...new Set( listSearchRes
-                    .filter((a) => a.lognumber === activeRecording)
-                    .map((a) => a.track)
-                ),
-              ].map((a,ndx) =>
-                (a.includes("SJA") || a.includes("BCC") || a.includes("BGR")) ? (
-                  <> <li key={a+'_'+ndx} className={`cursor-pointer mb-2 ${a} ${activeTrack === a ? "text-orange-500" : ""}`}
-                      onClick={() => handleTrackClick(a)}
-                    > {" "} {trackToTitles[a]} </li> <hr /> </>
-                ) : (
-                  <> <li key={a+'_'+ndx} className={`cursor-pointer mb-2 ${a} ${ activeTrack === a ? "text-orange-500" : ""}`}
-                      onClick={() => handleTrackClick(a)}
-                    > {" "} {a} </li> <hr /> </>
-                )
-              )}
-            </>
-          ) : (
-            <></>
-          )}
-        </ul>
-      </div> */}
-
-      {/* Content based on active recording and track */}
-      {/* <div className="w-3/4 p-4 overflow-y-auto custom-scrollbar">
-        {activeRecording && activeTrack && (
-          <div>
-            <h2 className="text-lg font-semibold mb-4">
-              {prettyNamesLogNumber[activeRecording]} -{" "}
-              {(activeTrack.includes("SJA") || activeTrack.includes("BCC") || activeTrack.includes("BGR"))
-                ? trackToTitles[activeTrack]
-                : activeTrack}
-            </h2>
-            <div className="border rounded border-2 mb-[0.5rem]">
-              <MetadataAccordion
-                content={listSearchRes.filter(
-                  (a) => a.track === activeTrack
-                )[0].arrIdNotes[0]} 
-                recording={activeRecording}
-                track={activeTrack}
-                findMatchRecording={findMatchRecording}
-                infoMusicList={infoMusicList}
-                structData={
-                  newStruct[
-                    newStruct.findIndex(
-                      (a) => a.recordingName === activeRecording
-                    )
-                  ]
-                }
-                setBlockToggles={setBlockToggles}
-                expandedRecording={expandedRecording}
-                setExpandedRecording={setExpandedRecording}
-                expandedTrack={expandedTrack}
-                setExpandedTrack={setExpandedTrack}
-              />
-            </div>
-            <TrackRes
-              key={"Track_" + activeTrack}
-              text={activeTrack}
-              listSearchRes={listSearchRes.filter(
-                (a) => a.track === activeTrack
-              )}
-              formatAndPlay={formatAndPlay}
-              getMusicInfo={getMusicInfo}
-              infoMusicList={infoMusicList}
-              setInfoMusicList={setInfoMusicList}
-              testPerformances={false}
-            />
-          </div>
-        )}
-      </div> */}
     </div>
     </>
   );
