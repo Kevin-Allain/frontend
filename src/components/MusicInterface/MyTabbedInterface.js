@@ -17,7 +17,8 @@ import TableRow from "./TableRow";
 import AdditionalInfo from "./AdditionalInfo";
 import {
   testHelloWorld,
-  doesMp3exist
+  doesMp3exist,
+  doMp3exist
 } from "../../utils/HandleApi";
 import PianoRoll from "../VisComponents/PianoRoll";
 import * as Tone from "tone";
@@ -81,6 +82,7 @@ const MyTabbedInterface = ({
     } else { prettyNamesLogNumber[lognumber] = lognumber }
   }
 
+  // TODO we should remove all of this
   let tracksForEvent = [];
   let newStruct = [];
   let trackToTitles = {};
@@ -130,21 +132,26 @@ const MyTabbedInterface = ({
   // Sort newStruct (here according to recording)
   newStruct = newStruct.sort((a, b) => a.recording > b.recording ? 1 : b.recording > a.recording ? -1 : 0 );
 
-  const handleRecordingClick = (recording) => {
-    // console.log("~~ handleRecordingClick, recording: ", recording, " ---- listSearchRes: ", listSearchRes, ", listLogNumbers: ", listLogNumbers);
-    setActiveRecording(recording);
-    filteredUniqueSearchResTracks =
-      [...new Set(listSearchRes.filter(a => a.lognumber === recording).map(a => a.track))];
+
+  // const [audioMp3, setAudioMp3] = useState(
+  //   new Audio(`https://jazzdap.city.ac.uk/public/sliced_audio_0_3.mp3`.replace(/ /g,"%20"))
+  // );
+
+  const playMp3Slicer = (fileNameSlicer) => {
+    console.log("playMp3Slicer - fileNameSlicer: ",fileNameSlicer);
+    let audioMp3 = new Audio(fileNameSlicer.replace(/ /g, "%20"));
+    console.log("audioMp3: ", audioMp3);
+    audioMp3.play();
   };
 
-  const handleTrackClick = (track) => {
-    // TODO
-    // console.log("~~ handleTrackClick, track: ",track,", typeof track: ",typeof track,", activeRecording: ",activeRecording);
-  };
-
-  const handleClickPlayMp3 = (a) => {
-    console.log("handleClickPlayMp3 - a: ",a);
-    // TODO
+  const handleClickPlayMp3 = (item) => {
+    console.log("handleClickPlayMp3 - item: ",item);
+    // TODO slice based on audio beginning and ending
+    let audioName = item["Audio Filename (Internal backup)"];
+    let start = Math.floor(item.arrTime[0]);
+    let end = Math.floor(item.arrTime[item.arrTime.length-1]);
+    let fileNameSlicer = `https://jazzdap.city.ac.uk/public/${audioName}_${start}_${end}.mp3`
+    playMp3Slicer(fileNameSlicer);
   }
   const handleClickPlayMIDI = item => {
     console.log("handleClickPlayMIDI - item: ",item);
@@ -227,16 +234,6 @@ const MyTabbedInterface = ({
   const [prevSelectedIndex, setPrevSelectedIndex] = useState(null);
   const [showPianoRoll, setShowPianoRoll] = useState(new Array(aggregateMatch.length).fill(false));
 
-  const [clickedCell, setClickedCell] = useState(null);
-  const handleCellClick = (event, rowIndex, columnIndex) => {
-    console.log("handleCellClick | ",{event, rowIndex, columnIndex});
-    const rect = event.target.getBoundingClientRect();
-    console.log("rect: ",rect);
-    const position = { top: rect.bottom + window.scrollY + 10, left: rect.left + window.scrollX + rect.width / 2 };
-    console.log("position: ",position)
-    setClickedCell({ rowIndex, columnIndex, position });
-  };
-
   // const handleHideInfo = () => { setClickedCell(null); };
   const [expandedRow, setExpandedRow] = useState(new Array(aggregateMatch.length).fill(false));
   const [contentExpandedRow, setContentExpandedRow] = useState(<>Test expanded row</>);
@@ -248,7 +245,7 @@ const MyTabbedInterface = ({
     } else {
       // Based on the cell clicked, we adapt the content of the new row.
       if (columnName === "Play Mp3") {
-        handleClickPlayMp3(item["Audio Filename (Internal backup)"]);
+        handleClickPlayMp3(item);
       } else if (columnName === "Play MIDI") {
         handleClickPlayMIDI(item);
       } else {
@@ -281,13 +278,16 @@ const MyTabbedInterface = ({
     console.log("in useEffect, aggregateMatch: ",aggregateMatch);
 
     let track_ids = aggregateMatch.map(a=>a.track);
-    const sja_ids = track_ids.map( text => text.split('-')[0]+'_'+text.split('-')[1].replace('T','') );
+    const sja_ids = [...new Set(track_ids.map( 
+      text => text.split('-')[0]+'_'+text.split('-')[1].replace('T','') 
+    ))];
     console.log("sja_ids: ",sja_ids);
 
     // I suppose a loop here would be awful. Maybe to do on the back-end...
     const fetchData = async () => {
       try {
-        const result = await doesMp3exist(sja_ids[0], setMp3Exist);
+        // const result = await doesMp3exist(sja_ids[0], setMp3Exist);
+        const result = await doMp3exist(sja_ids, setMp3Exist);
         console.log("result: ",result,", mp3Exists: ",mp3Exist);
       } catch (error) {
         console.error('Error fetching data:', error);

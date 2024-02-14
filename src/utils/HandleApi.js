@@ -1335,6 +1335,46 @@ const doMp3exist = async(sja_ids, setMp3Exist) => {
   })
 }
 
+// const doMp3exist = async (sja_ids, setMp3Exist) => {
+//   console.log("handleAPI doMp3exist", { sja_ids });
+
+//   const chunkSize = 100; // Define the chunk size
+//   const chunks = []; // Array to store the chunks of sja_ids
+
+//   // Split sja_ids into chunks
+//   for (let i = 0; i < sja_ids.length; i += chunkSize) {
+//     chunks.push(sja_ids.slice(i, i + chunkSize));
+//   }
+
+//   // Array to store promises of axios requests
+//   const promises = [];
+
+//   // Make requests for each chunk
+//   chunks.forEach((chunk) => {
+//     promises.push(
+//       axios.get(`${baseUrl}/doMp3exist`, { params: { sja_ids: chunk.join(',') } })
+//         .then((d) => {
+//           console.log("then of doMp3exist. d.data: ", d.data);
+//           return d.data.exist;
+//         })
+//     );
+//   });
+
+//   // Aggregate results before returning to the front-end
+//   Promise.all(promises)
+//     .then((results) => {
+//       console.log("then of dpMp3Exist, results: ",results);
+//       const aggregateResult = results.flat(); // Flatten the array of results
+//       console.log("aggregateResult: ",aggregateResult);
+//       setMp3Exist(aggregateResult);
+//     })
+//     .catch((error) => {
+//       console.error("Error occurred while fetching data:", error);
+//       // Handle error here
+//     });
+// };
+
+
 
 export {
   testHelloWorld,
