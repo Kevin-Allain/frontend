@@ -1330,8 +1330,8 @@ const doMp3exist = async(sja_ids, setMp3Exist) => {
   console.log("handleAPI doMp3exist", { sja_ids });
   axios.get(`${baseUrl}/doMp3exist`, {params: { sja_ids}})
   .then((d) => {
-    console.log("then of doMp3exist. d.data: ", d.data);
-    setMp3Exist(d.data.exist);
+    console.log("then of doMp3exist. d.data.objectsExist: ", d.data.objectsExist);
+    setMp3Exist(d.data.objectsExist);
   })
 }
 

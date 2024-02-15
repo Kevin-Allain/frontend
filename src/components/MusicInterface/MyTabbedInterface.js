@@ -13,6 +13,7 @@ import { MdPiano } from "react-icons/md";
 import { FiPlayCircle } from 'react-icons/fi'
 import { FaMusic } from "react-icons/fa";
 import { BiHide } from "react-icons/bi";
+import { RxCross1 } from "react-icons/rx";
 import TableRow from "./TableRow";
 import AdditionalInfo from "./AdditionalInfo";
 import {
@@ -131,11 +132,7 @@ const MyTabbedInterface = ({
   keysEvents.map((a, i) => newStruct.push({ recordingName: a, content: tracksForEvent[i] }) );
   // Sort newStruct (here according to recording)
   newStruct = newStruct.sort((a, b) => a.recording > b.recording ? 1 : b.recording > a.recording ? -1 : 0 );
-
-
-  // const [audioMp3, setAudioMp3] = useState(
-  //   new Audio(`https://jazzdap.city.ac.uk/public/sliced_audio_0_3.mp3`.replace(/ /g,"%20"))
-  // );
+  // const [audioMp3, setAudioMp3] = useState( new Audio(`https://jazzdap.city.ac.uk/public/sliced_audio_0_3.mp3`.replace(/ /g,"%20")) );
 
   const playMp3Slicer = (fileNameSlicer) => {
     console.log("playMp3Slicer - fileNameSlicer: ",fileNameSlicer);
@@ -219,23 +216,31 @@ const MyTabbedInterface = ({
   }
 
   console.log("-- prettyNamesLogNumber: ", prettyNamesLogNumber, ", infoMusicList: ", infoMusicList, ", listSearchRes: ", listSearchRes);
-  const aggregateMatch = [];
-  for (let i in infoMusicList) {
-    let matchingTracks = Object.assign({}, listSearchRes.filter(a => a.lognumber === infoMusicList[i].lognumber)[0]); // Get the first matching track
-    matchingTracks["prettyName"] = prettyNamesLogNumber[infoMusicList[i].lognumber];
-    let keys = Object.keys(infoMusicList[i]);
-    for (let k in keys) { matchingTracks[keys[k]] = infoMusicList[i][keys[k]]; }
-    // for showing details
-    matchingTracks['showDetails'] = false;
-    aggregateMatch.push(matchingTracks);
+  const [aggregateMatch,setAggregateMatch] = useState(null);
+  const [isAggregateMatchReady, setIsAggregateMatchReady] = useState(false);
+
+  const calculateAggregateMatch = (infoMusicList, listSearchRes, prettyNamesLogNumber) => {
+    console.log("calculateAggregateMatch - ",{infoMusicList, listSearchRes, prettyNamesLogNumber});
+    let fAggregate = []
+    for (let i in infoMusicList) {
+      let matchingTracks = Object.assign({}, listSearchRes.filter(a => a.lognumber === infoMusicList[i].lognumber)[0]); // Get the first matching track
+      matchingTracks["prettyName"] = prettyNamesLogNumber[infoMusicList[i].lognumber];
+      let keys = Object.keys(infoMusicList[i]);
+      for (let k in keys) { matchingTracks[keys[k]] = infoMusicList[i][keys[k]]; }
+      // for showing details
+      // matchingTracks['showDetails'] = false;
+      fAggregate.push(matchingTracks);
+    }
+    console.log("~ fAggregate: ", fAggregate);
+    return fAggregate;
   }
-  console.log("~ aggregateMatch: ", aggregateMatch);
-  const [showDetails, setShowDetails] = useState(new Array(aggregateMatch.length).fill(false));
-  const [prevSelectedIndex, setPrevSelectedIndex] = useState(null);
-  const [showPianoRoll, setShowPianoRoll] = useState(new Array(aggregateMatch.length).fill(false));
+
+  // const [showDetails, setShowDetails] = useState(new Array(aggregateMatch.length).fill(false));
+  // const [prevSelectedIndex, setPrevSelectedIndex] = useState(null);
+  const [showPianoRoll, setShowPianoRoll] = useState(new Array(listSearchRes.length).fill(false));
 
   // const handleHideInfo = () => { setClickedCell(null); };
-  const [expandedRow, setExpandedRow] = useState(new Array(aggregateMatch.length).fill(false));
+  const [expandedRow, setExpandedRow] = useState(new Array(listSearchRes.length).fill(false));
   const [contentExpandedRow, setContentExpandedRow] = useState(<>Test expanded row</>);
   const [datatTest, setDataTest] = useState("");
   const handleExpand = async (index, columnName = "", item = null) => {
@@ -275,30 +280,37 @@ const MyTabbedInterface = ({
 
   const [mp3Exist, setMp3Exist] = useState({})
   useEffect(() => {
-    console.log("in useEffect, aggregateMatch: ",aggregateMatch);
+    console.log("in useEffect");
+    const newAggregateMatch = calculateAggregateMatch(infoMusicList, listSearchRes, prettyNamesLogNumber);
+    setAggregateMatch(newAggregateMatch);
+    setIsAggregateMatchReady(true);
+  }, []);
+  useEffect(() => {
+    console.log("useEffect of aggregateMatch: ", aggregateMatch);
+    if (aggregateMatch !== null) {
+      let track_ids = aggregateMatch.map(a => a.track);
+      const sja_ids = [...new Set(track_ids.map(
+        text => text.split('-')[0] + '_' + text.split('-')[1].replace('T', '')
+      ))];
+      console.log("sja_ids: ", sja_ids);
 
-    let track_ids = aggregateMatch.map(a=>a.track);
-    const sja_ids = [...new Set(track_ids.map( 
-      text => text.split('-')[0]+'_'+text.split('-')[1].replace('T','') 
-    ))];
-    console.log("sja_ids: ",sja_ids);
-
-    // I suppose a loop here would be awful. Maybe to do on the back-end...
-    const fetchData = async () => {
-      try {
-        // const result = await doesMp3exist(sja_ids[0], setMp3Exist);
-        const result = await doMp3exist(sja_ids, setMp3Exist);
-        console.log("result: ",result,", mp3Exists: ",mp3Exist);
-      } catch (error) {
-        console.error('Error fetching data:', error);
-        setMp3Exist(false); // Set mp3Exists to false in case of an error
-      }
-    };
-
-    fetchData();
-  }, [aggregateMatch,mp3Exist]);
-
-
+      // I suppose a loop here would be awful. Maybe to do on the back-end...
+      const fetchData = async () => {
+        try {
+          const result = await doMp3exist(sja_ids, setMp3Exist);
+          console.log("result: ", result, ", mp3Exists: ", mp3Exist);
+        } catch (error) {
+          console.error('Error fetching data:', error);
+          setMp3Exist(false); // Set mp3Exists to false in case of an error
+        }
+      };
+      fetchData();
+    }
+  }, [aggregateMatch])
+  useEffect(() => {
+    console.log("mp3Exist changed:", mp3Exist);
+  }, [mp3Exist]);
+  
 
   return (
     <>    
@@ -307,8 +319,7 @@ const MyTabbedInterface = ({
       {/* <div className="w-1/8 p-4 overflow-y-auto custom-scrollbar"> */}
       <div className="overflow-y-auto custom-scrollbar">
         <table>
-          <thead>
-            <tr>
+          <thead> <tr>
               <th>Artist(s)</th>
               <th>Recording</th>
               <th>Track Title</th>
@@ -318,12 +329,11 @@ const MyTabbedInterface = ({
               <th>Piano Roll</th>
               <th>Play Mp3</th>
               <th>Play MIDI</th>
-            </tr>
-          </thead>
-          {/* TODO set functionalities for all columns later?! */}
+          </tr> </thead>
           <tbody>
             {/* <tr> <td>TEXT NOTE 1</td> <td>TEXT NOTE 2</td> <td>TEXT NOTE 3</td> <td>TEXT NOTE 4</td> <td>TEXT NOTE 5</td> <td>TEXT NOTE 6 blablablablablablabla blablablablablabla</td> <td>TEXT NOTE 7 blablablablablablabla blablablablablabla</td> <td>TEXT NOTE 8 blablablablablablabla blablablablablabla</td> <td>TEXT NOTE 9 blablablablablablabla blablablablablabla</td> </tr> */}
-            {aggregateMatch.map((item, index) => (
+            {isAggregateMatchReady 
+            ? aggregateMatch.map((item, index) => (
               <>
               <tr key={index} className={index%2===0 ? 'bg-stone-300' : null}>
                 <td>
@@ -338,20 +348,22 @@ const MyTabbedInterface = ({
                 <td>{item['Release Year']}</td>
                 <td>{item.arrNotes.map((a, i) => MIDItoNote[a].replaceAll("s", "")).toString().replaceAll(",", "-")}</td>
                 <td className="icon clickableCell"  onClick={() => handleExpand(index,'Details',item)}> 
-                  {/* {showDetails[index] ? <FaAngleUp/> : <FaAngleDown /> } */}
                   <BsFillInfoCircleFill/>
                 </td>
                 <td className="icon clickableCell"  onClick={() => handleExpand(index,'Piano Roll',item)}> 
                   {showPianoRoll[index] ? <BiHide/> : <MdPiano/> }
                 </td>
-                <td className="icon clickableCell"  onClick={() => handleExpand(index,'Play Mp3',item)}>
-                  <FaMusic />
-                </td>
+                {/* <td>STUFF</td> */}
+                {/* {item.SJA_ID} */}
+                {mp3Exist[item.SJA_ID]
+                  ? <td className="icon clickableCell"  onClick={() => handleExpand(index,'Play Mp3',item)}> <FaMusic /> </td>
+                  : <td className="text-slate-400"> <RxCross1 /> </td>
+                }
+
                 <td className="icon clickableCell"  onClick={() => handleExpand(index,'Play MIDI',item)}>
                   <FiPlayCircle />
                 </td>              
               </tr>
-              {/* <TableRow key={index} item={item} showDetails={showDetails} setShowDetails={setShowDetails} prevSelectedIndex={prevSelectedIndex} setPrevSelectedIndex={setPrevSelectedIndex} /> */}
               {expandedRow[index] && (
                 <tr className={index%2===0 ? 'bg-stone-300' : null}>
                   <td colSpan="9" className={'border-dotted border-black'}>
@@ -361,17 +373,17 @@ const MyTabbedInterface = ({
                 </tr>)}
               </>
               )
-            )}
+            )
+            : (
+              <tr>
+                <td colSpan="9">Loading...</td>
+              </tr>
+            )                
+          }
           </tbody>
         </table>
-        {/* Approach with a different div proved difficult as the positionning is off! Considering alternatives for now.*/}
-          {/* {clickedCell && (
-            <AdditionalInfo
-              rowData={infoMusicList[clickedCell.rowIndex]}
-              position={clickedCell.position}
-              onHide={handleHideInfo}
-            />
-          )} */}
+        {/* Approach with a different div proved difficult as the positionning is off! Considering alternatives for now. */}
+        {/* {clickedCell && ( <AdditionalInfo rowData={infoMusicList[clickedCell.rowIndex]} position={clickedCell.position} onHide={handleHideInfo} /> )} */}
       </div>
     </div>
     </>
