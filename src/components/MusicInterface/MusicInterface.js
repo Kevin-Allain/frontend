@@ -73,7 +73,7 @@ const MusicInterface = () => {
 
   const [playingMp3, setPlayingMp3] = useState(false);
   const [iconPlayMp3, setIconPlayMp3] = useState( <AiFillPlayCircle className="icon"></AiFillPlayCircle> );
-  const [audioMp3, setAudioMp3] = useState( new Audio( "https://www.learningcontainer.com/wp-content/uploads/2020/02/Kalimba.mp3" ) );
+  const [audioMp3, setAudioMp3] = useState( new Audio( "https://jazzdap.city.ac.uk/public/SJA_AC_A0003_N0005_E0010_Y10061959_01_161_163.mp3" ) ); // works
 
   const [notesTranslate, setNotesTranslate] = useState("");
   const [showNotesTranslate, setShowNotesTranslate] = useState(false);
@@ -334,25 +334,25 @@ const MusicInterface = () => {
   };
 
 
-  // function playMp3() {
-  //   if (playingMp3) { audioMp3.pause(); setIconPlayMp3(<AiFillPlayCircle className="icon"></AiFillPlayCircle>); } else { audioMp3.play(); setIconPlayMp3(<AiFillPauseCircle className="icon"></AiFillPauseCircle>); }
-  //   setPlayingMp3(!playingMp3);
-  // }
-  // function playToneSalamander() {
-  //   const now = Tone.now();
-  //   Tone.loaded().then(() => {
-  //     for (var i = 0; i < 3; i++) {
-  //       sampler.triggerAttackRelease( 
-  //         [ `E${i + 4}`, `F${i + 4}`, `C${i + 4}`, `G${i + 4}`, `B${i + 4}`, `A${i + 4}`, `A#${i + 4}`, ],
-  //         1,
-  //         now + i
-  //       );}
-  //   });
-  // }
-  // function resetMp3() {
-  //   if (playingMp3) { audioMp3.pause(); setIconPlayMp3(<AiFillPlayCircle></AiFillPlayCircle>); setPlayingMp3(!playingMp3); }
-  //   setAudioMp3( new Audio("https://www.learningcontainer.com/wp-content/uploads/2020/02/Kalimba.mp3") );
-  // }
+  function playMp3() {
+    if (playingMp3) { audioMp3.pause(); setIconPlayMp3(<AiFillPlayCircle className="icon"></AiFillPlayCircle>); } else { audioMp3.play(); setIconPlayMp3(<AiFillPauseCircle className="icon"></AiFillPauseCircle>); }
+    setPlayingMp3(!playingMp3);
+  }
+  function playToneSalamander() {
+    const now = Tone.now();
+    Tone.loaded().then(() => {
+      for (var i = 0; i < 3; i++) {
+        sampler.triggerAttackRelease( 
+          [ `E${i + 4}`, `F${i + 4}`, `C${i + 4}`, `G${i + 4}`, `B${i + 4}`, `A${i + 4}`, `A#${i + 4}`, ],
+          1,
+          now + i
+        );}
+    });
+  }
+  function resetMp3() {
+    if (playingMp3) { audioMp3.pause(); setIconPlayMp3(<AiFillPlayCircle></AiFillPlayCircle>); setPlayingMp3(!playingMp3); }
+    setAudioMp3( new Audio("https://www.learningcontainer.com/wp-content/uploads/2020/02/Kalimba.mp3") );
+  }
 
   function handleKeyPress(keyName) {
     setTextSearch((prevText) =>

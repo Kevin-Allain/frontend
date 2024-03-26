@@ -134,22 +134,35 @@ const MyTabbedInterface = ({
   newStruct = newStruct.sort((a, b) => a.recording > b.recording ? 1 : b.recording > a.recording ? -1 : 0 );
   // const [audioMp3, setAudioMp3] = useState( new Audio(`https://jazzdap.city.ac.uk/public/sliced_audio_0_3.mp3`.replace(/ /g,"%20")) );
 
-  const playMp3Slicer = (fileNameSlicer) => {
-    console.log("playMp3Slicer - fileNameSlicer: ",fileNameSlicer);
+  const playMp3Slicer = (fileNameSlicer, audioName, start, end, item) => {
+    console.log("playMp3Slicer - fileNameSlicer: ", fileNameSlicer);
     let audioMp3 = new Audio(fileNameSlicer.replace(/ /g, "%20"));
-    console.log("audioMp3: ", audioMp3);
+    audioMp3.onerror = function() {
+      // If an error occurs while loading the audio, update audioName and try again
+      audioName = item.SJA_ID;
+      fileNameSlicer = `https://jazzdap.city.ac.uk/public/${audioName}_${start}_${end}.mp3`;
+      console.log("Retry playMp3Slicer - fileNameSlicer: ", fileNameSlicer);
+      audioMp3 = new Audio(fileNameSlicer.replace(/ /g, "%20"));
+      audioMp3.onerror = function() {
+        // If a second error occurs, display an alert
+        alert('Audio file not found');
+      };
+      audioMp3.play();
+    };
     audioMp3.play();
   };
-
-  const handleClickPlayMp3 = (item) => {
-    console.log("handleClickPlayMp3 - item: ",item);
+  
+  const handleClickPlayMp3 = async (item) => {
+    console.log("handleClickPlayMp3 - item: ", item);
     // TODO slice based on audio beginning and ending
     let audioName = item["Audio Filename (Internal backup)"];
     let start = Math.floor(item.arrTime[0]);
-    let end = Math.floor(item.arrTime[item.arrTime.length-1]);
-    let fileNameSlicer = `https://jazzdap.city.ac.uk/public/${audioName}_${start}_${end}.mp3`
-    playMp3Slicer(fileNameSlicer);
-  }
+    let end = Math.ceil(item.arrTime[item.arrTime.length - 1]);
+    let fileNameSlicer = `https://jazzdap.city.ac.uk/public/${audioName}_${start}_${end}.mp3`;
+    
+    playMp3Slicer(fileNameSlicer, audioName, start, end, item);
+  };
+          
   const handleClickPlayMIDI = item => {
     console.log("handleClickPlayMIDI - item: ",item);
     handlePlayMIDINotes(item.arrNotes,item.arrDurations,item.arrTime);
