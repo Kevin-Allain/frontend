@@ -6,8 +6,8 @@ import { setIsLoading } from '../App';
  * Functions name match those done in Controllers.
  */
 
-const baseUrl = "https://jazzdap.city.ac.uk/api/" // can be used for development
-// const baseUrl = "http://localhost:5000" // can be used for development
+// const baseUrl = "https://jazzdap.city.ac.uk/api/" // can be used for development
+const baseUrl = "http://localhost:5000" // can be used for development
 // const baseUrl = "https://fullstack-proto-jazzdap-backend.onrender.com"
 // const baseUrl= "https://jazzdap-backend.onrender.com"
 

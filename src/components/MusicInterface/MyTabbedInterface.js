@@ -36,6 +36,11 @@ const MyTabbedInterface = ({
   formatAndPlay,
   getMusicInfo,
   setInfoMusicList,
+  oldSearch,
+  textFilterArtist,
+  textFilterRecording,
+  textFilterTrack,
+  percMatch
 }) => {
   const [activeRecording, setActiveRecording] = useState(null);
   const [activeTrack, setActiveTrack] = useState(null);
@@ -49,7 +54,6 @@ const MyTabbedInterface = ({
   }).toDestination();
 
   const handlePlayMIDINotes = (notes, durations, times) => {
-    console.log("handlePlayMIDINotes");
     const now = Tone.now();
     // console.log("handlePlayNotes notes: ", notes, ", durations: ", durations,", times: ",times);
     if (typeof notes === "undefined") {
@@ -273,8 +277,9 @@ const MyTabbedInterface = ({
         } if (columnName === "Details"){
           handleClickShowDetails(item);
         } else {
-          console.log("Default case. Should not happen.");
+          console.log("Default case. Should not happen. Or work in progress");
           setExpandedRow(new Array(aggregateMatch.length).fill(false)); // reset all expanded rows to false
+
           try {
             // Fetch information
             const additionalInfo = await testHelloWorld(setDataTest); // won't work unless we update the back-end and VPN is off.
@@ -382,6 +387,14 @@ const MyTabbedInterface = ({
                   <td colSpan="9" className={'border-dotted border-black'}>
                     {/* {expandedRow[index]} STUFF bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla  */}
                     {contentExpandedRow}
+                    <AnnotationSystem type={"search"} info={ oldSearch + "_fArtist(" + textFilterArtist + ")_fRecording(" + textFilterRecording + ")_fTrack(" + textFilterTrack + ")_fPerc(" + percMatch + ")" }/>
+                    <EmbeddedWorkflowInteraction
+                      idCaller={oldSearch + "_fArtist(" + textFilterArtist + ")_fRecording(" + textFilterRecording + ")_fTrack(" + textFilterTrack + ")_fPerc(" + percMatch + ")"}
+                      typeCaller={"search"}
+                      listLogNumbers={listLogNumbers}
+                      infoMusicList={infoMusicList}
+                      listTracks={listTracks}
+                    />                    
                   </td>
                 </tr>)}
               </>

@@ -659,6 +659,11 @@ const MusicInterface = () => {
               formatAndPlay={formatAndPlay}
               getMusicInfo={getMusicInfo}
               setInfoMusicList={setInfoMusicList}
+              oldSearch={oldSearch}
+              textFilterArtist={textFilterArtist} 
+              textFilterRecording={textFilterRecording} 
+              textFilterTrack={textFilterTrack}
+              percMatch={percMatch}
             />
           ) : (
             <></>
