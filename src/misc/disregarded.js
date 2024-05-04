@@ -938,12 +938,15 @@ function calcLevenshteinDistance_str(s1, s2) {
               <div>Recording content and interaction</div> {infoMusicList.length === 0 ? (<AiOutlineLoading className='spin' size={'20px'} />) :
                 findMatchRecording(activeRecording) !== -1 ? ( <div className='detailResultMeta'> <u>Info about recording:</u> {Object.entries(infoMusicList[findMatchRecording(activeRecording)]).map(([key, value]) => ( <p key={key}> {key}: {value} </p> ))} </div> )
                   : (<><div className='text-left'>No metadata about the recording</div><br /></>) }
-              <AnnotationSystem type={"recording"} info={activeRecording} /> <EmbeddedWorkflowInteraction idCaller={listSearchRes[0].arrIdNotes[0]} typeCaller={"recording"} />
+              <AnnotationSystem type={"recording"} info={activeRecording} /> 
+              <EmbeddedWorkflowInteraction idCaller={listSearchRes[0].arrIdNotes[0]} typeCaller={"recording"} />
             </div> */}
 
 {/* Zone for tracks... or directly samples? */ }
 {/* <div className='border p-[0.25rem]'>
-              <div>Track content and interaction</div> <div className='iconTracksInteractions'> <AnnotationSystem type={"track"} info={activeTrack} /> <EmbeddedWorkflowInteraction idCaller={listSearchRes[0].arrIdNotes[0]} typeCaller={"track"} /> </div>
+              <div>Track content and interaction</div> <div className='iconTracksInteractions'> 
+              <AnnotationSystem type={"track"} info={activeTrack} /> 
+              <EmbeddedWorkflowInteraction idCaller={listSearchRes[0].arrIdNotes[0]} typeCaller={"track"} /> </div>
             </div> */}
 
 

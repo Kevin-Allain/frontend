@@ -56,7 +56,8 @@ const SampleRes = ({
 
     return (
         <div className="sampleres" key={key}>
-            {/* <div className="text"> <h2>Song: {text.substr(text.indexOf("-") + 1)} </h2> </div> <AnnotationSystem type={"track"} info={text.substr(text.indexOf("-") + 1)} /> */}
+            {/* <div className="text"> <h2>Song: {text.substr(text.indexOf("-") + 1)} </h2> </div>                 
+            <AnnotationSystem type={"track"} info={text.substr(text.indexOf("-") + 1)} /> */}
             {/* ==== Piano Roll === */}
             {/* <div className='contentSample'> </div> */}
             {/* Should only be called when the user clicks on a button in practice...*/}

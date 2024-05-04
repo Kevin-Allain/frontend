@@ -221,15 +221,76 @@ const MyTabbedInterface = ({
           width={600}
           height={200}
         />
-        {/* <AnnotationSystem type={"sample"}
-          info={ text.substr(text.indexOf("-") + 1) + "_" + notes + "_" + Number(text.split("-")[0]) }
-          index={Number(text.split("-")[0])}
-        />
-        {typeof localStorage.token !== "undefined" && (
-          <EmbeddedWorkflowInteraction typeCaller={"sample"} idCaller={idDBNotes[0]} indexRange={idDBNotes.length} />
-        )} */}
+        {/* <AnnotationSystem type={"sample"} info={ text.substr(text.indexOf("-") + 1) + "_" + notes + "_" + Number(text.split("-")[0]) } index={Number(text.split("-")[0])} />
+        {typeof localStorage.token !== "undefined" && ( <EmbeddedWorkflowInteraction typeCaller={"sample"} idCaller={idDBNotes[0]} indexRange={idDBNotes.length} /> )} */}
       </>
     );
+  }
+  const hidePianoRoll = () => {
+    setContentExpandedRow(<></>)
+  }
+
+  const handleClickShowShared = (item, columnName) => {
+    // We have records of annotations being: 
+    // recording
+    // track
+    // sample
+    // search (not here)
+    // workflow (not here)
+    const annotationType = (columnName==="(E) Event Name")?"recording":(columnName==="Track title")?"track":(columnName==="Pattern")?"sample":columnName;
+    console.log("handleClickShowShared - item: ", item,", columnName: ", columnName, ", annotationType: ",annotationType);
+    const infoSearch = oldSearch + "_fArtist(" + textFilterArtist + ")_fRecording(" + textFilterRecording + ")_fTrack(" + textFilterTrack + ")_fPerc(" + percMatch + ")";
+
+    const activeLognumber = item.lognumber;
+    const activeRecording = item["(E) Event Name"];
+    const activeTrack = item.track;
+    const infoAnnotation = (columnName==="(E) Event Name")?activeLognumber:(columnName==="Track title")?activeTrack:infoSearch;
+    const mongoObjId = item._id;
+
+    // ---- Taken from MetadataAccordion
+    // -- recording
+    // <AnnotationSystem
+    //   type={"recording"}
+    //   recording={recording}
+    //   idCaller={mongoObjId}
+    //   recordingCode={recording}
+    //   trackCode={track}
+    //   metaObjId={metaObjId}
+    // />
+    // -- track
+    // <AnnotationSystem
+    //   type={"track"}
+    //   track={track}
+    //   idCaller={mongoObjId}
+    //   recordingCode={recording}
+    //   trackCode={track}
+    // />
+    // -- workflow
+    // <EmbeddedWorkflowInteraction
+    //   idCaller={content}
+    //   typeCaller={"track"}
+    // />
+
+    setContentExpandedRow(
+      <>
+        Content for {annotationType}. info (search): 
+        <AnnotationSystem 
+          type={annotationType} 
+          info={infoAnnotation}
+          recording={activeRecording}
+          idCaller={mongoObjId}
+          recordingCode={activeLognumber}
+          trackCode={activeTrack}
+          // metaObjId={metaObjId}
+        />
+        {typeof (localStorage.token) !== 'undefined' &&
+          <EmbeddedWorkflowInteraction
+            idCaller={infoAnnotation}
+            typeCaller={annotationType}
+          />
+          }
+      </>
+    )
   }
 
   console.log("-- prettyNamesLogNumber: ", prettyNamesLogNumber, ", infoMusicList: ", infoMusicList, ", listSearchRes: ", listSearchRes);
@@ -274,19 +335,28 @@ const MyTabbedInterface = ({
         // If the user clicks on the same cell, we should close it
         if (columnName === "Piano Roll") {
           handleClickShowPianoRoll(item);
-        } if (columnName === "Details"){
-          handleClickShowDetails(item);
-        } else {
-          console.log("Default case. Should not happen. Or work in progress");
-          setExpandedRow(new Array(aggregateMatch.length).fill(false)); // reset all expanded rows to false
+        } 
+        else{
+          hidePianoRoll();
+          if (columnName === "Details")
+          {
+            handleClickShowDetails(item);
+          }
+          else 
+          {
+            console.log("Default case. Should not happen. Or work in progress");
+            setExpandedRow(new Array(aggregateMatch.length).fill(false)); // reset all expanded rows to false
 
-          try {
-            // Fetch information
-            const additionalInfo = await testHelloWorld(setDataTest); // won't work unless we update the back-end and VPN is off.
-            console.log("datatTest: ", datatTest);
-            setExpandedRow((prevState) => ({ ...prevState, [index]: true }));
-          } catch (error) {
-            console.error("Error fetching additional information:", error);
+            handleClickShowShared(item, columnName);
+
+            try {
+              // Fetch information
+              // const additionalInfo = await testHelloWorld(setDataTest); // won't work unless we update the back-end and VPN is off.
+              // console.log("datatTest: ", datatTest);
+              setExpandedRow((prevState) => ({ ...prevState, [index]: true }));
+            } catch (error) {
+              console.error("Error fetching additional information:", error);
+            }
           }
         }
         setExpandedRow(new Array(aggregateMatch.length).fill(false)); // all to false
@@ -364,7 +434,9 @@ const MyTabbedInterface = ({
                   {item['Track Title']}
                 </td>
                 <td>{item['Release Year']}</td>
-                <td>{item.arrNotes.map((a, i) => MIDItoNote[a].replaceAll("s", "")).toString().replaceAll(",", "-")}</td>
+                <td className="icon clickableCell" onClick={() => handleExpand(index,'Pattern',item)} >
+                  {item.arrNotes.map((a, i) => MIDItoNote[a].replaceAll("s", "")).toString().replaceAll(",", "-")}
+                </td>
                 <td className="icon clickableCell"  onClick={() => handleExpand(index,'Details',item)}> 
                   <BsFillInfoCircleFill/>
                 </td>
@@ -387,14 +459,6 @@ const MyTabbedInterface = ({
                   <td colSpan="9" className={'border-dotted border-black'}>
                     {/* {expandedRow[index]} STUFF bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla  */}
                     {contentExpandedRow}
-                    <AnnotationSystem type={"search"} info={ oldSearch + "_fArtist(" + textFilterArtist + ")_fRecording(" + textFilterRecording + ")_fTrack(" + textFilterTrack + ")_fPerc(" + percMatch + ")" }/>
-                    <EmbeddedWorkflowInteraction
-                      idCaller={oldSearch + "_fArtist(" + textFilterArtist + ")_fRecording(" + textFilterRecording + ")_fTrack(" + textFilterTrack + ")_fPerc(" + percMatch + ")"}
-                      typeCaller={"search"}
-                      listLogNumbers={listLogNumbers}
-                      infoMusicList={infoMusicList}
-                      listTracks={listTracks}
-                    />                    
                   </td>
                 </tr>)}
               </>

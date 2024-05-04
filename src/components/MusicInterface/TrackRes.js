@@ -65,7 +65,8 @@ const TrackRes = ({
     return (
       <div className="trackres" key={text + "_" + listSearchRes.length}>
         {/* <div className="texttrackres"> <h3>Track: {text} </h3> </div> */}
-        {/* <div className='iconTracksInteractions'> <AnnotationSystem type={"track"} info={text} /> <EmbeddedWorkflowInteraction idCaller={listSearchRes[0].arrIdNotes[0]} typeCaller={"track"} /> </div> */}
+        {/* <div className='iconTracksInteractions'> <AnnotationSystem type={"track"} info={text} /> 
+        <EmbeddedWorkflowInteraction idCaller={listSearchRes[0].arrIdNotes[0]} typeCaller={"track"} /> </div> */}
         {testPerformances ? (
           <></>
         ) : (
