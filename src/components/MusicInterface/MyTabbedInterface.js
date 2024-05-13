@@ -212,19 +212,7 @@ const MyTabbedInterface = ({
   }
   const handleClickShowPianoRoll = (item) => {
     console.log("handleClickShowPianoRoll - item: ",item);         
-    setContentExpandedRow(
-      <>
-        <PianoRoll
-          notes={item.arrNotes}
-          occurrences={item.arrTime}
-          durations={item.arrDurations}
-          width={600}
-          height={200}
-        />
-        {/* <AnnotationSystem type={"sample"} info={ text.substr(text.indexOf("-") + 1) + "_" + notes + "_" + Number(text.split("-")[0]) } index={Number(text.split("-")[0])} />
-        {typeof localStorage.token !== "undefined" && ( <EmbeddedWorkflowInteraction typeCaller={"sample"} idCaller={idDBNotes[0]} indexRange={idDBNotes.length} /> )} */}
-      </>
-    );
+    setContentExpandedRow( <PianoRoll notes={item.arrNotes} occurrences={item.arrTime} durations={item.arrDurations} width={600} height={200} /> );
   }
   const hidePianoRoll = () => {
     setContentExpandedRow(<></>)
@@ -237,43 +225,51 @@ const MyTabbedInterface = ({
     // sample
     // search (not here)
     // workflow (not here)
-    const annotationType = (columnName==="(E) Event Name")?"recording":(columnName==="Track title")?"track":(columnName==="Pattern")?"sample":columnName;
+    const annotationType = (columnName==="(E) Event Name")?"recording":(columnName==="Track Title")?"track":(columnName==="Pattern")?"sample":columnName;
     console.log("handleClickShowShared - item: ", item,", columnName: ", columnName, ", annotationType: ",annotationType);
     const infoSearch = oldSearch + "_fArtist(" + textFilterArtist + ")_fRecording(" + textFilterRecording + ")_fTrack(" + textFilterTrack + ")_fPerc(" + percMatch + ")";
 
     const activeLognumber = item.lognumber;
-    const activeRecording = item["(E) Event Name"];
+    const activeRecording = item["(N) Named Artist(s)"];
     const activeTrack = item.track;
-    const infoAnnotation = (columnName==="(E) Event Name")?activeLognumber:(columnName==="Track title")?activeTrack:infoSearch;
+    // For annotation, we change the system, with a string that is unique based on artist-event_name-track (all spaces changed to _)
+    const codeAnnotationRecording =  item["(E) Event Name"].replaceAll(' ','_') 
+    + item["(E) Event Name"].replaceAll(' ','_')+'-'
+    const codeAnnotationTrack =  item["(E) Event Name"].replaceAll(' ','_') 
+    + item["(E) Event Name"].replaceAll(' ','_')+'-'
+    + item["Track Title"].replaceAll(' ','_');
+    const codeAnnotationSample =  item["(E) Event Name"].replaceAll(' ','_') 
+    + item["(E) Event Name"].replaceAll(' ','_')+'-'
+    + item["Track Title"].replaceAll(' ','_') +'-'
+    + item.arrNotes.toString().replaceAll(',','_');
+    const infoAnnotation = (columnName==="(E) Event Name")
+      ?codeAnnotationRecording
+      :(columnName==="Track Title")
+        ?codeAnnotationTrack
+        :(columnName==="Pattern")
+        ? codeAnnotationSample
+        :infoSearch;
     const mongoObjId = item._id;
+
+    console.log("infoAnnotation: ", infoAnnotation);
 
     // ---- Taken from MetadataAccordion
     // -- recording
     // <AnnotationSystem
-    //   type={"recording"}
-    //   recording={recording}
-    //   idCaller={mongoObjId}
-    //   recordingCode={recording}
-    //   trackCode={track}
-    //   metaObjId={metaObjId}
+    //   type={"recording"} recording={recording} idCaller={mongoObjId} recordingCode={recording} trackCode={track} metaObjId={metaObjId}
     // />
     // -- track
     // <AnnotationSystem
-    //   type={"track"}
-    //   track={track}
-    //   idCaller={mongoObjId}
-    //   recordingCode={recording}
-    //   trackCode={track}
+    //   type={"track"} track={track} idCaller={mongoObjId} recordingCode={recording} trackCode={track}
     // />
     // -- workflow
     // <EmbeddedWorkflowInteraction
-    //   idCaller={content}
-    //   typeCaller={"track"}
+    //   idCaller={content} typeCaller={"track"}
     // />
 
     setContentExpandedRow(
       <>
-        Content for {annotationType}. info (search): 
+        {/* Content for {annotationType}. */}
         <AnnotationSystem 
           type={annotationType} 
           info={infoAnnotation}
@@ -281,7 +277,6 @@ const MyTabbedInterface = ({
           idCaller={mongoObjId}
           recordingCode={activeLognumber}
           trackCode={activeTrack}
-          // metaObjId={metaObjId}
         />
         {typeof (localStorage.token) !== 'undefined' &&
           <EmbeddedWorkflowInteraction
@@ -338,15 +333,11 @@ const MyTabbedInterface = ({
         } 
         else{
           hidePianoRoll();
-          if (columnName === "Details")
-          {
+          if (columnName === "Details") {
             handleClickShowDetails(item);
-          }
-          else 
-          {
+          } else  {
             console.log("Default case. Should not happen. Or work in progress");
             setExpandedRow(new Array(aggregateMatch.length).fill(false)); // reset all expanded rows to false
-
             handleClickShowShared(item, columnName);
 
             try {
@@ -424,40 +415,26 @@ const MyTabbedInterface = ({
             ? aggregateMatch.map((item, index) => (
               <>
               <tr key={index} className={index%2===0 ? 'bg-stone-300' : null}>
-                <td>
-                  {item['(N) Named Artist(s)']}
-                </td>
-                <td className="icon clickableCell"  onClick={() => handleExpand(index,'(E) Event Name',item)}>
-                  {item['(E) Event Name']}
-                </td>
-                <td className="icon clickableCell"  onClick={() => handleExpand(index,'Track Title',item)}>
-                  {item['Track Title']}
-                </td>
+                <td> {item['(N) Named Artist(s)']} </td>
+                <td className="icon clickableCell"  onClick={() => handleExpand(index,'(E) Event Name',item)}> {item['(E) Event Name']} </td>
+                <td className="icon clickableCell"  onClick={() => handleExpand(index,'Track Title',item)}> {item['Track Title']} </td>
                 <td>{item['Release Year']}</td>
                 <td className="icon clickableCell" onClick={() => handleExpand(index,'Pattern',item)} >
                   {item.arrNotes.map((a, i) => MIDItoNote[a].replaceAll("s", "")).toString().replaceAll(",", "-")}
                 </td>
-                <td className="icon clickableCell"  onClick={() => handleExpand(index,'Details',item)}> 
-                  <BsFillInfoCircleFill/>
-                </td>
-                <td className="icon clickableCell"  onClick={() => handleExpand(index,'Piano Roll',item)}> 
-                  {showPianoRoll[index] ? <BiHide/> : <MdPiano/> }
-                </td>
+                <td className="icon clickableCell"  onClick={() => handleExpand(index,'Details',item)}> <BsFillInfoCircleFill/> </td>
+                <td className="icon clickableCell"  onClick={() => handleExpand(index,'Piano Roll',item)}> {showPianoRoll[index] ? <BiHide/> : <MdPiano/> } </td>
                 {/* <td>STUFF</td> */}
                 {/* {item.SJA_ID} */}
                 {mp3Exist[item.SJA_ID]
                   ? <td className="icon clickableCell"  onClick={() => handleExpand(index,'Play Mp3',item)}> <FaMusic /> </td>
                   : <td className="text-slate-400"> <RxCross1 /> </td>
                 }
-
-                <td className="icon clickableCell"  onClick={() => handleExpand(index,'Play MIDI',item)}>
-                  <FiPlayCircle />
-                </td>              
+                <td className="icon clickableCell"  onClick={() => handleExpand(index,'Play MIDI',item)}> <FiPlayCircle/> </td>
               </tr>
               {expandedRow[index] && (
                 <tr className={index%2===0 ? 'bg-stone-300' : null}>
                   <td colSpan="9" className={'border-dotted border-black'}>
-                    {/* {expandedRow[index]} STUFF bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla  */}
                     {contentExpandedRow}
                   </td>
                 </tr>)}
@@ -472,8 +449,6 @@ const MyTabbedInterface = ({
           }
           </tbody>
         </table>
-        {/* Approach with a different div proved difficult as the positionning is off! Considering alternatives for now. */}
-        {/* {clickedCell && ( <AdditionalInfo rowData={infoMusicList[clickedCell.rowIndex]} position={clickedCell.position} onHide={handleHideInfo} /> )} */}
       </div>
     </div>
     </>

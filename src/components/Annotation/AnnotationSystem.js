@@ -23,7 +23,7 @@ const AnnotationSystem = ({ type, info,idCaller = null, index=0, recordingCode=n
   const [selectedPrivacyOption, setSelectedPrivacyOption] = useState('public');
 
   useEffect(() => {
-    console.log("useEffect ~ AnnotationSystem: ",{ type, info,idCaller, index, recordingCode, trackCode,metaObjId})
+    // console.log("useEffect ~ AnnotationSystem: ",{ type, info,idCaller, index, recordingCode, trackCode,metaObjId})
   })
 
   const updateMode = (_id, text) => {
