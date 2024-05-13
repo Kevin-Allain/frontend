@@ -274,6 +274,8 @@ const loadDetailsSearchWorkflow = (_id) => {
             <AiFillDelete className="icon" onClick={() => handleDeleteWorkflow(item._id)} />
           </div>
         ))}
+        {isWorkflowListVisible && workflows.length===0 &&
+        <>No workflows</>}
       {isWorkflowVisible && selectedWorkflow &&
         <div className="workflowInterface">
           <h1>Workflow Interface</h1>{" "}<AiOutlineEyeInvisible className="icon" onClick={handleShowWorkflowDetail} />
