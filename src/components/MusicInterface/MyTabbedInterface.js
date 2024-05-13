@@ -101,7 +101,7 @@ const MyTabbedInterface = ({
       let trackInfoCode = curTrack.replace('-T', '_')
       if (curTrack.includes('SJA') || curTrack.includes('BCC') || curTrack.includes('BGR')) {
         let selecInfo = infoMusicList.filter(a => a['SJA_ID'] === trackInfoCode)
-        trackToTitles[curTrack] = selecInfo[0]['Track Title']
+        trackToTitles[curTrack] = selecInfo[0]['Track Title'] // Is this normal?
       }
     }
     else {
@@ -109,7 +109,8 @@ const MyTabbedInterface = ({
     }
   }
   let filteredUniqueSearchResTracks = [];
-  
+  console.log("trackToTitles: ",trackToTitles);
+
   const mergedData = {};
   infoMusicList.forEach((item) => {
     const eventName = item["(E) Event Name"];
@@ -140,6 +141,7 @@ const MyTabbedInterface = ({
   newStruct = newStruct.sort((a, b) => a.recording > b.recording ? 1 : b.recording > a.recording ? -1 : 0 );
   // const [audioMp3, setAudioMp3] = useState( new Audio(`https://jazzdap.city.ac.uk/public/sliced_audio_0_3.mp3`.replace(/ /g,"%20")) );
 
+  // TODO will need to be updated to be more specific...!
   const playMp3Slicer = (fileNameSlicer, audioName, start, end, item) => {
     console.log("playMp3Slicer - fileNameSlicer: ", fileNameSlicer);
     let audioMp3 = new Audio(fileNameSlicer.replace(/ /g, "%20"));
@@ -255,20 +257,8 @@ const MyTabbedInterface = ({
     const mongoObjId = item._id;
 
     console.log("infoAnnotation: ", infoAnnotation);
-
-    // ---- Taken from MetadataAccordion
-    // -- recording
-    // <AnnotationSystem
-    //   type={"recording"} recording={recording} idCaller={mongoObjId} recordingCode={recording} trackCode={track} metaObjId={metaObjId}
-    // />
-    // -- track
-    // <AnnotationSystem
-    //   type={"track"} track={track} idCaller={mongoObjId} recordingCode={recording} trackCode={track}
-    // />
-    // -- workflow
-    // <EmbeddedWorkflowInteraction
-    //   idCaller={content} typeCaller={"track"}
-    // />
+    console.log(`item.arrIdNotes: ${item.arrIdNotes}`);
+    console.log(`item.arrIdNotes[0]: ${item.arrIdNotes[0]}`);
 
     setContentExpandedRow(
       <>
@@ -283,7 +273,8 @@ const MyTabbedInterface = ({
         />
         {typeof (localStorage.token) !== 'undefined' &&
           <EmbeddedWorkflowInteraction
-            idCaller={infoAnnotation}
+            // idCaller={infoAnnotation}
+            idCaller={item.arrIdNotes[0]} // TODO assess if this was the right approach...
             typeCaller={annotationType}
           />
           }

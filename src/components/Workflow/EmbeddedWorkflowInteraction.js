@@ -23,7 +23,7 @@ import { setWorkflows } from '../Reducers/WorkflowReducer';
 // -the type of caller... 
 // - the idCaller, an item to identify it (either existing to an item, or loaded _id in the MongoDB database) ...
 const EmbeddedWorkflowInteraction = ({idCaller, typeCaller, indexRange=0,listLogNumbers=[], infoMusicList=[], listTracks=[]}) => {
-  // console.log("EmbeddedWorkflowInteraction ___ ",{idCaller, typeCaller, indexRange})  
+  console.log("++ EmbeddedWorkflowInteraction ___ ",{idCaller, typeCaller, indexRange})  
   // ## Attributes
     // Global variable for workflows
     const workflows = useSelector(state => state.workflows);
@@ -40,7 +40,6 @@ const EmbeddedWorkflowInteraction = ({idCaller, typeCaller, indexRange=0,listLog
     const [isWorkflowListVisible, setIsWorkflowListVisible] = useState(false);
     const [showWorkflowActions, setShowWorkflowActions] = useState(false);
     const [showWorkflowAddition, setShowWorkflowAddition] = useState(false);
-
     const [selectedPrivacyOption, setSelectedPrivacyOption] = useState('public');
     const [showLoadingIcon, setShowLoadingIcon] = useState(false); 
 
@@ -72,7 +71,6 @@ const EmbeddedWorkflowInteraction = ({idCaller, typeCaller, indexRange=0,listLog
       setSelectedPrivacyOption(event.target.value);
     };
   
-
     // ## Functions actions
     const handleWorkflowEnrich = (indexWorkflow) => {
       console.log("handleTestWorkflowEnrich. textInputObjectNote: ", textInputObjectNote, ", indexWorkflow: ", indexWorkflow, ", workflows[indexWorkflow]: ", workflows[indexWorkflow], ", idCaller: ", idCaller, ", typeCaller: ", typeCaller);
