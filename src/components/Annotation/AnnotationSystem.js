@@ -76,9 +76,6 @@ const AnnotationSystem = ({ type, info,idCaller = null, index=0, recordingCode=n
 
       {showInputAnnotation && (
         <>
-          <div>
-            {/* For test - type: {type}, info: {info}, idCaller: {idCaller}, metaObjId: {metaObjId} */}
-          </div>
           <div className="areaAnnotation">
             {typeof localStorage.token !== "undefined" && (
               <div className="areaInputAnnotation">

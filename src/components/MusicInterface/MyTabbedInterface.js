@@ -49,6 +49,8 @@ const MyTabbedInterface = ({
   const [expandedRecording, setExpandedRecording] = useState(false);
   const [expandedTrack, setExpandedTrack] = useState(false);
 
+  const [prevColumn, setPrevColumn] = useState('');
+
   const sampler = new Tone.Sampler({
     urls: { C4: "C4.mp3", "D#4": "Ds4.mp3", "F#4": "Fs4.mp3", A4: "A4.mp3" }, release: 1, baseUrl: "https://tonejs.github.io/audio/salamander/",
   }).toDestination();
@@ -219,6 +221,7 @@ const MyTabbedInterface = ({
   }
 
   const handleClickShowShared = (item, columnName) => {
+    setContentExpandedRow(<></>);
     // We have records of annotations being: 
     // recording
     // track
@@ -327,31 +330,37 @@ const MyTabbedInterface = ({
       } else if (columnName === "Play MIDI") {
         handleClickPlayMIDI(item);
       } else {
-        // If the user clicks on the same cell, we should close it
-        if (columnName === "Piano Roll") {
-          handleClickShowPianoRoll(item);
-        } 
-        else{
-          hidePianoRoll();
-          if (columnName === "Details") {
-            handleClickShowDetails(item);
-          } else  {
-            console.log("Default case. Should not happen. Or work in progress");
-            setExpandedRow(new Array(aggregateMatch.length).fill(false)); // reset all expanded rows to false
-            handleClickShowShared(item, columnName);
+        // If the user clicks on the same cell, we should close it        
+        if (columnName === prevColumn) { 
+          setExpandedRow(<></>)
+          setPrevColumn('');
+        } else {
+          setPrevColumn(columnName);
+          if (columnName === "Piano Roll") {
+            handleClickShowPianoRoll(item);
+          } else{
+            hidePianoRoll();
+            setExpandedRow(new Array(aggregateMatch.length).fill(false)); // reset all expanded rows to false          
+            if (columnName === "Details") {
+              handleClickShowDetails(item);
+            } else  {
+              console.log("Default case. Should not happen. Or work in progress");
+              setExpandedRow(new Array(aggregateMatch.length).fill(false)); // reset all expanded rows to false
+              handleClickShowShared(item, columnName);
 
-            try {
-              // Fetch information
-              // const additionalInfo = await testHelloWorld(setDataTest); // won't work unless we update the back-end and VPN is off.
-              // console.log("datatTest: ", datatTest);
-              setExpandedRow((prevState) => ({ ...prevState, [index]: true }));
-            } catch (error) {
-              console.error("Error fetching additional information:", error);
+              try {
+                // Fetch information
+                // const additionalInfo = await testHelloWorld(setDataTest); // won't work unless we update the back-end and VPN is off.
+                // console.log("datatTest: ", datatTest);
+                setExpandedRow((prevState) => ({ ...prevState, [index]: true }));
+              } catch (error) {
+                console.error("Error fetching additional information:", error);
+              }
             }
           }
+          setExpandedRow(new Array(aggregateMatch.length).fill(false)); // all to false
+          setExpandedRow((prevState) => ({ ...prevState, [index]: true })); // true for index we clicked on        
         }
-        setExpandedRow(new Array(aggregateMatch.length).fill(false)); // all to false
-        setExpandedRow((prevState) => ({ ...prevState, [index]: true })); // true for index we clicked on
       }
     }
   };
