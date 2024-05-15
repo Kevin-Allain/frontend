@@ -286,20 +286,33 @@ const MyTabbedInterface = ({
   const [aggregateMatch,setAggregateMatch] = useState(null);
   const [isAggregateMatchReady, setIsAggregateMatchReady] = useState(false);
 
+  // TODO Seems ok. But note that years don't seem to match... One (E) Event Name can have several years. To update
   const calculateAggregateMatch = (infoMusicList, listSearchRes, prettyNamesLogNumber) => {
     console.log("calculateAggregateMatch - ",{infoMusicList, listSearchRes, prettyNamesLogNumber});
-    let fAggregate = []
-    for (let i in infoMusicList) {
-      let matchingTracks = Object.assign({}, listSearchRes.filter(a => a.lognumber === infoMusicList[i].lognumber)[0]); // Get the first matching track
-      matchingTracks["prettyName"] = prettyNamesLogNumber[infoMusicList[i].lognumber];
-      let keys = Object.keys(infoMusicList[i]);
-      for (let k in keys) { matchingTracks[keys[k]] = infoMusicList[i][keys[k]]; }
-      // for showing details
-      // matchingTracks['showDetails'] = false;
-      fAggregate.push(matchingTracks);
+    // let fAggregate = []
+    // for (let i in infoMusicList) {
+    //   let matchingTracks = Object.assign(
+    //     {}, listSearchRes.filter(a => a.lognumber === infoMusicList[i].lognumber)[0]
+    //   ); // Get the first matching track
+    //   matchingTracks["prettyName"] = prettyNamesLogNumber[infoMusicList[i].lognumber];
+    //   let keys = Object.keys(infoMusicList[i]);
+    //   for (let k in keys) { matchingTracks[keys[k]] = infoMusicList[i][keys[k]]; }
+    //   // for showing details
+    //   // matchingTracks['showDetails'] = false;
+    //   fAggregate.push(matchingTracks);
+    // }
+    // console.log("~ fAggregate: ", fAggregate);
+    // return fAggregate;
+    let infoMatches = [];
+    for (let i in listSearchRes) { 
+        let info = infoMusicList.filter(a => a.SJA_ID === listSearchRes[i].track.replace('-T','_'))[0]
+        let merged = {...listSearchRes[i], ...info}
+        infoMatches.push(merged);
     }
-    console.log("~ fAggregate: ", fAggregate);
-    return fAggregate;
+    console.log("seems ok: ",infoMatches);
+    return infoMatches;    
+
+
   }
 
   // const [showDetails, setShowDetails] = useState(new Array(aggregateMatch.length).fill(false));
@@ -364,6 +377,7 @@ const MyTabbedInterface = ({
     setAggregateMatch(newAggregateMatch);
     setIsAggregateMatchReady(true);
   }, []);
+
   useEffect(() => {
     console.log("useEffect of aggregateMatch: ", aggregateMatch);
     if (aggregateMatch !== null) {
