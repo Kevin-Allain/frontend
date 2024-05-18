@@ -416,6 +416,7 @@ const MyTabbedInterface = ({
               <th>Artist(s)</th>
               <th>Recording</th>
               <th>Track Title</th>
+              <th>Event Year</th>
               <th>Release Year</th>
               <th>Pattern</th>
               <th>Details</th>
@@ -432,6 +433,7 @@ const MyTabbedInterface = ({
                 <td> {item['(N) Named Artist(s)']} </td>
                 <td className="icon clickableCell"  onClick={() => handleExpand(index,'(E) Event Name',item)}> {item['(E) Event Name']} </td>
                 <td className="icon clickableCell"  onClick={() => handleExpand(index,'Track Title',item)}> {item['Track Title']} </td>
+                <td>{item['Event Year']}</td>
                 <td>{item['Release Year']}</td>
                 <td className="icon clickableCell" onClick={() => handleExpand(index,'Pattern',item)} >
                   {item.arrNotes.map((a, i) => MIDItoNote[a].replaceAll("s", "")).toString().replaceAll(",", "-")}
