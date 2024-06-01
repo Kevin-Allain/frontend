@@ -164,6 +164,14 @@ const MyTabbedInterface = ({
     console.log("handleClickPlayMp3 - item: ", item);
     // TODO slice based on audio beginning and ending
     let audioName = item["Audio Filename (Internal backup)"];
+
+    const endOfAudioUrl = item["Audio File Path (internal backup)"].split("/")[item["Audio File Path (internal backup)"].split("/").length-2].replace(/[^a-z0-9]/gi, '');
+    const potentialSJA_ID_forFile = item["SJA_ID"]?.replace(/[^a-z0-9]/gi, '');
+    const potentialTrackTitle_forFile = item["Track Title"]?.replace(/[^a-z0-9]/gi, '');
+
+
+
+
     let start = Math.floor(item.arrTime[0]);
     let end = Math.ceil(item.arrTime[item.arrTime.length - 1]);
     let fileNameSlicer = `https://jazzdap.city.ac.uk/public/${audioName}_${start}_${end}.mp3`;
@@ -289,20 +297,7 @@ const MyTabbedInterface = ({
   // TODO Seems ok. But note that years don't seem to match... One (E) Event Name can have several years. To update
   const calculateAggregateMatch = (infoMusicList, listSearchRes, prettyNamesLogNumber) => {
     console.log("calculateAggregateMatch - ",{infoMusicList, listSearchRes, prettyNamesLogNumber});
-    // let fAggregate = []
-    // for (let i in infoMusicList) {
-    //   let matchingTracks = Object.assign(
-    //     {}, listSearchRes.filter(a => a.lognumber === infoMusicList[i].lognumber)[0]
-    //   ); // Get the first matching track
-    //   matchingTracks["prettyName"] = prettyNamesLogNumber[infoMusicList[i].lognumber];
-    //   let keys = Object.keys(infoMusicList[i]);
-    //   for (let k in keys) { matchingTracks[keys[k]] = infoMusicList[i][keys[k]]; }
-    //   // for showing details
-    //   // matchingTracks['showDetails'] = false;
-    //   fAggregate.push(matchingTracks);
-    // }
-    // console.log("~ fAggregate: ", fAggregate);
-    // return fAggregate;
+
     let infoMatches = [];
     for (let i in listSearchRes) { 
         let info = infoMusicList.filter(a => a.SJA_ID === listSearchRes[i].track.replace('-T','_'))[0]
@@ -390,7 +385,10 @@ const MyTabbedInterface = ({
       // I suppose a loop here would be awful. Maybe to do on the back-end...
       const fetchData = async () => {
         try {
-          const result = await doMp3exist(sja_ids, setMp3Exist);
+          // TODO update doMp3exist with new structure? Or should it only be backend?
+          const result = await 
+            // doMp3exist(sja_ids, setMp3Exist);
+            doMp3exist(aggregateMatch, setMp3Exist);
           console.log("result: ", result, ", mp3Exists: ", mp3Exist);
         } catch (error) {
           console.error('Error fetching data:', error);
@@ -443,7 +441,9 @@ const MyTabbedInterface = ({
                 {/* <td>STUFF</td> */}
                 {/* {item.SJA_ID} */}
                 {mp3Exist[item.SJA_ID]
-                  ? <td className="icon clickableCell"  onClick={() => handleExpand(index,'Play Mp3',item)}> <FaMusic /> </td>
+                  ? <td className="icon clickableCell"  onClick={() => 
+                      handleExpand(index,'Play Mp3',item)}> <FaMusic /> 
+                    </td>
                   : <td className="text-slate-400"> <RxCross1 /> </td>
                 }
                 <td className="icon clickableCell"  onClick={() => handleExpand(index,'Play MIDI',item)}> <FiPlayCircle/> </td>

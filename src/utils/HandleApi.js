@@ -1325,15 +1325,104 @@ const doesMp3exist = async(sja_id, setMp3Exists) => {
   })
 }
 
-// TODO do in the backend
-const doMp3exist = async(sja_ids, setMp3Exist) => {
-  console.log("handleAPI doMp3exist", { sja_ids });
-  axios.get(`${baseUrl}/doMp3exist`, {params: { sja_ids}})
-  .then((d) => {
-    console.log("then of doMp3exist. d.data.objectsExist: ", d.data.objectsExist);
-    setMp3Exist(d.data.objectsExist);
-  })
-}
+// Function to transform the array of objects
+const filterAttributes = (data, attributes) => {
+  return data.map(item => {
+      let filteredItem = {};
+      attributes.forEach(attr => {
+          if (item.hasOwnProperty(attr)) {
+              filteredItem[attr] = item[attr];
+          }
+      });
+      return filteredItem;
+  });
+};
+
+// const doMp3exist = async (aggregateMatch, setMp3Exist) => {
+//   try {
+//     const attributestoKeep = ["Audio File Path (internal backup)", "SJA_ID", "Track Title"];
+//     let smallerObj = filterAttributes(aggregateMatch, attributestoKeep);
+//     console.log("smallerObj:@ ", smallerObj);
+
+//     let sjaToStr = [];
+//     console.log("||| sjaToStr: ", sjaToStr);
+
+//     for (let i in smallerObj) {
+//       let item = smallerObj[i];
+//       // Ensure required attributes exist
+//       if (item["Audio File Path (internal backup)"] && item["SJA_ID"] && item["Track Title"]) {
+//         const endOfAudioUrl = item["Audio File Path (internal backup)"]
+//           .split("/")
+//           .slice(-2, -1)[0]
+//           .replace(/[^a-z0-9]/gi, '');
+//         const potentialSJA_ID_forFile = item["SJA_ID"].replace(/[^a-z0-9]/gi, '');
+//         const potentialTrackTitle_forFile = item["Track Title"].replace(/[^a-z0-9]/gi, '');
+//         let strFile1 = endOfAudioUrl + '_' + potentialSJA_ID_forFile;
+//         let strFile2 = endOfAudioUrl + '_' + potentialTrackTitle_forFile;
+//         let curSJA = item['SJA_ID'];
+//         let objSm = { [curSJA]: { "file1": strFile1, "file2": strFile2 } };
+//         console.log("objSm: ", objSm);
+//         sjaToStr = sjaToStr.concat(objSm);
+//       } else {
+//         console.warn(`Missing attributes in item: ${JSON.stringify(item)}`);
+//       }
+//     }
+//     console.log("====sjaToStr: ", sjaToStr);
+//     console.log("handleAPI doMp3exist", { sjaToStr });
+//     axios.get(`${baseUrl}/doMp3exist`, {params: { sjaToStr}})
+//     .then((d) => {
+//       console.log("then of doMp3exist. d.data.objectsExist: ", d.data.objectsExist);
+//       setMp3Exist(d.data.objectsExist);
+//     })
+//     console.log("!!!!!!!!!!!!!!!!!!!!");
+//   } catch (error) {
+//     console.error("An error occurred:", error);
+//   }
+// };
+
+const doMp3exist = async (aggregateMatch, setMp3Exist) => {
+  try {
+    const attributestoKeep = ["Audio File Path (internal backup)", "SJA_ID", "Track Title"];
+    let smallerObj = filterAttributes(aggregateMatch, attributestoKeep);
+    console.log("smallerObj:@ ", smallerObj);
+
+    let sjaToStr = [];
+    console.log("||| sjaToStr: ", sjaToStr);
+
+    for (let i in smallerObj) {
+      let item = smallerObj[i];
+      if (item["Audio File Path (internal backup)"] && item["SJA_ID"] && item["Track Title"]) {
+        let endOfAudioUrl = item["Audio File Path (internal backup)"]
+          .split("/")
+          .slice(-2, -1)[0]
+          .replace(/[^a-z0-9]/gi, '');
+        const potentialSJA_ID_forFile = item["SJA_ID"].replace(/[^a-z0-9]/gi, '');
+        const potentialTrackTitle_forFile = item["Track Title"].replace(/[^a-z0-9]/gi, '');
+        if (endOfAudioUrl.endsWith('/')){
+          endOfAudioUrl=endOfAudioUrl.slice(0,-1);
+        }
+
+        let strFile1 = endOfAudioUrl + '_' + potentialSJA_ID_forFile;
+        let strFile2 = endOfAudioUrl + '_' + potentialTrackTitle_forFile;
+        let curSJA = item['SJA_ID'];
+        let objSm = { [curSJA]: { "file1": strFile1, "file2": strFile2 } };
+        console.log("objSm: ", objSm);
+        sjaToStr = sjaToStr.concat(objSm);
+      } else {
+        console.warn(`Missing attributes in item: ${JSON.stringify(item)}`);
+      }
+    }
+
+    console.log("====sjaToStr: ", sjaToStr);
+    // Fallback to POST request if data is too large
+    const response = await axios.post(`${baseUrl}/doMp3exist`, { data: smallerObj });
+    console.log("then of doMp3exist. d.data.objectsExist: ", response.data.objectsExist);
+    setMp3Exist(response.data.objectsExist);
+  } catch (error) {
+    console.error("An error occurred:", error);
+  }
+};
+
 
 // const doMp3exist = async (sja_ids, setMp3Exist) => {
 //   console.log("handleAPI doMp3exist", { sja_ids });
@@ -1373,6 +1462,8 @@ const doMp3exist = async(sja_ids, setMp3Exist) => {
 //       // Handle error here
 //     });
 // };
+
+
 
 
 
