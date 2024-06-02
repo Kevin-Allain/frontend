@@ -1316,6 +1316,21 @@ const getSliceMp3 = async (file = '', start = 0, end = 0, sja_code_audioUrl,setA
     })
 }
 
+const getModernSliceMp3 = async(aggregateItem, setModernUrl) => {
+  try {
+    const attributestoKeep = ["Audio File Path (internal backup)", "SJA_ID", "Track Title","arrDurations","arrNotes","arrNotes"];
+    let smallerObj = filterAttributes(aggregateItem, attributestoKeep);
+    console.log("smallerObj for slice:¬ ", smallerObj);
+    // Fallback to POST request if data is too large
+    const response = await axios.post(`${baseUrl}/getModernSliceMp3`, { data: smallerObj });
+    console.log("then of getModernSliceMp3. d.data: ", response.data);
+    setModernUrl(response.data.modernUrl);
+  } catch (error) {
+    console.error("An error occurred:", error);
+  }
+
+}
+
 const doesMp3exist = async(sja_id, setMp3Exists) => {
   console.log("handleAPI doesMp3exist", { sja_id });
   axios.get(`${baseUrl}/doesMp3exist`, {params: { sja_id}})
@@ -1338,132 +1353,35 @@ const filterAttributes = (data, attributes) => {
   });
 };
 
-// const doMp3exist = async (aggregateMatch, setMp3Exist) => {
-//   try {
-//     const attributestoKeep = ["Audio File Path (internal backup)", "SJA_ID", "Track Title"];
-//     let smallerObj = filterAttributes(aggregateMatch, attributestoKeep);
-//     console.log("smallerObj:@ ", smallerObj);
-
-//     let sjaToStr = [];
-//     console.log("||| sjaToStr: ", sjaToStr);
-
-//     for (let i in smallerObj) {
-//       let item = smallerObj[i];
-//       // Ensure required attributes exist
-//       if (item["Audio File Path (internal backup)"] && item["SJA_ID"] && item["Track Title"]) {
-//         const endOfAudioUrl = item["Audio File Path (internal backup)"]
-//           .split("/")
-//           .slice(-2, -1)[0]
-//           .replace(/[^a-z0-9]/gi, '');
-//         const potentialSJA_ID_forFile = item["SJA_ID"].replace(/[^a-z0-9]/gi, '');
-//         const potentialTrackTitle_forFile = item["Track Title"].replace(/[^a-z0-9]/gi, '');
-//         let strFile1 = endOfAudioUrl + '_' + potentialSJA_ID_forFile;
-//         let strFile2 = endOfAudioUrl + '_' + potentialTrackTitle_forFile;
-//         let curSJA = item['SJA_ID'];
-//         let objSm = { [curSJA]: { "file1": strFile1, "file2": strFile2 } };
-//         console.log("objSm: ", objSm);
-//         sjaToStr = sjaToStr.concat(objSm);
-//       } else {
-//         console.warn(`Missing attributes in item: ${JSON.stringify(item)}`);
-//       }
-//     }
-//     console.log("====sjaToStr: ", sjaToStr);
-//     console.log("handleAPI doMp3exist", { sjaToStr });
-//     axios.get(`${baseUrl}/doMp3exist`, {params: { sjaToStr}})
-//     .then((d) => {
-//       console.log("then of doMp3exist. d.data.objectsExist: ", d.data.objectsExist);
-//       setMp3Exist(d.data.objectsExist);
-//     })
-//     console.log("!!!!!!!!!!!!!!!!!!!!");
-//   } catch (error) {
-//     console.error("An error occurred:", error);
-//   }
-// };
-
-const doMp3exist = async (aggregateMatch, setMp3Exist) => {
+const doMp3exist = async (aggregateMatch, setMp3Exist, setModernURLs) => {
+  const attributestoKeep = [
+    "Audio File Path (internal backup)", "SJA_ID", "Track Title",
+    "arrTime"
+  ];
+  let smallerObj = filterAttributes(aggregateMatch, attributestoKeep);
+  for(let i in smallerObj){
+    let interArr = [smallerObj[i]["arrTime"][0], smallerObj[i]["arrTime"][smallerObj[i]["arrTime"].length-1]];
+    smallerObj[i]["arrTime"] = interArr;
+  }
   try {
-    const attributestoKeep = ["Audio File Path (internal backup)", "SJA_ID", "Track Title"];
-    let smallerObj = filterAttributes(aggregateMatch, attributestoKeep);
     console.log("smallerObj:@ ", smallerObj);
-
-    let sjaToStr = [];
-    console.log("||| sjaToStr: ", sjaToStr);
-
-    for (let i in smallerObj) {
-      let item = smallerObj[i];
-      if (item["Audio File Path (internal backup)"] && item["SJA_ID"] && item["Track Title"]) {
-        let endOfAudioUrl = item["Audio File Path (internal backup)"]
-          .split("/")
-          .slice(-2, -1)[0]
-          .replace(/[^a-z0-9]/gi, '');
-        const potentialSJA_ID_forFile = item["SJA_ID"].replace(/[^a-z0-9]/gi, '');
-        const potentialTrackTitle_forFile = item["Track Title"].replace(/[^a-z0-9]/gi, '');
-        if (endOfAudioUrl.endsWith('/')){
-          endOfAudioUrl=endOfAudioUrl.slice(0,-1);
-        }
-
-        let strFile1 = endOfAudioUrl + '_' + potentialSJA_ID_forFile;
-        let strFile2 = endOfAudioUrl + '_' + potentialTrackTitle_forFile;
-        let curSJA = item['SJA_ID'];
-        let objSm = { [curSJA]: { "file1": strFile1, "file2": strFile2 } };
-        console.log("objSm: ", objSm);
-        sjaToStr = sjaToStr.concat(objSm);
-      } else {
-        console.warn(`Missing attributes in item: ${JSON.stringify(item)}`);
-      }
-    }
-
-    console.log("====sjaToStr: ", sjaToStr);
     // Fallback to POST request if data is too large
     const response = await axios.post(`${baseUrl}/doMp3exist`, { data: smallerObj });
     console.log("then of doMp3exist. d.data.objectsExist: ", response.data.objectsExist);
     setMp3Exist(response.data.objectsExist);
   } catch (error) {
     console.error("An error occurred:", error);
+  } finally {
+    console.log("finally of doMp3exist. could do calls to slice mp3 (and provide url here...), aggregateMatch: ",aggregateMatch, );
+    try{
+    let URLsliced = await axios.post(`${baseUrl}/getModernSlicesURLs`, { data: smallerObj });
+    setModernURLs(URLsliced.data.modernURLTimeSection);
+    }
+    catch(error){
+      console.error("An error occurred:", error);
+    }
   }
 };
-
-
-// const doMp3exist = async (sja_ids, setMp3Exist) => {
-//   console.log("handleAPI doMp3exist", { sja_ids });
-
-//   const chunkSize = 100; // Define the chunk size
-//   const chunks = []; // Array to store the chunks of sja_ids
-
-//   // Split sja_ids into chunks
-//   for (let i = 0; i < sja_ids.length; i += chunkSize) {
-//     chunks.push(sja_ids.slice(i, i + chunkSize));
-//   }
-
-//   // Array to store promises of axios requests
-//   const promises = [];
-
-//   // Make requests for each chunk
-//   chunks.forEach((chunk) => {
-//     promises.push(
-//       axios.get(`${baseUrl}/doMp3exist`, { params: { sja_ids: chunk.join(',') } })
-//         .then((d) => {
-//           console.log("then of doMp3exist. d.data: ", d.data);
-//           return d.data.exist;
-//         })
-//     );
-//   });
-
-//   // Aggregate results before returning to the front-end
-//   Promise.all(promises)
-//     .then((results) => {
-//       console.log("then of dpMp3Exist, results: ",results);
-//       const aggregateResult = results.flat(); // Flatten the array of results
-//       console.log("aggregateResult: ",aggregateResult);
-//       setMp3Exist(aggregateResult);
-//     })
-//     .catch((error) => {
-//       console.error("Error occurred while fetching data:", error);
-//       // Handle error here
-//     });
-// };
-
-
 
 
 

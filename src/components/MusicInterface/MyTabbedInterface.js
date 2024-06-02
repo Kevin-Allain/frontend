@@ -19,11 +19,12 @@ import AdditionalInfo from "./AdditionalInfo";
 import {
   testHelloWorld,
   doesMp3exist,
-  doMp3exist
+  doMp3exist,
+  getSliceMp3
 } from "../../utils/HandleApi";
 import PianoRoll from "../VisComponents/PianoRoll";
 import * as Tone from "tone";
-// TODO consider how these should be used with the table
+
 import AnnotationSystem from "../Annotation/AnnotationSystem";
 import EmbeddedWorkflowInteraction from "../Workflow/EmbeddedWorkflowInteraction";
 
@@ -50,6 +51,8 @@ const MyTabbedInterface = ({
   const [expandedTrack, setExpandedTrack] = useState(false);
 
   const [prevColumn, setPrevColumn] = useState('');
+
+  const [modernURL, setModernURLs] = useState([]);
 
   const sampler = new Tone.Sampler({
     urls: { C4: "C4.mp3", "D#4": "Ds4.mp3", "F#4": "Fs4.mp3", A4: "A4.mp3" }, release: 1, baseUrl: "https://tonejs.github.io/audio/salamander/",
@@ -141,9 +144,10 @@ const MyTabbedInterface = ({
   newStruct = newStruct.sort((a, b) => a.recording > b.recording ? 1 : b.recording > a.recording ? -1 : 0 );
   // const [audioMp3, setAudioMp3] = useState( new Audio(`https://jazzdap.city.ac.uk/public/sliced_audio_0_3.mp3`.replace(/ /g,"%20")) );
 
-  // TODO will need to be updated to be more specific...!
+  // TODO will need to be updated to be more specific based on update from handleClickPlayMp3...!
   const playMp3Slicer = (fileNameSlicer, audioName, start, end, item) => {
     console.log("playMp3Slicer - fileNameSlicer: ", fileNameSlicer);
+
     let audioMp3 = new Audio(fileNameSlicer.replace(/ /g, "%20"));
     audioMp3.onerror = function() {
       // If an error occurs while loading the audio, update audioName and try again
@@ -152,7 +156,6 @@ const MyTabbedInterface = ({
       console.log("Retry playMp3Slicer - fileNameSlicer: ", fileNameSlicer);
       audioMp3 = new Audio(fileNameSlicer.replace(/ /g, "%20"));
       audioMp3.onerror = function() {
-        // If a second error occurs, display an alert
         alert('Audio file not found');
       };
       audioMp3.play();
@@ -165,15 +168,21 @@ const MyTabbedInterface = ({
     // TODO slice based on audio beginning and ending
     let audioName = item["Audio Filename (Internal backup)"];
 
-    const endOfAudioUrl = item["Audio File Path (internal backup)"].split("/")[item["Audio File Path (internal backup)"].split("/").length-2].replace(/[^a-z0-9]/gi, '');
+    if (item["Audio File Path (internal backup)"] && item["Audio File Path (internal backup)"].endsWith('/')){ item["Audio File Path (internal backup)"]=item["Audio File Path (internal backup)"].slice(0,-1); }
+    let endOfAudioUrl = item["Audio File Path (internal backup)"]?.split("/")[item["Audio File Path (internal backup)"]?.split("/").length-1].replace(/[^a-z0-9]/gi, '');
     const potentialSJA_ID_forFile = item["SJA_ID"]?.replace(/[^a-z0-9]/gi, '');
-    const potentialTrackTitle_forFile = item["Track Title"]?.replace(/[^a-z0-9]/gi, '');
+    const potentialTrackTitle_forFile = item["Track Title"]?.replace(/[^a-z0-9]/gi, '');  
+    let strFile1 = endOfAudioUrl+'_'+potentialSJA_ID_forFile;
+    let strFile2 = endOfAudioUrl+'_'+potentialTrackTitle_forFile;
 
-
-
-
+    console.log("mp3Exist[SJA_ID]: ", mp3Exist[item.SJA_ID]) 
     let start = Math.floor(item.arrTime[0]);
     let end = Math.ceil(item.arrTime[item.arrTime.length - 1]);
+
+    // mp3 existing does not mean that the slice exists...
+    // TODO which filepath to give?
+    // getModernSliceMp3(item,setModernUrl);
+
     let fileNameSlicer = `https://jazzdap.city.ac.uk/public/${audioName}_${start}_${end}.mp3`;
     
     playMp3Slicer(fileNameSlicer, audioName, start, end, item);
@@ -294,7 +303,6 @@ const MyTabbedInterface = ({
   const [aggregateMatch,setAggregateMatch] = useState(null);
   const [isAggregateMatchReady, setIsAggregateMatchReady] = useState(false);
 
-  // TODO Seems ok. But note that years don't seem to match... One (E) Event Name can have several years. To update
   const calculateAggregateMatch = (infoMusicList, listSearchRes, prettyNamesLogNumber) => {
     console.log("calculateAggregateMatch - ",{infoMusicList, listSearchRes, prettyNamesLogNumber});
 
@@ -385,10 +393,7 @@ const MyTabbedInterface = ({
       // I suppose a loop here would be awful. Maybe to do on the back-end...
       const fetchData = async () => {
         try {
-          // TODO update doMp3exist with new structure? Or should it only be backend?
-          const result = await 
-            // doMp3exist(sja_ids, setMp3Exist);
-            doMp3exist(aggregateMatch, setMp3Exist);
+          const result = await doMp3exist(aggregateMatch, setMp3Exist);
           console.log("result: ", result, ", mp3Exists: ", mp3Exist);
         } catch (error) {
           console.error('Error fetching data:', error);

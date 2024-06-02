@@ -39,19 +39,19 @@ const generateAllValuesYears = (labels,data) => {
         if( !isNaN(nextYear) && (year<nextYear) ) {
                 // console.log("year<nextYear");
                 for(let j = year+1; j<nextYear; j++){
-                    console.log("- j: ",j);
+                    // console.log("- j: ",j);
                     result[j]=0;
                 }
             }
           }
-      console.log("result[year]: ",result[year]);
+      // console.log("result[year]: ",result[year]);
       }
-  console.log("generateAllYears - result: ", result);
+  // console.log("generateAllYears - result: ", result);
   return result;
 };
 
 const GraphsResults = ({ infoMusicList, oldSearch, listSearchRes }) => {
-  console.log("~~ GraphsResults - infoMusicList: ", infoMusicList, ", oldSearch: ", oldSearch, ", listSearchRes: ", listSearchRes);
+  // console.log("~~ GraphsResults - infoMusicList: ", infoMusicList, ", oldSearch: ", oldSearch, ", listSearchRes: ", listSearchRes);
   const [showGraphs, setShowGraphs] = useState(false);
   const handleToggle = () => { setShowGraphs(!showGraphs); };
   // Set up date in javascript format
@@ -102,7 +102,7 @@ const GraphsResults = ({ infoMusicList, oldSearch, listSearchRes }) => {
     if (acc[value]) { acc[value]++; } else { acc[value] = 1; }
     return acc;
   }, {}))
-  console.log("- lognumbersCount: ",lognumbersCount, "count: ", Object.values(lognumbersCount).reduce((partialSum, a) => partialSum + a, 0));
+  // console.log("- lognumbersCount: ",lognumbersCount, "count: ", Object.values(lognumbersCount).reduce((partialSum, a) => partialSum + a, 0));
   const [tracksCount, setTracksCount] = useState(
     listSearchRes.reduce((acc, obj) => {
     // const value = obj.track;
@@ -169,7 +169,7 @@ const GraphsResults = ({ infoMusicList, oldSearch, listSearchRes }) => {
 
   let mapMatchToYear_iso = {}; // WIP Christmas critical
   const extractInfo = (listItem) => {
-    console.log("extractInfo | listItem: ",listItem);
+    // console.log("extractInfo | listItem: ",listItem);
     const trackWithoutT = listItem.track.replace('-T', '_');
     const correspondingInfo = infoMusicList.find((info) => info.SJA_ID === trackWithoutT);
     // console.log("extractInfo | correspondingInfo: ", correspondingInfo);
@@ -186,7 +186,7 @@ const GraphsResults = ({ infoMusicList, oldSearch, listSearchRes }) => {
   // Function to count occurrences for each unique combination of arrNotes and year
   const countOccurrences_notesYear = () => {
     const occurrences = {};
-    console.log("countOccurrences_notesYear | listSearchRes: ",listSearchRes)
+    // console.log("countOccurrences_notesYear | listSearchRes: ",listSearchRes)
     listSearchRes.forEach((listItem) => {
       const { arrNotes, year } = extractInfo(listItem);
       const key = `${arrNotes}/${year}`;
@@ -281,7 +281,7 @@ const GraphsResults = ({ infoMusicList, oldSearch, listSearchRes }) => {
   const rangeIndex1 = lastIndex1 - firstIndex1;
   let filteredMapMelodyCount = {};
   if ((rangeIndex1 / numMelodies > 0.80) || numMelodies < 20 ) {
-    console.log("No filter");
+    // console.log("No filter");
     // filteredMapMelodyCount = mapMelodyToCount;
     for (let k in mapMelodyToCount) {
       filteredMapMelodyCount[arrayStrPitchesToNotes(k)] = filteredMapMelodyCount[arrayStrPitchesToNotes(k)]
@@ -289,7 +289,7 @@ const GraphsResults = ({ infoMusicList, oldSearch, listSearchRes }) => {
       : mapMelodyToCount[k];
     }
   } else {
-    console.log("Filter");
+    // console.log("Filter");
     const numberFilterMelodyCount = 2;
     for (let k in mapMelodyToCount) {
       if (mapMelodyToCount[k] > numberFilterMelodyCount) { 
@@ -299,13 +299,13 @@ const GraphsResults = ({ infoMusicList, oldSearch, listSearchRes }) => {
       }
     }
   }
-  console.log("- filteredMapMelodyCount: ", filteredMapMelodyCount,", length: ",Object.keys(filteredMapMelodyCount).length);
+  // console.log("- filteredMapMelodyCount: ", filteredMapMelodyCount,", length: ",Object.keys(filteredMapMelodyCount).length);
   let sortedMelodyCount = {}
   for (let i in Object.keys(filteredMapMelodyCount).sort()) {
     sortedMelodyCount[Object.keys(filteredMapMelodyCount).sort()[i]] =
       filteredMapMelodyCount[Object.keys(filteredMapMelodyCount).sort()[i]]
   }
-  console.log("- sortedMelodyCount: ", sortedMelodyCount,", length: ",Object.keys(sortedMelodyCount).length);
+  // console.log("- sortedMelodyCount: ", sortedMelodyCount,", length: ",Object.keys(sortedMelodyCount).length);
 
 
   const datesCount = {};
@@ -316,7 +316,7 @@ const GraphsResults = ({ infoMusicList, oldSearch, listSearchRes }) => {
         ? infoMusicList.filter(a => a.lognumber === b)[0]['dateEvent']
         : null)
   for (let i in mapRecordingToDate) { datesCount[mapRecordingToDate[i]] = lognumbersCount[i] }
-  console.log("- datesCount: ",datesCount);
+  // console.log("- datesCount: ",datesCount);
   let keysTime = [];
   let valuesTime = [];
   let objIso = {}
@@ -379,7 +379,7 @@ const GraphsResults = ({ infoMusicList, oldSearch, listSearchRes }) => {
   useEffect(() => {
     // This is called each time there is a call to change selectedAttributeMix or selectedAxisY
     const updateOptions = () => {
-      console.log("-- updateOptions | typeGraph: ",typeGraph,", arrayDataBubble: ",arrayDataBubble,", selectedAttributeMix: ",selectedAttributeMix);
+      // console.log("-- updateOptions | typeGraph: ",typeGraph,", arrayDataBubble: ",arrayDataBubble,", selectedAttributeMix: ",selectedAttributeMix);
 
       if (typeGraph === "scatter") {
         // The variables that should be changed: labelsXscatter, labelsYscatter, valsScatter
