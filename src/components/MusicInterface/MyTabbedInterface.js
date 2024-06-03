@@ -150,7 +150,7 @@ const MyTabbedInterface = ({
     let urlModern  = `https://jazzdap.city.ac.uk/public/${fileNameSlicer}`
     urlModern = urlModern.replace(/ /g, "%20");
     let audioMp3 = new Audio(urlModern);
-    
+
     audioMp3.onerror = function() {
       console.log("~audioMp3.onerror~")
       // If an error occurs while loading the audio, update audioName and try again
@@ -191,9 +191,9 @@ const MyTabbedInterface = ({
     console.log("modernURLs[strFile2_start_end]: ", modernURLs[`${strFile2}_${start}_${end}`]);
 
     let urlModern = modernURLs[`${strFile1}_${start}_${end}`]
-      ? modernURLs[`${strFile1}_${start}_${end}`].split('public').at(-1).replace('\\','')
+      ? modernURLs[`${strFile1}_${start}_${end}`].split('public').at(-1).replace('\\','').replace('/','')
       : modernURLs[`${strFile2}_${start}_${end}`] 
-        ? modernURLs[`${strFile2}_${start}_${end}`].split('public').at(-1).replace('\\','') 
+        ? modernURLs[`${strFile2}_${start}_${end}`].split('public').at(-1).replace('\\','').replace('/','')
         : undefined;
     console.log("urlModern: ",urlModern);
 
