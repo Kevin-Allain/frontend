@@ -52,7 +52,7 @@ const MyTabbedInterface = ({
 
   const [prevColumn, setPrevColumn] = useState('');
 
-  const [modernURL, setModernURLs] = useState([]);
+  const [modernURLs, setModernURLs] = useState([]);
 
   const sampler = new Tone.Sampler({
     urls: { C4: "C4.mp3", "D#4": "Ds4.mp3", "F#4": "Fs4.mp3", A4: "A4.mp3" }, release: 1, baseUrl: "https://tonejs.github.io/audio/salamander/",
@@ -146,18 +146,20 @@ const MyTabbedInterface = ({
 
   // TODO will need to be updated to be more specific based on update from handleClickPlayMp3...!
   const playMp3Slicer = (fileNameSlicer, audioName, start, end, item) => {
-    console.log("playMp3Slicer - fileNameSlicer: ", fileNameSlicer);
-
-    let audioMp3 = new Audio(fileNameSlicer.replace(/ /g, "%20"));
+    console.log("playMp3Slicer - ", {fileNameSlicer, audioName, start, end, item});
+    let urlModern  = `https://jazzdap.city.ac.uk/public/${fileNameSlicer}`
+    urlModern = urlModern.replace(/ /g, "%20");
+    let audioMp3 = new Audio(urlModern);
+    
     audioMp3.onerror = function() {
+      console.log("~audioMp3.onerror~")
       // If an error occurs while loading the audio, update audioName and try again
       audioName = item.SJA_ID;
-      fileNameSlicer = `https://jazzdap.city.ac.uk/public/${audioName}_${start}_${end}.mp3`;
+      // fileNameSlicer = `https://jazzdap.city.ac.uk/public/${audioName}_${start}_${end}.mp3`;
+      fileNameSlicer = `https://jazzdap.city.ac.uk/public/${fileNameSlicer}`
       console.log("Retry playMp3Slicer - fileNameSlicer: ", fileNameSlicer);
       audioMp3 = new Audio(fileNameSlicer.replace(/ /g, "%20"));
-      audioMp3.onerror = function() {
-        alert('Audio file not found');
-      };
+      audioMp3.onerror = function() { alert('Audio file not found'); };
       audioMp3.play();
     };
     audioMp3.play();
@@ -183,9 +185,23 @@ const MyTabbedInterface = ({
     // TODO which filepath to give?
     // getModernSliceMp3(item,setModernUrl);
 
-    let fileNameSlicer = `https://jazzdap.city.ac.uk/public/${audioName}_${start}_${end}.mp3`;
-    
-    playMp3Slicer(fileNameSlicer, audioName, start, end, item);
+    console.log(`${strFile1}_${start}_${end}`)
+    console.log(`${strFile2}_${start}_${end}`)
+    console.log("modernURLs[strFile1_start_end]: ", modernURLs[`${strFile1}_${start}_${end}`]);
+    console.log("modernURLs[strFile2_start_end]: ", modernURLs[`${strFile2}_${start}_${end}`]);
+
+    let urlModern = modernURLs[`${strFile1}_${start}_${end}`]
+      ? modernURLs[`${strFile1}_${start}_${end}`].split('public').at(-1).replace('\\','')
+      : modernURLs[`${strFile2}_${start}_${end}`] 
+        ? modernURLs[`${strFile2}_${start}_${end}`].split('public').at(-1).replace('\\','') 
+        : undefined;
+    console.log("urlModern: ",urlModern);
+
+    let fileNameSlicer = urlModern 
+      ? `https://jazzdap.city.ac.uk/public/${audioName}_${start}_${end}.mp3` 
+      : `https://jazzdap.city.ac.uk/public/${urlModern}`;
+
+    playMp3Slicer(urlModern, audioName, start, end, item);
   };
           
   const handleClickPlayMIDI = item => {
@@ -393,8 +409,8 @@ const MyTabbedInterface = ({
       // I suppose a loop here would be awful. Maybe to do on the back-end...
       const fetchData = async () => {
         try {
-          const result = await doMp3exist(aggregateMatch, setMp3Exist);
-          console.log("result: ", result, ", mp3Exists: ", mp3Exist);
+          const result = await doMp3exist(aggregateMatch, setMp3Exist,setModernURLs);
+          console.log("result: ", result, ", mp3Exists: ", mp3Exist,", modernURLs: ", modernURLs);
         } catch (error) {
           console.error('Error fetching data:', error);
           setMp3Exist(false); // Set mp3Exists to false in case of an error
@@ -406,6 +422,9 @@ const MyTabbedInterface = ({
   useEffect(() => {
     console.log("mp3Exist changed:", mp3Exist);
   }, [mp3Exist]);
+  useEffect(() => {
+    console.log(" ~ modernURLs changed: ",modernURLs)
+  })
   
 
   return (
